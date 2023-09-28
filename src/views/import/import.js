@@ -12,11 +12,76 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+  CFormInput,
+  CFormLabel,
+  CForm,
+  CButton
 } from '@coreui/react'
 import { DocsExample } from 'src/components'
 
 const Import = () => {
   return (
+    // JOB SEARCH - DROPDOWN & TEXT FIELD
+    <CRow>
+    <CCol xs={12}>
+      <CCard className="mb-2">
+        <CCardHeader>
+          <strong>To create Job, Delete and so on</strong> <small>Basic example</small>
+        </CCardHeader>
+        <CCardBody>
+        <CDropdown>
+  <CDropdownToggle color="secondary">Job No.</CDropdownToggle>
+  <CDropdownMenu>
+    <CDropdownItem href="#">BE No.</CDropdownItem>
+    <CDropdownItem href="#">HBL/HAWB No.</CDropdownItem>
+    <CDropdownItem href="#">MBL/MAWB No.</CDropdownItem>
+    <CDropdownItem href="#">Container No.</CDropdownItem>
+  </CDropdownMenu>
+    <CFormInput type="text" size="sm" placeholder="" aria-label="sm input example"/>
+  </CDropdown>
+  </CCardBody>
+
+  <CForm>
+  <CRow className="mb-2">
+    <CFormLabel className="col-sm-1 col-form-label">Mode</CFormLabel>
+    <CDropdown className="col-sm-1">
+  <CDropdownToggle color="secondary">Both</CDropdownToggle>
+  <CDropdownMenu>
+    <CDropdownItem href="#">Air</CDropdownItem>
+    <CDropdownItem href="#">Sea</CDropdownItem>
+  </CDropdownMenu>
+  </CDropdown>
+  </CRow>
+  </CForm>
+  <CForm>
+  <CRow className="mb-2">
+    <CFormLabel className="col-sm-1 col-form-label">BE Type</CFormLabel>
+    <CDropdown className="col-sm-1">
+  <CDropdownToggle color="secondary">All</CDropdownToggle>
+  <CDropdownMenu>
+    <CDropdownItem href="#">Home</CDropdownItem>
+    <CDropdownItem href="#">In-Bond</CDropdownItem>
+    <CDropdownItem href="#">In-Bond</CDropdownItem>
+    <CDropdownItem href="#">SEZ-Z</CDropdownItem>
+    <CDropdownItem href="#">SEZ-M</CDropdownItem>
+    <CDropdownItem href="#">SEZ-T</CDropdownItem>
+
+  </CDropdownMenu>
+  </CDropdown>
+  </CRow>
+  <CCol xs={12}>
+      <CButton color="primary" type="submit">
+        Search
+      </CButton>
+    </CCol>
+  </CForm>
+  </CCard>
+    </CCol>
+  
     <CTable hover responsive striped className=''>
   <CTableHead>
     <CTableRow color='dark'>
@@ -82,7 +147,7 @@ const Import = () => {
     
   </CTableBody>
 </CTable>
-
+</CRow>
   )
 }
 

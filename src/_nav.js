@@ -234,11 +234,11 @@ const _nav = [
       //   name: 'Range',
       //   to: '/forms/range',
       // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Input Group',
-      //   to: '/forms/input-group',
-      // },
+      {
+        component: CNavItem,
+        name: 'Input Group',
+        to: '/forms/input-group',
+      },
       // {
       //   component: CNavItem,
       //   name: 'Floating Labels',
