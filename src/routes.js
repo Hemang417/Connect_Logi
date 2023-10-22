@@ -2,6 +2,7 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Import = React.lazy(() => import('./views/import/import'))
+const Modal = React.lazy(() => import('./views/import/Modal'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -55,6 +56,7 @@ const routes = [
   { path: '/', exact: true },
   { path: '/dashboard', element: Dashboard },
   { path: '/import', element: Import },
+  { path: '/import/Modal', element: Modal },
   { path: '/theme', element: Colors, exact: true },
   { path: '/theme/colors', element: Colors },
   { path: '/theme/typography', element: Typography },

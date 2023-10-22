@@ -1,15 +1,3 @@
-import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
-    Avatar,
-    Chip,
-    Tooltip,
-    Progress,
-  } from "@material-tailwind/react";
-  import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-  import { authorsTableData, projectsTableData } from "@/data";
 //   import modalImport from "./modalImport";
   import { useEffect, useState } from "react";
   import {IMPO2D} from "./IMPO2D";
