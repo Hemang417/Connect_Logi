@@ -49,47 +49,47 @@ const _nav = [
   //   name: 'Components',
   // },
   {
-    component: CNavGroup,
+    component: CNavItem,
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Home',
-        to: '/dashboard'
-        // to: '/base/accordion',
-      },
-      {
-        component: CNavItem,
-        name: 'Import',
-        to: '/import'
-        // to: '/base/breadcrumbs',
-      },
-      {
-        component: CNavItem,
-        name: 'Export',
-        to: '/dashboard'
-        // to: '/base/cards',
-      },
-      {
-        component: CNavItem,
-        name: 'Transport',
-        to: '/dashboard'
-        // to: '/base/carousels',
-      },
-      {
-        component: CNavItem,
-        name: 'Frieght Forwarding',
-        to: '/dashboard'
-        // to: '/base/collapses',
-      },
-      {
-        component: CNavItem,
-        name: 'Accounts',
-        to: '/dashboard'
-        // to: '/base/list-groups',
-      },
+    // items: [
+    //   {
+    //     component: CNavItem,
+    //     name: 'Home',
+    //     to: '/dashboard'
+    //     // to: '/base/accordion',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Import',
+    //     to: '/import'
+    //     // to: '/base/breadcrumbs',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Export',
+    //     to: '/dashboard'
+    //     // to: '/base/cards',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Transport',
+    //     to: '/dashboard'
+    //     // to: '/base/carousels',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Frieght Forwarding',
+    //     to: '/dashboard'
+    //     // to: '/base/collapses',
+    //   },
+    //   {
+    //     component: CNavItem,
+    //     name: 'Accounts',
+    //     to: '/dashboard'
+    //     // to: '/base/list-groups',
+    //   },
       // {
       //   component: CNavItem,
       //   name: 'Navs & Tabs',
@@ -130,7 +130,7 @@ const _nav = [
       //   name: 'Tooltips',
       //   to: '/base/tooltips',
       // },
-    ],
+    // ],
   },
   {
     component: CNavItem,
