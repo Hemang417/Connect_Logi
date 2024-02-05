@@ -102,7 +102,7 @@ const organization = () => {
   </CTableHead>
   <CTableBody>
     <CTableRow>
-    <th scope="row" class="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+    <th scope="row" class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <Link to={"/Modal"}>
                         Edit
                       </Link>
