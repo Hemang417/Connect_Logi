@@ -135,7 +135,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Organization',
-    to: '/buttons',
+    to: '/organization',
     icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
     // items: [
     //   {
