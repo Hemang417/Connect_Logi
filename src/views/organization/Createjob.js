@@ -40,8 +40,8 @@ const Createjob = () => {
     <CCol xs={12}>
       <CCard className="mb-2 container-div">
         <CCardBody>
-          <input type="text" placeholder="Name" className='text-field' />
-          <input type="text" placeholder="Alias" className='text-field' />
+          <input type="text" placeholder="Name" className='text-field-1' />
+          <input type="text" placeholder="Alias" className='text-field-1' />
         </CCardBody>
         </CCard>
       </CCol>
