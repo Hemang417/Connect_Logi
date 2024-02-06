@@ -28,7 +28,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 // import createjob from './CreateJob';
 
-const organization = () => {
+const Createjob = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -37,7 +37,7 @@ const organization = () => {
     <CRow>
       <CCardBody className='button-div'>
         <div className='createjob-button'>
-          <Link to={'/Createjob'}>
+          <Link to={'/'}>
           <CButton color="primary" type="submit">
             +
           </CButton>
@@ -126,4 +126,4 @@ const organization = () => {
   )
 }
 
-export default organization;
+export default Createjob;
