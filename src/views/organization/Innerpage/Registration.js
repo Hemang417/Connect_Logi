@@ -24,14 +24,14 @@ import {
   CNav,
   CNavLink
 } from '@coreui/react'
-import '../../css/styles.css';
+// import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { General } from './Innerpage';
+// import createjob from './CreateJob';
 
-const Createjob = () => {
+const Registration = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -62,9 +62,8 @@ const Createjob = () => {
   </CNavLink>
 </CNavItem> */}
 </CNav>
-<General />
 </div>
   )
 }
 
-export default Createjob;
+export default Registration;
