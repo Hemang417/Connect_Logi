@@ -156,21 +156,22 @@ const _nav = [
     // ],
   },
   {
-    component: CNavGroup,
+    component: CNavItem,
     name: 'Import',
+    to: '/import',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Dashboard',
-        to: '/dashboard'
-        // to: '/forms/form-control',
-      },
-      {
-        component: CNavItem,
-        name: 'Job Creation & Process',
-        to: '/import',
-      },
+    // items: [
+      // {
+      //   component: CNavItem,
+      //   name: 'Dashboard',
+      //   to: '/dashboard'
+      //   // to: '/forms/form-control',
+      // },
+      // {
+      //   component: CNavItem,
+      //   name: 'Job Creation & Process',
+      //   to: '/import',
+      // },
       // {
       //     component: CNavItem,
       //     name: 'Tables',
@@ -206,7 +207,7 @@ const _nav = [
       //   name: 'Validation',
       //   to: '/forms/validation',
       // },
-    ],
+    // ],
   },
   {
     component: CNavGroup,
