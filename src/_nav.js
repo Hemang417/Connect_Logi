@@ -214,12 +214,12 @@ const _nav = [
     name: 'Export',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
     items: [
-      {
-        component: CNavItem,
-        name: 'Dashboard',
-        to: '/dashboard'
-        // to: '/forms/form-control',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'Dashboard',
+      //   to: '/dashboard'
+      //   to: '/forms/form-control',
+      // },
       {
         component: CNavItem,
         name: 'Job Creation & Process',
