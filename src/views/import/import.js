@@ -36,9 +36,11 @@ const Import = () => {
     <CRow>
         <CCardBody className='button-div'>
 <div className='createjob-button'>
+<Link to={'/impcreatejob'} target='_blank'>
   <CButton color="primary" type="submit">
         +
       </CButton>
+      </Link>
   </div>
   <div className='createjob-button'>
   <CButton color="primary" type="submit">

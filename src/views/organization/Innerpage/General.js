@@ -22,6 +22,11 @@ import {
     CFormLabel,
     CForm,
     CButton,
+    CModal,
+    CModalHeader,
+    CModalTitle,
+    CModalBody,
+    CModalFooter,
     CNavItem,
     CNav,
     CNavLink
@@ -37,6 +42,7 @@ const General = () => {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
+    const [visible, setVisible] = useState(false)
     return (
         <div>
             <CCol xs={12}>
@@ -48,7 +54,9 @@ const General = () => {
                                 <CDropdownItem href="#">Mumbai</CDropdownItem>
                                 <CDropdownItem href="#">Kolkata</CDropdownItem>
                                 <CDropdownDivider/>
-    <CDropdownItem href="#">Add New Branch</CDropdownItem>
+                                {/* <Link to={"/addnewBranch"}> */}
+                                <CDropdownItem onClick={() => setVisible(!visible)}>Add New Branch</CDropdownItem>
+                                {/* </Link> */}
                             </CDropdownMenu>
                         </CDropdown>
                         <input type="text" placeholder="Address" className='text-field-1' />
@@ -104,6 +112,24 @@ const General = () => {
   </CNavLink>
 </CNavItem> */}
             {/* </CNav> */}
+            <CModal
+      visible={visible}
+      onClose={() => setVisible(false)}
+      aria-labelledby="LiveDemoExampleLabel"
+    >
+      <CModalHeader onClose={() => setVisible(false)}>
+        <CModalTitle id="LiveDemoExampleLabel">Add new Branch</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+      <input type="text" placeholder="Name" className='text-field-1' />
+      </CModalBody>
+      <CModalFooter>
+        <CButton color="secondary" onClick={() => setVisible(false)}>
+          Close
+        </CButton>
+        <CButton color="primary">Add New</CButton>
+      </CModalFooter>
+    </CModal>
         </div>
     )
 }

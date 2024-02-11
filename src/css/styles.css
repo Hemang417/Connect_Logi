@@ -53,3 +53,31 @@
 .text-field-2{
     width:100%
 }
+
+/* Registration */
+
+.new-regis-button{
+    background-color: rgb(38, 172, 38);
+    padding: 3px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* Import Create Job */
+.grid-container{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    column-gap: 5px;
+}
+
+.text-field-3{
+    margin-right: 2%;
+    font-size: small;
+}
+.text-field-4{
+    font-size: small;
+}
+.dropdown-btn{
+    font-size: small;
+    padding: 5px;
+}

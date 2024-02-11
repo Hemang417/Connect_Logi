@@ -29,12 +29,14 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { General } from './Innerpage';
+import { General, Registration } from './Innerpage';
+
 
 const Createjob = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  // const [isActive, setActive] = useState("false");
+  const [isshown, setIsShown] = useState("general");
   return (
     <div>
     <CCol xs={12}>
@@ -48,10 +50,10 @@ const Createjob = () => {
 
 <CNav variant="tabs">
 <CNavItem>
-  <CNavLink href="#" active>General</CNavLink>
+  <CNavLink onClick={() => {setIsShown("general")}}>General</CNavLink>
 </CNavItem>
 <CNavItem>
-  <CNavLink href="#">Registration</CNavLink>
+  <CNavLink onClick={() => {setIsShown("registration")}}>Registration</CNavLink>
 </CNavItem>
 {/* <CNavItem>
   <CNavLink href="#">Link</CNavLink>
@@ -62,7 +64,10 @@ const Createjob = () => {
   </CNavLink>
 </CNavItem> */}
 </CNav>
-<General />
+        {isshown === "general" && <General />}
+        {isshown === "registration" && <Registration />}
+{/* <General /> */}
+{/* <Registration /> */}
 </div>
   )
 }
