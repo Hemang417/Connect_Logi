@@ -33,6 +33,7 @@ import { General } from './Innerpage';
 import { O2D } from './Innerpage';
 import { DoNDelivery } from './Innerpage';
 import { D2C } from './Innerpage'
+import { DocumentUpload } from './Innerpage';
 // import { General, Registration } from './Innerpage';
 
 
@@ -141,7 +142,7 @@ const impcreatejob = () => {
         </CCard>
       </CCol>
 
-      <CNav variant="tabs">
+      <CNav variant="tabs" className='nav-link-text'>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
         </CNavItem>
@@ -161,7 +162,7 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("registration") }}>Quotation</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("registration") }}>Documents Upload</CNavLink>
+          <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("registration") }}>Transaction History</CNavLink>
@@ -179,6 +180,7 @@ const impcreatejob = () => {
       {isshown === "o2d" && <O2D />}
       {isshown === "DoNDelivery" && <DoNDelivery />}
       {isshown === "d2c" && <D2C />}
+      {isshown === "documentupload" && <DocumentUpload />}
         {/* {isshown === "registration" && <Registration />} */}
       {/* <General /> */}
       {/* <Registration /> */}

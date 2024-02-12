@@ -82,6 +82,9 @@
     font-size: small;
     padding: 5px;
 }
+.nav-link-text{
+    font-size: small;
+}
 
 
 /* Import General */
@@ -138,3 +141,4 @@
 .remarks-field{
     width: 100%;
 }
+
