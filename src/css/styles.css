@@ -68,7 +68,7 @@
     display: grid;
     grid-template-columns: auto auto auto auto;
     column-gap: 5px;
-    row-gap: 15px;
+    row-gap: 10px;
 }
 
 .text-field-3{
@@ -81,4 +81,60 @@
 .dropdown-btn{
     font-size: small;
     padding: 5px;
+}
+
+
+/* Import General */
+
+/* .general-grid{
+    display: grid;
+    grid-template-columns: auto;
+    font-size: medium;
+} */
+
+.impgen-text-field-1{
+    margin-bottom: 2%;
+}
+
+.impgen-text-dropdown{
+    width: 100%;
+}
+
+.main-div{
+    display: flex;
+    flex-direction: row;
+}
+
+.left-div{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+.right-div{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* O2D */
+.left-div-table{
+    font-size: small;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.o2d-field-4{
+    padding: 5px;
+    border-color: black;
+}
+
+.date-field{
+    width: auto;
+}
+
+.remarks-field{
+    width: 100%;
 }

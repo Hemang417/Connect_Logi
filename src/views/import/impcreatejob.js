@@ -29,6 +29,10 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { General } from './Innerpage';
+import { O2D } from './Innerpage';
+import { DoNDelivery } from './Innerpage';
+import { D2C } from './Innerpage'
 // import { General, Registration } from './Innerpage';
 
 
@@ -142,7 +146,25 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("registration") }}>Registration</CNavLink>
+          <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("registration") }}>Collection</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("registration") }}>Quotation</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("registration") }}>Documents Upload</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("registration") }}>Transaction History</CNavLink>
         </CNavItem>
         {/* <CNavItem>
   <CNavLink href="#">Link</CNavLink>
@@ -153,10 +175,38 @@ const impcreatejob = () => {
   </CNavLink>
 </CNavItem> */}
       </CNav>
-      {/* {isshown === "general" && <General />}
-        {isshown === "registration" && <Registration />} */}
+      {isshown === "general" && <General />}
+      {isshown === "o2d" && <O2D />}
+      {isshown === "DoNDelivery" && <DoNDelivery />}
+      {isshown === "d2c" && <D2C />}
+        {/* {isshown === "registration" && <Registration />} */}
       {/* <General /> */}
       {/* <Registration /> */}
+      <div className='all-buttons'>
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Save
+                    </CButton>
+                </div>
+
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Save & Close
+                    </CButton>
+                </div>
+
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Save & New
+                    </CButton>
+                </div>
+
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Close
+                    </CButton>
+                </div>
+            </div>
     </div>
   )
 }
