@@ -92,6 +92,7 @@ const DocumentUpload = () => {
                     
                 </CTableBody>
             </CTable>
+            
         </div>
         </div>
     )

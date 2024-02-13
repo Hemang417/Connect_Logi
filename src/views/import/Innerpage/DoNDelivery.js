@@ -53,6 +53,7 @@ const DoNDelivery = () => {
                         <CTableHeaderCell scope="col">Type of Do & Delivery</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Plan Date</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Actual Date</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Time Delay</CTableHeaderCell>
                         <CTableHeaderCell scope="col"></CTableHeaderCell>
                         <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
                     </CTableRow>
@@ -63,11 +64,13 @@ const DoNDelivery = () => {
                         <CTableDataCell>BL Status & Agent Name</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>                        
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Port/CFS Nomination</CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
@@ -78,6 +81,7 @@ const DoNDelivery = () => {
                         <CTableDataCell>Scrutiny</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
 
@@ -86,12 +90,14 @@ const DoNDelivery = () => {
                         <CTableDataCell>Original Doc. Received</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Payment to Shipping Line</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
@@ -100,12 +106,14 @@ const DoNDelivery = () => {
                         <CTableDataCell>Delivery Order</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Delivery</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        

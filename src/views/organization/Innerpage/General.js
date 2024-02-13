@@ -69,7 +69,7 @@ const General = () => {
                     </CCardBody>
                 </CCard>
             </CCol>
-            <div className='all-buttons'>
+            {/* <div className='all-buttons'>
                 <div className='search-button'>
                     <CButton color="primary" type="submit">
                         Save
@@ -93,7 +93,7 @@ const General = () => {
                         Close
                     </CButton>
                 </div>
-            </div>
+            </div> */}
 
 
             {/* <CNav variant="tabs">

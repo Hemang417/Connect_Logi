@@ -34,6 +34,8 @@ import { O2D } from './Innerpage';
 import { DoNDelivery } from './Innerpage';
 import { D2C } from './Innerpage'
 import { DocumentUpload } from './Innerpage';
+import { Collection } from './Innerpage';
+import { Transactionhistory } from './Innerpage'
 // import { General, Registration } from './Innerpage';
 
 
@@ -156,7 +158,7 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("registration") }}>Collection</CNavLink>
+          <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("registration") }}>Quotation</CNavLink>
@@ -165,7 +167,7 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("registration") }}>Transaction History</CNavLink>
+          <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
         </CNavItem>
         {/* <CNavItem>
   <CNavLink href="#">Link</CNavLink>
@@ -181,6 +183,8 @@ const impcreatejob = () => {
       {isshown === "DoNDelivery" && <DoNDelivery />}
       {isshown === "d2c" && <D2C />}
       {isshown === "documentupload" && <DocumentUpload />}
+      {isshown === "Collection" && <Collection />}
+      {isshown === "Transactionhistory" && <Transactionhistory />}
         {/* {isshown === "registration" && <Registration />} */}
       {/* <General /> */}
       {/* <Registration /> */}

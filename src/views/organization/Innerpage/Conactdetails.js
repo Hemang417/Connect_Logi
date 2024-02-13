@@ -33,7 +33,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 // import createjob from './CreateJob';
 
-const Registration = () => {
+const Contactdeatils = () => {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
@@ -51,7 +51,7 @@ const Registration = () => {
     <CDropdownItem href="#">Add New Branch</CDropdownItem>
                             </CDropdownMenu>
                         </CDropdown> */}
-                        <input type="text" placeholder="PAN Details" className='text-field-1' />
+                        <input type="text" placeholder="Credit Days" className='text-field-1' />
                         <input type="text" placeholder="GST Details" className='text-field-1' />
                         <input type="text" placeholder="IEC Code" className='text-field-1' />
                         {/* <div className='search-button'>
@@ -62,31 +62,6 @@ const Registration = () => {
                     </CCardBody>
                 </CCard>
             </CCol>
-            {/* <div className='all-buttons'>
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Save
-                    </CButton>
-                </div>
-
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Save & Close
-                    </CButton>
-                </div>
-
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Save & New
-                    </CButton>
-                </div>
-
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Close
-                    </CButton>
-                </div>
-            </div> */}
 
 
             {/* <CNav variant="tabs">
@@ -109,4 +84,4 @@ const Registration = () => {
     )
 }
 
-export default Registration;
+export default Contactdeatils;

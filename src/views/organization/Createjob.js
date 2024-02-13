@@ -29,7 +29,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { General, Registration } from './Innerpage';
+import { General, Registration, Accounts } from './Innerpage';
+import Contactdeatils from './Innerpage/Conactdetails';
 
 
 const Createjob = () => {
@@ -55,6 +56,12 @@ const Createjob = () => {
 <CNavItem>
   <CNavLink onClick={() => {setIsShown("registration")}}>Registration</CNavLink>
 </CNavItem>
+<CNavItem>
+  <CNavLink onClick={() => {setIsShown("accounts")}}>Accounts</CNavLink>
+</CNavItem>
+<CNavItem>
+  <CNavLink onClick={() => {setIsShown("contactdetails")}}>Contact Details</CNavLink>
+</CNavItem>
 {/* <CNavItem>
   <CNavLink href="#">Link</CNavLink>
 </CNavItem> */}
@@ -66,9 +73,37 @@ const Createjob = () => {
 </CNav>
         {isshown === "general" && <General />}
         {isshown === "registration" && <Registration />}
+        {isshown === "accounts" && <Accounts />}
+        {isshown === "contactdetails" && <Contactdeatils />}
 {/* <General /> */}
 {/* <Registration /> */}
+<div className='all-buttons'>
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Save
+                    </CButton>
+                </div>
+
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Save & Close
+                    </CButton>
+                </div>
+
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Save & New
+                    </CButton>
+                </div>
+
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Close
+                    </CButton>
+                </div>
+            </div>
 </div>
+
   )
 }
 

@@ -53,6 +53,7 @@ const O2D = () => {
                         <CTableHeaderCell scope="col">Type of O2D</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Plan Date</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Actual Date</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Time Delay</CTableHeaderCell>
                         <CTableHeaderCell scope="col"></CTableHeaderCell>
                         <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
                     </CTableRow>
@@ -63,11 +64,13 @@ const O2D = () => {
                         <CTableDataCell>ETA Follow Up</CTableDataCell>
                         <CTableDataCell><input type="date" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>                        
                         <CTableDataCell><input type="date" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
+                        <CTableDataCell><input type="date" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Scrutiny Document</CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
@@ -78,6 +81,7 @@ const O2D = () => {
                         <CTableDataCell>Checklist</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
 
@@ -86,12 +90,14 @@ const O2D = () => {
                         <CTableDataCell>E-Sanchit</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Checklist Approval</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
@@ -100,12 +106,14 @@ const O2D = () => {
                         <CTableDataCell>Filling BOE</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Assesment</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
@@ -114,12 +122,14 @@ const O2D = () => {
                         <CTableDataCell>Duty Call</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Examination/OOC</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
