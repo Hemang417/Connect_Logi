@@ -32,6 +32,12 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
+                      <CFormInput placeholder="Organization Code" autoComplete="organizationcode" />
+                    </CInputGroup>
+                    <CInputGroup className="mb-3">
+                      <CInputGroupText>
+                        <CIcon icon={cilUser} />
+                      </CInputGroupText>
                       <CFormInput placeholder="Username" autoComplete="username" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -61,7 +67,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              {/* <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
@@ -76,7 +82,7 @@ const Login = () => {
                     </Link>
                   </div>
                 </CCardBody>
-              </CCard>
+              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>
