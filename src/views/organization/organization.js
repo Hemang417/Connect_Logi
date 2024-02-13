@@ -106,7 +106,7 @@ const organization = () => {
           <CTableBody>
             <CTableRow>
               <th scope="row" class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                <Link to={"/Modal"}>
+                <Link to={"./Creatjob"}>
                   Edit
                 </Link>
                 {/* <a href="./Modal" target="_blank" rel="noopener noreferrer">

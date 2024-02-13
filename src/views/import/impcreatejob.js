@@ -36,6 +36,7 @@ import { D2C } from './Innerpage'
 import { DocumentUpload } from './Innerpage';
 import { Collection } from './Innerpage';
 import { Transactionhistory } from './Innerpage'
+import { Quotation } from './Innerpage'
 // import { General, Registration } from './Innerpage';
 
 
@@ -161,7 +162,7 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("registration") }}>Quotation</CNavLink>
+          <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
@@ -185,6 +186,7 @@ const impcreatejob = () => {
       {isshown === "documentupload" && <DocumentUpload />}
       {isshown === "Collection" && <Collection />}
       {isshown === "Transactionhistory" && <Transactionhistory />}
+      {isshown === "Quotation" && <Quotation />}
         {/* {isshown === "registration" && <Registration />} */}
       {/* <General /> */}
       {/* <Registration /> */}

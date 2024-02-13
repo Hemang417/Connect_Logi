@@ -5,5 +5,6 @@ import D2C from "./D2C";
 import DocumentUpload from "./DocumentUpload";
 import Collection from "./Collection";
 import Transactionhistory from "./Transactionhistory";
+import Quotation from "./Quotation";
 
-export { General, O2D, DoNDelivery, D2C, DocumentUpload, Collection, Transactionhistory };
+export { General, O2D, DoNDelivery, D2C, DocumentUpload, Collection, Transactionhistory, Quotation };

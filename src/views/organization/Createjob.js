@@ -29,8 +29,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { General, Registration, Accounts } from './Innerpage';
-import Contactdeatils from './Innerpage/Conactdetails';
+import { General, Registration, Accounts, Contactdetails } from './Innerpage';
 
 
 const Createjob = () => {
@@ -74,7 +73,7 @@ const Createjob = () => {
         {isshown === "general" && <General />}
         {isshown === "registration" && <Registration />}
         {isshown === "accounts" && <Accounts />}
-        {isshown === "contactdetails" && <Contactdeatils />}
+        {isshown === "contactdetails" && <Contactdetails />}
 {/* <General /> */}
 {/* <Registration /> */}
 <div className='all-buttons'>

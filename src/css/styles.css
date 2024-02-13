@@ -54,6 +54,11 @@
     width:100%
 }
 
+.contact-add-button{
+    color: white;
+    margin-top: 5px;
+}
+
 /* Registration */
 
 .new-regis-button{
@@ -141,5 +146,9 @@
 
 .remarks-field{
     width: 100%;
+}
+
+.impcollection-search-button{
+    padding: auto;
 }
 
