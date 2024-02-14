@@ -62,106 +62,59 @@ const Import = () => {
   </div>
 
   </CCardBody>
-
-  
-    <CCol xs={12}>
-      <CCard className="mb-2 container-div">
-        <CCardBody>
-        {/* <CDropdown>
-  <CDropdownToggle color="secondary">Job No.</CDropdownToggle>
-  <CDropdownMenu>
-    <CDropdownItem href="#">BE No.</CDropdownItem>
-    <CDropdownItem href="#">HBL/HAWB No.</CDropdownItem>
-    <CDropdownItem href="#">MBL/MAWB No.</CDropdownItem>
-    <CDropdownItem href="#">Container No.</CDropdownItem>
-  </CDropdownMenu>
-    <CFormInput type="text" size="sm" placeholder="" aria-label="sm input example"/>
-  </CDropdown> */}
-
-  <input type="text" placeholder="Job No."  className='text-field'/>
-
-  <CFormLabel className="col-sm-1 col-form-label ">Mode</CFormLabel>
-    <CDropdown className="col-sm-1 dropdown-button">
-  <CDropdownToggle color="secondary">Both</CDropdownToggle>
-  <CDropdownMenu>
-    <CDropdownItem href="#">Air</CDropdownItem>
-    <CDropdownItem href="#">Sea</CDropdownItem>
-  </CDropdownMenu>
-  </CDropdown>
-
-  <CFormLabel className="col-sm-1 col-form-label">BE Type</CFormLabel>
-    <CDropdown className="col-sm-1 dropdown-button">
-  <CDropdownToggle color="secondary">All</CDropdownToggle>
-  <CDropdownMenu>
-    <CDropdownItem href="#">Home</CDropdownItem>
-    <CDropdownItem href="#">In-Bond</CDropdownItem>
-    <CDropdownItem href="#">In-Bond</CDropdownItem>
-    <CDropdownItem href="#">SEZ-Z</CDropdownItem>
-    <CDropdownItem href="#">SEZ-M</CDropdownItem>
-    <CDropdownItem href="#">SEZ-T</CDropdownItem>
-
-  </CDropdownMenu>
-  </CDropdown>
-  <DatePicker
-        selectsStart
-        selected={startDate}
-        onChange={date => setStartDate(date)}
-        startDate={startDate}
-        className='col-form-label'
-      />
-
-  </CCardBody>
-  <div>
-  <DatePicker
-        selectsEnd
-        selected={endDate}
-        onChange={date => setEndDate(date)}
-        endDate={endDate}
-        startDate={startDate}
-        minDate={startDate}
-        className='col-form-label datepicker'
-     />
-  </div>
-  <div className='search-button'>
-  <CButton color="primary" type="submit">
-        Search
-      </CButton>
-  </div>
- 
-  </CCard>
-  </CCol>
-
-  <CCol xs={12}>
-      <CCard className="mb-2 container-div">
-        <CCardBody>
-        {/* <CDropdown>
-  <CDropdownToggle color="secondary">Job No.</CDropdownToggle>
-  <CDropdownMenu>
-    <CDropdownItem href="#">BE No.</CDropdownItem>
-    <CDropdownItem href="#">HBL/HAWB No.</CDropdownItem>
-    <CDropdownItem href="#">MBL/MAWB No.</CDropdownItem>
-    <CDropdownItem href="#">Container No.</CDropdownItem>
-  </CDropdownMenu>
-    <CFormInput type="text" size="sm" placeholder="" aria-label="sm input example"/>
-  </CDropdown> */}
-
-  <input type="text" placeholder="BE No."  className='text-field'/>
-
-  <input type="text" placeholder="HBL/HAWB No." className='text-field' />
-
-  <input type="text" placeholder="MBL/MAWB No." className='text-field' />
-
-  <input type="text" placeholder="Container No." className='text-field' />
-
-  </CCardBody>
-  <div className='search-button'>
-  <CButton color="primary" type="submit">
-        Search
-      </CButton>
-  </div>
- 
-  </CCard>
-  </CCol>
+      <CCol xs={12}>
+        <CCard className="mb-2 container-div">
+          <CCardBody>
+            <div className='grid-container'>
+            <div>
+                {/* <label for="Transport Mode" className='text-field-3'>Job No.</label> */}
+                <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>Job No.</CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                <CDropdownItem href="#">BE No.</CDropdownItem>
+                                <CDropdownItem href="#">AWB/HAWB</CDropdownItem>
+                                <CDropdownItem href="#">HBL/HAWB</CDropdownItem>
+                                <CDropdownItem href="#">Container No.</CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
+                        <input type="text" placeholder="" className='text-field-4' />
+              </div>
+            <div>
+                <label for="Mode" className='text-field-3'>Mode</label>
+                <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>Both</CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                <CDropdownItem href="#">Air</CDropdownItem>
+                                <CDropdownItem href="#">Sea</CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
+                        </div>
+              <div>
+                <label for="Job Date" className='text-field-3'>Importer Name</label>
+                <input type="text" placeholder="" className='text-field-4' />
+              </div>
+              <div>
+                <label for="Mode" className='text-field-3'>Status</label>
+                <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>Both</CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                <CDropdownItem href="#">Active</CDropdownItem>
+                                <CDropdownItem href="#">Completed</CDropdownItem>
+                                <CDropdownItem href="#">Pending</CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
+                        </div>
+                        <div className='all-buttons'>
+                <div className='search-button'>
+                    <CButton color="primary" type="submit">
+                        Search
+                    </CButton>
+                </div>
+                </div>
+            </div>
+          </CCardBody>
+        </CCard>
+      </CCol>
   
   <CForm>
   
@@ -233,6 +186,7 @@ const Import = () => {
 </CForm>
 
 </CRow>
+
 
   )
 }
