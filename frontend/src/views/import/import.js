@@ -65,7 +65,7 @@ const Import = () => {
       <CCol xs={12}>
         <CCard className="mb-2 container-div">
           <CCardBody>
-            <div className='grid-container'>
+            <div className='grid-container-import'>
             <div>
                 {/* <label for="Transport Mode" className='text-field-3'>Job No.</label> */}
                 <CDropdown>

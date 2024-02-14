@@ -78,7 +78,7 @@ const O2D = () => {
 
                     </CTableRow>
                     <CTableRow>
-                        <CTableDataCell>Checklist</CTableDataCell>
+                        <CTableDataCell>Checklist Approval</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
@@ -91,14 +91,6 @@ const O2D = () => {
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Checklist Approval</CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>

@@ -152,3 +152,22 @@
     padding: auto;
 }
 
+.dropdown-btn-branch{
+    width: 100%;
+}
+
+/* Import */
+
+.grid-container-import{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+
+.dropdown-btn{
+    background: transparent;
+    border: 1px solid black;
+}
+
+.text-field-4{
+    margin-left: 2%;
+}

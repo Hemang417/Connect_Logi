@@ -126,6 +126,14 @@ const D2C = () => {
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
+                    <CTableRow>
+                        <CTableDataCell>Miscellaneous</CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
+                    </CTableRow>
                 </CTableBody>
             </CTable>
         </div>

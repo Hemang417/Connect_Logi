@@ -56,10 +56,6 @@ const General = () => {
                                 <CDropdownMenu className="impgen-text-dropdown">
                                     <CDropdownItem href="#">Mumbai</CDropdownItem>
                                     <CDropdownItem href="#">Kolkata</CDropdownItem>
-                                    <CDropdownDivider />
-                                    {/* <Link to={"/addnewBranch"}> */}
-                                    <CDropdownItem onClick={() => setVisible(!visible)}>Add New Branch</CDropdownItem>
-                                    {/* </Link> */}
                                 </CDropdownMenu>
                             </CDropdown>
                             {/* <input type="text" placeholder="Address"/> */}
