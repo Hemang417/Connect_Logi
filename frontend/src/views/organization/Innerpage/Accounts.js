@@ -33,10 +33,26 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 // import createjob from './CreateJob';
 
-const Accounts = () => {
+const Accounts = ({ onSave }) => {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
+    const [accountData, setAccountData] = useState({
+        creditdays: ''
+      })
+
+
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setAccountData({ ...accountData, [name]: value });
+    };
+
+    const handleSave = () => {
+        onSave(accountData);
+    };
+
+
+
     return (
         <div>
             <CCol xs={12}>
@@ -51,14 +67,12 @@ const Accounts = () => {
     <CDropdownItem href="#">Add New Branch</CDropdownItem>
                             </CDropdownMenu>
                         </CDropdown> */}
-                        <input type="text" placeholder="Credit Days" className='text-field-1' />
-                        <input type="text" placeholder="GST Details" className='text-field-1' />
-                        <input type="text" placeholder="IEC Code" className='text-field-1' />
-                        {/* <div className='search-button'>
-                    <CButton type="submit" className='new-regis-button'>
-                        New
-                    </CButton>
-                </div> */}
+                        <input type="text" placeholder="Credit Days" className='text-field-1' value={accountData.creditdays} onChange={handleChange} name='creditdays'/>
+                        <div className='mb-2 search-button update-button'>
+                            <CButton color="primary" type="submit" onClick={handleSave}>
+                                Update
+                            </CButton>
+                        </div>
                     </CCardBody>
                 </CCard>
             </CCol>

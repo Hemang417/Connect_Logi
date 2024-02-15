@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -26,21 +26,48 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 // import createjob from './CreateJob';
 
 const organization = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+  const [organization, setOrganization] = useState([]);
+
+
+  useEffect(() => {
+    const renderOverview = async () => {
+      try {
+        const nameoforg = localStorage.getItem('orgname');
+        const codeoforg = localStorage.getItem('orgcode');
+
+        const response = await axios.get('http://localhost:5000/getOrg', {
+          params: {
+            orgname: nameoforg,
+            orgcode: codeoforg
+          }
+        });
+
+        setOrganization(response.data);
+      } catch (error) {
+        console.log("Error: " + error);
+      }
+    }
+    renderOverview();
+  }, [])
+
+console.log(organization);
+
   return (
     // JOB SEARCH - DROPDOWN & TEXT FIELD
     <CRow>
       <CCardBody className='button-div'>
         <div className='createjob-button'>
           <Link to={'/Createjob'}>
-          <CButton color="primary" type="submit">
-            +
-          </CButton>
+            <CButton color="primary" type="submit">
+              +
+            </CButton>
           </Link>
         </div>
         <div className='createjob-button'>
@@ -54,7 +81,7 @@ const organization = () => {
           </CButton>
         </div>
         <div className='createjob-button'>
-          <CButton class="btn btn-primary" type="button">
+          <CButton className="btn btn-primary" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon" role="img" aria-hidden="true">
               <polygon fill="var(--ci-primary-color, currentColor)" points="272 434.744 272 209.176 240 209.176 240 434.744 188.118 382.862 165.49 405.489 256 496 346.51 405.489 323.882 382.862 272 434.744" class="ci-primary"></polygon><path fill="var(--ci-primary-color, currentColor)" d="M400,161.176c0-79.4-64.6-144-144-144s-144,64.6-144,144a96,96,0,0,0,0,192h80v-32H112a64,64,0,0,1,0-128h32v-32a112,112,0,0,1,224,0v32h32a64,64,0,0,1,0,128H320v32h80a96,96,0,0,0,0-192Z" class="ci-primary"></path>
             </svg>
@@ -104,20 +131,19 @@ const organization = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            <CTableRow>
-              <th scope="row" class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                <Link to={"./Creatjob"}>
-                  Edit
-                </Link>
-                {/* <a href="./Modal" target="_blank" rel="noopener noreferrer">
-                        Edit
-                    </a>   */}
-              </th>
-              <CTableHeaderCell scope="row">Seawave Forwarding and Logistics Pvt. Ltd.</CTableHeaderCell>
-              <CTableDataCell>Prologis</CTableDataCell>
-            </CTableRow>
-
+            {organization.map((organization, index) => (
+              <CTableRow key={index}>
+                <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <Link to={"./Creatjob"}>
+                    Edit
+                  </Link>
+                </th>
+                <CTableHeaderCell scope="row">{organization.clientname}</CTableHeaderCell>
+                <CTableDataCell>{organization.alias}</CTableDataCell>
+              </CTableRow>
+            ))}
           </CTableBody>
+
         </CTable>
       </CForm>
 

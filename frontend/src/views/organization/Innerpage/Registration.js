@@ -33,10 +33,27 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 // import createjob from './CreateJob';
 
-const Registration = () => {
+const Registration = ({onSave}) => {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
+
+    const [registrationData, setRegistrationData] = useState({
+        PAN: '',
+        GST: '',
+        IEC: ''
+    })
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setRegistrationData({ ...registrationData, [name]: value });
+    };
+
+    const handleSave = () => {
+        onSave(registrationData);
+    };
+
+
     return (
         <div>
             <CCol xs={12}>
@@ -51,14 +68,19 @@ const Registration = () => {
     <CDropdownItem href="#">Add New Branch</CDropdownItem>
                             </CDropdownMenu>
                         </CDropdown> */}
-                        <input type="text" placeholder="PAN Details" className='text-field-1' />
-                        <input type="text" placeholder="GST Details" className='text-field-1' />
-                        <input type="text" placeholder="IEC Code" className='text-field-1' />
+                        <input type="text" placeholder="PAN Details" className='text-field-1' name='PAN' onChange={handleChange} value={registrationData.PAN}/>
+                        <input type="text" placeholder="GST Details" className='text-field-1' name='GST' onChange={handleChange} value={registrationData.GST}/>
+                        <input type="text" placeholder="IEC Code" className='text-field-1' name='IEC' onChange={handleChange} value={registrationData.IEC}/>
                         {/* <div className='search-button'>
                     <CButton type="submit" className='new-regis-button'>
                         New
                     </CButton>
                 </div> */}
+                <div className='mb-2 search-button update-button'>
+                            <CButton color="primary" type="submit" onClick={handleSave}>
+                                Update
+                            </CButton>
+                        </div>
                     </CCardBody>
                 </CCard>
             </CCol>

@@ -38,21 +38,33 @@ const Login = () => {
     })
 }
 
-// handling the login auth and storing the token from backend to cookie and navigating to home page
-async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-        const response = await axios.post('http://localhost:5000/auth/login', {
-          username: loginData.username,
-          password: loginData.password,
-          orgcode: loginData.orgcode
-        });
-        navigate('/dashboard');
-    } catch (error) {
-        console.log("Error: " + error);
-    }
 
+async function handleSubmit(e) {
+  e.preventDefault();
+  try {
+      const response = await axios.post('http://localhost:5000/auth/login', {
+        username: loginData.username,
+        password: loginData.password,
+        orgcode: loginData.orgcode
+      });
+      
+      if(response.status === 200){
+        // Successful login, navigate to the dashboard
+        navigate('/dashboard');
+      } else {
+        // Invalid credentials, display an error message to the user
+        // You can also clear the input fields here if needed
+        alert('Invalid credentials. Please try again.');
+      }
+  } catch (error) {
+      console.log("Error: " + error);
+      // Handle other errors (e.g., network error, server error)
+      // Display an appropriate error message to the user
+      alert('An error occurred. Please try again later.');
+  }
 }
+
+
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -91,17 +103,18 @@ async function handleSubmit(e) {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        {/* <Link to={'/dashboard'}> */}
+                        
                         <CButton color="primary" className="px-4" onClick={handleSubmit}>
                           Login
                         </CButton>
-                        {/* </Link> */}
+                        
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
                           Forgot password?
                         </CButton>
                       </CCol>
+                      
                     </CRow>
                   </CForm>
                 </CCardBody>

@@ -47,6 +47,9 @@ const Register = () => {
           orgcode: regForm.orgcode,
           repeatPassword: regForm.repeatPassword,
         });
+        localStorage.setItem('orgname', regForm.orgname);
+        localStorage.setItem('orgcode', response.data.register.orgcode);
+        
         navigate('/dashboard');
     } catch (error) {
         console.log("Error: " + error);
