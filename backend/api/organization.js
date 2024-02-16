@@ -42,3 +42,34 @@ export const OrgRender = async (orgname, orgcode) => {
         throw error;
     }
 }
+
+
+
+
+
+export const insertEmployees = async (username, password, orgcode, branchname, orgname) => {
+    try {
+        const connection = await connectMySQL();
+        console.log(username, password, orgcode, branchname, orgname);
+        // Check if the organization exists in the users table
+        const [rows] = await connection.execute(`
+            SELECT * FROM users WHERE orgcode = ? AND orgname = ?
+        `, [orgcode, orgname]);
+
+        // If the organization doesn't exist, throw an error
+        if (rows.length === 0) {
+            throw new Error('Organization does not exist');
+        }
+
+        // Insert employee data into the employees table
+        await connection.execute(`
+            INSERT INTO employees (username, password, branchname, orgcode, orgname) 
+            VALUES (?, ?, ?, ?, ?)
+        `, [username, password, branchname, orgcode, orgname]);
+
+        return { success: true, message: 'Employee inserted successfully' };
+    } catch (error) {
+        console.error('Error inserting employee data:', error.message);
+        throw error;
+    }
+}

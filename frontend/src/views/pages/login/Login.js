@@ -49,6 +49,8 @@ async function handleSubmit(e) {
       });
       
       if(response.status === 200){
+        localStorage.setItem('orgcode', response.data.orgcode);
+        localStorage.setItem('orgname', response.data.orgname);
         // Successful login, navigate to the dashboard
         navigate('/dashboard');
       } else {

@@ -5,21 +5,32 @@ import { connectMySQL } from "../config/sqlconfig.js";
 export const getTheUser = async (username, password, orgcode) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(
-            `SELECT * FROM users WHERE username = ? AND password = ? AND orgcode = ?`,
-            [username, password, orgcode]
-        );
-        // If no user is found, return null
-        if (rows.length === 0) {
-            return null;
+
+        if (username === "admin") {
+            const [rows] = await connection.execute(
+                `SELECT * FROM users WHERE username = ? AND password = ? AND orgcode = ?`,
+                [username, password, orgcode]
+            );
+            if (rows.length === 0) {
+                return null;
+            }
+            return rows[0];
+        } else {
+            const [rows] = await connection.execute(
+                `SELECT * FROM employees WHERE username = ? AND password = ? AND orgcode = ?`,
+                [username, password, orgcode]
+            );
+            if (rows.length === 0) {
+                return null;
+            }
+            return rows[0];
         }
-        // Otherwise, return the user details
-        return rows[0]; 
     } catch (error) {
         console.error('Error fetching user:', error.message);
         throw error;
     }
 }
+
 
 
 
@@ -33,7 +44,7 @@ export const insertUser = async (username, password, orgname, orgcode) => {
         const [rows] = await connection.execute(`INSERT INTO users (username, password, orgcode, orgname) VALUES (?, ?, ?, ?)`,
             [username, password, newOrgcode, orgname]
         ); // Replace orgcode with newOrgCode
-        return {rows: rows, orgcode: newOrgcode};
+        return { rows: rows, orgcode: newOrgcode };
     } catch (error) {
         console.error('Error inserting user:', error.message);
         throw error;

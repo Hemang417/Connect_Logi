@@ -318,6 +318,16 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'New User',
+    to: '/new_user',
+    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW',
+    // },
+  },
+  {
+    component: CNavItem,
     name: 'Widgets',
     to: '/widgets',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
