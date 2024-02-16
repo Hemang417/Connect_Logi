@@ -49,7 +49,8 @@ const Createjob = () => {
     city: '',
     postalCode: '',
     phoneNumber: '',
-    emailAddress: ''
+    emailAddress: '',
+    branchName: ''
   })
 
   const [registrationData, setRegistrationData] = useState({
@@ -78,13 +79,14 @@ const Createjob = () => {
     setRegistrationData(data);
   }
 
+console.log(generalData.branchName);
   async function handleSubmit(e) {
     try {
       e.preventDefault();
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const response = await axios.post('http://localhost:5000/org/store', {
-        // branchName: generalData.branchName,
+        branchName: generalData.branchName,
         clientname: generalData.clientname,
         address: generalData.address,
         country: generalData.country,
@@ -112,14 +114,14 @@ const Createjob = () => {
 
   return (
     <div>
-      <CCol xs={12}>
+      {/* <CCol xs={12}>
         <CCard className="mb-2 container-div">
           <CCardBody>
             <input type="text" placeholder="Name" className='text-field-1' />
             <input type="text" placeholder="Alias" className='text-field-1' />
           </CCardBody>
         </CCard>
-      </CCol>
+      </CCol> */}
 
       <CNav variant="tabs">
         <CNavItem>

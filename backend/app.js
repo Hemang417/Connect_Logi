@@ -50,8 +50,8 @@ app.post('/auth/signup', async (req, res) => {
 
 app.post('/org/store', async (req, res) => {
     try {
-        const { clientname, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode } = req.body;
-        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays);
+        const { clientname, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName } = req.body;
+        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, branchName);
         res.status(200).json(allstoredinDB);
     } catch (error) {
         console.log('Error during Login:', error);

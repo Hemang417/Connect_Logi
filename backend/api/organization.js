@@ -2,7 +2,7 @@ import { connectMySQL } from "../config/sqlconfig.js";
 
 
 // STORING 
-export const OrgDataStorage = async (clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays) => {
+export const OrgDataStorage = async (clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, branchName) => {
     try {
         const connection = await connectMySQL();
         // Check if data exists in the users table for the provided orgname and orgcode
@@ -16,10 +16,14 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 
         // Insert data into the organizations table
         const [rows] = await connection.execute(`
-            INSERT INTO crm_db.organizations (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode]);
+            INSERT INTO crm_db.organizations (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName]);
         
+
+        const [allrows] = await connection.execute(`INSERT INTO branches (branchname, clientname, orgcode) VALUES(?, ?, ?)`, 
+        [branchName, clientname, orgcode])
+
         return rows;
     } catch (error) {
         console.error('Error inserting organization data:', error.message);
@@ -44,9 +48,7 @@ export const OrgRender = async (orgname, orgcode) => {
 }
 
 
-
-
-
+// ADD USER VIA ADMIN API
 export const insertEmployees = async (username, password, orgcode, branchname, orgname) => {
     try {
         const connection = await connectMySQL();
@@ -73,3 +75,6 @@ export const insertEmployees = async (username, password, orgcode, branchname, o
         throw error;
     }
 }
+
+
+

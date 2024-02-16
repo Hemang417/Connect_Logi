@@ -52,7 +52,8 @@ const General = ({ onSave }) => {
         city: '',
         postalCode: '',
         phoneNumber: '',
-        emailAddress: ''
+        emailAddress: '',
+        branchName: ''
     });
 
     const handleChange = (e) => {
@@ -65,29 +66,64 @@ const General = ({ onSave }) => {
     };
 
 
+    // const handleAddBranch = () => {
+    //     if (branchName.trim() !== '') {
+    //         setGeneralData(prevState => ({
+    //             ...prevState,
+    //             branchName: [...prevState.branchName, branchName.trim()]
+    //         }));
+    //         setBranchName('');
+    //         setVisible(false);
+    //     }
+    // };
+
+    const handleAddBranch = () => {
+        // Append new branch name to the existing string
+        
+        if (generalData.branchName !== '') {
+          setGeneralData({ ...generalData, branchName: generalData.branchName });
+          setVisible(false);
+        }
+      };
+
     return (
         <div>
             <CCol xs={12}>
                 <CCard className="mb-2 container-div-general">
                     <CCardBody>
-                        <CDropdown className="text-field-1">
-                            <CDropdownToggle color="secondary">Branch Names</CDropdownToggle>
-                            <CDropdownMenu className="text-field-2">
-                                <CDropdownItem href="#">Mumbai</CDropdownItem>
-                                <CDropdownItem href="#">Kolkata</CDropdownItem>
-                                <CDropdownDivider />
-                                {/* <Link to={"/addnewBranch"}> */}
-                                <CDropdownItem onClick={() => setVisible(!visible)}>Add New Branch</CDropdownItem>
-                                {/* </Link> */}
-                            </CDropdownMenu>
-                        </CDropdown>
                         <input
                             type="text"
                             name="clientname"
                             value={generalData.clientname}
                             placeholder="Client Name"
                             onChange={handleChange}
+                            className='text-field-1'
                         />
+                        {/* <input
+                            type="text"
+                            name="clientname"
+                            value={generalData.clientname}
+                            placeholder="Alias"
+                            onChange={handleChange}
+                            className='text-field-1'
+                        /> */}
+                        <CDropdown className="text-field-1">
+                            <CDropdownToggle color="secondary">Branch Names</CDropdownToggle>
+                            <CDropdownMenu className="text-field-2">
+                                {/* <CDropdownItem href="#">Mumbai</CDropdownItem>
+                                <CDropdownItem href="#">Kolkata</CDropdownItem> */}
+                                {/* {generalData.branchName.map((branch, index) => (
+                                    <CDropdownItem key={index}>{branch}</CDropdownItem>
+                                ))} */}
+                                <CDropdownItem>
+                                {generalData.branchName}
+                                </CDropdownItem>
+                                <CDropdownDivider />
+                                {/* <Link to={"/addnewBranch"}> */}
+                                <CDropdownItem onClick={() => setVisible(!visible)} style={{ cursor: 'pointer' }}>Add New Branch</CDropdownItem>
+                                {/* </Link> */}
+                            </CDropdownMenu>
+                        </CDropdown>
                         <input
                             type="text"
                             name="address"
@@ -155,7 +191,46 @@ const General = ({ onSave }) => {
 
                 </CCard>
             </CCol>
+            <CModal
+                visible={visible}
+                onClose={() => setVisible(false)}
+                aria-labelledby="LiveDemoExampleLabel"
+            >
+                <CModalHeader onClose={() => setVisible(false)}>
+                    <CModalTitle id="LiveDemoExampleLabel">Add Branch Details</CModalTitle>
+                </CModalHeader>
+                <CModalBody >
+                    {/* <div>
+                        <input type="date" placeholder="" className='text-field-1' />
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Bill No." className='text-field-1' />
+                    </div> */}
+                    <div>
+                        <input type="text" placeholder="Branch Name"
+                            className='text-field-1' name='branchName'
+                            onChange={handleChange}
+                        />
+                    </div>
+                    
+                    {/* <div>
+                        <input type="text" placeholder="Amount" className='text-field-1' />
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Tax" className='text-field-1' />
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Grand Total" className='text-field-1' />
+                    </div> */}
 
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={() => setVisible(false)}>
+                        Close
+                    </CButton>
+                    <CButton color="primary" onClick={handleAddBranch}>Add New</CButton>
+                </CModalFooter>
+            </CModal>
         </div>
     )
 }
