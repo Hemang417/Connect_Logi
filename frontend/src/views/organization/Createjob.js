@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -32,7 +32,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { General, Registration, Accounts, Contactdetails } from './Innerpage';
 
-
 const Createjob = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
@@ -53,6 +52,63 @@ const Createjob = () => {
     branchName: ''
   })
 
+
+  const [prefilledData, setPrefilledData] = useState({
+    clientname: '',
+    address: '',
+    country: '',
+    state: '',
+    city: '',
+    postalCode: '',
+    phoneNumber: '',
+    emailAddress: '',
+    branchName: '',
+    PAN: '',
+    GST: '',
+    IEC: '',
+    creditdays: ''
+  })
+
+
+
+  useEffect(() => {
+    const fetchClientData = async () => {
+      try {
+        if(localStorage.getItem('clientname') && localStorage.getItem('alias') && localStorage.getItem('branchname')){
+
+        const response = await axios.get('http://localhost:5000/allFetch', {
+          params: {
+            clientname: localStorage.getItem('clientname'),
+            alias: localStorage.getItem('alias'),
+            branchname: localStorage.getItem('branchname')
+          }
+        });
+        const data = response.data;
+
+        setPrefilledData({
+          clientname: data.clientname,
+          address: data.address,
+          country: data.country,
+          state: data.state,
+          city: data.city,
+          postalCode: data.postalcode,
+          phoneNumber: data.phone,
+          emailAddress: data.email,
+          branchName: data.branchname,
+          PAN: data.PAN,
+          GST: data.GST,
+          IEC: data.IEC,
+          creditdays: data.creditdays
+        });
+      }
+      } catch (error) {
+        console.log('Error: ' + error);
+      }
+    };
+    fetchClientData();
+  }, []);
+
+
   const [registrationData, setRegistrationData] = useState({
     PAN: '',
     GST: '',
@@ -63,7 +119,7 @@ const Createjob = () => {
     creditdays: ''
   })
 
-
+  // console.log(allFetch);
 
   const handleSaveGeneralData = (data) => {
     setGeneralData(data);
@@ -79,7 +135,9 @@ const Createjob = () => {
     setRegistrationData(data);
   }
 
-console.log(generalData.branchName);
+
+
+
   async function handleSubmit(e) {
     try {
       e.preventDefault();
@@ -108,6 +166,30 @@ console.log(generalData.branchName);
       console.log("Error: " + error);
     }
   }
+
+  // const [fetchedOrg, setFetchedOrg] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchAll = async () => {
+  //     try {
+  //       const nameoforg = localStorage.getItem('orgname');
+  //       const codeoforg = localStorage.getItem('orgcode');
+  //       console.log(nameoforg, codeoforg);
+  //       const allData = await axios.get('http://localhost:5000/allFetch', {
+  //         params: {
+  //           orgname: nameoforg,
+  //           orgcode: codeoforg
+  //         }
+  //       })
+  //       setFetchedOrg(allData.data)
+  //     } catch (error) {
+  //       console.log("Error: " + error);
+  //     }
+  //   }
+  //   fetchAll();
+  // }, [])
+
+
 
 
 
@@ -138,9 +220,9 @@ console.log(generalData.branchName);
         </CNavItem>
 
       </CNav>
-      {isshown === "general" && <General onSave={handleSaveGeneralData} />}
-      {isshown === "registration" && <Registration onSave={handleSaveRegistrationData} />}
-      {isshown === "accounts" && <Accounts onSave={handleSaveAccountData} />}
+      {isshown === "general" && <General onSave={handleSaveGeneralData} gData={prefilledData} />}
+      {isshown === "registration" && <Registration onSave={handleSaveRegistrationData} rData={prefilledData} />}
+      {isshown === "accounts" && <Accounts onSave={handleSaveAccountData} aData={prefilledData} />}
       {isshown === "contactdetails" && <Contactdetails />}
 
       <div className='all-buttons'>

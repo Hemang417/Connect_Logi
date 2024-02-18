@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     CCard,
     CCardBody,
@@ -38,7 +38,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 // import createjob from './CreateJob';
 
-const General = ({ onSave }) => {
+const General = ({ onSave, gData }) => {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
@@ -65,6 +65,23 @@ const General = ({ onSave }) => {
         onSave(generalData);
     };
 
+    const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+        // Update prefilledData state when gData changes
+        if (gData) {
+            setGeneralData(gData);
+        }
+    }, [gData]);
+
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setPrefilledData({ ...prefilledData, [name]: value });
+    // };
+
+    // const handleSave = () => {
+    //     onSave(prefilledData);
+    // };
 
     // const handleAddBranch = () => {
     //     if (branchName.trim() !== '') {
@@ -77,14 +94,104 @@ const General = ({ onSave }) => {
     //     }
     // };
 
+
+
+
+
+
+
+
+
+
     const handleAddBranch = () => {
         // Append new branch name to the existing string
-        
+
         if (generalData.branchName !== '') {
-          setGeneralData({ ...generalData, branchName: generalData.branchName });
-          setVisible(false);
+            setGeneralData({ ...generalData, branchName: generalData.branchName });
+            setVisible(false);
+            if (!isEditing) {
+                setGeneralData(prevState => ({
+                    ...prevState,
+                    clientname: '',
+                    address: '',
+                    country: '',
+                    state: '',
+                    city: '',
+                    postalCode: '',
+                    phoneNumber: '',
+                    emailAddress: ''
+                }));
+            }
         }
-      };
+
+    };
+
+
+
+
+
+
+
+
+
+    // const handleAddBranch = () => {
+    //     const newBranchName = generalData.branchName.trim();
+
+    //     if (newBranchName !== '') {
+    //         setGeneralData({
+    //             ...generalData,
+    //             branchName: [...generalData.branchName, newBranchName]
+    //         });
+    //         // Clear the input field and hide the modal
+    //         setVisible(false);
+    //     }
+    // };
+
+
+
+
+
+
+    // const handleAddBranch = () => {
+    //     const newBranchName = generalData.branchName.trim();
+    //     if (newBranchName !== '') {
+    //         setGeneralData(prevState => ({
+    //             ...prevState,
+    //             branchName: 
+    //         }));
+    //         // Clear other form fields only if not editing
+    //         if (!isEditing) {
+    //             setGeneralData(prevState => ({
+    //                 ...prevState,
+    //                 clientname: '',
+    //                 address: '',
+    //                 country: '',
+    //                 state: '',
+    //                 city: '',
+    //                 postalCode: '',
+    //                 phoneNumber: '',
+    //                 emailAddress: ''
+    //             }));
+    //         }
+    //     }
+    // };
+
+
+
+
+
+
+
+
+
+    console.log(generalData);
+
+
+
+
+
+
+
 
     return (
         <div>
@@ -108,16 +215,16 @@ const General = ({ onSave }) => {
                             className='text-field-1'
                         /> */}
                         <CDropdown className="text-field-1">
-                            <CDropdownToggle color="secondary">Branch Names</CDropdownToggle>
+                            <CDropdownToggle color="secondary">Branch Name</CDropdownToggle>
                             <CDropdownMenu className="text-field-2">
                                 {/* <CDropdownItem href="#">Mumbai</CDropdownItem>
                                 <CDropdownItem href="#">Kolkata</CDropdownItem> */}
                                 {/* {generalData.branchName.map((branch, index) => (
                                     <CDropdownItem key={index}>{branch}</CDropdownItem>
                                 ))} */}
-                                <CDropdownItem>
-                                {generalData.branchName}
-                                </CDropdownItem>
+
+                                <CDropdownItem>{generalData.branchName}</CDropdownItem>
+
                                 <CDropdownDivider />
                                 {/* <Link to={"/addnewBranch"}> */}
                                 <CDropdownItem onClick={() => setVisible(!visible)} style={{ cursor: 'pointer' }}>Add New Branch</CDropdownItem>
@@ -212,7 +319,7 @@ const General = ({ onSave }) => {
                             onChange={handleChange}
                         />
                     </div>
-                    
+
                     {/* <div>
                         <input type="text" placeholder="Amount" className='text-field-1' />
                     </div>

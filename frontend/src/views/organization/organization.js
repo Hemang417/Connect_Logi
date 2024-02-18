@@ -27,14 +27,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-// import createjob from './CreateJob';
+
 
 const organization = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [organization, setOrganization] = useState([]);
-
+  
 
   useEffect(() => {
     const renderOverview = async () => {
@@ -48,8 +48,7 @@ const organization = () => {
             orgcode: codeoforg
           }
         });
-
-        setOrganization(response.data);
+        setOrganization([response.data]);
       } catch (error) {
         console.log("Error: " + error);
       }
@@ -57,6 +56,25 @@ const organization = () => {
     renderOverview();
   }, [])
 
+
+
+
+  async function prefillData(index) {
+    try {
+      localStorage.setItem('clientname', organization[index].clientname);
+      localStorage.setItem('alias', organization[index].alias)
+      localStorage.setItem('branchname', organization[index].branchname);
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+  }
+
+
+  function removeLocal(){
+    localStorage.removeItem('clientname');
+    localStorage.removeItem('alias');
+    localStorage.removeItem('branchname');
+  }
 console.log(organization);
 
   return (
@@ -65,7 +83,7 @@ console.log(organization);
       <CCardBody className='button-div'>
         <div className='createjob-button'>
           <Link to={'/Createjob'}>
-            <CButton color="primary" type="submit">
+            <CButton color="primary" type="submit" onClick={removeLocal}>
               +
             </CButton>
           </Link>
@@ -127,14 +145,14 @@ console.log(organization);
               <CTableHeaderCell scope="col"></CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Alias</CTableHeaderCell>
-
+              
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {organization.map((organization, index) => (
               <CTableRow key={index}>
                 <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  <Link to={"./Creatjob"}>
+                  <Link to={"/Createjob"} onClick={() => prefillData(index)}>
                     Edit
                   </Link>
                 </th>

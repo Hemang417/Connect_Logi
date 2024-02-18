@@ -33,19 +33,63 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 
 
 // RENDER ON ORGANIZATION PAGE
+// export const OrgRender = async (orgname, orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+       
+//         const [row] = await connection.execute(`
+//             SELECT clientname, alias, branchname FROM organizations WHERE orgname = ? AND orgcode = ?
+//         `, [orgname, orgcode]);
+//         return row;
+//     } catch (error) {
+//         console.error('Error fetching organization data:', error.message);
+//         throw error;
+//     }
+// }
+
+
+
+
+
+
 export const OrgRender = async (orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
        
-        const [row] = await connection.execute(`
-            SELECT clientname, alias FROM organizations WHERE orgname = ? AND orgcode = ?
+        const [rows] = await connection.execute(`
+            SELECT clientname, alias, branchname
+            FROM organizations
+            WHERE orgname = ? AND orgcode = ?
         `, [orgname, orgcode]);
-        return row;
+        
+        if (rows.length > 0) {
+            const branchNames = rows.map(row => row.branchname); // Use map instead of forEach
+            const organizationData = {
+                clientname: rows[0].clientname,
+                alias: rows[0].alias,
+                allbranchesofclient: branchNames
+            };
+            
+            return organizationData;
+        } else {
+            return null; // Handle case where organization not found
+        }
     } catch (error) {
         console.error('Error fetching organization data:', error.message);
         throw error;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 // ADD USER VIA ADMIN API
@@ -76,5 +120,17 @@ export const insertEmployees = async (username, password, orgcode, branchname, o
     }
 }
 
+
+
+export const fetchBranchData = async (clientname, alias, branchname) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`SELECT * FROM organizations WHERE clientname = ? AND alias = ? AND branchname = ?`, [clientname, alias, branchname]);
+        return rows[0];
+    } catch (error) {
+        console.error('Error inserting employee data:', error.message);
+        throw error;
+    }
+}
 
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
     CCard,
     CCardBody,
@@ -33,7 +33,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 // import createjob from './CreateJob';
 
-const Registration = ({onSave}) => {
+const Registration = ({onSave, rData}) => {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
@@ -53,6 +53,18 @@ const Registration = ({onSave}) => {
         onSave(registrationData);
     };
 
+   
+    // const [prefilledData, setPrefilledData] = useState({
+    //     PAN: '',
+    //     GST: '',
+    //     IEC: ''
+    // });
+
+    useEffect(() => {
+        if (rData) {
+            setRegistrationData(rData);
+        }
+    }, [rData]);
 
     return (
         <div>

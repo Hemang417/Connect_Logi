@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData } from './api/organization.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -63,7 +63,6 @@ app.post('/org/store', async (req, res) => {
 app.get('/getOrg', async (req, res) => {
     try {
         const { orgname, orgcode } = req.query;
-
         const renderData = await OrgRender(orgname, orgcode);
         res.status(200).json(renderData);
     } catch (error) {
@@ -91,6 +90,19 @@ app.post('/emp/store', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 })
+
+
+app.get('/allFetch', async (req, res) => {
+    try {
+        const {clientname, alias, branchname} = req.query;
+        const allDataofBranch = await fetchBranchData(clientname, alias, branchname);
+        res.json(allDataofBranch);
+    } catch (error) {
+        console.log('Error during Login:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
+
 
 
 
