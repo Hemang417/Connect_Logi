@@ -40,6 +40,7 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 //         const [row] = await connection.execute(`
 //             SELECT clientname, alias, branchname FROM organizations WHERE orgname = ? AND orgcode = ?
 //         `, [orgname, orgcode]);
+        
 //         return row;
 //     } catch (error) {
 //         console.error('Error fetching organization data:', error.message);
@@ -47,6 +48,38 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 //     }
 // }
 
+
+
+
+
+
+// export const OrgRender = async (orgname, orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+       
+//         const [rows] = await connection.execute(`
+//             SELECT clientname, alias, branchname
+//             FROM organizations
+//             WHERE orgname = ? AND orgcode = ?
+//         `, [orgname, orgcode]);
+//         console.log(rows);
+//         if (rows.length > 0) {
+//             const branchNames = rows.map(row => row.branchname); // Use map instead of forEach
+//             const organizationData = {
+//                 clientname: rows[0].clientname,
+//                 alias: rows[0].alias,
+//                 allbranchesofclient: branchNames
+//             };
+            
+//             return organizationData;
+//         } else {
+//             return null; // Handle case where organization not found
+//         }
+//     } catch (error) {
+//         console.error('Error fetching organization data:', error.message);
+//         throw error;
+//     }
+// }
 
 
 
@@ -62,15 +95,21 @@ export const OrgRender = async (orgname, orgcode) => {
             WHERE orgname = ? AND orgcode = ?
         `, [orgname, orgcode]);
         
+       
+        
         if (rows.length > 0) {
-            const branchNames = rows.map(row => row.branchname); // Use map instead of forEach
-            const organizationData = {
-                clientname: rows[0].clientname,
-                alias: rows[0].alias,
-                allbranchesofclient: branchNames
-            };
+            const clientsMap = new Map(); // Map to store clients and their branches
+            rows.forEach(row => {
+                const { clientname, alias, branchname } = row;
+                if (clientsMap.has(alias)) {
+                    clientsMap.get(alias).branchname.push(branchname);
+                } else {
+                    clientsMap.set(alias, { clientname, alias, branchname: [branchname] });
+                }
+            });
             
-            return organizationData;
+            const organizationData = Array.from(clientsMap.values());
+            return organizationData.flat(); // Flatten the array
         } else {
             return null; // Handle case where organization not found
         }
@@ -79,6 +118,14 @@ export const OrgRender = async (orgname, orgcode) => {
         throw error;
     }
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -125,8 +172,9 @@ export const insertEmployees = async (username, password, orgcode, branchname, o
 export const fetchBranchData = async (clientname, alias, branchname) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(`SELECT * FROM organizations WHERE clientname = ? AND alias = ? AND branchname = ?`, [clientname, alias, branchname]);
-        return rows[0];
+        const [row] = await connection.execute(`SELECT * FROM organizations WHERE clientname = ? AND alias = ? AND branchname = ?`, [clientname, alias, branchname]);
+       
+        return row[0];
     } catch (error) {
         console.error('Error inserting employee data:', error.message);
         throw error;
@@ -134,3 +182,47 @@ export const fetchBranchData = async (clientname, alias, branchname) => {
 }
 
 
+
+
+
+
+export const updateRow = async (orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays) => {
+    try {
+        const connection = await connectMySQL();
+        
+        const [row] = await connection.execute(`
+            UPDATE organizations
+            SET 
+                address = ?,
+                country = ?,
+                state = ?,
+                city = ?,
+                postalcode = ?,
+                phone = ?,
+                email = ?,
+                PAN = ?,
+                GST = ?,
+                IEC = ?,
+                creditdays = ?
+            WHERE 
+                orgcode = ? AND
+                orgname = ? AND
+                branchname = ? AND
+                clientname = ? AND
+                alias = ?
+        `, [
+            address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays,
+            orgcode,
+            orgname,
+            branchname,
+            clientname,
+            alias,
+        ]);
+
+        
+        return row;
+    } catch (error) {
+        console.error('Error updating row:', error.message);
+        throw error;
+    }
+}

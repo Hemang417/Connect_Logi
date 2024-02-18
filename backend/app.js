@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow } from './api/organization.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -50,8 +50,8 @@ app.post('/auth/signup', async (req, res) => {
 
 app.post('/org/store', async (req, res) => {
     try {
-        const { clientname, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName } = req.body;
-        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, branchName);
+        const { clientname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchName } = req.body;
+        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, branchName);
         res.status(200).json(allstoredinDB);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -95,6 +95,7 @@ app.post('/emp/store', async (req, res) => {
 app.get('/allFetch', async (req, res) => {
     try {
         const {clientname, alias, branchname} = req.query;
+        console.log(clientname, alias, branchname);
         const allDataofBranch = await fetchBranchData(clientname, alias, branchname);
         res.json(allDataofBranch);
     } catch (error) {
@@ -103,6 +104,21 @@ app.get('/allFetch', async (req, res) => {
     }
 })
 
+
+
+app.put('/updateData', async (req, res) => {
+    try {
+        const { orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays } = req.body;
+        
+        // Call the updateRow function to update the row in the database
+        const allDataupdate = await updateRow(orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays);
+
+        res.status(200).json(allDataupdate);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
 
 

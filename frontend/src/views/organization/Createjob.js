@@ -1,3 +1,126 @@
+// import React, { useState, useEffect } from 'react';
+// import { CButton, CNav, CNavItem, CNavLink } from '@coreui/react';
+// import { useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import { General, Registration, Accounts, Contactdetails } from './Innerpage';
+
+// const CreateJob = () => {
+//   const [activeTab, setActiveTab] = useState('general');
+//   const navigate = useNavigate();
+
+//   const [branches, setBranches] = useState([]);
+
+//   const [formData, setFormData] = useState({
+//     clientname: '',
+//     address: '',
+//     country: '',
+//     state: '',
+//     city: '',
+//     postalCode: '',
+//     phoneNumber: '',
+//     emailAddress: '',
+//     branchName: '',
+//     PAN: '',
+//     GST: '',
+//     IEC: '',
+//     creditdays: ''
+//   });
+
+
+
+
+
+//   useEffect(() => {
+//     // Fetch branches from localStorage
+//     const storedBranches = JSON.parse(localStorage.getItem('branches')) || [];
+//     setBranches(storedBranches);
+//   }, []);
+
+//   const handleTabClick = (tab) => {
+//     setActiveTab(tab);
+//   };
+
+//   const handleSaveGeneralData = (data) => {
+//     setFormData(data);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const response = await axios.post('http://localhost:5000/org/store', {
+//         ...formData
+//       });
+//       navigate('/organization#/organization');
+//     } catch (error) {
+//       console.log("Error: ", error);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <CNav variant="tabs">
+//         <CNavItem>
+//           <CNavLink onClick={() => handleTabClick('general')} active={activeTab === 'general'}>General</CNavLink>
+//         </CNavItem>
+//         <CNavItem>
+//           <CNavLink onClick={() => handleTabClick('registration')} active={activeTab === 'registration'}>Registration</CNavLink>
+//         </CNavItem>
+//         <CNavItem>
+//           <CNavLink onClick={() => handleTabClick('accounts')} active={activeTab === 'accounts'}>Accounts</CNavLink>
+//         </CNavItem>
+//         <CNavItem>
+//           <CNavLink onClick={() => handleTabClick('contactdetails')} active={activeTab === 'contactdetails'}>Contact Details</CNavLink>
+//         </CNavItem>
+//       </CNav>
+
+//       {activeTab === 'general' && (
+//         <General onSave={handleSaveGeneralData} formData={formData} branches={branches} />
+//       )}
+
+//       {activeTab === 'registration' && (
+//         <Registration formData={formData} onSave={handleSaveGeneralData}/>
+//       )}
+
+//       {activeTab === 'accounts' && (
+//         <Accounts formData={formData} onSave={handleSaveGeneralData}/>
+//       )}
+
+//       {activeTab === 'contactdetails' && (
+//         <Contactdetails formData={formData} onSave={handleSaveGeneralData}/>
+//       )}
+
+//       <div className='all-buttons'>
+//         <div className='search-button'>
+//           <CButton color="primary" type="submit" onClick={handleSubmit}>Save</CButton>
+//         </div>
+
+//         <div className='search-button'>
+//           <CButton color="primary" type="submit" onClick={handleSubmit}>Save & Close</CButton>
+//         </div>
+
+//         <div className='search-button'>
+//           <CButton color="primary" type="submit" onClick={handleSubmit}>Close</CButton>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default CreateJob;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useEffect } from 'react'
 import {
   CCard,
@@ -46,9 +169,9 @@ const Createjob = () => {
     country: '',
     state: '',
     city: '',
-    postalCode: '',
-    phoneNumber: '',
-    emailAddress: '',
+    postalcode: '',
+    phone: '',
+    email: '',
     branchName: ''
   })
 
@@ -59,9 +182,9 @@ const Createjob = () => {
     country: '',
     state: '',
     city: '',
-    postalCode: '',
-    phoneNumber: '',
-    emailAddress: '',
+    postal: '',
+    phone: '',
+    email: '',
     branchName: '',
     PAN: '',
     GST: '',
@@ -74,33 +197,33 @@ const Createjob = () => {
   useEffect(() => {
     const fetchClientData = async () => {
       try {
-        if(localStorage.getItem('clientname') && localStorage.getItem('alias') && localStorage.getItem('branchname')){
+        if (localStorage.getItem('clientname') && localStorage.getItem('alias') && localStorage.getItem('branchname')) {
 
-        const response = await axios.get('http://localhost:5000/allFetch', {
-          params: {
-            clientname: localStorage.getItem('clientname'),
-            alias: localStorage.getItem('alias'),
-            branchname: localStorage.getItem('branchname')
-          }
-        });
-        const data = response.data;
+          const response = await axios.get('http://localhost:5000/allFetch', {
+            params: {
+              clientname: localStorage.getItem('clientname'),
+              alias: localStorage.getItem('alias'),
+              branchname: localStorage.getItem('branchname')
+            }
+          });
+          const data = response.data;
 
-        setPrefilledData({
-          clientname: data.clientname,
-          address: data.address,
-          country: data.country,
-          state: data.state,
-          city: data.city,
-          postalCode: data.postalcode,
-          phoneNumber: data.phone,
-          emailAddress: data.email,
-          branchName: data.branchname,
-          PAN: data.PAN,
-          GST: data.GST,
-          IEC: data.IEC,
-          creditdays: data.creditdays
-        });
-      }
+          setPrefilledData({
+            clientname: data.clientname,
+            address: data.address,
+            country: data.country,
+            state: data.state,
+            city: data.city,
+            postalcode: data.postalcode,
+            phone: data.phone,
+            email: data.email,
+            branchName: data.branchname,
+            PAN: data.PAN,
+            GST: data.GST,
+            IEC: data.IEC,
+            creditdays: data.creditdays
+          });
+        }
       } catch (error) {
         console.log('Error: ' + error);
       }
@@ -143,6 +266,7 @@ const Createjob = () => {
       e.preventDefault();
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
+
       const response = await axios.post('http://localhost:5000/org/store', {
         branchName: generalData.branchName,
         clientname: generalData.clientname,
@@ -150,9 +274,9 @@ const Createjob = () => {
         country: generalData.country,
         state: generalData.state,
         city: generalData.city,
-        postalCode: generalData.postalCode,
-        phoneNumber: generalData.phoneNumber,
-        emailAddress: generalData.emailAddress,
+        postalcode: generalData.postalcode,
+        phone: generalData.phone,
+        email: generalData.email,
         PAN: registrationData.PAN,
         GST: registrationData.GST,
         IEC: registrationData.IEC,
@@ -160,7 +284,7 @@ const Createjob = () => {
         orgname: nameoforg,
         orgcode: codeoforg
       })
-
+      localStorage.removeItem('isEditing')
       navigate('/organization#/organization')
     } catch (error) {
       console.log("Error: " + error);
@@ -188,6 +312,47 @@ const Createjob = () => {
   //   }
   //   fetchAll();
   // }, [])
+
+
+  function redirectToOrg() {
+    navigate('/organization#/organization')
+  }
+
+
+
+  async function updateData(e) {
+    try {
+      e.preventDefault();
+      const nameoforg = localStorage.getItem('orgname');
+      const codeoforg = localStorage.getItem('orgcode');
+      const alias = localStorage.getItem('alias');
+      // const clientname = localStorage.getItem('clientname');
+      const selectedBranchName = localStorage.getItem('selectedBranchName');
+      console.log(nameoforg, codeoforg, alias, selectedBranchName, generalData, registrationData, accountData);
+      const response = await axios.put('http://localhost:5000/updateData', {
+        alias: alias,
+        branchname: selectedBranchName,
+        clientname: generalData.clientname,
+        address: generalData.address,
+        country: generalData.country,
+        state: generalData.state,
+        city: generalData.city,
+        postalcode: generalData.postalcode,
+        phone: generalData.phone,
+        email: generalData.email,
+        PAN: registrationData.PAN,
+        GST: registrationData.GST,
+        IEC: registrationData.IEC,
+        creditdays: accountData.creditdays,
+        orgname: nameoforg,
+        orgcode: codeoforg
+      })
+      
+      navigate('/organization#/organization')
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+  }
 
 
 
@@ -227,8 +392,8 @@ const Createjob = () => {
 
       <div className='all-buttons'>
         <div className='search-button'>
-          <CButton color="primary" type="submit">
-            Save
+          <CButton color="primary" type="submit" onClick={updateData}>
+            Update
           </CButton>
         </div>
 
@@ -239,7 +404,7 @@ const Createjob = () => {
         </div>
 
         <div className='search-button'>
-          <CButton color="primary" type="submit">
+          <CButton color="primary" type="submit" onClick={redirectToOrg}>
             Close
           </CButton>
         </div>
