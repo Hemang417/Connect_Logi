@@ -257,3 +257,16 @@ export const fetchAllContacts = async (branchname, orgname, orgcode) => {
         throw error;
     }
 }
+
+
+
+export const deleteContact = async (email, mobile, contactName, designation, department) => {
+    try {
+        const connection = await connectMySQL();
+        const row = await connection.execute(`DELETE FROM contacts WHERE email = ? AND mobile = ? AND contactName = ? AND designation = ? AND department = ?`, [email, mobile, contactName, designation, department]);
+        return row;
+    } catch (error) {
+        console.error('Error updating row:', error.message);
+        throw error;
+    }
+}

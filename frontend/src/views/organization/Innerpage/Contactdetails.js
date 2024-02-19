@@ -97,7 +97,7 @@ const Contactdetails = () => {
             console.log(error);
         }
     }
-    
+
 
 
 
@@ -119,8 +119,36 @@ const Contactdetails = () => {
         fetchAllpeopleContact();
     }, []);
 
+// const newContacts = allcontacts.filter((contact, i) => i !== index);
+        // setAllContacts(newContacts);
+
+   
 
 
+        async function handleDelete(index) {
+            try {
+                const contactToDelete = allcontacts[index];
+                const { email, mobile, contactName, designation, department } = contactToDelete;
+        
+                // Send DELETE request to backend with contact data to identify and delete the contact
+                const response = await axios.delete('http://localhost:5000/deleteContact', {
+                    data: {
+                        email,
+                        mobile,
+                        contactName,
+                        designation,
+                        department
+                    }
+                });
+                fetchAllContacts();
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        
+
+        
 
 
     const handleChange = (e) => {
@@ -141,6 +169,10 @@ const Contactdetails = () => {
                             <CTableHeaderCell scope="col">Department</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Mobile</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Email ID</CTableHeaderCell>
+                            <CTableHeaderCell scope="col"></CTableHeaderCell>
+                            <CTableDataCell>
+
+                            </CTableDataCell>
                         </CTableRow>
                     </CTableHead>
 
@@ -153,13 +185,24 @@ const Contactdetails = () => {
                                 <CTableDataCell>{contact.designation}</CTableDataCell>
                                 <CTableDataCell>{contact.department}</CTableDataCell>
                                 <CTableDataCell>{contact.mobile}</CTableDataCell>
+                                
+                                <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <Link>
+                                        Edit
+                                    </Link>
+                                </th>
+                                <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <Link className='delete-text-color' onClick={() => handleDelete(index)}>
+                                        Delete
+                                    </Link>
+                                </th>
                             </CTableRow>
-                        )) : 
-                        <CTableRow>
-                            <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                No contacts found for this branch and for this client
-                            </th>
-                        </CTableRow>
+                        )) :
+                            <CTableRow>
+                                <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    No contacts found for this branch and for this client
+                                </th>
+                            </CTableRow>
 
                         }
                     </CTableBody>
