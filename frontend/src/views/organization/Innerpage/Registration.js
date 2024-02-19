@@ -285,6 +285,7 @@ const Registration = ({ onSave, rData }) => {
                         }
                     })
                     setRegistrationData(response.data);
+                    
                 } catch (error) {
                     console.log("Error: " + error);
                 }
@@ -294,13 +295,15 @@ const Registration = ({ onSave, rData }) => {
         if (localStorage.getItem('isEditing')) {
             setIsEditing(true);
             // Clear the GST field
+            
             setRegistrationData(prevData => ({
                 ...prevData,
-                GST: ''
+                GST: '',
+                PAN: '',
+                IEC: ''
             }));
         }
     }, []);
-
 
 
 

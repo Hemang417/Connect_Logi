@@ -34,7 +34,7 @@
 //   const [startDate, setStartDate] = useState();
 //   const [endDate, setEndDate] = useState();
 //   const [organization, setOrganization] = useState([]);
-  
+
 
 //   useEffect(() => {
 //     const renderOverview = async () => {
@@ -146,7 +146,7 @@
 //               <CTableHeaderCell scope="col"></CTableHeaderCell>
 //               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
 //               <CTableHeaderCell scope="col">Alias</CTableHeaderCell>
-              
+
 //             </CTableRow>
 //           </CTableHead>
 //           <CTableBody>
@@ -223,10 +223,13 @@ const organization = () => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [organization, setOrganization] = useState([]);
-  
+  // const [searchName, setSearchName] = useState('');
+  // const [searchAlias, setSearchAlias] = useState('');
+
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
-    const renderOverview = async () => {
+   const renderOverview = async () => {
       try {
         const nameoforg = localStorage.getItem('orgname');
         const codeoforg = localStorage.getItem('orgcode');
@@ -250,28 +253,65 @@ const organization = () => {
 
 
 
-  
-
-
-
   async function prefillData(index) {
     try {
       localStorage.setItem('clientname', organization[index].clientname);
       localStorage.setItem('alias', organization[index].alias)
       localStorage.setItem('branchname', organization[index].branchname);
+      localStorage.setItem('selectedBranchName', organization[index].branchname[0])
     } catch (error) {
       console.log("Error: " + error);
     }
   }
 
 
-  function removeLocal(){
+  function removeLocal() {
     localStorage.removeItem('clientname');
     localStorage.removeItem('alias');
     localStorage.removeItem('branchname');
     localStorage.removeItem('selectedBranchName');
     localStorage.removeItem('isEditing')
   }
+
+
+
+
+
+
+  const handleSearch = async () => {
+    // Check if there is a search value
+    if (searchValue.trim() !== '') {
+      // Filter organizations based on searchValue
+      const filteredOrg = organization.filter(org => {
+        const clientname = org.clientname.toLowerCase();
+        const alias = org.alias.toLowerCase();
+        const searchTerm = searchValue.toLowerCase();
+        return clientname.includes(searchTerm) || alias.includes(searchTerm);
+      });
+      
+      setOrganization(filteredOrg);
+    } else {
+      // If no search value, display all organizations again
+      const nameoforg = localStorage.getItem('orgname');
+      const codeoforg = localStorage.getItem('orgcode');
+  
+      try {
+        const response = await axios.get('http://localhost:5000/getOrg', {
+          params: {
+            orgname: nameoforg,
+            orgcode: codeoforg
+          }
+        });
+        setOrganization(response.data);
+      } catch (error) {
+        console.log("Error: " + error);
+      }
+    }
+  };
+  
+
+
+
 
 
   return (
@@ -321,15 +361,43 @@ const organization = () => {
     <CFormInput type="text" size="sm" placeholder="" aria-label="sm input example"/>
   </CDropdown> */}
 
-            <input type="text" placeholder="Name" className='text-field' />
+            {/* <input type="text" placeholder="Name" className='text-field' />
 
-            <input type="text" placeholder="Alias" className='text-field' />
+            <input type="text" placeholder="Alias" className='text-field' /> */}
+
+
+
+            {/* <input
+              type="text"
+              placeholder="Name"
+              className="text-field"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Alias"
+              className="text-field"
+              value={searchAlias}
+              onChange={(e) => setSearchName(e.target.value)}
+            /> */}
+
+
+
+            <input
+              type='text' placeholder="Search Client" className="text-field" 
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+
+
+
 
           </CCardBody>
           <div className='search-button'>
-            <CButton color="primary" type="submit">
+            <CButton color="primary" type="submit" onClick={handleSearch}>
               Search
             </CButton>
+            
           </div>
 
         </CCard>
@@ -343,21 +411,32 @@ const organization = () => {
               <CTableHeaderCell scope="col"></CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Alias</CTableHeaderCell>
-              
+
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {organization.map((organization, index) => (
-              <CTableRow key={index}>
+
+            {organization && organization.length > 0 ?
+              organization.map((org, index) => (
+                <CTableRow key={index}>
+                  <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <Link to={"/Createjob"} onClick={() => prefillData(index)}>
+                      Edit
+                    </Link>
+                  </th>
+                  <CTableHeaderCell scope="row">{org.clientname}</CTableHeaderCell>
+                  <CTableDataCell>{org.alias}</CTableDataCell>
+                </CTableRow>
+              )) :
+              <CTableRow>
                 <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  <Link to={"/Createjob"} onClick={() => prefillData(index)}>
-                    Edit
-                  </Link>
+                  No organizations found
                 </th>
-                <CTableHeaderCell scope="row">{organization.clientname}</CTableHeaderCell>
-                <CTableDataCell>{organization.alias}</CTableDataCell>
               </CTableRow>
-            ))}
+            }
+
+
+
           </CTableBody>
 
         </CTable>

@@ -548,6 +548,8 @@ const General = ({ onSave, gData }) => {
         if (generalData.branchName !== '') {
             setGeneralData({ ...generalData, branchName: generalData.branchName });
             localStorage.setItem('isEditing', true);
+            localStorage.setItem('selectedBranchName',generalData.branchName);
+            
             setVisible(false);
             if (!isEditing) {
                 setGeneralData(prevState => ({
@@ -702,7 +704,7 @@ async function handlebranchchange(index){
                             className='text-field-1'
                         /> */}
                         <CDropdown className="text-field-1">
-                            <CDropdownToggle color="secondary">Branch Name</CDropdownToggle>
+                            <CDropdownToggle color="secondary">{localStorage.getItem('selectedBranchName')}</CDropdownToggle>
                             <CDropdownMenu className="text-field-2">
                                 {/* <CDropdownItem href="#">Mumbai</CDropdownItem>
                                 <CDropdownItem href="#">Kolkata</CDropdownItem> */}

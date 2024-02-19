@@ -266,7 +266,7 @@ const Createjob = () => {
       e.preventDefault();
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
-
+      console.log(nameoforg, codeoforg, generalData, registrationData, accountData);
       const response = await axios.post('http://localhost:5000/org/store', {
         branchName: generalData.branchName,
         clientname: generalData.clientname,
