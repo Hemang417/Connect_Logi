@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts } from './api/organization.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -76,7 +76,7 @@ app.get('/getOrg', async (req, res) => {
 app.post('/emp/store', async (req, res) => {
     try {
         const {username, password, orgcode, branchname, repeatPassword, orgname} = req.body;
-        console.log(username, password, orgcode, branchname, repeatPassword, orgname);
+        
         if(!username || !password || !orgcode || !branchname || !orgname){
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
@@ -95,7 +95,7 @@ app.post('/emp/store', async (req, res) => {
 app.get('/allFetch', async (req, res) => {
     try {
         const {clientname, alias, branchname} = req.query;
-        console.log(clientname, alias, branchname);
+        
         const allDataofBranch = await fetchBranchData(clientname, alias, branchname);
         res.json(allDataofBranch);
     } catch (error) {
@@ -119,6 +119,31 @@ app.put('/updateData', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+
+app.post('/storeContact', async (req, res) => {
+    try {
+        const {contactName, designation, department, mobile, email, branchname, orgname, orgcode} = req.body;
+        const contactStore = await insertContact(contactName, designation, department, mobile, email, branchname, orgname, orgcode);
+        return res.status(200).json(contactStore);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
+
+
+app.get('/getAllContacts', async (req, res) => {
+    try {
+        const {branchname, orgname, orgcode} = req.query;
+        const allContacts = await fetchAllContacts(branchname, orgname, orgcode);
+        res.json(allContacts);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
+
 
 
 
