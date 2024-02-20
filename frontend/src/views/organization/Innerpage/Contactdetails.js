@@ -153,10 +153,10 @@ const Contactdetails = () => {
         const handleEdit = (index) => {
             const contactToEdit = allcontacts[index];
             setContact(contactToEdit);
-            // seteditVisible(true);
+            seteditVisible(true);
             setVisible(true); // Open the modal for editing
 
-            handleUpdate();
+            // handleUpdate();
 
 
         };
@@ -165,12 +165,18 @@ const Contactdetails = () => {
         const handleUpdate = async () => {
             try {
                 // Send a PUT request to update the contact
+                const codeoforg = localStorage.getItem('orgcode');
+                const nameoforg = localStorage.getItem('orgname');
+                const branchname = localStorage.getItem('selectedBranchName');
                 const response = await axios.put('http://localhost:5000/updateContact', {
                     contactName: contact.contactName,
                     designation: contact.designation,
                     department: contact.department,
                     mobile: contact.mobile,
                     email: contact.email,
+                    branchname: branchname,
+                    orgname: nameoforg,
+                    orgcode: codeoforg
                 });
                 
                 // Fetch updated contacts after editing
@@ -274,9 +280,15 @@ const Contactdetails = () => {
                         Close
                     </CButton>
                     {
-                        editVisible ? <CButton color="primary">Update</CButton>:
-                        <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
+                        // If the modal is opened for editing, show the update button
+                        // Otherwise, show the add new button
+                        editVisible ?
+                            <CButton color="primary" onClick={handleUpdate}>Update</CButton> :
+                            <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
+                    
                     }
+                    {/* <CButton color="primary" onClick={handleSubmit}>Add New</CButton> */}
+                   
                     
                     
                 </CModalFooter>
