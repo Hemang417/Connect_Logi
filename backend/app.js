@@ -50,8 +50,8 @@ app.post('/auth/signup', async (req, res) => {
 
 app.post('/org/store', async (req, res) => {
     try {
-        const { clientname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchName } = req.body;
-        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, branchName);
+        const { clientname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username } = req.body;
+        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, branchName, username);
         res.status(200).json(allstoredinDB);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -84,7 +84,7 @@ app.post('/emp/store', async (req, res) => {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
         const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname);
-
+        res.status(200).json(allStorageofemp);
     } catch (error) {
         console.log('Error during Login:', error);
         res.status(500).json({ message: 'Internal Server Error' });

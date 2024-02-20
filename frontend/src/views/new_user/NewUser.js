@@ -43,7 +43,7 @@ const NewUser = () => {
         e.preventDefault();
         try {
             const nameoforg = localStorage.getItem('orgname')
-            console.log(nameoforg);
+            
             const response = await axios.post('http://localhost:5000/emp/store', {
                 username: regForm.username,
                 password: regForm.password,
@@ -62,7 +62,11 @@ const NewUser = () => {
             });
             // localStorage.setItem('orgname', regForm.orgname);
             // localStorage.setItem('orgcode', response.data.register.orgcode);
-            navigate('/dashboard')
+            if(response.statusCode === 200){
+                navigate('/dashboard');
+            }
+            
+            navigate('/dashboard');
         } catch (error) {
             console.log("Error: " + error);
         }

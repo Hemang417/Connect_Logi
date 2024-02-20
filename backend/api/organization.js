@@ -2,7 +2,7 @@ import { connectMySQL } from "../config/sqlconfig.js";
 
 
 // STORING 
-export const OrgDataStorage = async (clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, branchName) => {
+export const OrgDataStorage = async (clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, branchName, username) => {
     try {
         const connection = await connectMySQL();
         // Check if data exists in the users table for the provided orgname and orgcode
@@ -16,9 +16,9 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 
         // Insert data into the organizations table
         const [rows] = await connection.execute(`
-            INSERT INTO crm_db.organizations (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName]);
+            INSERT INTO crm_db.organizations (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname, username)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username]);
 
 
         const [allrows] = await connection.execute(`INSERT INTO branches (branchname, clientname, orgcode) VALUES(?, ?, ?)`,
