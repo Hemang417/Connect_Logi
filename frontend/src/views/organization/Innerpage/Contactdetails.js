@@ -38,6 +38,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 // import createjob from './CreateJob';
 
 const Contactdetails = () => {
@@ -76,7 +77,9 @@ const Contactdetails = () => {
 
             setVisible(false);
             fetchAllContacts();
+            toast.success('Contact added successfully');
         } catch (error) {
+            toast.error('Not stored')
             console.log(error);
         }
     }
@@ -141,8 +144,9 @@ const Contactdetails = () => {
                     }
                 });
                 fetchAllContacts();
-                
+                toast.success('Contact deleted successfully')
             } catch (error) {
+                toast.error('Error deleting contact')
                 console.log(error);
             }
         }
@@ -182,8 +186,9 @@ const Contactdetails = () => {
                 // Fetch updated contacts after editing
                 fetchAllContacts();
                 setVisible(false); // Close the modal after editing
-               
+                toast.success('Contact updated successfully')
             } catch (error) {
+                toast.error('Error updating contact')
                 console.log(error);
             }
         };

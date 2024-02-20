@@ -216,7 +216,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-
+import {useLocation} from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const organization = () => {
   const [date, setDate] = useState(new Date());
@@ -226,7 +227,12 @@ const organization = () => {
   // const [searchName, setSearchName] = useState('');
   // const [searchAlias, setSearchAlias] = useState('');
 
+  const location = useLocation();
   const [searchValue, setSearchValue] = useState('');
+  
+  if(location.pathname=='/organization'){
+    localStorage.removeItem('updateBtn')
+  }
 
   useEffect(() => {
    const renderOverview = async () => {
@@ -258,14 +264,18 @@ const organization = () => {
       localStorage.setItem('clientname', organization[index].clientname);
       localStorage.setItem('alias', organization[index].alias)
       localStorage.setItem('branchname', organization[index].branchname);
-      localStorage.setItem('selectedBranchName', organization[index].branchname[0])
+      localStorage.setItem('selectedBranchName', organization[index].branchname[0]);
+      localStorage.setItem('updateBtn', true);
     } catch (error) {
+      toast.error(error)
       console.log("Error: " + error);
     }
   }
 
 
   function removeLocal() {
+    toast.success('Create new client now')
+    localStorage.setItem('updateBtn', false);
     localStorage.removeItem('clientname');
     localStorage.removeItem('alias');
     localStorage.removeItem('branchname');

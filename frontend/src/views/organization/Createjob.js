@@ -154,6 +154,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { General, Registration, Accounts, Contactdetails } from './Innerpage';
+import toast from 'react-hot-toast'
 
 const Createjob = () => {
   const [date, setDate] = useState(new Date());
@@ -287,8 +288,10 @@ const Createjob = () => {
         username: employeename
       })
       localStorage.removeItem('isEditing');
+      toast.success('Stored client successfully');
       navigate('/organization#/organization')
     } catch (error) {
+      toast.error('Error in storing client successfully')
       console.log("Error: " + error);
     }
   }
@@ -322,16 +325,18 @@ const Createjob = () => {
 
 
 
+
+
   async function updateData(e) {
     try {
       e.preventDefault();
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const alias = localStorage.getItem('alias');
-      // const clientname = localStorage.getItem('clientname');
       const selectedBranchName = localStorage.getItem('selectedBranchName');
-      console.log(nameoforg, codeoforg, alias, selectedBranchName, generalData, registrationData, accountData);
-      const response = await axios.put('http://localhost:5000/updateData', {
+  
+      // Fetch the latest data from state variables
+      const dataToUpdate = {
         alias: alias,
         branchname: selectedBranchName,
         clientname: generalData.clientname,
@@ -348,15 +353,65 @@ const Createjob = () => {
         creditdays: accountData.creditdays,
         orgname: nameoforg,
         orgcode: codeoforg
-      })
+      };
       
-      navigate('/organization#/organization')
+      // Send update request with the latest data
+      const response = await axios.put('http://localhost:5000/updateData', dataToUpdate);
+      toast.success('Updated data successfully')
+      // Redirect after successful update
+      navigate('/organization#/organization');
     } catch (error) {
+      toast.error('Error updating data')
       console.log("Error: " + error);
     }
   }
+  
 
 
+
+
+
+
+
+
+
+
+
+
+
+  // async function updateData(e) {
+  //   try {
+  //     e.preventDefault();
+  //     const nameoforg = localStorage.getItem('orgname');
+  //     const codeoforg = localStorage.getItem('orgcode');
+  //     const alias = localStorage.getItem('alias');
+  //     // const clientname = localStorage.getItem('clientname');
+  //     const selectedBranchName = localStorage.getItem('selectedBranchName');
+  //     console.log(generalData, registrationData, accountData);
+  //     const response = await axios.put('http://localhost:5000/updateData', {
+  //       alias: alias,
+  //       branchname: selectedBranchName,
+  //       clientname: generalData.clientname,
+  //       address: generalData.address,
+  //       country: generalData.country,
+  //       state: generalData.state,
+  //       city: generalData.city,
+  //       postalcode: generalData.postalcode,
+  //       phone: generalData.phone,
+  //       email: generalData.email,
+  //       PAN: registrationData.PAN,
+  //       GST: registrationData.GST,
+  //       IEC: registrationData.IEC,
+  //       creditdays: accountData.creditdays,
+  //       orgname: nameoforg,
+  //       orgcode: codeoforg
+  //     })
+
+  //     navigate('/organization#/organization')
+  //   } catch (error) {
+  //     console.log("Error: " + error);
+  //   }
+  // }
 
 
 
@@ -393,7 +448,36 @@ const Createjob = () => {
       {isshown === "contactdetails" && <Contactdetails />}
 
       <div className='all-buttons'>
+
+        {localStorage.getItem('updateBtn') === 'true' ? (
+          <div className='search-button'>
+            <CButton color="primary" type="submit" onClick={updateData}>
+              Update
+            </CButton>
+          </div>
+        ) : (
+          <div className='search-button'>
+            <CButton color="primary" type="submit" onClick={handleSubmit}>
+              Save & Close
+            </CButton>
+          </div>
+        )}
+
+
+
+        {/* <div className='search-button'>
+          <CButton color="primary" type="submit" onClick={updateData}>
+            Update
+          </CButton>
+        </div> 
+
         <div className='search-button'>
+          <CButton color="primary" type="submit" onClick={handleSubmit}>
+            Save & Close
+          </CButton>
+        </div> */}
+
+        {/* <div className='search-button'>
           <CButton color="primary" type="submit" onClick={updateData}>
             Update
           </CButton>
@@ -403,7 +487,7 @@ const Createjob = () => {
           <CButton color="primary" type="submit" onClick={handleSubmit}>
             Save & Close
           </CButton>
-        </div>
+        </div> */}
 
         <div className='search-button'>
           <CButton color="primary" type="submit" onClick={redirectToOrg}>

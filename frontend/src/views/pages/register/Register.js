@@ -15,6 +15,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const Register = () => {
 
@@ -49,9 +50,10 @@ const Register = () => {
         });
         localStorage.setItem('orgname', regForm.orgname);
         localStorage.setItem('orgcode', response.data.register.orgcode);
-        
+        toast.success('Registration successful')
         navigate('/dashboard');
     } catch (error) {
+      toast.error('Registration failed')
         console.log("Error: " + error);
     }
 }

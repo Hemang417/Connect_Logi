@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -15,12 +15,13 @@ import {
   CDropdown,
   CDropdownToggle,
   CDropdownMenu,
-  CDropdownItem
+  CDropdownItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,25 +34,29 @@ const Login = () => {
 
   function handleChange(e) {
     setloginData({
-        ...loginData,
-        [e.target.name]: e.target.value
+      ...loginData,
+      [e.target.name]: e.target.value
     })
-}
+  }
 
 
-async function handleSubmit(e) {
-  e.preventDefault();
-  try {
+
+
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
       const response = await axios.post('http://localhost:5000/auth/login', {
         username: loginData.username,
         password: loginData.password,
         orgcode: loginData.orgcode
       });
-      
-      if(response.status === 200){
+
+      if (response.status === 200) {
         localStorage.setItem('orgcode', response.data.orgcode);
         localStorage.setItem('orgname', response.data.orgname);
         localStorage.setItem('username', response.data.username);
+        toast.success('Logged in successfully. Navigating to dashboard.');
         // Successful login, navigate to the dashboard
         navigate('/dashboard');
       } else {
@@ -59,13 +64,13 @@ async function handleSubmit(e) {
         // You can also clear the input fields here if needed
         alert('Invalid credentials. Please try again.');
       }
-  } catch (error) {
+    } catch (error) {
       console.log("Error: " + error);
       // Handle other errors (e.g., network error, server error)
       // Display an appropriate error message to the user
       alert('An error occurred. Please try again later.');
+    }
   }
-}
 
 
 
@@ -84,13 +89,13 @@ async function handleSubmit(e) {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Organization Code" autoComplete="organizationcode" onChange={handleChange} name="orgcode"/>
+                      <CFormInput placeholder="Organization Code" autoComplete="organizationcode" onChange={handleChange} name="orgcode" />
                     </CInputGroup>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" onChange={handleChange} name="username"/>
+                      <CFormInput placeholder="Username" autoComplete="username" onChange={handleChange} name="username" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -106,18 +111,18 @@ async function handleSubmit(e) {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        
+
                         <CButton color="primary" className="px-4" onClick={handleSubmit}>
                           Login
                         </CButton>
-                        
+
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
                           Forgot password?
                         </CButton>
                       </CCol>
-                      
+
                     </CRow>
                   </CForm>
                 </CCardBody>
@@ -138,6 +143,7 @@ async function handleSubmit(e) {
                   </div>
                 </CCardBody>
               </CCard> */}
+              
             </CCardGroup>
           </CCol>
         </CRow>

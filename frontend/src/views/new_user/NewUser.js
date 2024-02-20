@@ -14,7 +14,8 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilBuilding } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from 'axios';
+import toast from 'react-hot-toast'
 
 const NewUser = () => {
 
@@ -63,11 +64,13 @@ const NewUser = () => {
             // localStorage.setItem('orgname', regForm.orgname);
             // localStorage.setItem('orgcode', response.data.register.orgcode);
             if(response.statusCode === 200){
+                toast.success('New user added successfully')
                 navigate('/dashboard');
             }
             
             navigate('/dashboard');
         } catch (error) {
+            toast.error('Error creating new user')
             console.log("Error: " + error);
         }
     }

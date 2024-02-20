@@ -445,6 +445,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
+import toast from 'react-hot-toast';
 // import createjob from './CreateJob';
 
 const General = ({ onSave, gData }) => {
@@ -549,7 +550,7 @@ const General = ({ onSave, gData }) => {
             setGeneralData({ ...generalData, branchName: generalData.branchName });
             localStorage.setItem('isEditing', true);
             localStorage.setItem('selectedBranchName',generalData.branchName);
-            
+            toast.success('Branches added successfully')
             setVisible(false);
             if (!isEditing) {
                 setGeneralData(prevState => ({
@@ -670,6 +671,7 @@ async function handlebranchchange(index){
             }
         })
         setGeneralData(response.data);
+        toast.success('Branched switched successfully')
     } catch (error) {
         console.log("Error: " + error);
     }
