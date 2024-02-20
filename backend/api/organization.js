@@ -270,3 +270,16 @@ export const deleteContact = async (email, mobile, contactName, designation, dep
         throw error;
     }
 }
+
+
+export const updateContact = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const row = await connection.execute(`UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ?`,
+            [contactName, designation, department, mobile, email, branchname, orgname, orgcode]);
+        return row;
+    } catch (error) {
+        console.error('Error updating row:', error.message);
+        throw error;
+    }
+}

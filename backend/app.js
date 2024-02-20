@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact } from './api/organization.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -162,6 +162,17 @@ app.delete('/deleteContact', async (req, res) => {
 })
 
 
+
+app.put('/updateContact', async(req, res) => {
+    try {
+        const { contactName, designation, department, mobile, email, branchname, orgname, orgcode } = req.body;
+        const contactStore = await updateContact(contactName, designation, department, mobile, email, branchname, orgname, orgcode);
+        return res.status(200).json(contactStore);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
 
 
 app.listen(PORT, () => {

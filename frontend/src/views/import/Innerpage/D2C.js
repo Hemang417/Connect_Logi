@@ -53,8 +53,8 @@ const D2C = () => {
                         <CTableHeaderCell scope="col">Type of Delivery to Dispatch</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Plan Date</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Actual Date</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Time Delay</CTableHeaderCell>
                         <CTableHeaderCell scope="col"></CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Time Delay</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>
@@ -64,74 +64,74 @@ const D2C = () => {
                         <CTableDataCell>Shipping Line</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>                        
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                        
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>                   
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>CFS</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
 
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Stamp Duty</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>               
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell> 
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>               
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
 
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Custom Duty</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>    
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>    
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Insurance</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>LR/Empty Slip/Bill</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Billing</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>  
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Disptach</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell> 
+                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell> 
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                     <CTableRow>
                         <CTableDataCell>Miscellaneous</CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>  
                         <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                         <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
                     </CTableRow>
                 </CTableBody>

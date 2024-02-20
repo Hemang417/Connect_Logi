@@ -98,12 +98,37 @@ const impcreatejob = () => {
                 <input type="text" placeholder="" className='text-field-4' />
               </div>
               <div>
+                <label for="Delivery Mode" className='text-field-3'>Own Booking</label>
+                <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                <CDropdownItem href="#">Yes</CDropdownItem>
+                                <CDropdownItem href="#">No</CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
+              </div>
+              <div>
                 <label for="Delivery Mode" className='text-field-3'>Delivery Mode</label>
                 <CDropdown>
                             <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
                             <CDropdownMenu className="text-field-4">
                                 <CDropdownItem href="#">Loaded</CDropdownItem>
                                 <CDropdownItem href="#">Destuff</CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
+              </div>
+              <div>
+                <label for="Delivery Mode" className='text-field-3'>No. of Container</label>
+                <input type="text" placeholder="" className='text-field-4' />
+
+              </div>
+              <div>
+                <label for="BE Type" className='text-field-3'>Own Transportation</label>
+                <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                <CDropdownItem href="#">Yes</CDropdownItem>
+                                <CDropdownItem href="#">No</CDropdownItem>
                             </CDropdownMenu>
                         </CDropdown>
               </div>
@@ -157,6 +182,9 @@ const impcreatejob = () => {
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>

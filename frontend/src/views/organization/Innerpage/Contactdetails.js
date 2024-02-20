@@ -147,8 +147,43 @@ const Contactdetails = () => {
             }
         }
         
+        const [editVisible, seteditVisible] = useState(false);
 
+        // const [editContact, setEditContact] = useState(null);
+        const handleEdit = (index) => {
+            const contactToEdit = allcontacts[index];
+            setContact(contactToEdit);
+            // seteditVisible(true);
+            setVisible(true); // Open the modal for editing
+
+            handleUpdate();
+
+
+        };
         
+        // // Function to update the edited contact
+        const handleUpdate = async () => {
+            try {
+                // Send a PUT request to update the contact
+                const response = await axios.put('http://localhost:5000/updateContact', {
+                    contactName: contact.contactName,
+                    designation: contact.designation,
+                    department: contact.department,
+                    mobile: contact.mobile,
+                    email: contact.email,
+                });
+                
+                // Fetch updated contacts after editing
+                fetchAllContacts();
+                setVisible(false); // Close the modal after editing
+               
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+
+
 
 
     const handleChange = (e) => {
@@ -187,7 +222,7 @@ const Contactdetails = () => {
                                 <CTableDataCell>{contact.mobile}</CTableDataCell>
                                 
                                 <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <Link>
+                                    <Link onClick={() => handleEdit(index)}>
                                         Edit
                                     </Link>
                                 </th>
@@ -210,7 +245,7 @@ const Contactdetails = () => {
 
 
                     <div className='search-button'>
-                        <CButton color="success" type="submit" className='contact-add-button' onClick={() => setVisible(!visible)}>
+                        <CButton color="success" type="submit" className='contact-add-button' onClick={() => {setVisible(!visible); seteditVisible(false)}}>
                             +
                         </CButton>
                     </div>
@@ -219,7 +254,7 @@ const Contactdetails = () => {
 
             <CModal
                 visible={visible}
-                onClose={() => setVisible(false)}
+                onClose={() => { setVisible(false) }}
                 aria-labelledby="LiveDemoExampleLabel"
             >
                 <CModalHeader onClose={() => setVisible(false)}>
@@ -238,7 +273,12 @@ const Contactdetails = () => {
                     <CButton color="secondary" onClick={() => setVisible(false)}>
                         Close
                     </CButton>
-                    <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
+                    {
+                        editVisible ? <CButton color="primary">Update</CButton>:
+                        <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
+                    }
+                    
+                    
                 </CModalFooter>
             </CModal>
         </div>
