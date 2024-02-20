@@ -472,6 +472,7 @@ const General = ({ onSave, gData }) => {
     };
 
     const handleSave = () => {
+        toast.success('Data saved successfully');
         onSave(generalData);
     };
 

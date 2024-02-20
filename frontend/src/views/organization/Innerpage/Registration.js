@@ -230,6 +230,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
+import toast from 'react-hot-toast';
 // import createjob from './CreateJob';
 
 const Registration = ({ onSave, rData }) => {
@@ -249,6 +250,7 @@ const Registration = ({ onSave, rData }) => {
     };
 
     const handleSave = () => {
+        toast.success('Registration saved successfully')
         onSave(registrationData);
     };
 

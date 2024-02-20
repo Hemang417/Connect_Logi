@@ -146,6 +146,7 @@ const Accounts = ({ onSave, aData }) => {
 
     // Handle save button click
     const handleSave = () => {
+        toast.success('Account saved successfully')
         onSave(accountData);
     };
 
