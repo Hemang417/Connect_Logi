@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact } from './api/organization.js';
+import { fetchAllusers, storeimpaccess } from './api/userlist.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -84,6 +85,7 @@ app.post('/emp/store', async (req, res) => {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
         const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname);
+        
         res.status(200).json(allStorageofemp);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -174,6 +176,88 @@ app.put('/updateContact', async(req, res) => {
     }
 })
 
+
+app.get('/fetchAllusers', async (req, res) => {
+    try {
+        const {orgcode, orgname, username} = req.query;
+        const getAllusers = await fetchAllusers(orgcode, orgname, username);
+        // if(getAllusers.status === 200){
+        //     res.status(200);
+        // }
+        res.json(getAllusers);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
+
+
+app.post('/impstore', async (req, res) => {
+    try {
+        const {
+            ETAFollowUp,
+            ScrutinyDocument,
+            ChecklistApproval,
+            ESanchit,
+            FillingBOE,
+            Assesment,
+            DutyCall,
+            ExaminationOOC,
+            EBLStatusAgentName,
+            PortCFSNomination,
+            Scrutiny,
+            OriginalDocReceived,
+            InvoiceReceivedfromShippingLine,
+            PaymenttoShippingLine,
+            DeliveryOrder,
+            Delivery,
+            ShippingLine,
+            CFS,
+            StampDuty,
+            CustomDuty,
+            Insurance,
+            LREmptySlipBill,
+            Billing,
+            Dispatch,
+            Miscellaneous,
+        } = req.body.dataAccess; 
+        const {username} = req.body
+        
+        const allRows = [
+            ETAFollowUp,
+            ScrutinyDocument,
+            ChecklistApproval,
+            ESanchit,
+            FillingBOE,
+            Assesment,
+            DutyCall,
+            ExaminationOOC,
+            EBLStatusAgentName,
+            PortCFSNomination,
+            Scrutiny,
+            OriginalDocReceived,
+            InvoiceReceivedfromShippingLine,
+            PaymenttoShippingLine,
+            DeliveryOrder,
+            Delivery,
+            ShippingLine,
+            CFS,
+            StampDuty,
+            CustomDuty,
+            Insurance,
+            LREmptySlipBill,
+            Billing,
+            Dispatch,
+            Miscellaneous
+        ]
+        
+        const storeimp = await storeimpaccess(allRows, username);
+
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

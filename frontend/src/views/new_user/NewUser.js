@@ -54,6 +54,7 @@ const NewUser = () => {
                 branchname: regForm.branchname
             });
             
+            
             setregForm({
                 username: '',
                 password: '',
@@ -61,10 +62,13 @@ const NewUser = () => {
                 repeatPassword: '',
                 branchname: ''
             });
+            
+            
+            
             // localStorage.setItem('orgname', regForm.orgname);
             // localStorage.setItem('orgcode', response.data.register.orgcode);
             if(response.statusCode === 200){
-                toast.success('New user added successfully')
+                toast.success('New user added successfully');
                 navigate('/dashboard');
             }
             

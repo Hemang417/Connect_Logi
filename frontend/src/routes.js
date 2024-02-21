@@ -7,6 +7,8 @@ const organization = React.lazy(() => import('./views/organization/organization'
 const CreateJob = React.lazy(() => import('./views/organization/Createjob'))  
 const addnewBranch = React.lazy(() => import('./views/organization/Innerpage/addnewBranch'))
 const NewUser = React.lazy(() => import('./views/new_user/NewUser'))
+const UserList = React.lazy(() => import('./views/userlist/UserList'))
+const UserListAccess = React.lazy(() => import('./views/userlist/InnerPage/UserListAccess'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -65,6 +67,8 @@ const routes = [
   { path: '/Createjob', element: CreateJob },
   { path: '/addnewBranch', element: addnewBranch },
   { path: '/new_user', element: NewUser },
+  { path: '/userlist', element: UserList },
+  { path: '/UserListAccess', element: UserListAccess },
   { path: '/theme', element: Colors, exact: true },
   { path: '/theme/colors', element: Colors },
   { path: '/theme/typography', element: Typography },

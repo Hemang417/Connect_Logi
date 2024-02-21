@@ -143,7 +143,7 @@ export const OrgRender = async (orgname, orgcode) => {
 export const insertEmployees = async (username, password, orgcode, branchname, orgname) => {
     try {
         const connection = await connectMySQL();
-        console.log(username, password, orgcode, branchname, orgname);
+        
         // Check if the organization exists in the users table
         const [rows] = await connection.execute(`
             SELECT * FROM users WHERE orgcode = ? AND orgname = ?
@@ -160,7 +160,7 @@ export const insertEmployees = async (username, password, orgcode, branchname, o
             VALUES (?, ?, ?, ?, ?)
         `, [username, password, branchname, orgcode, orgname]);
 
-        return { success: true, message: 'Employee inserted successfully' };
+        return rows;
     } catch (error) {
         console.error('Error inserting employee data:', error.message);
         throw error;
