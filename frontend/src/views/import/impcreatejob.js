@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
   CCard,
   CCardBody,
@@ -43,6 +43,36 @@ import { Quotation } from './Innerpage'
 const impcreatejob = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
+
+
+  // const checkUsername = localStorage.getItem('username');
+  const [showQuotation, setshowQuotation] = useState(false);
+  // let getRole = '';
+  
+  // if (checkUsername && checkUsername.includes('@')) {
+  //   getRole = checkUsername.split('@')[1];
+  
+  //   if (getRole === 'sales') {
+  //     setshowQuotation(true);
+  //   }
+  // }
+  
+
+
+  useEffect(() => {
+    const checkUsername = localStorage.getItem('username');
+    let getRole = '';
+
+    if (checkUsername && checkUsername.includes('@')) {
+      getRole = checkUsername.split('@')[1];
+      if (getRole === 'sales') {
+        setshowQuotation(true);
+      }
+    }
+  }, []);
+
+
+
   // const [isActive, setActive] = useState("false");
   const [isshown, setIsShown] = useState("general");
   return (
@@ -66,32 +96,32 @@ const impcreatejob = () => {
               <div>
                 <label for="Transport Mode" className='text-field-3'>Transport Mode</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">Air</CDropdownItem>
-                                <CDropdownItem href="#">Sea</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">Air</CDropdownItem>
+                    <CDropdownItem href="#">Sea</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="Custom House" className='text-field-3'>Custom House</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">Mumbai Sea</CDropdownItem>
-                                <CDropdownItem href="#">Kolkata Sea</CDropdownItem>
-                                <CDropdownItem href="#">Raxaul LCS</CDropdownItem>
-                                <CDropdownItem href="#">Jogbani LCS</CDropdownItem>
-                                <CDropdownItem href="#">Sonauli LCS</CDropdownItem>
-                                <CDropdownItem href="#">Pipavav (Victor) Port</CDropdownItem>
-                                <CDropdownItem href="#">Hazira</CDropdownItem>
-                                <CDropdownItem href="#">ICD Tumb</CDropdownItem>
-                                <CDropdownItem href="#">Mundra Sea</CDropdownItem>
-                                <CDropdownItem href="#">Nhava Sea</CDropdownItem>
-                                <CDropdownItem href="#">Vadodra ICD</CDropdownItem>
-                                <CDropdownItem href="#">Valvada ICD</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">Mumbai Sea</CDropdownItem>
+                    <CDropdownItem href="#">Kolkata Sea</CDropdownItem>
+                    <CDropdownItem href="#">Raxaul LCS</CDropdownItem>
+                    <CDropdownItem href="#">Jogbani LCS</CDropdownItem>
+                    <CDropdownItem href="#">Sonauli LCS</CDropdownItem>
+                    <CDropdownItem href="#">Pipavav (Victor) Port</CDropdownItem>
+                    <CDropdownItem href="#">Hazira</CDropdownItem>
+                    <CDropdownItem href="#">ICD Tumb</CDropdownItem>
+                    <CDropdownItem href="#">Mundra Sea</CDropdownItem>
+                    <CDropdownItem href="#">Nhava Sea</CDropdownItem>
+                    <CDropdownItem href="#">Vadodra ICD</CDropdownItem>
+                    <CDropdownItem href="#">Valvada ICD</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="Job Owner" className='text-field-3'>Job Owner</label>
@@ -100,22 +130,22 @@ const impcreatejob = () => {
               <div>
                 <label for="Delivery Mode" className='text-field-3'>Own Booking</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">Yes</CDropdownItem>
-                                <CDropdownItem href="#">No</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">Yes</CDropdownItem>
+                    <CDropdownItem href="#">No</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="Delivery Mode" className='text-field-3'>Delivery Mode</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">Loaded</CDropdownItem>
-                                <CDropdownItem href="#">Destuff</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">Loaded</CDropdownItem>
+                    <CDropdownItem href="#">Destuff</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="Delivery Mode" className='text-field-3'>No. of Container</label>
@@ -125,37 +155,37 @@ const impcreatejob = () => {
               <div>
                 <label for="BE Type" className='text-field-3'>Own Transportation</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">Yes</CDropdownItem>
-                                <CDropdownItem href="#">No</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">Yes</CDropdownItem>
+                    <CDropdownItem href="#">No</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="BE Type" className='text-field-3'>BE Type</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">Home</CDropdownItem>
-                                <CDropdownItem href="#">In-Bond</CDropdownItem>
-                                <CDropdownItem href="#">Ex-Bond</CDropdownItem>
-                                <CDropdownItem href="#">SEZ-Z</CDropdownItem>
-                                <CDropdownItem href="#">SEZ-M</CDropdownItem>
-                                <CDropdownItem href="#">SEZ-T</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">Home</CDropdownItem>
+                    <CDropdownItem href="#">In-Bond</CDropdownItem>
+                    <CDropdownItem href="#">Ex-Bond</CDropdownItem>
+                    <CDropdownItem href="#">SEZ-Z</CDropdownItem>
+                    <CDropdownItem href="#">SEZ-M</CDropdownItem>
+                    <CDropdownItem href="#">SEZ-T</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="Consignment Type" className='text-field-3'>Consignment Type</label>
                 <CDropdown>
-                            <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                            <CDropdownMenu className="text-field-4">
-                                <CDropdownItem href="#">FCL</CDropdownItem>
-                                <CDropdownItem href="#">LCL</CDropdownItem>
-                                <CDropdownItem href="#">Break Bulk</CDropdownItem>
-                            </CDropdownMenu>
-                        </CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem href="#">FCL</CDropdownItem>
+                    <CDropdownItem href="#">LCL</CDropdownItem>
+                    <CDropdownItem href="#">Break Bulk</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
               </div>
               <div>
                 <label for="CFS Name" className='text-field-3'>CFS Name</label>
@@ -190,7 +220,9 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
+          {showQuotation && (
+            <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
+          )}
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
@@ -215,34 +247,34 @@ const impcreatejob = () => {
       {isshown === "Collection" && <Collection />}
       {isshown === "Transactionhistory" && <Transactionhistory />}
       {isshown === "Quotation" && <Quotation />}
-        {/* {isshown === "registration" && <Registration />} */}
+      {/* {isshown === "registration" && <Registration />} */}
       {/* <General /> */}
       {/* <Registration /> */}
       <div className='all-buttons'>
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Save
-                    </CButton>
-                </div>
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Save
+          </CButton>
+        </div>
 
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Save & Close
-                    </CButton>
-                </div>
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Save & Close
+          </CButton>
+        </div>
 
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Save & New
-                    </CButton>
-                </div>
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Save & New
+          </CButton>
+        </div>
 
-                <div className='search-button'>
-                    <CButton color="primary" type="submit">
-                        Close
-                    </CButton>
-                </div>
-            </div>
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Close
+          </CButton>
+        </div>
+      </div>
     </div>
   )
 }
