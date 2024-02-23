@@ -56,7 +56,7 @@
 //             username: username
 //           }
 //         })
-        
+
 //         setAllData(response.data.rows);
 //         console.log(response);
 //         if(response.data.success){
@@ -74,18 +74,18 @@
 //     try {
 //       // Access the username at the specified index in the allData state
 //       const username = allData[index].username;
-  
-      
+
+
 //       // Store the username in localStorage
 //       localStorage.setItem('empnameforaccess', username);
-      
+
 //       // navigate('/#/UserListAccess');
 //       // Optionally, you can redirect or perform any other action here
 //     } catch (error) {
 //       console.log(error);
 //     }
 //   }
-  
+
 
 
 
@@ -151,6 +151,7 @@ import '../../css/styles.css';
 const UserList = () => {
   const [allData, setAllData] = useState([]);
   const navigate = useNavigate();
+  const [userAccessData, setuserAccessData] = useState([])
 
   useEffect(() => {
     const fetchAllUsernames = async () => {
@@ -166,7 +167,7 @@ const UserList = () => {
           }
         });
         setAllData(response.data.rows);
-
+        setuserAccessData(response.data.row);
 
       } catch (error) {
         console.log('Error: ' + error);
@@ -201,7 +202,9 @@ const UserList = () => {
                 <Link to={'/UserListAccess'} onClick={() => handleAccess(index)}>Edit</Link>
               </CTableHeaderCell>
               <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
-              <CTableDataCell>Access</CTableDataCell>
+              <CTableDataCell>
+                {userAccessData.some(accessUser => accessUser.username === userData.username) ? 'Import' : 'Access'}
+              </CTableDataCell>
             </CTableRow>
           ))}
         </CTableBody>
