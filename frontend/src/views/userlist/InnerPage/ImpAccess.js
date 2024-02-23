@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -30,7 +30,7 @@ import '../../../css/styles.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 const ImpAccess = () => {
@@ -39,7 +39,7 @@ const ImpAccess = () => {
   const [endDate, setEndDate] = useState();
   const [visible, setVisible] = useState(false);
 
-
+  const navigate = useNavigate();
 
 
   const [dataAccess, setDataAccess] = useState({
@@ -73,23 +73,82 @@ const ImpAccess = () => {
 
 
 
-  const handleCheckboxChange = (event) => {
+  const fetchUserAccess = async () => {
+    try {
+      const username = localStorage.getItem('empnameforaccess');
+      const response = await axios.get(`http://localhost:5000/getUserAccess`, {
+        params: {
+          username: username
+        }
+      });
+
+      const newState = {};
+      response.data.forEach(item => {
+        newState[item.rowname] = item.value;
+      });
+
+      setDataAccess(newState);
+      console.log(response.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserAccess();
+  }, []);
+
+
+  // console.log(dataAccess);
+
+
+
+  // const handleCheckboxChange = (event) => {
+  //   const { name, checked } = event.target;
+  //   setDataAccess(prevState => ({
+  //     ...prevState,
+  //     [name]: checked ? name : '' // Store 'checked' if true, empty string otherwise
+  //   }));
+  // };
+
+
+
+  const handleCheckboxChange = async (event) => {
     const { name, checked } = event.target;
     setDataAccess(prevState => ({
       ...prevState,
-      [name]: checked ? name : '' // Store 'checked' if true, empty string otherwise
+      [name]: checked ? name : '' // Update only the specific property corresponding to the checkbox
     }));
+
+    try {
+      const username = localStorage.getItem('empnameforaccess');
+      if (checked) {
+        // Checkbox is checked, send a backend request to store data
+        await axios.post('http://localhost:5000/impstore', { [name]: name, username }); // Send only the specific property
+      } else {
+        // Checkbox is unchecked, send a backend request to remove data
+        await axios.delete('http://localhost:5000/delimp', {
+          data: { [name]: name, username } // Send only the specific property with an empty value
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 
 
-  async function handleApply(){
-    try {
-      const username = localStorage.getItem('empnameforaccess')
-      const response = await axios.post('http://localhost:5000/impstore', {dataAccess, username});
-    } catch (error) {
-      console.log(error);
-    }
+
+
+  async function handleApply() {
+    // try {
+    //   const username = localStorage.getItem('empnameforaccess')
+    //   const response = await axios.post('http://localhost:5000/impstore', {dataAccess, username});
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    navigate('/userlist');
   }
 
 
@@ -111,6 +170,7 @@ const ImpAccess = () => {
           </CTableRow>
         </CTableHead>
         <CTableBody>
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -123,13 +183,13 @@ const ImpAccess = () => {
                 name="ETAFollowUp"
                 checked={dataAccess.ETAFollowUp === 'ETAFollowUp'}
                 onChange={handleCheckboxChange}
-                
               />
             </CTableDataCell>
             <CTableDataCell>
 
             </CTableDataCell>
           </CTableRow>
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -559,10 +619,10 @@ const ImpAccess = () => {
               />
             </CTableDataCell>
             <CTableDataCell>
-            
+
             </CTableDataCell>
 
-            
+
 
           </CTableRow>
           <CButton onClick={handleApply}>Apply Access</CButton>

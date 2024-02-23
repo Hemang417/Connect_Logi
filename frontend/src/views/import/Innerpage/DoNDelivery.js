@@ -51,6 +51,7 @@ const DoNDelivery = () => {
                 <CTableHead className='c-table-head'>
                     <CTableRow color='dark'>
                         <CTableHeaderCell scope="col">Type of Do & Delivery</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Plan Date</CTableHeaderCell>
                         <CTableHeaderCell scope="col">Actual Date</CTableHeaderCell>
                         <CTableHeaderCell scope="col"></CTableHeaderCell>

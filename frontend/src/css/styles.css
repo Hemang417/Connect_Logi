@@ -158,6 +158,12 @@
     border-color: black;
 }
 
+.o2d-field-5{
+    width: 100px;
+    padding: 5px;
+    border-color: black;
+}
+
 .date-field{
     width: auto;
 }
