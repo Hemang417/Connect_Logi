@@ -16,7 +16,7 @@ import {
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 // const [readOnly, setReadOnly] = useState(false);
 const isAdmin = localStorage.getItem('username')==='admin';
-const isNotAdmin = localStorage.getItem('username')!=='admin';
+// const isNotAdmin = localStorage.getItem('username')!=='admin';
 // if(isAdmin) setReadOnly(readOnly);
 // const [visible, setVisible] = useState(false);
 
@@ -75,7 +75,7 @@ const _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+ 
     // items: [
     //   {
     //     component: CNavItem,
@@ -160,7 +160,7 @@ const _nav = [
     name: 'Organization',
     to: '/organization',
     icon: <CIcon icon={cilCursor} customClassName="nav-icon"/>,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+    
     // items: [
     //   {
     //     component: CNavItem,
@@ -184,7 +184,7 @@ const _nav = [
     name: 'Import',
     to: '/import',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+  
     // items: [
       // {
       //   component: CNavItem,
@@ -238,7 +238,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Export',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+
     items: [
       // {
       //   component: CNavItem,
@@ -293,7 +293,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Icons',
     icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+
     items: [
       {
         component: CNavItem,
@@ -320,7 +320,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Notifications',
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+
     items: [
       {
         component: CNavItem,
@@ -353,7 +353,7 @@ const _nav = [
     name: 'New User',
     to: '/new_user',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    visible: {isAdmin}? isAdmin: isNotAdmin,
+
   
     // setVisible: true,
     // badge: {
@@ -366,7 +366,7 @@ const _nav = [
     name: 'User List',
     to: '/userlist',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    visible: {isAdmin}? isAdmin: isNotAdmin,
+
     // badge: {
     //   color: 'info',
     //   text: 'NEW',
@@ -379,7 +379,7 @@ const _nav = [
     name: 'Widgets',
     to: '/widgets',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+
     badge: {
       color: 'info',
       text: 'NEW',
@@ -393,7 +393,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Pages',
     icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-    visible: {isNotAdmin}? isNotAdmin: isAdmin,
+
     items: [
       {
         component: CNavItem,
@@ -424,16 +424,13 @@ const _nav = [
     icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
   },
 ]
-// _nav.forEach(item => {
-//   if (item.name === 'New User' && item.name === 'User List') {
-//     item.readOnly = false;
-//   }
-// });
-// for (let i = 0; i < _nav.length; i++) {
-//   if (_nav[i].name === 'New User' || _nav[i].name === 'User List') {
-//     _nav[i].readOnly = true;
-//   }
-// }
 
-const visibleNav = _nav.filter(item => item.visible);
+
+
+
+const visibleNav = isAdmin
+  ? _nav // If isAdmin is true, show all items
+  : _nav.filter(item => item.name !== 'New User' && item.name !== 'User List'); // Exclude "New User" and "User List" if isAdmin is false
+
+
 export default visibleNav;
