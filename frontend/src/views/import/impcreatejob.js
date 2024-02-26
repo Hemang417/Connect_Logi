@@ -37,7 +37,8 @@ import { DocumentUpload } from './Innerpage';
 import { Collection } from './Innerpage';
 import { Transactionhistory } from './Innerpage'
 import { Quotation } from './Innerpage'
-import axios from 'axios'
+import axios from 'axios';
+import toast from 'react-hot-toast'
 // import { General, Registration } from './Innerpage';
 
 
@@ -60,6 +61,7 @@ const impcreatejob = () => {
   // }
 
 
+  const [showAll, setshowAll] = useState(false);
 
   const [JobformData, setJobFormData] = useState({
     jobDate: '',
@@ -113,14 +115,22 @@ const impcreatejob = () => {
 
   async function storeJob() {
     try {
+      
       const username = localStorage.getItem('username');
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg});
+      if (response.status === 200) {
+        toast.success('Job created successfully.');
+        setshowAll(true);
+        const idofcol = response.data[0].id;
+        const sendupdate = await axios.put('http://localhost:5000/updateId', {jobno: idofcol, transportMode: JobformData.transportMode})
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+}
+
 
 
 
@@ -273,46 +283,51 @@ const impcreatejob = () => {
         </CCard>
       </CCol>
 
-      <CNav variant="tabs" className='nav-link-text'>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          {showQuotation && (
-            <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
-          )}
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
-        </CNavItem>
-        {/* <CNavItem>
+      {showAll && (
+        <CNav variant="tabs" className='nav-link-text'>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            {showQuotation && (
+              <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
+            )}
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
+          </CNavItem>
+          {/* <CNavItem>
   <CNavLink href="#">Link</CNavLink>
 </CNavItem> */}
-        {/* <CNavItem>
+          {/* <CNavItem>
   <CNavLink href="#" disabled>
     Disabled
   </CNavLink>
 </CNavItem> */}
-      </CNav>
-      {isshown === "general" && <General />}
+        </CNav>
+      )}
+
+
+
+      {showAll && isshown === "general" && <General />}
       {isshown === "o2d" && <O2D />}
       {isshown === "DoNDelivery" && <DoNDelivery />}
       {isshown === "d2c" && <D2C />}
@@ -323,31 +338,36 @@ const impcreatejob = () => {
       {/* {isshown === "registration" && <Registration />} */}
       {/* <General /> */}
       {/* <Registration /> */}
-      <div className='all-buttons'>
-        <div className='search-button'>
-          <CButton color="primary" type="submit">
-            Save
-          </CButton>
-        </div>
 
-        <div className='search-button'>
-          <CButton color="primary" type="submit">
-            Save & Close
-          </CButton>
-        </div>
 
-        <div className='search-button'>
-          <CButton color="primary" type="submit">
-            Save & New
-          </CButton>
-        </div>
+      {showAll && (
+        <div className='all-buttons'>
+          <div className='search-button'>
+            <CButton color="primary" type="submit">
+              Save
+            </CButton>
+          </div>
 
-        <div className='search-button'>
-          <CButton color="primary" type="submit">
-            Close
-          </CButton>
+          <div className='search-button'>
+            <CButton color="primary" type="submit">
+              Save & Close
+            </CButton>
+          </div>
+
+          <div className='search-button'>
+            <CButton color="primary" type="submit">
+              Save & New
+            </CButton>
+          </div>
+
+          <div className='search-button'>
+            <CButton color="primary" type="submit">
+              Close
+            </CButton>
+          </div>
         </div>
-      </div>
+      )}
+
     </div>
   )
 }

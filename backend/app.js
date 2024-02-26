@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
-import { storeJob } from './api/import.js';
+import { storeJob, updateJobNumber } from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -309,9 +309,10 @@ app.post('/storeJob', async (req, res) => {
         blType,
         bltypenumber,
         jobOwner,
-        orgname, orgcode
+        orgname, orgcode, lastIc
     } = req.body;
-    const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname);
+    const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc);
+        console.log(storeandcreateJob);
     res.status(200).json(storeandcreateJob);
 
     } catch (error) {
@@ -320,7 +321,15 @@ app.post('/storeJob', async (req, res) => {
 })
 
 
-
+app.put('/updateId', async (req, res) => {
+    try {
+        const {jobno, transportMode} = req.body;
+        const sendtoAPI = await updateJobNumber(jobno, transportMode);
+        res.status(200).json(sendtoAPI);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 
