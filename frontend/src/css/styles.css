@@ -219,3 +219,11 @@
     column-gap: 10px;
     margin-top: 2%;
 } */
+
+.custom-house-dropdown{
+    height: 120px;
+}
+
+.row-font{
+    font-size: small;
+}

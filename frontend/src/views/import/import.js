@@ -120,67 +120,57 @@ const Import = () => {
   
     <CTable hover responsive striped className=''>
   <CTableHead>
-    <CTableRow color='dark' >
-      <CTableHeaderCell scope="col"></CTableHeaderCell>
-      <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-      <CTableHeaderCell scope="col">Job No.</CTableHeaderCell>
-      <CTableHeaderCell scope="col">Importer Name</CTableHeaderCell>
-      <CTableHeaderCell scope="col">HBL/HAWB No.</CTableHeaderCell>
-      <CTableHeaderCell scope="col">MBL/MAWB No.</CTableHeaderCell>
-      <CTableHeaderCell scope="col">ETA</CTableHeaderCell>
-      <CTableHeaderCell scope="col">IGM</CTableHeaderCell>
-      <CTableHeaderCell scope="col">Checklist</CTableHeaderCell>
-      <CTableHeaderCell scope="col">E-Sanchit</CTableHeaderCell>
-      <CTableHeaderCell scope="col">BOE Filling</CTableHeaderCell>
-      <CTableHeaderCell scope="col">DO</CTableHeaderCell>
-      <CTableHeaderCell scope="col">Delivery</CTableHeaderCell>
-      <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
+    <CTableRow color='dark'>
+      <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Date</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Job No.</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Importer Name</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>HBL/HAWB No.</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>MBL/MAWB No.</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>ETA</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Filling BOE</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Assesment</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Examination/OOC</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>BL Status/Agent Name</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Original Doc. Received</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Delivery Order</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Delivery</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>LR/Empty Slip/Bill</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Billing</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Dispatch</CTableHeaderCell>
+      <CTableHeaderCell scope="col" className='row-font'>Job Status</CTableHeaderCell>
 
     </CTableRow>
   </CTableHead>
   <CTableBody>
     <CTableRow>
-    <th scope="row" class="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <Link to={"/Modal"}>
+    <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
+                      <Link to={"/impcreatejob"}>
                         Edit
                       </Link>
                     {/* <a href="./Modal" target="_blank" rel="noopener noreferrer">
                         Edit
                     </a>   */}
                   </th>
-      <CTableHeaderCell scope="row">06.09.2023 13:44:55</CTableHeaderCell>
-      <CTableDataCell>S/I/0001/23-24</CTableDataCell>
-      <CTableDataCell>PERMANENT MAGNET LTD</CTableDataCell>
-      <CTableDataCell>RTTT5787088</CTableDataCell>
-      <CTableDataCell>RTTT5787088</CTableDataCell>
-      <CTableDataCell>19-06-2023</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>Assesment</CTableDataCell>
+      <CTableHeaderCell scope="row" className='row-font'>06.09.2023 13:44:55</CTableHeaderCell>
+      <CTableDataCell className='row-font'>S/I/0001/23-24</CTableDataCell>
+      <CTableDataCell className='row-font'>PERMANENT MAGNET LTD</CTableDataCell>
+      <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
+      <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+      <CTableDataCell className='row-font'></CTableDataCell>
+
     </CTableRow>
-    <CTableRow>
-    <th scope="row" class="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-        <a href="/dashboard/import/Modal" target="_blank" rel="noopener noreferrer">Edit</a>  
-    </th>
-    <CTableHeaderCell scope="row">06.09.2023 13:44:55</CTableHeaderCell>
-      <CTableDataCell>A/I/0001/23-24</CTableDataCell>
-      <CTableDataCell>LASONS INDIA PVT LTD</CTableDataCell>
-      <CTableDataCell>RTTT5787088</CTableDataCell>
-      <CTableDataCell>RTTT5787088</CTableDataCell>
-      <CTableDataCell>19-06-2023</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>19-06-2023 16:37:00</CTableDataCell>
-      <CTableDataCell>Done</CTableDataCell>
-    </CTableRow>
-    
   </CTableBody>
 </CTable>
 </CForm>

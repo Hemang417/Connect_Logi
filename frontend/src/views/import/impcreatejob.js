@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -37,7 +37,9 @@ import { DocumentUpload } from './Innerpage';
 import { Collection } from './Innerpage';
 import { Transactionhistory } from './Innerpage'
 import { Quotation } from './Innerpage'
+import axios from 'axios'
 // import { General, Registration } from './Innerpage';
+
 
 
 const impcreatejob = () => {
@@ -48,15 +50,34 @@ const impcreatejob = () => {
   // const checkUsername = localStorage.getItem('username');
   const [showQuotation, setshowQuotation] = useState(false);
   // let getRole = '';
-  
+
   // if (checkUsername && checkUsername.includes('@')) {
   //   getRole = checkUsername.split('@')[1];
-  
+
   //   if (getRole === 'sales') {
   //     setshowQuotation(true);
   //   }
   // }
-  
+
+
+
+  const [JobformData, setJobFormData] = useState({
+    jobDate: '',
+    docReceivedOn: '',
+    transportMode: '',
+    customHouse: '',
+    ownBooking: '',
+    deliveryMode: '',
+    numberOfContainer: '',
+    ownTransportation: '',
+    beType: '',
+    consignmentType: '',
+    cfsName: '',
+    shippingLineName: '',
+    blType: '',
+    bltypenumber: ''
+  });
+
 
 
   useEffect(() => {
@@ -65,16 +86,52 @@ const impcreatejob = () => {
 
     if (checkUsername && checkUsername.includes('@')) {
       getRole = checkUsername.split('@')[1];
-      if (getRole === 'sales') {
+      if (getRole === 'sales' && getRole === 'admin') {
         setshowQuotation(true);
       }
     }
   }, []);
 
 
+  const handleDropdownChange = (name, value) => {
+    setJobFormData({
+      ...JobformData,
+      [name]: value
+    });
+  };
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setJobFormData({
+      ...JobformData,
+      [name]: value
+    });
+  };
+
+
+
+  async function storeJob() {
+    try {
+      const username = localStorage.getItem('username');
+      const nameoforg = localStorage.getItem('orgname');
+      const codeoforg = localStorage.getItem('orgcode');
+      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+
 
   // const [isActive, setActive] = useState("false");
   const [isshown, setIsShown] = useState("general");
+
+
+
+
   return (
     <div>
       <CCol xs={12}>
@@ -83,117 +140,133 @@ const impcreatejob = () => {
             <div className='grid-container'>
               <div>
                 <label for="Job No." className='text-field-3'>Job No.</label>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' readOnly />
               </div>
               <div>
                 <label for="Job Date" className='text-field-3'>Job Date</label>
-                <input type="date" placeholder="" className='text-field-4' />
+                <input type="date" placeholder="" className='text-field-4' name='jobDate' onChange={handleChange} value={JobformData.jobDate} />
               </div>
               <div>
                 <label for="Doc. Received On Date" className='text-field-3'>Doc. Received On</label>
-                <input type="datetime-local" placeholder="" className='text-field-4' />
+                <input type="datetime-local" placeholder="" className='text-field-4' name='docReceivedOn' onChange={handleChange} value={JobformData.docReceivedOn} />
               </div>
               <div>
                 <label for="Transport Mode" className='text-field-3'>Transport Mode</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.transportMode ? JobformData.transportMode : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Air</CDropdownItem>
-                    <CDropdownItem href="#">Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('transportMode', 'Air')}>Air</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('transportMode', 'Sea')}>Sea</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="Custom House" className='text-field-3'>Custom House</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                  <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Mumbai Sea</CDropdownItem>
-                    <CDropdownItem href="#">Kolkata Sea</CDropdownItem>
-                    <CDropdownItem href="#">Raxaul LCS</CDropdownItem>
-                    <CDropdownItem href="#">Jogbani LCS</CDropdownItem>
-                    <CDropdownItem href="#">Sonauli LCS</CDropdownItem>
-                    <CDropdownItem href="#">Pipavav (Victor) Port</CDropdownItem>
-                    <CDropdownItem href="#">Hazira</CDropdownItem>
-                    <CDropdownItem href="#">ICD Tumb</CDropdownItem>
-                    <CDropdownItem href="#">Mundra Sea</CDropdownItem>
-                    <CDropdownItem href="#">Nhava Sea</CDropdownItem>
-                    <CDropdownItem href="#">Vadodra ICD</CDropdownItem>
-                    <CDropdownItem href="#">Valvada ICD</CDropdownItem>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.customHouse ? JobformData.customHouse : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4 overflow-y-scroll custom-house-dropdown
+                  ">
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Mumbai Sea')}>Mumbai Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Kolkata Sea')}>Kolkata Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Raxaul LCS')}>Raxaul LCS</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Jogbani LCS')}>Jogbani LCS</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Sonauli LCS')}>Sonauli LCS</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Pipavav Victor Port')}>Pipavav (Victor) Port</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Hazira')}>Hazira</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'ICD Tumb')}>ICD Tumb</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Mundra Sea')}>Mundra Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Nhava Sea')}>Nhava Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Vadodra ICD')}>Vadodra ICD</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('customHouse', 'Valvada ICD')}>Valvada ICD</CDropdownItem>
+                    {/* <CButton onClick={}>Add Custom House</CButton> */}
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="Job Owner" className='text-field-3'>Job Owner</label>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' readOnly />
               </div>
               <div>
                 <label for="Delivery Mode" className='text-field-3'>Own Booking</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.ownBooking ? JobformData.ownBooking : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Yes</CDropdownItem>
-                    <CDropdownItem href="#">No</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('ownBooking', 'Yes')}>Yes</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('ownBooking', 'No')}>No</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="Delivery Mode" className='text-field-3'>Delivery Mode</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.deliveryMode ? JobformData.deliveryMode : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Loaded</CDropdownItem>
-                    <CDropdownItem href="#">Destuff</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('deliveryMode', 'Loaded')}>Loaded</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('deliveryMode', 'Destuff')}>Destuff</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="Delivery Mode" className='text-field-3'>No. of Container</label>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' name='numberOfContainer' onChange={handleChange} value={JobformData.numberOfContainer} />
 
               </div>
               <div>
                 <label for="BE Type" className='text-field-3'>Own Transportation</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.ownTransportation ? JobformData.ownTransportation : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Yes</CDropdownItem>
-                    <CDropdownItem href="#">No</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('ownTransportation', 'Yes')}>Yes</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('ownTransportation', 'No')}>No</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="BE Type" className='text-field-3'>BE Type</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.beType ? JobformData.beType : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Home</CDropdownItem>
-                    <CDropdownItem href="#">In-Bond</CDropdownItem>
-                    <CDropdownItem href="#">Ex-Bond</CDropdownItem>
-                    <CDropdownItem href="#">SEZ-Z</CDropdownItem>
-                    <CDropdownItem href="#">SEZ-M</CDropdownItem>
-                    <CDropdownItem href="#">SEZ-T</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('beType', 'Home')}>Home</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('beType', 'In-Bond')}>In-Bond</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('beType', 'Ex-Bond')}>Ex-Bond</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('beType', 'SEZ-Z')}>SEZ-Z</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('beType', 'SEZ-M')}>SEZ-M</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('beType', 'SEZ-T')}>SEZ-T</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="Consignment Type" className='text-field-3'>Consignment Type</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.consignmentType ? JobformData.consignmentType : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">FCL</CDropdownItem>
-                    <CDropdownItem href="#">LCL</CDropdownItem>
-                    <CDropdownItem href="#">Break Bulk</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('consignmentType', 'FCL')}>FCL</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('consignmentType', 'LCL')}>LCL</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('consignmentType', 'Break Bulk')}>Break Bulk</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="CFS Name" className='text-field-3'>CFS Name</label>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' name='cfsName' value={JobformData.cfsName} onChange={handleChange} />
               </div>
               <div>
                 <label for="Shipping Line Name" className='text-field-3'>Shipping Line Name</label>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' name='shippingLineName' onChange={handleChange} value={JobformData.shippingLineName} />
+              </div>
+              <div>
+                {/* <label for="Delivery Mode" className='text-field-3'></label> */}
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.blType ? JobformData.blType : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem onClick={() => handleDropdownChange('blType', 'HBL/MBL')}>HBL/MBL</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('blType', 'HAWB/MAWB')}>HAWB/MAWB</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+                <input type="text" placeholder="" className='text-field-4' name='bltypenumber' value={JobformData.bltypenumber} onChange={handleChange} />
+              </div>
+              <div>
+                <CButton color="primary" type="submit" onClick={storeJob}>Create Job</CButton>
               </div>
             </div>
           </CCardBody>

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
+import { storeJob } from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -285,6 +286,42 @@ app.get('/getUserAccess', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 })
+
+
+
+
+app.post('/storeJob', async (req, res) => {
+    try {
+        
+        const {
+        jobDate,
+        docReceivedOn,
+        transportMode,
+        customHouse,
+        ownBooking,
+        deliveryMode,
+        numberOfContainer,
+        ownTransportation,
+        beType,
+        consignmentType,
+        cfsName,
+        shippingLineName,
+        blType,
+        bltypenumber,
+        jobOwner,
+        orgname, orgcode
+    } = req.body;
+    const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname);
+    res.status(200).json(storeandcreateJob);
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+
 
 
 

@@ -46,8 +46,11 @@ const Collection = () => {
     const [visible, setVisible] = useState(false)
     return (
         <div>
+            <div className='mb-2 mt-2'>
             <label for="Credit Days" className='text-field-3'>Credit Days</label>
             <input type="text" placeholder="" className='text-field-4' />
+            </div>
+            
             <div className='left-div-table'>
                 <CTable hover responsive striped>
                     <CTableHead className='c-table-head'>
@@ -82,7 +85,7 @@ const Collection = () => {
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
                             <CDropdown>
                                 <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                                <CDropdownMenu className="text-field-4">
+                                <CDropdownMenu className="text-field-4 overflow-y-scroll">
                                     <CDropdownItem href="#">Vedprakash Mishra</CDropdownItem>
                                     <CDropdownItem href="#">Bhavna Gharat</CDropdownItem>
                                     <CDropdownItem href="#">Vikas Jha</CDropdownItem>
