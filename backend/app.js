@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
-import { storeJob, updateJobNumber } from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient } from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -332,6 +332,53 @@ app.put('/updateId', async (req, res) => {
 })
 
 
+app.get('/getbranches', async(req, res) => {
+    try {
+        const {importerName, orgcode} = req.query;
+        const branches = await fetchBranches(importerName, orgcode);
+        res.json(branches)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/getorganizationdetails', async(req, res) => {
+    try {
+        const {clientName, branchName, orgcode} = req.query;
+        
+        const alldata = await fetchAllorgdata(clientName, branchName, orgcode);
+        
+        res.send(alldata);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+app.post('/createGeneral', async (req, res) => {
+    try {
+        const {orgname, orgcode, jobowner, jobnumber} = req.body;
+        const {importerName, address, gst, iec, portShipment, finalDestination} = req.body.formData;
+        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination);
+        res.send(storingGeneralImportData);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+app.get('/getimporters', async (req, res) => {
+    try {
+        const {orgcode} = req.query;
+        const getClients = await getClient(orgcode);
+        res.send(getClients);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 

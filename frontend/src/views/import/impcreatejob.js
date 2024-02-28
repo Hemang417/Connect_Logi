@@ -61,7 +61,7 @@ const impcreatejob = () => {
   // }
 
 
-  const [showAll, setshowAll] = useState(false);
+  // const [showAll, setshowAll] = useState(false);
 
   const [JobformData, setJobFormData] = useState({
     jobDate: '',
@@ -122,9 +122,10 @@ const impcreatejob = () => {
       const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg});
       if (response.status === 200) {
         toast.success('Job created successfully.');
-        setshowAll(true);
+        
         const idofcol = response.data[0].id;
         const sendupdate = await axios.put('http://localhost:5000/updateId', {jobno: idofcol, transportMode: JobformData.transportMode})
+        localStorage.setItem('jobNumber', sendupdate.data)
       }
     } catch (error) {
       console.log(error);
@@ -283,7 +284,7 @@ const impcreatejob = () => {
         </CCard>
       </CCol>
 
-      {showAll && (
+      
         <CNav variant="tabs" className='nav-link-text'>
           <CNavItem>
             <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
@@ -323,11 +324,11 @@ const impcreatejob = () => {
   </CNavLink>
 </CNavItem> */}
         </CNav>
-      )}
+      
 
 
 
-      {showAll && isshown === "general" && <General />}
+      {isshown === "general" && <General />}
       {isshown === "o2d" && <O2D />}
       {isshown === "DoNDelivery" && <DoNDelivery />}
       {isshown === "d2c" && <D2C />}
@@ -340,7 +341,7 @@ const impcreatejob = () => {
       {/* <Registration /> */}
 
 
-      {showAll && (
+      
         <div className='all-buttons'>
           <div className='search-button'>
             <CButton color="primary" type="submit">
@@ -366,7 +367,7 @@ const impcreatejob = () => {
             </CButton>
           </div>
         </div>
-      )}
+     
 
     </div>
   )
