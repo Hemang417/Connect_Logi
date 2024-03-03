@@ -245,7 +245,7 @@ const Createjob = () => {
 
   // console.log(allFetch);
 
-  const handleSaveGeneralData = (data) => {
+  async function handleSaveGeneralData(data) {
     setGeneralData(data);
   };
 
@@ -289,6 +289,7 @@ const Createjob = () => {
       })
       localStorage.removeItem('isEditing');
       toast.success('Stored client successfully');
+      localStorage.removeItem('branchnames');
       navigate('/organization#/organization')
     } catch (error) {
       toast.error('Error in storing client successfully')
@@ -320,6 +321,10 @@ const Createjob = () => {
 
 
   function redirectToOrg() {
+    localStorage.removeItem('organizationbranches');
+    localStorage.removeItem('firstorgofclient');
+    localStorage.removeItem('alias');
+    localStorage.removeItem('organizationclientname');
     navigate('/organization#/organization')
   }
 
@@ -333,12 +338,12 @@ const Createjob = () => {
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const alias = localStorage.getItem('alias');
-      const selectedBranchName = localStorage.getItem('selectedBranchName');
-  
+     console.log(generalData); 
+     
       // Fetch the latest data from state variables
       const dataToUpdate = {
         alias: alias,
-        branchname: selectedBranchName,
+        branchname: generalData.branchname,
         clientname: generalData.clientname,
         address: generalData.address,
         country: generalData.country,

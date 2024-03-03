@@ -471,7 +471,7 @@ const General = ({ onSave, gData }) => {
         setGeneralData({ ...generalData, [name]: value });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         toast.success('Data saved successfully');
         onSave(generalData);
     };
@@ -516,59 +516,101 @@ const General = ({ onSave, gData }) => {
         const fetchAllBranches = async () => {
             try {
                 // Get all branches from localStorage
-                const branchesString = localStorage.getItem('branchname');
-
-                // Split the branches string into an array of strings
-                const branchesArray = branchesString ? branchesString.split(',') : [];
-
+                const branchesString = localStorage.getItem('organizationbranches');
+                const jsonbranchesString = JSON.parse(branchesString);
+    
+                // Extract branchname and id properties from each object
+                const branchesArray = jsonbranchesString.map(branch => ({
+                    id: branch.id,
+                    branchname: branch.branchname
+                }));
+    
                 // Set the branches array to the state
                 setAllBranches(branchesArray);
             } catch (error) {
                 console.log("Error: " + error);
             }
         };
-
+    
         // Call the fetchAllBranches function
         fetchAllBranches();
     }, []);
+    
 
 
 
 
 
 
-
-
-
-
-
-
-
-    const handleAddBranch = () => {
-        // Append new branch name to the existing string
-
-        if (generalData.branchName !== '') {
-            setGeneralData({ ...generalData, branchName: generalData.branchName });
-            localStorage.setItem('isEditing', true);
-            localStorage.setItem('selectedBranchName',generalData.branchName);
-            toast.success('Branches added successfully')
-            setVisible(false);
-            if (!isEditing) {
-                setGeneralData(prevState => ({
-                    ...prevState,
-
-                    address: '',
-                    country: '',
-                    state: '',
-                    city: '',
-                    postalcode: '',
-                    phone: '',
-                    email: ''
-                }));
+    const handleAddBranch = async () => {
+        try {
+            
+            const codeoforg = localStorage.getItem('orgcode');
+           
+            if(localStorage.getItem('isEditing')==='true'){
+                var clientname = localStorage.getItem('organizationclientname');
+            }else{
+                var clientname = localStorage.getItem('clientname');
             }
-        }
 
-    };
+            const response = await axios.post('http://localhost:5000/storeinbranchestable', {
+                clientname: clientname,
+                orgcode: codeoforg,
+                branchname: generalData.branchName
+            })
+            setVisible(false);
+
+            localStorage.setItem('branchnames', response.data.branchname);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    useEffect(() => {
+        // Store clientname in localStorage
+        if (localStorage.getItem('updateBtn') === 'false') {
+            localStorage.setItem('clientname', generalData.clientname);
+        }
+    }, [generalData.clientname]);
+
+
+
+
+
+
+
+
+
+
+
+
+    // const handleAddBranch = () => {
+    //     // Append new branch name to the existing string
+
+    //     if (generalData.branchName !== '') {
+    //         setGeneralData({ ...generalData, branchName: generalData.branchName });
+    //         localStorage.setItem('isEditing', true);
+    //         localStorage.setItem('selectedBranchName',generalData.branchName);
+    //         toast.success('Branches added successfully')
+    //         setVisible(false);
+    //         if (!isEditing) {
+    //             setGeneralData(prevState => ({
+    //                 ...prevState,
+
+    //                 address: '',
+    //                 country: '',
+    //                 state: '',
+    //                 city: '',
+    //                 postalcode: '',
+    //                 phone: '',
+    //                 email: ''
+    //             }));
+    //         }
+    //     }
+
+    // };
 
 
 
@@ -626,20 +668,23 @@ const General = ({ onSave, gData }) => {
 
 
     useEffect(() => {
-        if (localStorage.getItem('selectedBranchName')) {
+        if (localStorage.getItem('firstorgofclient')) {
             const prefillwithLocal = async () => {
                 try {
-                    const selectedBranchName = localStorage.getItem('selectedBranchName');
-                    const clientname = localStorage.getItem('clientname');
-                    const aliashai = localStorage.getItem('alias')
-    
+                    const firstbranchofclient = localStorage.getItem('firstorgofclient');
+                    const jsonfirstbranch = JSON.parse(firstbranchofclient);
+                    const clientname = localStorage.getItem('organizationclientname');
+                    const aliashai = localStorage.getItem('alias');
+
                     const response = await axios.get('http://localhost:5000/allFetch', {
-                        params:{
+                        params: {
                             clientname: clientname,
                             alias: aliashai,
-                            branchname: selectedBranchName
+                            branchname: jsonfirstbranch.branchname,
+                            id: jsonfirstbranch.id
                         }
                     });
+                    localStorage.setItem('branchDataforprefill', JSON.stringify(response.data))
                     setGeneralData(response.data);
                 } catch (error) {
                     console.log("Error: " + error);
@@ -648,7 +693,6 @@ const General = ({ onSave, gData }) => {
             prefillwithLocal();
         }
     }, []); // Empty dependency array ensures the effect runs only once during component mounting
-    
 
 
 
@@ -657,31 +701,32 @@ const General = ({ onSave, gData }) => {
 
 
 
-async function handlebranchchange(index){
-    try {
-        const selectedBranchName = allBranches[index];
-        const clientname = localStorage.getItem('clientname');
-        const aliashai = localStorage.getItem('alias')
 
-        localStorage.setItem('selectedBranchName', selectedBranchName);
-        const response = await axios.get('http://localhost:5000/allFetch', {
-            params:{
-                clientname: clientname,
-                alias: aliashai,
-                branchname: selectedBranchName
-            }
-        })
-        setGeneralData(response.data);
-        toast.success('Branched switched successfully')
-    } catch (error) {
-        console.log("Error: " + error);
+    async function handlebranchchange(index) {
+        try {
+            const selectedBranchName = allBranches[index];
+            const clientname = localStorage.getItem('organizationclientname');
+            const aliashai = localStorage.getItem('alias');
+            
+            // localStorage.setItem('selectedBranchName', selectedBranchName);
+            const response = await axios.get('http://localhost:5000/allFetch', {
+                params: {
+                    clientname: clientname,
+                    alias: aliashai,
+                    branchname: selectedBranchName
+                }
+            })
+            setGeneralData(response.data);
+            toast.success('Branched switched successfully')
+        } catch (error) {
+            console.log("Error: " + error);
+        }
     }
-}
 
 
 
 
-
+let checkbranchname = JSON.parse(localStorage.getItem('firstorgofclient'));
 
 
 
@@ -707,7 +752,7 @@ async function handlebranchchange(index){
                             className='text-field-1'
                         /> */}
                         <CDropdown className="text-field-1">
-                            <CDropdownToggle color="secondary">{localStorage.getItem('selectedBranchName')}</CDropdownToggle>
+                            <CDropdownToggle color="secondary">{ checkbranchname ? checkbranchname.branchname: 'Create a branch'}</CDropdownToggle>
                             <CDropdownMenu className="text-field-2">
                                 {/* <CDropdownItem href="#">Mumbai</CDropdownItem>
                                 <CDropdownItem href="#">Kolkata</CDropdownItem> */}
@@ -717,7 +762,9 @@ async function handlebranchchange(index){
 
                                 <>
                                     {allBranches.map((branch, index) => (
-                                        <CDropdownItem key={index} onClick={() => handlebranchchange(index)}>{branch}</CDropdownItem>
+                                        <CDropdownItem key={index} onClick={() => handlebranchchange(index)}>
+                                            {branch.branchname}
+                                        </CDropdownItem>
                                     ))}
                                 </>
 
@@ -811,6 +858,7 @@ async function handlebranchchange(index){
                     </div> */}
                     <div>
                         <input type="text" placeholder="Branch Name"
+                            value={generalData.branchName}
                             className='text-field-1' name='branchName'
                             onChange={handleChange}
                         />

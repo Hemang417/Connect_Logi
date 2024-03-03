@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable  } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
 import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient } from './api/import.js';
 
@@ -65,7 +65,7 @@ app.post('/org/store', async (req, res) => {
 app.get('/getOrg', async (req, res) => {
     try {
         const { orgname, orgcode } = req.query;
-        const renderData = await OrgRender(orgname, orgcode);
+        const renderData = await OrgRender(orgname, orgcode );
         res.status(200).json(renderData);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -97,9 +97,9 @@ app.post('/emp/store', async (req, res) => {
 
 app.get('/allFetch', async (req, res) => {
     try {
-        const { clientname, alias, branchname } = req.query;
+        const { clientname, alias, branchname, id } = req.query;
 
-        const allDataofBranch = await fetchBranchData(clientname, alias, branchname);
+        const allDataofBranch = await fetchBranchData(clientname, alias, branchname, id);
         res.json(allDataofBranch);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -112,7 +112,7 @@ app.get('/allFetch', async (req, res) => {
 app.put('/updateData', async (req, res) => {
     try {
         const { orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays } = req.body;
-
+        console.log(orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays);
         // Call the updateRow function to update the row in the database
         const allDataupdate = await updateRow(orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays);
 
@@ -379,6 +379,20 @@ app.get('/getimporters', async (req, res) => {
         console.log(error);
     }
 })
+
+
+
+app.post('/storeinbranchestable', async(req, res) => {
+    try {
+        const {clientname, orgcode, branchname} = req.body;
+        const storingbranchesinbranchtable = await saveBranchinTable(clientname, orgcode, branchname);
+        
+        res.send(storingbranchesinbranchtable);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 
 

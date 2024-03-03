@@ -231,7 +231,9 @@ const organization = () => {
   const [searchValue, setSearchValue] = useState('');
   
   if(location.pathname=='/organization'){
-    localStorage.removeItem('updateBtn')
+    localStorage.removeItem('updateBtn');
+    localStorage.removeItem('clientname');
+    localStorage.removeItem('branchnames');
   }
 
   useEffect(() => {
@@ -239,13 +241,14 @@ const organization = () => {
       try {
         const nameoforg = localStorage.getItem('orgname');
         const codeoforg = localStorage.getItem('orgcode');
-
+      
         const response = await axios.get('http://localhost:5000/getOrg', {
           params: {
             orgname: nameoforg,
             orgcode: codeoforg
           }
         });
+       
         setOrganization(response.data);
       } catch (error) {
         console.log("Error: " + error);
@@ -259,18 +262,21 @@ const organization = () => {
 
 
 
-  async function prefillData(index) {
-    try {
-      localStorage.setItem('clientname', organization[index].clientname);
-      localStorage.setItem('alias', organization[index].alias)
-      localStorage.setItem('branchname', organization[index].branchname);
-      localStorage.setItem('selectedBranchName', organization[index].branchname[0]);
+  const prefillData = (org) => {
+    try {  
+      localStorage.setItem('alias', org.alias);
+      localStorage.setItem('organizationbranches', JSON.stringify(org.branches));
+      localStorage.setItem('organizationclientname', org.clientname);
+      localStorage.setItem('firstorgofclient', JSON.stringify(org.branches[0]));
       localStorage.setItem('updateBtn', true);
+      localStorage.setItem('isEditing', true);
     } catch (error) {
-      toast.error(error)
+      toast.error(error);
       console.log("Error: " + error);
     }
-  }
+  };
+  
+
 
 
   function removeLocal() {
@@ -430,7 +436,7 @@ const organization = () => {
               organization.map((org, index) => (
                 <CTableRow key={index}>
                   <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <Link to={"/Createjob"} onClick={() => prefillData(index)}>
+                    <Link to={"/Createjob"} onClick={() => prefillData(org)}>
                       Edit
                     </Link>
                   </th>

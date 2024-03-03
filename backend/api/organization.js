@@ -20,10 +20,6 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username]);
 
-
-        const [allrows] = await connection.execute(`INSERT INTO branches (branchname, clientname, orgcode) VALUES(?, ?, ?)`,
-            [branchName, clientname, orgcode])
-
         return rows;
     } catch (error) {
         console.error('Error inserting organization data:', error.message);
@@ -90,21 +86,19 @@ export const OrgRender = async (orgname, orgcode) => {
         const connection = await connectMySQL();
 
         const [rows] = await connection.execute(`
-            SELECT clientname, alias, branchname
+            SELECT clientname, alias, branchname, id
             FROM organizations
             WHERE orgname = ? AND orgcode = ?
         `, [orgname, orgcode]);
 
-
-
         if (rows.length > 0) {
             const clientsMap = new Map(); // Map to store clients and their branches
             rows.forEach(row => {
-                const { clientname, alias, branchname } = row;
+                const { clientname, alias, branchname, id } = row;
                 if (clientsMap.has(alias)) {
-                    clientsMap.get(alias).branchname.push(branchname);
+                    clientsMap.get(alias).branches.push({ branchname, id });
                 } else {
-                    clientsMap.set(alias, { clientname, alias, branchname: [branchname] });
+                    clientsMap.set(alias, { clientname, alias, branches: [{ branchname, id }] });
                 }
             });
 
@@ -118,8 +112,6 @@ export const OrgRender = async (orgname, orgcode) => {
         throw error;
     }
 }
-
-
 
 
 
@@ -169,10 +161,10 @@ export const insertEmployees = async (username, password, orgcode, branchname, o
 
 
 
-export const fetchBranchData = async (clientname, alias, branchname) => {
+export const fetchBranchData = async (clientname, alias, branchname, id) => {
     try {
         const connection = await connectMySQL();
-        const [row] = await connection.execute(`SELECT * FROM organizations WHERE clientname = ? AND alias = ? AND branchname = ?`, [clientname, alias, branchname]);
+        const [row] = await connection.execute(`SELECT * FROM organizations WHERE clientname = ? AND alias = ? AND branchname = ? AND id = ?`, [clientname, alias, branchname, id]);
 
         return row[0];
     } catch (error) {
@@ -189,7 +181,7 @@ export const fetchBranchData = async (clientname, alias, branchname) => {
 export const updateRow = async (orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays) => {
     try {
         const connection = await connectMySQL();
-
+        
         const [row] = await connection.execute(`
             UPDATE organizations
             SET 
@@ -281,5 +273,22 @@ export const updateContact = async (contactName, designation, department, mobile
     } catch (error) {
         console.error('Error updating row:', error.message);
         throw error;
+    }
+}
+
+
+
+
+export const saveBranchinTable = async (clientname, orgcode, branchname) => {
+    try {
+        const connection = await connectMySQL();
+       
+        const [row] = await connection.execute(`INSERT INTO branches (clientname, orgcode, branchname) VALUES (?, ?, ?)`, [clientname, orgcode, branchname]);
+        return {
+            row,
+            branchname
+        }
+    } catch (error) {
+        console.log(error);
     }
 }

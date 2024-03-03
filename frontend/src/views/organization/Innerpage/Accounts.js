@@ -155,18 +155,20 @@ const Accounts = ({ onSave, aData }) => {
 
 
     useEffect(() => {
-        if(localStorage.getItem('selectedBranchName')){
+        if(localStorage.getItem('firstorgofclient')){
             const prefill = async () => {
                 try {
-                    const selectedBranchName = localStorage.getItem('selectedBranchName');
-                    const clientname = localStorage.getItem('clientname');
+                    const firstbranchofclient = localStorage.getItem('firstorgofclient');
+                    const jsonfirstbranch = JSON.parse(firstbranchofclient);
+                    const clientname = localStorage.getItem('organizationclientname');
                     const aliashai = localStorage.getItem('alias')
     
                     const response = await axios.get('http://localhost:5000/allFetch', {
                         params: {
                             clientname: clientname,
                             alias: aliashai,
-                            branchname: selectedBranchName
+                            branchname: jsonfirstbranch.branchname,
+                            id: jsonfirstbranch.id
                         }
                     })
                     setAccountData(response.data);
