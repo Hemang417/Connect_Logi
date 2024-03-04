@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable  } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch  } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
 import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient } from './api/import.js';
 
@@ -392,6 +392,44 @@ app.post('/storeinbranchestable', async(req, res) => {
         console.log(error);
     }
 })
+
+
+
+
+app.put('/updateTheBID', async (req, res) => {
+    try {
+        const { BID, clientname, orgcode, branchname } = req.body;
+  
+        const updatingtheBID = await updateBID(BID, clientname, orgcode, branchname);
+        
+        res.status(200).json({ success: true, message: "BID updated successfully" });
+    } catch (error) {
+        console.log(error);
+        // Sending an error response back to the client
+        res.status(500).json({ success: false, message: "Error updating BID" });
+    }
+});
+
+
+
+
+
+app.delete('/deleteBranch', async (req, res) => {
+    try {
+        const { id, branchname, orgcode, orgname, clientname } = req.body;
+
+        // Call your deleteBranch function passing the received data
+        const deletedBranch = await deleteBranch(id, branchname, orgcode, orgname, clientname);
+
+        // Send the response back to the frontend
+        res.send(deletedBranch);
+    } catch (error) {
+        console.log(error);
+        // Handle errors and send an appropriate response
+        res.status(500).send({ success: false, message: 'Error deleting branch' });
+    }
+});
+
 
 
 

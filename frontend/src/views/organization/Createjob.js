@@ -289,8 +289,19 @@ const Createjob = () => {
       })
       localStorage.removeItem('isEditing');
       toast.success('Stored client successfully');
+
+      let insertedRowsBID = response.data;
+      
+      const inserttheID = await axios.put('http://localhost:5000/updateTheBID', {
+          BID: insertedRowsBID,
+          clientname: generalData.clientname,
+          orgcode: codeoforg,
+          branchname: generalData.branchName
+      });
+
       localStorage.removeItem('branchnames');
-      navigate('/organization#/organization')
+      navigate('/organization#/organization');
+  
     } catch (error) {
       toast.error('Error in storing client successfully')
       console.log("Error: " + error);
@@ -405,6 +416,18 @@ const Createjob = () => {
         username: employeename,
       })
       toast.success('Branch added successfully');
+
+
+      let insertedRowsBID = response.data;
+
+      const inserttheID = await axios.put('http://localhost:5000/updateTheBID', {
+          BID: insertedRowsBID,
+          clientname: localStorage.getItem('organizationclientname'),
+          orgcode: codeoforg,
+          branchname: localStorage.getItem('branchnames')
+      });
+
+      
 
       navigate('/organization#/organization')
 

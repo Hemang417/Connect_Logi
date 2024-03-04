@@ -437,7 +437,8 @@ import {
     CModalFooter,
     CNavItem,
     CNav,
-    CNavLink
+    CNavLink,
+    CLink
 } from '@coreui/react'
 import '../../../css/styles.css';
 import DatePicker from 'react-datepicker';
@@ -446,6 +447,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
 import toast from 'react-hot-toast';
+import {useNavigate} from 'react-router-dom';
 // import createjob from './CreateJob';
 
 const General = ({ onSave, gData }) => {
@@ -453,7 +455,7 @@ const General = ({ onSave, gData }) => {
     // const [startDate, setStartDate] = useState();
     // const [endDate, setEndDate] = useState();
     const [visible, setVisible] = useState(false);
-
+    const navigate = useNavigate();
     const [generalData, setGeneralData] = useState({
         clientname: '',
         address: '',
@@ -739,11 +741,32 @@ const General = ({ onSave, gData }) => {
 
 
 
-    async function handleDelete(e){
+    async function handleDelete(e, index) {
         e.preventDefault();
         try {
-            console.log('Deleting branch');
+            const branchtoDelete = allBranches[index];
+            const clientname = localStorage.getItem('organizationclientname');
+            const codeoforg = localStorage.getItem('orgcode');
+            const nameoforg = localStorage.getItem('orgname');
+
+            // Send data to backend
+            const response = await axios.delete('http://localhost:5000/deleteBranch', {
+                data: {
+                    id: branchtoDelete.id,
+                    branchname: branchtoDelete.branchname,
+                    orgcode: codeoforg,
+                    orgname: nameoforg,
+                    clientname: clientname
+                }
+            });
+
+            // Handle success response
+            toast.success('Branch deleted successfully');
+            
+            navigate('/organization#/organization')
+
         } catch (error) {
+            // Handle error
             console.log(error);
         }
     }
@@ -776,14 +799,16 @@ const General = ({ onSave, gData }) => {
                         <CDropdown className="text-field-1">
                             <CDropdownToggle color="secondary">{localStorage.getItem('branchnames') || (checkbranchname ? checkbranchname.branchname : 'Create a branch')}</CDropdownToggle>
                             <CDropdownMenu className="text-field-2">
-                               
+
 
                                 <>
                                     {allBranches.map((branch, index) => (
-                                        <CDropdownItem key={index} onClick={() => handlebranchchange(index)}>
+
+                                        <CDropdownItem key={index} onClick={() => handlebranchchange(index)} style={{ cursor: 'pointer' }}>
                                             {branch.branchname}
-                                            <CButton onClick={handleDelete}>delete</CButton>
+                                            <CLink style={{ cursor: 'pointer', marginLeft: '20px' }} onClick={(e) => handleDelete(e, index)}>Delete</CLink>
                                         </CDropdownItem>
+
                                     ))}
                                 </>
 
