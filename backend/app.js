@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch  } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew  } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
 import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient } from './api/import.js';
 
@@ -126,8 +126,8 @@ app.put('/updateData', async (req, res) => {
 
 app.post('/storeContact', async (req, res) => {
     try {
-        const { contactName, designation, department, mobile, email, branchname, orgname, orgcode } = req.body;
-        const contactStore = await insertContact(contactName, designation, department, mobile, email, branchname, orgname, orgcode);
+        const { contactName, designation, department, mobile, email, branchname, orgname, orgcode, id, clientname } = req.body;
+        const contactStore = await insertContact(contactName, designation, department, mobile, email, branchname, orgname, orgcode, id, clientname);
         return res.status(200).json(contactStore);
     } catch (error) {
         console.log('Error during data update:', error);
@@ -138,15 +138,24 @@ app.post('/storeContact', async (req, res) => {
 
 app.get('/getAllContacts', async (req, res) => {
     try {
-        const { branchname, orgname, orgcode } = req.query;
-        const allContacts = await fetchAllContacts(branchname, orgname, orgcode);
+        const { branchname, clientname, id, orgname, orgcode } = req.query;
+        const allContacts = await fetchAllContacts(branchname, clientname, id, orgname, orgcode);
         res.json(allContacts);
     } catch (error) {
         console.log('Error during data update:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 })
-
+app.get('/getAllContactsofNew', async (req, res) => {
+    try {
+        const { branchname, clientname, orgname, orgcode } = req.query;
+        const allContacts = await fetchAllContactsofNew(branchname, clientname, orgname, orgcode);
+        res.json(allContacts);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
 
 app.delete('/deleteContact', async (req, res) => {
     try {
@@ -168,9 +177,22 @@ app.delete('/deleteContact', async (req, res) => {
 
 app.put('/updateContact', async(req, res) => {
     try {
-        const { contactName, designation, department, mobile, email, branchname, orgname, orgcode } = req.body;
-        const contactStore = await updateContact(contactName, designation, department, mobile, email, branchname, orgname, orgcode);
+        const { contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode} = req.body;
+     
+        const contactStore = await updateContact(contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode );
         return res.status(200).json(contactStore);
+    } catch (error) {
+        console.log('Error during data update:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
+
+
+app.put('/updateContactduringNew', async(req, res) => {
+    try {
+        const {contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname} = req.body;
+        const response = await updateContactduringNew(contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname);
+        return res.status(200).json(response);
     } catch (error) {
         console.log('Error during data update:', error);
         res.status(500).json({ message: 'Internal Server Error' });

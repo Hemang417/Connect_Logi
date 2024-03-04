@@ -231,13 +231,13 @@ export const updateRow = async (orgcode, orgname, clientname, alias, branchname,
 
 
 // STORE CONTACTS
-export const insertContact = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode) => {
+export const insertContact = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode, id, clientname) => {
     try {
         const connection = await connectMySQL();
         const row = await connection.execute(`INSERT INTO contacts 
-        (contactName, designation, department, mobile, email, branchname, orgname, orgcode) 
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?)
-        `, [contactName, designation, department, mobile, email, branchname, orgname, orgcode]);
+        (contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, bid) 
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, id]);
         return row;
     } catch (error) {
         console.error('Error updating row:', error.message);
@@ -247,11 +247,35 @@ export const insertContact = async (contactName, designation, department, mobile
 
 
 
-export const fetchAllContacts = async (branchname, orgname, orgcode) => {
+export const fetchAllContacts = async (branchname, clientname, id, orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ?`, [branchname, orgname, orgcode]);
+        const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid = ?`, [branchname, orgname, orgcode, clientname, id]);
         return rows;
+    } catch (error) {
+        console.error('Error updating row:', error.message);
+        throw error;
+    }
+}
+
+export const fetchAllContactsofNew = async (branchname, clientname, orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ?`, [branchname, orgname, orgcode, clientname]);
+        return rows;
+    } catch (error) {
+        console.error('Error updating row:', error.message);
+        throw error;
+    }
+}
+
+
+export const updateContactduringNew = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname) => {
+    try {
+        const connection = await connectMySQL();
+        const row = await connection.execute(`UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ?`,
+            [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname]);
+        return row;
     } catch (error) {
         console.error('Error updating row:', error.message);
         throw error;
@@ -272,11 +296,13 @@ export const deleteContact = async (email, mobile, contactName, designation, dep
 }
 
 
-export const updateContact = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode) => {
+export const updateContact = async (contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
-        const row = await connection.execute(`UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ?`,
-            [contactName, designation, department, mobile, email, branchname, orgname, orgcode]);
+        const row = await connection.execute(
+            `UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid = ?`,
+            [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, id]
+        );
         return row;
     } catch (error) {
         console.error('Error updating row:', error.message);

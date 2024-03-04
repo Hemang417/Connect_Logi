@@ -417,7 +417,6 @@ const Createjob = () => {
       })
       toast.success('Branch added successfully');
 
-
       let insertedRowsBID = response.data;
 
       const inserttheID = await axios.put('http://localhost:5000/updateTheBID', {
@@ -427,21 +426,12 @@ const Createjob = () => {
           branchname: localStorage.getItem('branchnames')
       });
 
-      
-
-      navigate('/organization#/organization')
+      navigate('/organization#/organization');
 
     } catch (error) {
       console.log(error);
     }
   }
-
-
-
-
-
-
-
 
 
 

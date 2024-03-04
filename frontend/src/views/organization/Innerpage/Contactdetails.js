@@ -64,20 +64,43 @@ const Contactdetails = () => {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
+            const getbranchdetails = localStorage.getItem('firstorgofclient');
+            const idofthatbranch = JSON.parse(getbranchdetails);
+
+            if (localStorage.getItem('isEditing') === 'true') {
+                var clientname = localStorage.getItem('organizationclientname');
+                var branchname = idofthatbranch.branchname;
+                var id = idofthatbranch.id;
+            } else {
+                var clientname = localStorage.getItem('clientname');
+                var branchname = localStorage.getItem('branchnames');
+            }
+
+
             const response = await axios.post('http://localhost:5000/storeContact', {
                 contactName: contact.contactName,
                 designation: contact.designation,
                 department: contact.department,
                 mobile: contact.mobile,
                 email: contact.email,
-                branchname: localStorage.getItem('selectedBranchName'),
+                branchname: branchname,
                 orgname: localStorage.getItem('orgname'),
-                orgcode: localStorage.getItem('orgcode')
+                orgcode: localStorage.getItem('orgcode'),
+                id: id ? id : null,
+                clientname: clientname
             });
 
             setVisible(false);
+            setContact({ // Reset the contact state to its initial values
+                contactName: '',
+                designation: '',
+                department: '',
+                mobile: '',
+                email: ''
+            });
             fetchAllContacts();
             toast.success('Contact added successfully');
+
         } catch (error) {
             toast.error('Not stored')
             console.log(error);
@@ -88,14 +111,42 @@ const Contactdetails = () => {
 
     const fetchAllContacts = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/getAllContacts', {
-                params: {
-                    branchname: localStorage.getItem('selectedBranchName'),
-                    orgname: localStorage.getItem('orgname'),
-                    orgcode: localStorage.getItem('orgcode'),
-                }
-            });
-            setAllContacts(response.data);
+            const getBranchDetails = localStorage.getItem('firstorgofclient');
+            const idOfThatBranch = JSON.parse(getBranchDetails);
+
+            let clientname, branchname, id;
+            if (localStorage.getItem('isEditing') === 'true') {
+                clientname = localStorage.getItem('organizationclientname');
+                branchname = idOfThatBranch.branchname;
+                id = idOfThatBranch.id;
+            } else {
+                clientname = localStorage.getItem('clientname');
+                branchname = localStorage.getItem('branchnames');
+            }
+
+            if (localStorage.getItem('isEditing') === 'true') {
+                const response = await axios.get('http://localhost:5000/getAllContacts', {
+                    params: {
+                        branchname: branchname,
+                        clientname: clientname,
+                        id: id ? id : null,
+                        orgname: localStorage.getItem('orgname'),
+                        orgcode: localStorage.getItem('orgcode'),
+                    }
+                });
+                setAllContacts(response.data);
+            } else {
+                const response = await axios.get('http://localhost:5000/getAllContactsofNew', {
+                    params: {
+                        branchname: branchname,
+                        clientname: clientname,
+                        orgname: localStorage.getItem('orgname'),
+                        orgcode: localStorage.getItem('orgcode'),
+                    }
+                });
+                setAllContacts(response.data);
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -107,9 +158,14 @@ const Contactdetails = () => {
     useEffect(() => {
         const fetchAllpeopleContact = async () => {
             try {
+                const getbranchdetails = localStorage.getItem('firstorgofclient');
+                const idofthatbranch = JSON.parse(getbranchdetails);
+                const clientname = localStorage.getItem('organizationclientname');
                 const response = await axios.get('http://localhost:5000/getAllContacts', {
                     params: {
-                        branchname: localStorage.getItem('selectedBranchName'),
+                        branchname: idofthatbranch.branchname,
+                        clientname: clientname,
+                        id: idofthatbranch.id,
                         orgname: localStorage.getItem('orgname'),
                         orgcode: localStorage.getItem('orgcode'),
                     }
@@ -122,76 +178,122 @@ const Contactdetails = () => {
         fetchAllpeopleContact();
     }, []);
 
-// const newContacts = allcontacts.filter((contact, i) => i !== index);
-        // setAllContacts(newContacts);
-
-   
 
 
-        async function handleDelete(index) {
-            try {
-                const contactToDelete = allcontacts[index];
-                const { email, mobile, contactName, designation, department } = contactToDelete;
-        
-                // Send DELETE request to backend with contact data to identify and delete the contact
-                const response = await axios.delete('http://localhost:5000/deleteContact', {
-                    data: {
-                        email,
-                        mobile,
-                        contactName,
-                        designation,
-                        department
-                    }
-                });
-                fetchAllContacts();
-                toast.success('Contact deleted successfully')
-            } catch (error) {
-                toast.error('Error deleting contact')
-                console.log(error);
-            }
+    async function handleDelete(index) {
+        try {
+            const contactToDelete = allcontacts[index];
+            const { email, mobile, contactName, designation, department } = contactToDelete;
+
+            // Send DELETE request to backend with contact data to identify and delete the contact
+            const response = await axios.delete('http://localhost:5000/deleteContact', {
+                data: {
+                    email,
+                    mobile,
+                    contactName,
+                    designation,
+                    department
+                }
+            });
+            fetchAllContacts();
+            toast.success('Contact deleted successfully');
+        } catch (error) {
+            toast.error('Error deleting contact')
+            console.log(error);
         }
-        
-        const [editVisible, seteditVisible] = useState(false);
+    }
 
-        // const [editContact, setEditContact] = useState(null);
-        const handleEdit = (index) => {
-            const contactToEdit = allcontacts[index];
-            setContact(contactToEdit);
-            seteditVisible(true);
-            setVisible(true); // Open the modal for editing
+    const [editVisible, seteditVisible] = useState(false);
 
-            // handleUpdate();
+    // const [editContact, setEditContact] = useState(null);
+    const handleEdit = (index) => {
+        const contactToEdit = allcontacts[index];
+        console.log(contactToEdit);
+        setContact(contactToEdit);
+        seteditVisible(true);
+        setVisible(true); // Open the modal for editing
+
+        // handleUpdate();
+
+    };
 
 
-        };
-        
-        // // Function to update the edited contact
-        const handleUpdate = async () => {
-            try {
-                // Send a PUT request to update the contact
-                const codeoforg = localStorage.getItem('orgcode');
-                const nameoforg = localStorage.getItem('orgname');
-                const branchname = localStorage.getItem('selectedBranchName');
+    // if (setVisible === false) {
+    //     contact({
+    //         contactName: '',
+    //         designation: '',
+    //         department: '',
+    //         mobile: '',
+    //         email: ''
+    //     })
+    // }
+
+
+    // // Function to update the edited contact
+    const handleUpdate = async () => {
+        try {
+
+
+            const getBranchDetails = localStorage.getItem('firstorgofclient');
+            const idOfThatBranch = JSON.parse(getBranchDetails);
+
+            let clientname, branchname, id;
+            if (localStorage.getItem('isEditing') === 'true') {
+                clientname = localStorage.getItem('organizationclientname');
+                branchname = idOfThatBranch.branchname;
+                id = idOfThatBranch.id;
+            } else {
+                clientname = localStorage.getItem('clientname');
+                branchname = localStorage.getItem('branchnames');
+            }
+
+            if (localStorage.getItem('isEditing') === 'true') {
                 const response = await axios.put('http://localhost:5000/updateContact', {
+                   
+                        contactName: contact.contactName,
+                        designation: contact.designation,
+                        department: contact.department,
+                        mobile: contact.mobile,
+                        email: contact.email,
+                        branchname: branchname,
+                        clientname: clientname,
+                        id: id,
+                        orgname: localStorage.getItem('orgname'),
+                        orgcode: localStorage.getItem('orgcode'),
+                   
+                });
+                
+            } else {
+                const response = await axios.put('http://localhost:5000/updateContactduringNew', {
                     contactName: contact.contactName,
                     designation: contact.designation,
                     department: contact.department,
                     mobile: contact.mobile,
                     email: contact.email,
                     branchname: branchname,
-                    orgname: nameoforg,
-                    orgcode: codeoforg
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    clientname: clientname
                 });
                 
-                // Fetch updated contacts after editing
-                fetchAllContacts();
-                setVisible(false); // Close the modal after editing
-                toast.success('Contact updated successfully')
-            } catch (error) {
-                toast.error('Error updating contact')
-                console.log(error);
             }
-        };
+
+            // Fetch updated contacts after editing
+            fetchAllContacts();
+            setContact({ // Reset the contact state to its initial values
+                contactName: '',
+                designation: '',
+                department: '',
+                mobile: '',
+                email: ''
+            });
+            setVisible(false); // Close the modal after editing
+            toast.success('Contact updated successfully')
+        } catch (error) {
+            toast.error('Error updating contact')
+            console.log(error);
+        }
+    };
 
 
 
@@ -231,7 +333,7 @@ const Contactdetails = () => {
                                 <CTableDataCell>{contact.designation}</CTableDataCell>
                                 <CTableDataCell>{contact.department}</CTableDataCell>
                                 <CTableDataCell>{contact.mobile}</CTableDataCell>
-                                
+
                                 <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     <Link onClick={() => handleEdit(index)}>
                                         Edit
@@ -256,7 +358,7 @@ const Contactdetails = () => {
 
 
                     <div className='search-button'>
-                        <CButton color="success" type="submit" className='contact-add-button' onClick={() => {setVisible(!visible); seteditVisible(false)}}>
+                        <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); seteditVisible(false) }}>
                             +
                         </CButton>
                     </div>
@@ -290,12 +392,12 @@ const Contactdetails = () => {
                         editVisible ?
                             <CButton color="primary" onClick={handleUpdate}>Update</CButton> :
                             <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
-                    
+
                     }
                     {/* <CButton color="primary" onClick={handleSubmit}>Add New</CButton> */}
-                   
-                    
-                    
+
+
+
                 </CModalFooter>
             </CModal>
         </div>
