@@ -518,24 +518,24 @@ const General = ({ onSave, gData }) => {
                 // Get all branches from localStorage
                 const branchesString = localStorage.getItem('organizationbranches');
                 const jsonbranchesString = JSON.parse(branchesString);
-    
+
                 // Extract branchname and id properties from each object
                 const branchesArray = jsonbranchesString.map(branch => ({
                     id: branch.id,
                     branchname: branch.branchname
                 }));
-    
+
                 // Set the branches array to the state
                 setAllBranches(branchesArray);
             } catch (error) {
                 console.log("Error: " + error);
             }
         };
-    
+
         // Call the fetchAllBranches function
         fetchAllBranches();
     }, []);
-    
+
 
 
 
@@ -544,12 +544,12 @@ const General = ({ onSave, gData }) => {
 
     const handleAddBranch = async () => {
         try {
-            
+
             const codeoforg = localStorage.getItem('orgcode');
-           
-            if(localStorage.getItem('isEditing')==='true'){
+
+            if (localStorage.getItem('isEditing') === 'true') {
                 var clientname = localStorage.getItem('organizationclientname');
-            }else{
+            } else {
                 var clientname = localStorage.getItem('clientname');
             }
 
@@ -561,6 +561,23 @@ const General = ({ onSave, gData }) => {
             setVisible(false);
 
             localStorage.setItem('branchnames', response.data.branchname);
+
+            localStorage.removeItem('firstorgofclient');
+
+            if (localStorage.getItem('branchnames') && localStorage.getItem('isEditing') === 'true') {
+                setGeneralData({
+                    ...generalData,
+                    address: '',
+                    country: '',
+                    postalcode: '',
+                    state: '',
+                    phone: '',
+                    email: '',
+                    city: ''
+                });
+            }
+
+
 
         } catch (error) {
             console.log(error);
@@ -574,13 +591,6 @@ const General = ({ onSave, gData }) => {
             localStorage.setItem('clientname', generalData.clientname);
         }
     }, [generalData.clientname]);
-
-
-
-
-
-
-
 
 
 
@@ -705,19 +715,22 @@ const General = ({ onSave, gData }) => {
     async function handlebranchchange(index) {
         try {
             const selectedBranchName = allBranches[index];
+
             const clientname = localStorage.getItem('organizationclientname');
             const aliashai = localStorage.getItem('alias');
-            
-            // localStorage.setItem('selectedBranchName', selectedBranchName);
+
             const response = await axios.get('http://localhost:5000/allFetch', {
                 params: {
                     clientname: clientname,
                     alias: aliashai,
-                    branchname: selectedBranchName
+                    branchname: selectedBranchName.branchname,
+                    id: selectedBranchName.id
                 }
             })
             setGeneralData(response.data);
-            toast.success('Branched switched successfully')
+            localStorage.setItem('firstorgofclient', JSON.stringify(selectedBranchName));
+            localStorage.setItem('branchnames', selectedBranchName.branchname);
+            toast.success('Branched switched successfully');
         } catch (error) {
             console.log("Error: " + error);
         }
@@ -726,8 +739,17 @@ const General = ({ onSave, gData }) => {
 
 
 
-let checkbranchname = JSON.parse(localStorage.getItem('firstorgofclient'));
+    async function handleDelete(e){
+        e.preventDefault();
+        try {
+            console.log('Deleting branch');
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+
+    let checkbranchname = JSON.parse(localStorage.getItem('firstorgofclient'));
 
 
     return (
@@ -738,7 +760,7 @@ let checkbranchname = JSON.parse(localStorage.getItem('firstorgofclient'));
                         <input
                             type="text"
                             name="clientname"
-                            value={generalData.clientname}
+                            value={generalData.clientname ? generalData.clientname : localStorage.getItem('organizationclientname')}
                             placeholder="Client Name"
                             onChange={handleChange}
                             className='text-field-1'
@@ -752,18 +774,15 @@ let checkbranchname = JSON.parse(localStorage.getItem('firstorgofclient'));
                             className='text-field-1'
                         /> */}
                         <CDropdown className="text-field-1">
-                            <CDropdownToggle color="secondary">{ checkbranchname ? checkbranchname.branchname: 'Create a branch'}</CDropdownToggle>
+                            <CDropdownToggle color="secondary">{localStorage.getItem('branchnames') || (checkbranchname ? checkbranchname.branchname : 'Create a branch')}</CDropdownToggle>
                             <CDropdownMenu className="text-field-2">
-                                {/* <CDropdownItem href="#">Mumbai</CDropdownItem>
-                                <CDropdownItem href="#">Kolkata</CDropdownItem> */}
-                                {/* {generalData.branchName.map((branch, index) => (
-                                    <CDropdownItem key={index}>{branch}</CDropdownItem>
-                                ))} */}
+                               
 
                                 <>
                                     {allBranches.map((branch, index) => (
                                         <CDropdownItem key={index} onClick={() => handlebranchchange(index)}>
                                             {branch.branchname}
+                                            <CButton onClick={handleDelete}>delete</CButton>
                                         </CDropdownItem>
                                     ))}
                                 </>

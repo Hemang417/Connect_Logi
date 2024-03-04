@@ -296,22 +296,28 @@ const Registration = ({ onSave, rData }) => {
             }
             prefill();
         }
-        if (localStorage.getItem('isEditing')) {
-            setIsEditing(true);
-            // Clear the GST field
-            
-            setRegistrationData(prevData => ({
-                ...prevData,
-                GST: '',
-                PAN: '',
-                IEC: ''
-            }));
-        }
+        
     }, []);
 
 
 
-
+    useEffect(() => {
+        const handlenewbranchdata = async () => {
+            try {
+                if (localStorage.getItem('branchnames') && localStorage.getItem('isEditing') === 'true') {
+                    setRegistrationData({
+                        PAN: '',
+                        GST: '',
+                        IEC: ''
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        handlenewbranchdata();
+    }, []);
+    
 
 
 

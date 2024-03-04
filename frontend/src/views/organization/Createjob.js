@@ -325,7 +325,9 @@ const Createjob = () => {
     localStorage.removeItem('firstorgofclient');
     localStorage.removeItem('alias');
     localStorage.removeItem('organizationclientname');
-    navigate('/organization#/organization')
+    localStorage.removeItem('isEditing');
+    localStorage.removeItem('branchDataforprefill');
+    navigate('/organization#/organization');
   }
 
 
@@ -338,8 +340,8 @@ const Createjob = () => {
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const alias = localStorage.getItem('alias');
-     console.log(generalData); 
-     
+      console.log(generalData);
+
       // Fetch the latest data from state variables
       const dataToUpdate = {
         alias: alias,
@@ -359,7 +361,7 @@ const Createjob = () => {
         orgname: nameoforg,
         orgcode: codeoforg
       };
-      
+
       // Send update request with the latest data
       const response = await axios.put('http://localhost:5000/updateData', dataToUpdate);
       toast.success('Updated data successfully')
@@ -370,7 +372,47 @@ const Createjob = () => {
       console.log("Error: " + error);
     }
   }
-  
+
+
+
+
+
+
+
+  async function storenewbranch(e) {
+    try {
+      e.preventDefault();
+      const nameoforg = localStorage.getItem('orgname');
+      const codeoforg = localStorage.getItem('orgcode');
+      const employeename = localStorage.getItem('username');
+      const alias = localStorage.getItem('alias');
+      const response = await axios.post('http://localhost:5000/org/store', {
+        branchName: localStorage.getItem('branchnames'),
+        clientname: localStorage.getItem('organizationclientname'),
+        address: generalData.address,
+        country: generalData.country,
+        state: generalData.state,
+        city: generalData.city,
+        postalcode: generalData.postalcode,
+        phone: generalData.phone,
+        email: generalData.email,
+        PAN: registrationData.PAN,
+        GST: registrationData.GST,
+        IEC: registrationData.IEC,
+        creditdays: accountData.creditdays,
+        orgname: nameoforg,
+        orgcode: codeoforg,
+        username: employeename,
+      })
+      toast.success('Branch added successfully');
+
+      navigate('/organization#/organization')
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 
 
@@ -454,6 +496,7 @@ const Createjob = () => {
 
       <div className='all-buttons'>
 
+
         {localStorage.getItem('updateBtn') === 'true' ? (
           <div className='search-button'>
             <CButton color="primary" type="submit" onClick={updateData}>
@@ -469,30 +512,14 @@ const Createjob = () => {
         )}
 
 
+        {localStorage.getItem('isEditing') === 'true' && localStorage.getItem('branchnames') && (
+          <div className='search-button'>
+            <CButton color="primary" type="submit" onClick={storenewbranch}>
+              Save New Branch
+            </CButton>
+          </div>
+        )}
 
-        {/* <div className='search-button'>
-          <CButton color="primary" type="submit" onClick={updateData}>
-            Update
-          </CButton>
-        </div> 
-
-        <div className='search-button'>
-          <CButton color="primary" type="submit" onClick={handleSubmit}>
-            Save & Close
-          </CButton>
-        </div> */}
-
-        {/* <div className='search-button'>
-          <CButton color="primary" type="submit" onClick={updateData}>
-            Update
-          </CButton>
-        </div>
-
-        <div className='search-button'>
-          <CButton color="primary" type="submit" onClick={handleSubmit}>
-            Save & Close
-          </CButton>
-        </div> */}
 
         <div className='search-button'>
           <CButton color="primary" type="submit" onClick={redirectToOrg}>

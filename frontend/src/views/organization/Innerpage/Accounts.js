@@ -161,7 +161,7 @@ const Accounts = ({ onSave, aData }) => {
                     const firstbranchofclient = localStorage.getItem('firstorgofclient');
                     const jsonfirstbranch = JSON.parse(firstbranchofclient);
                     const clientname = localStorage.getItem('organizationclientname');
-                    const aliashai = localStorage.getItem('alias')
+                    const aliashai = localStorage.getItem('alias');
     
                     const response = await axios.get('http://localhost:5000/allFetch', {
                         params: {
@@ -178,20 +178,37 @@ const Accounts = ({ onSave, aData }) => {
             }
             prefill();
         }
-        if (localStorage.getItem('isEditing')) {
-            setIsEditing(true);
-            // Clear the GST field
-            setAccountData(prevData => ({
-                ...prevData,
-                creditdays: ''
-            }));
-        }
+        
     }, []);
 
 
 
 
 
+    useEffect(() => {
+        const handlenewbranchdata = async () => {
+            try {
+                if (localStorage.getItem('branchnames') && localStorage.getItem('isEditing') === 'true') {
+                    setAccountData({
+                        creditdays: ''
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        handlenewbranchdata();
+    }, []);
+    
+
+
+
+
+// useEffect(() => {
+//     const prefillswitchedbranch = async () => {
+
+//     }
+// })
 
 
 
