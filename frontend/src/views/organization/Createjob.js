@@ -246,33 +246,41 @@ const Createjob = () => {
   // console.log(allFetch);
 
   async function handleSaveGeneralData(data) {
-    const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
-    localstorageobjtoupdate.address = data.address;
-    localstorageobjtoupdate.country = data.country;
-    localstorageobjtoupdate.state = data.state;
-    localstorageobjtoupdate.city = data.city;
-    localstorageobjtoupdate.postalcode = data.postalcode;
-    localstorageobjtoupdate.phone = data.phone;
-    localstorageobjtoupdate.email = data.email;
-    localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
+    if (localStorage.getItem('branchDataforprefill')) {
+      const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+      localstorageobjtoupdate.address = data.address;
+      localstorageobjtoupdate.country = data.country;
+      localstorageobjtoupdate.state = data.state;
+      localstorageobjtoupdate.city = data.city;
+      localstorageobjtoupdate.postalcode = data.postalcode;
+      localstorageobjtoupdate.phone = data.phone;
+      localstorageobjtoupdate.email = data.email;
+      localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
+    }
+
     setGeneralData(data);
   };
 
 
-  const handleSaveAccountData = async(data) => {
-    const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
-    localstorageobjtoupdate.creditdays = data.creditdays;
-    localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
+  const handleSaveAccountData = async (data) => {
+    if (localStorage.getItem('branchDataforprefill')) {
+      const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+      localstorageobjtoupdate.creditdays = data.creditdays;
+      localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
+    }
+
     setAccountData(data);
   }
 
 
-  const handleSaveRegistrationData = async(data) => {
-    const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
-    localstorageobjtoupdate.PAN = data.PAN;
-    localstorageobjtoupdate.GST = data.GST;
-    localstorageobjtoupdate.IEC = data.IEC;
-    localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
+  const handleSaveRegistrationData = async (data) => {
+    if (localStorage.getItem('branchDataforprefill')) {
+      const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+      localstorageobjtoupdate.PAN = data.PAN;
+      localstorageobjtoupdate.GST = data.GST;
+      localstorageobjtoupdate.IEC = data.IEC;
+      localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
+    }
     setRegistrationData(data);
   }
 
@@ -308,12 +316,12 @@ const Createjob = () => {
       toast.success('Stored client successfully');
 
       let insertedRowsBID = response.data;
-      
+
       const inserttheID = await axios.put('http://localhost:5000/updateTheBID', {
-          BID: insertedRowsBID,
-          clientname: generalData.clientname,
-          orgcode: codeoforg,
-          branchname: generalData.branchName
+        BID: insertedRowsBID,
+        clientname: generalData.clientname,
+        orgcode: codeoforg,
+        branchname: generalData.branchName
       });
 
 
@@ -327,7 +335,7 @@ const Createjob = () => {
 
       localStorage.removeItem('branchnames');
       navigate('/organization#/organization');
-  
+
     } catch (error) {
       toast.error('Error in storing client successfully')
       console.log("Error: " + error);
@@ -400,7 +408,7 @@ const Createjob = () => {
         orgname: nameoforg,
         orgcode: codeoforg
       };
-     
+
       // Send update request with the latest data
       const response = await axios.put('http://localhost:5000/updateData', dataToUpdate);
       toast.success('Updated data successfully')
@@ -448,10 +456,10 @@ const Createjob = () => {
       let insertedRowsBID = response.data;
 
       const inserttheID = await axios.put('http://localhost:5000/updateTheBID', {
-          BID: insertedRowsBID,
-          clientname: localStorage.getItem('organizationclientname'),
-          orgcode: codeoforg,
-          branchname: localStorage.getItem('branchnames')
+        BID: insertedRowsBID,
+        clientname: localStorage.getItem('organizationclientname'),
+        orgcode: codeoforg,
+        branchname: localStorage.getItem('branchnames')
       });
 
 

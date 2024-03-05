@@ -372,6 +372,17 @@ const _nav = [
     //   text: 'NEW',
     // },
   },
+  {
+    component: CNavItem,
+    name: 'TAT',
+    to: '/tat',
+    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW',
+    // },
+  },
 
 
   {
@@ -430,7 +441,7 @@ const _nav = [
 
 const visibleNav = isAdmin
   ? _nav // If isAdmin is true, show all items
-  : _nav.filter(item => item.name !== 'New User' && item.name !== 'User List'); // Exclude "New User" and "User List" if isAdmin is false
+  : _nav.filter(item => item.name !== 'New User' && item.name !== 'User List' && item.name !== 'TAT'); // Exclude "New User" and "User List" if isAdmin is false
 
 
 export default visibleNav;

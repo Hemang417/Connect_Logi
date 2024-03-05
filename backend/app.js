@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact  } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient } from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeimpTAT, fetchImpTATData } from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -467,6 +467,29 @@ app.delete('/deleteBranch', async (req, res) => {
     }
 });
 
+
+
+// this is for ImpTAT file
+
+app.post('/storeimpTAT', async (req, res) => {
+    try {
+        const {impTATData, orgname, orgcode} = req.body;
+        const storedimpTATData = await storeimpTAT(impTATData, orgname, orgcode);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/getImpTATData', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const getImpTATData = await fetchImpTATData(orgname, orgcode);
+        res.send(getImpTATData);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 
