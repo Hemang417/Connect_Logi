@@ -696,7 +696,7 @@ const General = ({ onSave, gData }) => {
                             id: jsonfirstbranch.id
                         }
                     });
-                    localStorage.setItem('branchDataforprefill', JSON.stringify(response.data))
+                    localStorage.setItem('branchDataforprefill', JSON.stringify(response.data));
                     setGeneralData(response.data);
                 } catch (error) {
                     console.log("Error: " + error);
@@ -732,6 +732,7 @@ const General = ({ onSave, gData }) => {
             setGeneralData(response.data);
             localStorage.setItem('firstorgofclient', JSON.stringify(selectedBranchName));
             localStorage.setItem('branchnames', selectedBranchName.branchname);
+            localStorage.setItem('branchDataforprefill', JSON.stringify(response.data))
             toast.success('Branched switched successfully');
         } catch (error) {
             console.log("Error: " + error);

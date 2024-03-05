@@ -67,11 +67,17 @@ const Contactdetails = () => {
             const getbranchdetails = localStorage.getItem('firstorgofclient');
             const idofthatbranch = JSON.parse(getbranchdetails);
 
-            if (localStorage.getItem('isEditing') === 'true') {
+            if (localStorage.getItem('isEditing') === 'true' && localStorage.getItem('firstorgofclient')) {
                 var clientname = localStorage.getItem('organizationclientname');
                 var branchname = idofthatbranch.branchname;
                 var id = idofthatbranch.id;
-            } else {
+            } else if(localStorage.getItem('isEditing')==='true'){
+                var clientname = localStorage.getItem('organizationclientname');
+                var branchname = localStorage.getItem('branchnames');
+            }
+            
+            else 
+            {
                 var clientname = localStorage.getItem('clientname');
                 var branchname = localStorage.getItem('branchnames');
             }
@@ -115,16 +121,20 @@ const Contactdetails = () => {
             const idOfThatBranch = JSON.parse(getBranchDetails);
 
             let clientname, branchname, id;
-            if (localStorage.getItem('isEditing') === 'true') {
+            if (localStorage.getItem('isEditing') === 'true' && localStorage.getItem('firstorgofclient')) {
                 clientname = localStorage.getItem('organizationclientname');
                 branchname = idOfThatBranch.branchname;
                 id = idOfThatBranch.id;
-            } else {
+            } else if(localStorage.getItem('isEditing')==='true'){
+                clientname = localStorage.getItem('organizationclientname');
+                branchname = localStorage.getItem('branchnames');
+            }
+            else {
                 clientname = localStorage.getItem('clientname');
                 branchname = localStorage.getItem('branchnames');
             }
 
-            if (localStorage.getItem('isEditing') === 'true') {
+            if (localStorage.getItem('isEditing') === 'true' && localStorage.getItem('firstorgofclient')) {
                 const response = await axios.get('http://localhost:5000/getAllContacts', {
                     params: {
                         branchname: branchname,
@@ -135,7 +145,20 @@ const Contactdetails = () => {
                     }
                 });
                 setAllContacts(response.data);
-            } else {
+            } else if(localStorage.getItem('isEditing')==='true'){
+                const response = await axios.get('http://localhost:5000/getAllContactsofNew', {
+                    params: {
+                        branchname: branchname,
+                        clientname: clientname,
+                        orgname: localStorage.getItem('orgname'),
+                        orgcode: localStorage.getItem('orgcode'),
+                    }
+                });
+                setAllContacts(response.data);
+            }   
+            
+            
+            else {
                 const response = await axios.get('http://localhost:5000/getAllContactsofNew', {
                     params: {
                         branchname: branchname,
@@ -238,16 +261,21 @@ const Contactdetails = () => {
             const idOfThatBranch = JSON.parse(getBranchDetails);
 
             let clientname, branchname, id;
-            if (localStorage.getItem('isEditing') === 'true') {
+            if (localStorage.getItem('isEditing') === 'true' && localStorage.getItem('firstorgofclient')) {
                 clientname = localStorage.getItem('organizationclientname');
                 branchname = idOfThatBranch.branchname;
                 id = idOfThatBranch.id;
-            } else {
+            } else if(localStorage.getItem('isEditing')==='true'){
+                clientname = localStorage.getItem('organizationclientname');
+                branchname = localStorage.getItem('branchnames');
+            }
+            
+            else {
                 clientname = localStorage.getItem('clientname');
                 branchname = localStorage.getItem('branchnames');
             }
 
-            if (localStorage.getItem('isEditing') === 'true') {
+            if (localStorage.getItem('isEditing') === 'true' && localStorage.getItem('firstorgofclient')) {
                 const response = await axios.put('http://localhost:5000/updateContact', {
                    
                         contactName: contact.contactName,
@@ -263,7 +291,21 @@ const Contactdetails = () => {
                    
                 });
                 
-            } else {
+            } else if(localStorage.getItem('isEditing')==='true'){
+                const response = await axios.put('http://localhost:5000/updateContactduringNew', {
+                    contactName: contact.contactName,
+                    designation: contact.designation,
+                    department: contact.department,
+                    mobile: contact.mobile,
+                    email: contact.email,
+                    branchname: branchname,
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    clientname: clientname
+                });
+            }
+            
+            else {
                 const response = await axios.put('http://localhost:5000/updateContactduringNew', {
                     contactName: contact.contactName,
                     designation: contact.designation,

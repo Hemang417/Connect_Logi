@@ -246,16 +246,33 @@ const Createjob = () => {
   // console.log(allFetch);
 
   async function handleSaveGeneralData(data) {
+    const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+    localstorageobjtoupdate.address = data.address;
+    localstorageobjtoupdate.country = data.country;
+    localstorageobjtoupdate.state = data.state;
+    localstorageobjtoupdate.city = data.city;
+    localstorageobjtoupdate.postalcode = data.postalcode;
+    localstorageobjtoupdate.phone = data.phone;
+    localstorageobjtoupdate.email = data.email;
+    localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
     setGeneralData(data);
   };
 
 
-  const handleSaveAccountData = (data) => {
+  const handleSaveAccountData = async(data) => {
+    const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+    localstorageobjtoupdate.creditdays = data.creditdays;
+    localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
     setAccountData(data);
   }
 
 
-  const handleSaveRegistrationData = (data) => {
+  const handleSaveRegistrationData = async(data) => {
+    const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+    localstorageobjtoupdate.PAN = data.PAN;
+    localstorageobjtoupdate.GST = data.GST;
+    localstorageobjtoupdate.IEC = data.IEC;
+    localStorage.setItem('branchDataforprefill', JSON.stringify(localstorageobjtoupdate));
     setRegistrationData(data);
   }
 
@@ -298,6 +315,15 @@ const Createjob = () => {
           orgcode: codeoforg,
           branchname: generalData.branchName
       });
+
+
+      const inserttheIDincontact = await axios.put('http://localhost:5000/updatetheBIDcontact', {
+        BID: insertedRowsBID,
+        clientname: generalData.clientname,
+        orgcode: codeoforg,
+        orgname: nameoforg,
+        branchname: generalData.branchName
+      })
 
       localStorage.removeItem('branchnames');
       navigate('/organization#/organization');
@@ -351,28 +377,30 @@ const Createjob = () => {
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const alias = localStorage.getItem('alias');
-      console.log(generalData);
+
+      const localstorageobjtoupdate = await JSON.parse(localStorage.getItem('branchDataforprefill'));
+
 
       // Fetch the latest data from state variables
       const dataToUpdate = {
         alias: alias,
-        branchname: generalData.branchname,
-        clientname: generalData.clientname,
-        address: generalData.address,
-        country: generalData.country,
-        state: generalData.state,
-        city: generalData.city,
-        postalcode: generalData.postalcode,
-        phone: generalData.phone,
-        email: generalData.email,
-        PAN: registrationData.PAN,
-        GST: registrationData.GST,
-        IEC: registrationData.IEC,
-        creditdays: accountData.creditdays,
+        branchname: localstorageobjtoupdate.branchname,
+        clientname: localstorageobjtoupdate.clientname,
+        address: localstorageobjtoupdate.address,
+        country: localstorageobjtoupdate.country,
+        state: localstorageobjtoupdate.state,
+        city: localstorageobjtoupdate.city,
+        postalcode: localstorageobjtoupdate.postalcode,
+        phone: localstorageobjtoupdate.phone,
+        email: localstorageobjtoupdate.email,
+        PAN: localstorageobjtoupdate.PAN,
+        GST: localstorageobjtoupdate.GST,
+        IEC: localstorageobjtoupdate.IEC,
+        creditdays: localstorageobjtoupdate.creditdays,
         orgname: nameoforg,
         orgcode: codeoforg
       };
-
+     
       // Send update request with the latest data
       const response = await axios.put('http://localhost:5000/updateData', dataToUpdate);
       toast.success('Updated data successfully')
@@ -425,6 +453,17 @@ const Createjob = () => {
           orgcode: codeoforg,
           branchname: localStorage.getItem('branchnames')
       });
+
+
+      const inserttheIDincontact = await axios.put('http://localhost:5000/updatetheBIDcontact', {
+        BID: insertedRowsBID,
+        clientname: localStorage.getItem('organizationclientname'),
+        orgcode: codeoforg,
+        orgname: nameoforg,
+        branchname: localStorage.getItem('branchnames')
+      })
+
+
 
       navigate('/organization#/organization');
 

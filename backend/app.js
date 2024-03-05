@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew  } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact  } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
 import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient } from './api/import.js';
 
@@ -146,6 +146,8 @@ app.get('/getAllContacts', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 })
+
+
 app.get('/getAllContactsofNew', async (req, res) => {
     try {
         const { branchname, clientname, orgname, orgcode } = req.query;
@@ -434,12 +436,25 @@ app.put('/updateTheBID', async (req, res) => {
 
 
 
+app.put('/updatetheBIDcontact', async(req, res) => {
+    try {
+        const {BID, clientname, orgname, orgcode, branchname} = req.body;
+        const updationofBIDincontact = await updateBIDContact(BID, clientname, orgcode, orgname, branchname);
+        res.send(updationofBIDincontact);
+    } catch (error) {
+        console.log(error);
+        // Sending an error response back to the client
+        res.status(500).json({ success: false, message: "Error updating BID" });
+    }
+})
+
+
 
 
 app.delete('/deleteBranch', async (req, res) => {
     try {
         const { id, branchname, orgcode, orgname, clientname } = req.body;
-
+        
         // Call your deleteBranch function passing the received data
         const deletedBranch = await deleteBranch(id, branchname, orgcode, orgname, clientname);
 

@@ -261,7 +261,7 @@ export const fetchAllContacts = async (branchname, clientname, id, orgname, orgc
 export const fetchAllContactsofNew = async (branchname, clientname, orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ?`, [branchname, orgname, orgcode, clientname]);
+        const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid IS NULL`, [branchname, orgname, orgcode, clientname]);
         return rows;
     } catch (error) {
         console.error('Error updating row:', error.message);
@@ -273,8 +273,8 @@ export const fetchAllContactsofNew = async (branchname, clientname, orgname, org
 export const updateContactduringNew = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname) => {
     try {
         const connection = await connectMySQL();
-        const row = await connection.execute(`UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ?`,
-            [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname]);
+        const row = await connection.execute(`UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND mobile = ?`,
+            [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, mobile]);
         return row;
     } catch (error) {
         console.error('Error updating row:', error.message);
@@ -300,8 +300,8 @@ export const updateContact = async (contactName, designation, department, mobile
     try {
         const connection = await connectMySQL();
         const row = await connection.execute(
-            `UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid = ?`,
-            [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, id]
+            `UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid = ? AND mobile = ?`,
+            [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, id, mobile]
         );
         return row;
     } catch (error) {
@@ -350,6 +350,23 @@ export const updateBID = async (BID, clientname, orgcode, branchname) => {
 }
 
 
+export const updateBIDContact = async (BID, clientname, orgcode, orgname, branchname) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`
+            UPDATE contacts 
+            SET bid = ? 
+            WHERE clientname = ? AND orgcode = ? AND orgname = ? AND branchname = ? AND bid IS NULL
+        `, [BID, clientname, orgcode, orgname, branchname]);
+        return row;
+    } catch (error) {
+        console.log(error);
+        return { success: false, message: 'Error updating BID' };
+    }
+}
+
+
+
 
 
 export const deleteBranch = async (id, branchname, orgcode, orgname, clientname) => {
@@ -368,8 +385,15 @@ export const deleteBranch = async (id, branchname, orgcode, orgname, clientname)
             WHERE bid = ? AND orgcode = ? AND clientname = ? AND branchname = ?
         `, [id, orgcode, clientname, branchname]);
 
-        return {branchRow, orgRow};
+        // Delete contacts from contacts table
+        const [deletedContacts] = await connection.execute(`DELETE FROM contacts 
+            WHERE branchname = ? AND bid = ? AND orgcode = ? AND orgname = ? AND clientname = ?
+        `, [branchname, id, orgcode, orgname, clientname]);
+
+        return {branchRow, orgRow, deletedContacts};
+
     } catch (error) {
         console.log(error);
     }
 }
+

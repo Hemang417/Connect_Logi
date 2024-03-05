@@ -234,6 +234,13 @@ const organization = () => {
     localStorage.removeItem('updateBtn');
     localStorage.removeItem('clientname');
     localStorage.removeItem('branchnames');
+    localStorage.removeItem('organizationclientname');
+    localStorage.removeItem('firstorgofclient');
+    localStorage.removeItem('isEditing');
+    localStorage.removeItem('branchDataforprefill');
+    localStorage.removeItem('alias');
+    localStorage.removeItem('organizationbranches');
+    
   }
 
   useEffect(() => {
