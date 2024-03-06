@@ -62,9 +62,9 @@ const impcreatejob = () => {
 
 
   // const [showAll, setshowAll] = useState(false);
-
+  const currentdateandtime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   const [JobformData, setJobFormData] = useState({
-    jobDate: '',
+    jobDate: currentdateandtime,
     docReceivedOn: '',
     transportMode: '',
     customHouse: '',
@@ -77,7 +77,9 @@ const impcreatejob = () => {
     cfsName: '',
     shippingLineName: '',
     blType: '',
-    bltypenumber: ''
+    bltypenumber: '',
+    blstatus: '',
+    freedays: ''
   });
 
 
@@ -85,10 +87,12 @@ const impcreatejob = () => {
   useEffect(() => {
     const checkUsername = localStorage.getItem('username');
     let getRole = '';
-
+    if (checkUsername === 'admin') {
+      setshowQuotation(true);
+    }
     if (checkUsername && checkUsername.includes('@')) {
       getRole = checkUsername.split('@')[1];
-      if (getRole === 'sales' && getRole === 'admin') {
+      if (getRole === 'sales') {
         setshowQuotation(true);
       }
     }
@@ -115,22 +119,22 @@ const impcreatejob = () => {
 
   async function storeJob() {
     try {
-      
+
       const username = localStorage.getItem('username');
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
-      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg});
+      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg });
       if (response.status === 200) {
         toast.success('Job created successfully.');
-        
+
         const idofcol = response.data[0].id;
-        const sendupdate = await axios.put('http://localhost:5000/updateId', {jobno: idofcol, transportMode: JobformData.transportMode})
+        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode })
         localStorage.setItem('jobNumber', sendupdate.data)
       }
     } catch (error) {
       console.log(error);
     }
-}
+  }
 
 
 
@@ -155,7 +159,7 @@ const impcreatejob = () => {
               </div>
               <div>
                 <label for="Job Date" className='text-field-3'>Job Date</label>
-                <input type="date" placeholder="" className='text-field-4' name='jobDate' onChange={handleChange} value={JobformData.jobDate} />
+                <input type="text" placeholder="" className='text-field-4' name='jobDate' value={JobformData.jobDate} readOnly />
               </div>
               <div>
                 <label for="Doc. Received On Date" className='text-field-3'>Doc. Received On</label>
@@ -266,6 +270,10 @@ const impcreatejob = () => {
                 <input type="text" placeholder="" className='text-field-4' name='shippingLineName' onChange={handleChange} value={JobformData.shippingLineName} />
               </div>
               <div>
+                <label for="Free Days" className='text-field-3'>Free Days</label>
+                <input type="text" placeholder="" className='text-field-4' name='freedays' onChange={handleChange} value={JobformData.freedays} />
+              </div>
+              <div>
                 {/* <label for="Delivery Mode" className='text-field-3'></label> */}
                 <CDropdown>
                   <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.blType ? JobformData.blType : 'Select'}</CDropdownToggle>
@@ -277,6 +285,16 @@ const impcreatejob = () => {
                 <input type="text" placeholder="" className='text-field-4' name='bltypenumber' value={JobformData.bltypenumber} onChange={handleChange} />
               </div>
               <div>
+                <label for="Free Days" className='text-field-3'>BL Status</label>
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.blstatus ? JobformData.blstatus : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem onClick={() => handleDropdownChange('blstatus', 'Surrender')}>Surrender</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('blstatus', 'Original')}>Original</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+              </div>
+              <div>
                 <CButton color="primary" type="submit" onClick={storeJob}>Create Job</CButton>
               </div>
             </div>
@@ -284,47 +302,47 @@ const impcreatejob = () => {
         </CCard>
       </CCol>
 
-      
-        <CNav variant="tabs" className='nav-link-text'>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            {showQuotation && (
-              <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
-            )}
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
-          </CNavItem>
-          {/* <CNavItem>
+
+      <CNav variant="tabs" className='nav-link-text'>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          {showQuotation && (
+            <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
+          )}
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("documentupload") }}>Documents Upload</CNavLink>
+        </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
+        </CNavItem>
+        {/* <CNavItem>
   <CNavLink href="#">Link</CNavLink>
 </CNavItem> */}
-          {/* <CNavItem>
+        {/* <CNavItem>
   <CNavLink href="#" disabled>
     Disabled
   </CNavLink>
 </CNavItem> */}
-        </CNav>
-      
+      </CNav>
+
 
 
 
@@ -341,33 +359,33 @@ const impcreatejob = () => {
       {/* <Registration /> */}
 
 
-      
-        <div className='all-buttons'>
-          <div className='search-button'>
-            <CButton color="primary" type="submit">
-              Save
-            </CButton>
-          </div>
 
-          <div className='search-button'>
-            <CButton color="primary" type="submit">
-              Save & Close
-            </CButton>
-          </div>
-
-          <div className='search-button'>
-            <CButton color="primary" type="submit">
-              Save & New
-            </CButton>
-          </div>
-
-          <div className='search-button'>
-            <CButton color="primary" type="submit">
-              Close
-            </CButton>
-          </div>
+      <div className='all-buttons'>
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Save
+          </CButton>
         </div>
-     
+
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Save & Close
+          </CButton>
+        </div>
+
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Save & New
+          </CButton>
+        </div>
+
+        <div className='search-button'>
+          <CButton color="primary" type="submit">
+            Close
+          </CButton>
+        </div>
+      </div>
+
 
     </div>
   )

@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact  } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeimpTAT, fetchImpTATData, updateImpTATData } from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeimpTAT, fetchImpTATData, updateImpTATData, TATget } from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -65,7 +65,7 @@ app.post('/org/store', async (req, res) => {
 app.get('/getOrg', async (req, res) => {
     try {
         const { orgname, orgcode } = req.query;
-        const renderData = await OrgRender(orgname, orgcode );
+        const renderData = await OrgRender(orgname, orgcode);
         res.status(200).json(renderData);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -86,7 +86,7 @@ app.post('/emp/store', async (req, res) => {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
         const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname);
-        
+
         res.status(200).json(allStorageofemp);
     } catch (error) {
         console.log('Error during Login:', error);
@@ -177,11 +177,11 @@ app.delete('/deleteContact', async (req, res) => {
 
 
 
-app.put('/updateContact', async(req, res) => {
+app.put('/updateContact', async (req, res) => {
     try {
-        const { contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode} = req.body;
-     
-        const contactStore = await updateContact(contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode );
+        const { contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode } = req.body;
+
+        const contactStore = await updateContact(contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode);
         return res.status(200).json(contactStore);
     } catch (error) {
         console.log('Error during data update:', error);
@@ -190,9 +190,9 @@ app.put('/updateContact', async(req, res) => {
 })
 
 
-app.put('/updateContactduringNew', async(req, res) => {
+app.put('/updateContactduringNew', async (req, res) => {
     try {
-        const {contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname} = req.body;
+        const { contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname } = req.body;
         const response = await updateContactduringNew(contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname);
         return res.status(200).json(response);
     } catch (error) {
@@ -204,9 +204,9 @@ app.put('/updateContactduringNew', async(req, res) => {
 
 app.get('/fetchAllusers', async (req, res) => {
     try {
-        const {orgcode, orgname, username} = req.query;
+        const { orgcode, orgname, username } = req.query;
         const getAllusers = await fetchAllusers(orgcode, orgname, username);
-        
+
         // if(getAllusers.status === 200){
         //     res.status(200);
         // }
@@ -250,7 +250,7 @@ app.post('/impstore', async (req, res) => {
         const { username, ...dataAccess } = req.body; // Destructure username and dataAccess from req.body
         const storeimp = await storeimpaccess(dataAccess, username);
         res.json(storeimp)
-        
+
         // const allRows = [
         //     ETAFollowUp,
         //     ScrutinyDocument,
@@ -278,7 +278,7 @@ app.post('/impstore', async (req, res) => {
         //     Dispatch,
         //     Miscellaneous
         // ]
-        
+
         // const storeimp = await storeimpaccess(allRows, username);
 
     } catch (error) {
@@ -290,7 +290,7 @@ app.post('/impstore', async (req, res) => {
 
 app.delete('/delimp', async (req, res) => {
     try {
-        const {username, ...dataAccess} = req.body;
+        const { username, ...dataAccess } = req.body;
         const removeimp = await removeimpaccess(dataAccess, username);
         res.json(removeimp);
     } catch (error) {
@@ -302,7 +302,7 @@ app.delete('/delimp', async (req, res) => {
 
 app.get('/getUserAccess', async (req, res) => {
     try {
-        const {username} = req.query;
+        const { username } = req.query;
         const userAccess = await getUserAccess(username);
         res.json(userAccess);
     } catch (error) {
@@ -316,28 +316,28 @@ app.get('/getUserAccess', async (req, res) => {
 
 app.post('/storeJob', async (req, res) => {
     try {
-        
+
         const {
-        jobDate,
-        docReceivedOn,
-        transportMode,
-        customHouse,
-        ownBooking,
-        deliveryMode,
-        numberOfContainer,
-        ownTransportation,
-        beType,
-        consignmentType,
-        cfsName,
-        shippingLineName,
-        blType,
-        bltypenumber,
-        jobOwner,
-        orgname, orgcode, lastIc
-    } = req.body;
-    const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc);
+            jobDate,
+            docReceivedOn,
+            transportMode,
+            customHouse,
+            ownBooking,
+            deliveryMode,
+            numberOfContainer,
+            ownTransportation,
+            beType,
+            consignmentType,
+            cfsName,
+            shippingLineName,
+            blType,
+            bltypenumber,
+            jobOwner,
+            orgname, orgcode, lastIc, freedays, blstatus
+        } = req.body;
+        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus);
         console.log(storeandcreateJob);
-    res.status(200).json(storeandcreateJob);
+        res.status(200).json(storeandcreateJob);
 
     } catch (error) {
         console.log(error);
@@ -347,7 +347,7 @@ app.post('/storeJob', async (req, res) => {
 
 app.put('/updateId', async (req, res) => {
     try {
-        const {jobno, transportMode} = req.body;
+        const { jobno, transportMode } = req.body;
         const sendtoAPI = await updateJobNumber(jobno, transportMode);
         res.status(200).json(sendtoAPI);
     } catch (error) {
@@ -356,10 +356,10 @@ app.put('/updateId', async (req, res) => {
 })
 
 
-app.get('/getbranches', async(req, res) => {
+app.get('/getbranches', async (req, res) => {
     try {
-        const {importerName, orgcode} = req.query;
-        const branches = await fetchBranches(importerName, orgcode);
+        const { importerName, orgcode, orgname } = req.query;
+        const branches = await fetchBranches(importerName, orgcode, orgname);
         res.json(branches)
     } catch (error) {
         console.log(error);
@@ -367,12 +367,12 @@ app.get('/getbranches', async(req, res) => {
 })
 
 
-app.get('/getorganizationdetails', async(req, res) => {
+app.get('/getorganizationdetails', async (req, res) => {
     try {
-        const {clientName, branchName, orgcode} = req.query;
-        
-        const alldata = await fetchAllorgdata(clientName, branchName, orgcode);
-        
+        const { clientName, branchName, orgcode, orgname, id } = req.query;
+
+        const alldata = await fetchAllorgdata(clientName, branchName, orgcode, orgname, id);
+
         res.send(alldata);
     } catch (error) {
         console.log(error);
@@ -383,8 +383,8 @@ app.get('/getorganizationdetails', async(req, res) => {
 
 app.post('/createGeneral', async (req, res) => {
     try {
-        const {orgname, orgcode, jobowner, jobnumber} = req.body;
-        const {importerName, address, gst, iec, portShipment, finalDestination} = req.body.formData;
+        const { orgname, orgcode, jobowner, jobnumber } = req.body;
+        const { importerName, address, gst, iec, portShipment, finalDestination } = req.body.formData;
         const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination);
         res.send(storingGeneralImportData);
     } catch (error) {
@@ -396,7 +396,7 @@ app.post('/createGeneral', async (req, res) => {
 
 app.get('/getimporters', async (req, res) => {
     try {
-        const {orgcode} = req.query;
+        const { orgcode } = req.query;
         const getClients = await getClient(orgcode);
         res.send(getClients);
     } catch (error) {
@@ -406,11 +406,13 @@ app.get('/getimporters', async (req, res) => {
 
 
 
-app.post('/storeinbranchestable', async(req, res) => {
+
+
+app.post('/storeinbranchestable', async (req, res) => {
     try {
-        const {clientname, orgcode, branchname} = req.body;
+        const { clientname, orgcode, branchname } = req.body;
         const storingbranchesinbranchtable = await saveBranchinTable(clientname, orgcode, branchname);
-        
+
         res.send(storingbranchesinbranchtable);
     } catch (error) {
         console.log(error);
@@ -423,9 +425,9 @@ app.post('/storeinbranchestable', async(req, res) => {
 app.put('/updateTheBID', async (req, res) => {
     try {
         const { BID, clientname, orgcode, branchname } = req.body;
-  
+
         const updatingtheBID = await updateBID(BID, clientname, orgcode, branchname);
-        
+
         res.status(200).json({ success: true, message: "BID updated successfully" });
     } catch (error) {
         console.log(error);
@@ -436,9 +438,9 @@ app.put('/updateTheBID', async (req, res) => {
 
 
 
-app.put('/updatetheBIDcontact', async(req, res) => {
+app.put('/updatetheBIDcontact', async (req, res) => {
     try {
-        const {BID, clientname, orgname, orgcode, branchname} = req.body;
+        const { BID, clientname, orgname, orgcode, branchname } = req.body;
         const updationofBIDincontact = await updateBIDContact(BID, clientname, orgcode, orgname, branchname);
         res.send(updationofBIDincontact);
     } catch (error) {
@@ -454,7 +456,7 @@ app.put('/updatetheBIDcontact', async(req, res) => {
 app.delete('/deleteBranch', async (req, res) => {
     try {
         const { id, branchname, orgcode, orgname, clientname } = req.body;
-        
+
         // Call your deleteBranch function passing the received data
         const deletedBranch = await deleteBranch(id, branchname, orgcode, orgname, clientname);
 
@@ -473,7 +475,7 @@ app.delete('/deleteBranch', async (req, res) => {
 
 app.post('/storeimpTAT', async (req, res) => {
     try {
-        const {impTATData, orgname, orgcode} = req.body;
+        const { impTATData, orgname, orgcode } = req.body;
         const storedimpTATData = await storeimpTAT(impTATData, orgname, orgcode);
     } catch (error) {
         console.log(error);
@@ -483,7 +485,7 @@ app.post('/storeimpTAT', async (req, res) => {
 
 app.get('/getImpTATData', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const getImpTATData = await fetchImpTATData(orgname, orgcode);
         res.send(getImpTATData);
     } catch (error) {
@@ -494,13 +496,26 @@ app.get('/getImpTATData', async (req, res) => {
 
 app.put('/updateImpTAT', async (req, res) => {
     try {
-        const {impTATData, orgname, orgcode} = req.body;
+        const { impTATData, orgname, orgcode } = req.body;
         const updateTATdata = await updateImpTATData(impTATData, orgname, orgcode);
         res.send(updateTATdata);
     } catch (error) {
         console.log(error);
     }
 })
+
+
+
+app.get('/getTATofO2D', async (req, res) => {
+    try {
+        const {orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC } = req.query;
+        const getTATofO2D = await TATget(orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC);
+        res.send(getTATofO2D);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 
 

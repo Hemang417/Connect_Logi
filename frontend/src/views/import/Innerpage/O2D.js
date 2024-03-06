@@ -50,6 +50,7 @@ const O2D = () => {
     const [dataAccess, setDataAccess] = useState({
         ETAFollowUp: '',
         ScrutinyDocument: '',
+        PortCFSNomination: '',
         ChecklistApproval: '',
         ESanchit: '',
         FillingBOE: '',
@@ -86,16 +87,47 @@ const O2D = () => {
         }
     };
 
+
+
+
+async function showTAT(){
+    try {
+        const nameoforg = localStorage.getItem('orgname');
+        const codeoforg = localStorage.getItem('orgcode');
+        const response = await axios.get('http://localhost:5000/getTATofO2D', {
+            params: {
+                orgname: nameoforg,
+                orgcode: codeoforg,
+                ScrutinyDocument: 'ScrutinyDocument',
+                PortCFSNomination: 'PortCFSNomination',
+                ChecklistApproval: 'ChecklistApproval',
+                ESanchit: 'ESanchit',
+                FillingBOE: 'FillingBOE',
+                Assesment: 'Assesment',
+                DutyCall: 'DutyCall',
+                ExaminationOOC: 'ExaminationOOC'
+            }
+        })
+        console.log(response.data);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         fetchUserAccess();
+        showTAT()
     }, []);
-
-
-
-
-
-
-    console.log(dataAccess);
 
 
 
@@ -123,7 +155,7 @@ const O2D = () => {
 
                         <CTableRow>
                             <CTableDataCell>ETA Follow Up</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.ETAFollowUp == 'ETAFollowUp' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell></CTableDataCell>
                             <CTableDataCell><input type="date" placeholder="" className='o2d-field-4 date-field' readOnly={dataAccess.ETAFollowUp == 'ETAFollowUp' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="date" placeholder="" className='o2d-field-4 date-field' readOnly={dataAccess.ETAFollowUp == 'ETAFollowUp' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ETAFollowUp == 'ETAFollowUp' ? visible : !visible} /></CTableDataCell>
@@ -149,7 +181,19 @@ const O2D = () => {
 
                         <CTableRow>
                             <CTableDataCell>Scrutiny Document</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="time" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell readOnly>UnderProcess</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                        </CTableRow>
+
+
+                        <CTableRow>
+                            <CTableDataCell>Port/CFS Nomination</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
@@ -161,9 +205,14 @@ const O2D = () => {
 
 
 
+
+
+
+
+
                         <CTableRow>
                             <CTableDataCell>Checklist Approval</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
@@ -174,7 +223,7 @@ const O2D = () => {
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>E-Sanchit</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
@@ -184,7 +233,7 @@ const O2D = () => {
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Filling BOE</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
@@ -200,7 +249,7 @@ const O2D = () => {
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Assesment</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
@@ -216,7 +265,7 @@ const O2D = () => {
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Duty Call</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
@@ -226,7 +275,7 @@ const O2D = () => {
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Examination/OOC</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>

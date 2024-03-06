@@ -46,119 +46,157 @@ const DoNDelivery = () => {
     const [visible, setVisible] = useState(false)
     return (
         <div>
-        <div className='left-div-table'>
-            <CTable hover responsive striped>
-                <CTableHead className='c-table-head'>
-                    <CTableRow color='dark'>
-                        <CTableHeaderCell scope="col">Type of Do & Delivery</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Plan Date</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Actual Date</CTableHeaderCell>
-                        <CTableHeaderCell scope="col"></CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Time Delay</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
-                    </CTableRow>
-                </CTableHead>
+            <div className='left-div-table'>
+                <CTable hover responsive striped>
+                    <CTableHead className='c-table-head'>
+                        <CTableRow color='dark'>
+                            <CTableHeaderCell scope="col">Type of Do & Delivery</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Plan Date</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Actual Date</CTableHeaderCell>
+                            <CTableHeaderCell scope="col"></CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Time Delay</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
+                        </CTableRow>
+                    </CTableHead>
 
-                <CTableBody>
-                    <CTableRow>
-                        <CTableDataCell>BL Status & Agent Name</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>                        
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>  
-                        <CDropdown>
-                                <CDropdownToggle className="dropdown-btn" color='secondary'>Select Query</CDropdownToggle>
-                                <CDropdownMenu className="text-field-4">
-                                    <CDropdownItem href="#">Underprocess</CDropdownItem>
-                                    <CDropdownItem href="#">Completed</CDropdownItem>
-                                </CDropdownMenu>
-                            </CDropdown>             
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Port/CFS Nomination</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>  
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Scrutiny</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>                 
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Original Doc. Received</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>      
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Invoice Received from Shipping Line</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>      
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Payment to Shipping Line</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>    
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Delivery Order</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>    
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CDropdown>
+                    <CTableBody>
+                        <CTableRow>
+                            <CTableDataCell>BL Status & Agent Name</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4 date-field' /></CTableDataCell>
+                            <CDropdown>
                                 <CDropdownToggle className="dropdown-btn" color='secondary'>Select Query</CDropdownToggle>
                                 <CDropdownMenu className="text-field-4">
                                     <CDropdownItem href="#">Underprocess</CDropdownItem>
                                     <CDropdownItem href="#">Completed</CDropdownItem>
                                 </CDropdownMenu>
                             </CDropdown>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                    <CTableRow>
-                        <CTableDataCell>Delivery</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                        <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>   
-                        <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>                      
-                        <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                        <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>                        
-                    </CTableRow>
-                </CTableBody>
-            </CTable>
-        </div>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Shipping Line Bond</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CDropdown>
+                                <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                                <CDropdownMenu className="text-field-4">
+                                    <CDropdownItem href="#">Yearly</CDropdownItem>
+                                    <CDropdownItem href="#">One Time</CDropdownItem>
+                                </CDropdownMenu>
+                            </CDropdown>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>BL Documents</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell readOnly>UnderProcess</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Original Doc. Received</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell readOnly>UnderProcess</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Invoice Received from Shipping Line</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell readOnly>UnderProcess</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Payment to Shipping Line</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell readOnly>UnderProcess</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Delivery Order</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CDropdown>
+                                <CDropdownToggle className="dropdown-btn" color='secondary'>Select Query</CDropdownToggle>
+                                <CDropdownMenu className="text-field-4">
+                                    <CDropdownItem href="#">Underprocess</CDropdownItem>
+                                    <CDropdownItem href="#">Completed</CDropdownItem>
+                                </CDropdownMenu>
+                            </CDropdown>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Container Arrived at CFS</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CDropdown>
+                                <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                                <CDropdownMenu className="text-field-4">
+                                    <CDropdownItem href="#">Yes</CDropdownItem>
+                                    <CDropdownItem href="#">No</CDropdownItem>
+                                </CDropdownMenu>
+                            </CDropdown>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Delivery</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell readOnly>UnderProcess</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                        <CTableRow>
+                            <CTableDataCell>Empty Container Recieving</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                            <CDropdown>
+                                <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                                <CDropdownMenu className="text-field-4">
+                                    <CDropdownItem href="#">Yes</CDropdownItem>
+                                    <CDropdownItem href="#">No</CDropdownItem>
+                                </CDropdownMenu>
+                            </CDropdown>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
+                        </CTableRow>
+                    </CTableBody>
+                </CTable>
+            </div>
         </div>
     )
 }

@@ -673,6 +673,8 @@ import Select from 'react-select';
 import { CCard, CCardBody, CCol, CRow, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, CButton, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react';
 import '../../../css/styles.css';
 import { CChart } from '@coreui/react-chartjs'
+import {useNavigate} from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 
 const General = () => {
@@ -689,6 +691,8 @@ const General = () => {
     const [importers, setImporters] = useState([]);
     const [visible, setVisible] = useState(false);
     const [filtered, setFiltered] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAllClients = async () => {
@@ -715,7 +719,11 @@ const General = () => {
         setFormData({
             ...formData,
             importerName: newValue.value,
+            address: '',
+            iec: '',
+            gst: ''
         });
+    
     };
 
     useEffect(() => {
@@ -732,31 +740,40 @@ const General = () => {
             const username = localStorage.getItem('username');
             const nameoforg = localStorage.getItem('orgname');
             const codeoforg = localStorage.getItem('orgcode');
+           
             const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum });
+            toast.success('Successfully stored General Details');
         } catch (error) {
+            toast.error('Error storing General Details.');
             console.log(error);
         }
     }
 
 
-    const handleBranchSelect = async (branchName) => {
+    const handleBranchSelect = async (branchName, id) => {
         setFormData({
             ...formData,
-            selectedBranch: branchName
+            selectedBranch: branchName,
+            id: id
         });
-        await fetchOrganizationDetails(branchName);
+        await fetchOrganizationDetails(branchName, id);
     };
 
+    
+    
 
     const fetchBranches = async () => {
         try {
             const codeoforg = localStorage.getItem('orgcode');
+            const nameoforg = localStorage.getItem('orgname');
             const response = await axios.get(`http://localhost:5000/getbranches`, {
                 params: {
                     importerName: formData.importerName,
-                    orgcode: codeoforg
+                    orgcode: codeoforg,
+                    orgname: nameoforg
                 }
             });
+            localStorage.setItem('allbranchesofclient', JSON.stringify(response.data))
             setFormData({
                 ...formData,
                 branches: response.data
@@ -766,22 +783,32 @@ const General = () => {
         }
     };
 
-    const fetchOrganizationDetails = async (branchName) => {
+
+    
+    
+
+
+
+    const fetchOrganizationDetails = async (branchName, id) => {
         try {
             const codeoforg = localStorage.getItem('orgcode');
             const response = await axios.get(`http://localhost:5000/getorganizationdetails`, {
                 params: {
                     clientName: formData.importerName,
                     branchName: branchName,
-                    orgcode: codeoforg
+                    orgcode: codeoforg,
+                    orgname: localStorage.getItem('orgname'),
+                    id: id
                 }
             });
+            
             setFormData({
                 ...formData,
                 address: response.data[0].address,
                 gst: response.data[0].GST,
                 iec: response.data[0].IEC
             });
+
         } catch (error) {
             console.error('Error fetching organization details:', error);
         }
@@ -803,16 +830,16 @@ const General = () => {
                             <CDropdown className="impgen-text-field-1">
                                 <CDropdownToggle color="secondary">Branch Names</CDropdownToggle>
                                 <CDropdownMenu className="impgen-text-dropdown">
-                                    {formData.branches.map((branch, index) => (
-                                        <CDropdownItem key={index} onClick={() => handleBranchSelect(branch.branchname)}>{branch.branchname}</CDropdownItem>
+                                    {formData.branches && formData.branches.map((branch, index) => (
+                                        <CDropdownItem key={index} onClick={() => handleBranchSelect(branch.branchname, branch.id)}>{branch.branchname}</CDropdownItem>
                                     ))}
                                 </CDropdownMenu>
                             </CDropdown>
                             <textarea name="address" placeholder='Address' cols="50" rows="5" className='impgen-text-field-1' value={formData.address} readOnly></textarea>
                             <input type="text" name="gst" placeholder="GST" className='impgen-text-field-1' value={formData.gst} readOnly />
                             <input type="text" name="iec" placeholder="IEC Code" className='impgen-text-field-1' value={formData.iec} readOnly />
-                            <input type="text" name="portShipment" placeholder="Port of Shipment" className='impgen-text-field-1' value={formData.portShipment} onChange={handleInputChange} />
-                            <input type="text" name="finalDestination" placeholder="Final Destination" className='impgen-text-field-1' value={formData.finalDestination} onChange={handleInputChange} />
+                            <input type="text" name="portShipment" placeholder="Port of Shipment" className='impgen-text-field-1' value={formData.portShipment} onChange={(e) => setFormData({ ...formData, portShipment: e.target.value })} />
+                            <input type="text" name="finalDestination" placeholder="Final Destination" className='impgen-text-field-1' value={formData.finalDestination}  onChange={(e) => setFormData({ ...formData, finalDestination: e.target.value })} />
                             
                             <CButton onClick={handleSubmit}>Submit</CButton>
                         </div>

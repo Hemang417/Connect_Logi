@@ -1,7 +1,7 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 
 let incrementNumber = 0;
-export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc) => {
+export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus) => {
     try {
         const connection = await connectMySQL();
         const firstletter = transportMode.charAt(0).toUpperCase();
@@ -25,9 +25,9 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 
 
         const [result] = await connection.execute(`INSERT INTO impjobcreation 
-        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgname, orgcode)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode]);
+        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgname, orgcode, freedays, blstatus)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus]);
 
         const insertedId = result.insertId;
 
@@ -80,12 +80,12 @@ export const updateJobNumber = async (id, transportMode) => {
 
 
 
-export const fetchBranches = async (importerName, orgcode) => {
+export const fetchBranches = async (importerName, orgcode, orgname) => {
     try {
         const connection = await connectMySQL();
 
-        const [rows] = await connection.execute(`SELECT branchname FROM branches WHERE clientname = ? AND orgcode = ?`, [importerName, orgcode]);
-
+        const [rows] = await connection.execute(`SELECT branchname, id FROM organizations WHERE clientname = ? AND orgcode = ? AND orgname = ?`, [importerName, orgcode, orgname]);
+        
         return rows;
     } catch (error) {
         console.log(error);
@@ -94,11 +94,11 @@ export const fetchBranches = async (importerName, orgcode) => {
 
 
 
-export const fetchAllorgdata = async (clientName, branchName, orgcode) => {
+export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, id) => {
     try {
         const connection = await connectMySQL();
 
-        const [rows] = await connection.execute(`SELECT GST, IEC, address FROM organizations WHERE clientname = ? AND orgcode = ? AND branchname = ?`, [clientName, orgcode, branchName]);
+        const [rows] = await connection.execute(`SELECT GST, IEC, address FROM organizations WHERE clientname = ? AND orgcode = ? AND branchname = ? AND orgname = ? AND id = ?`, [clientName, orgcode, branchName, orgname, id]);
 
         return rows;
 
@@ -127,11 +127,209 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 
 
 
+
+// export const getClient = async (orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const [rows] = await connection.execute(`SELECT clientname, GROUP_CONCAT(CONCAT_WS(':', id, branchname, address, GST, IEC) SEPARATOR ',') AS branches FROM organizations WHERE orgcode = ? GROUP BY clientname`, [orgcode]);
+//         // const allclients = [];
+   
+//         // Transform the rows into an array of objects with separate properties for client name and branches
+//         const clients = rows.map(row => {
+//             var client = {
+//                 clientname: row.clientname,
+//                 branches: []
+//             };
+
+//             // Split the concatenated string of branches and parse each branch into an object
+//             const branchDetails = row.branches.split(',');
+//             branchDetails.forEach(branch => {
+//                 var [id, branchname, address, GST, IEC] = branch.split(':');
+//                 var branchdata = {
+//                     id: id,
+//                     branchname: branchname,
+//                     address: address,
+//                     GST: GST,
+//                     IEC: IEC
+//                 };
+//                 // Push the branch data into the branches array of the client
+//                 client.branches.push(branchdata);
+//             });
+
+//             // Push the client object into the allclients array
+//             // sendClient(client);
+//             return client;
+//         });
+        
+        
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+// export const getClient = async (orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const [rows] = await connection.execute(`SELECT clientname, GROUP_CONCAT(CONCAT_WS(':', id, branchname, address, GST, IEC) SEPARATOR ',') AS branches FROM organizations WHERE orgcode = ? GROUP BY clientname`, [orgcode]);
+//         const allclients = [];
+//         // Transform the rows into an array of objects with separate properties for client name and branches
+//         const clients = rows.map(row => {
+//             const client = {
+//                 clientname: row.clientname,
+//                 branches: []
+//             };
+
+//             // Split the concatenated string of branches and parse each branch into an object
+//             const branchDetails = row.branches.split(',');
+//             branchDetails.forEach(branch => {
+//                 const [id, branchname, address, GST, IEC] = branch.split(':');
+//                 const branchdata = {
+//                     id: id,
+//                     branchname: branchname,
+//                     address: address,
+//                     GST: GST,
+//                     IEC: IEC
+//                 };
+//                 // Push the branch data into the branches array of the client
+//                 client.branches.push(branchdata);
+//             });
+
+//             // Print out the client object and its branches separately
+//             // console.log('Client:', client);
+            
+//             return client;
+//         });
+
+//         return allclients;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+// export const getClient = async (orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const [rows] = await connection.execute(`SELECT clientname, GROUP_CONCAT(CONCAT_WS(':', id, branchname, address, GST, IEC) SEPARATOR ',') AS branches FROM organizations WHERE orgcode = ? GROUP BY clientname`, [orgcode]);
+        
+//         // Transform the rows into an array of objects with separate properties for client name and branches
+//         const clients = rows.map(row => {
+            
+//             // Split the concatenated string of branches and parse each branch into an object
+//             const branchDetails = row.branches.split(',');
+           
+//             branchDetails.forEach(branch => {
+//                 const [id, branchname, address, GST, IEC] = branch.split(':');
+               
+//                 const branchdata = {
+//                     id: id,
+//                     branchname: branchname,
+//                     address: address,
+//                     GST: GST,
+//                     IEC: IEC
+//                 }
+            
+//                 const client = {
+//                     clientname: row.clientname,
+//                     branches: []
+//                 };
+                
+//                 client.branches.push(branchdata);
+//                 console.log(client);
+//             });
+        
+//         });
+
+//         // console.log(clients);
+//         return clients;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+
+// export const getClient = async (orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const [rows] = await connection.execute(`SELECT clientname, address, GST, IEC, branchname, id
+//         FROM organizations
+//         WHERE orgcode = ?
+//         GROUP BY clientname, address, GST, IEC, branchname, id;
+//         `, [orgcode]);
+
+//         // Initialize an empty array to store the clients
+//         const clients = [];
+
+//         // Iterate over each row from the database
+//         rows.forEach(row => {
+//             // Check if the client already exists in the clients array
+//             const existingClientIndex = clients.findIndex(client => client.clientname === row.clientname);
+
+//             // If the client exists, add the branch to its branches array
+//             if (existingClientIndex !== -1) {
+//                 clients[existingClientIndex].branches.push({
+//                     branchname: row.branchname,
+//                     id: row.id,
+//                     address: row.address,
+//                     GST: row.GST,
+//                     IEC: row.IEC
+//                 });
+//             } else {
+//                 // If the client does not exist, create a new client object and push it to the clients array
+//                 clients.push({
+//                     clientname: row.clientname,
+//                     branches: [{
+//                         branchname: row.branchname,
+//                         id: row.id,
+//                         address: row.address,
+//                         GST: row.GST,
+//                         IEC: row.IEC
+//                     }]
+//                 });
+//             }
+//         });
+
+//         console.log(clients);
+//         return clients;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+
+
+
+
+
+
 export const getClient = async (orgcode) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(`SELECT clientname FROM organizations WHERE orgcode = ?`, [orgcode]);
-
+        const [rows] = await connection.execute(`SELECT clientname, id, branchname, address, GST, IEC FROM organizations WHERE orgcode = ?`, [orgcode]);
+        
         return rows;
     } catch (error) {
         console.log(error);
@@ -186,3 +384,32 @@ export const updateImpTATData = async (impTATData, orgname, orgcode) => {
         console.log(error);
     }
 }
+
+
+
+
+export const TATget = async (orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC) => {
+    try {
+        const connection = await connectMySQL();
+        const columnNames = [ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC];
+        const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        
+        const result = [];
+
+        // Loop through each row
+        for (const row of rows) {
+            // Check if the tatimpcolumn value matches any of the specified column names
+            if (columnNames.includes(row.tatimpcolumn)) {
+                // Extract days, hours, and minutes from the row
+                const { days, hours, minutes } = row;
+
+                // Store the extracted values in the result array
+                result.push({ [row.tatimpcolumn]: { days, hours, minutes } });
+            }
+        }
+      
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
