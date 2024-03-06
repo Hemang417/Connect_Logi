@@ -69,7 +69,7 @@ const ImpTAT = () => {
         { document: 'Miscellaneous', tat: { days: '00', hours: '00', minutes: '00' } }
     ]);
 
-
+    const [changeapplytoupdate, setchangeapplytoupdate] = useState(false);
 
 
 
@@ -156,31 +156,53 @@ const ImpTAT = () => {
 
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/getImpTATData', {
-                    params: {
-                        orgname: localStorage.getItem('orgname'),
-                        orgcode: localStorage.getItem('orgcode')
-                    }
+    async function handleUpdate() {
+        try {
+            const response = await axios.put('http://localhost:5000/updateImpTAT', { 
+                impTATData: impTATData,
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode')
+            });
+            navigate('/dashboard');
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-                });
-                
-                const formattedData = response.data.map(item => ({
-                    document: item.document,
-                    tat: {
-                        days: item.days,
-                        hours: item.hours,
-                        minutes: item.minutes
-                    }
-                }));
 
-                setImpTATData(formattedData);
-            } catch (error) {
-                console.log(error);
+
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/getImpTATData', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode')
+                }
+
+            });
+
+            const formattedData = response.data.map(item => ({
+                document: item.tatimpcolumn,
+                tat: {
+                    days: item.days,
+                    hours: item.hours,
+                    minutes: item.minutes
+                }
+            }));
+            
+            if (formattedData.length > 0) {
+                setchangeapplytoupdate(true);
             }
-        };
+            setImpTATData(formattedData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+
+    useEffect(() => {
 
         fetchData();
     }, []);
@@ -226,7 +248,14 @@ const ImpTAT = () => {
                 </CTableBody>
 
             </CTable>
-            <CButton onClick={handleApply}>Apply Import TAT</CButton>
+
+            {changeapplytoupdate ?
+                <CButton onClick={handleUpdate}>Update</CButton>
+                :
+                <CButton onClick={handleApply}>Apply Import TAT</CButton>
+            }
+
+
         </div>
     );
 };

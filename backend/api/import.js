@@ -169,3 +169,20 @@ export const fetchImpTATData = async (orgname, orgcode) => {
         console.log(error);
     }
 }
+
+
+export const updateImpTATData = async (impTATData, orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        for (const item of impTATData) {
+            const { document, tat } = item;
+            const { days, hours, minutes } = tat;
+
+            // Assuming there is a table named 'impTATTable' with columns tatimpcolumn, days, hours, minutes
+            await connection.execute(`UPDATE tatimport SET days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND tatimpcolumn = ?`, [days, hours, minutes, orgname, orgcode, document]);
+        }
+        return 'Update successful'; // Return statement moved outside of the loop
+    } catch (error) {
+        console.log(error);
+    }
+}
