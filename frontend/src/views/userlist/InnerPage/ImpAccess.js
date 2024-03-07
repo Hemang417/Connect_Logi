@@ -45,20 +45,23 @@ const ImpAccess = () => {
   const [dataAccess, setDataAccess] = useState({
     ETAFollowUp: '',
     ScrutinyDocument: '',
+    PortCFSNomination: '',
     ChecklistApproval: '',
     ESanchit: '',
-    FillingBOE: '',
+    FilingBOE: '',
     Assesment: '',
     DutyCall: '',
     ExaminationOOC: '',
-    EBLStatusAgentName: '',
-    PortCFSNomination: '',
-    Scrutiny: '',
+    BLStatusAgentName: '',
+    ShippingLineBond: '',
+    BLDocuments: '',
     OriginalDocReceived: '',
     InvoiceReceivedfromShippingLine: '',
     PaymenttoShippingLine: '',
     DeliveryOrder: '',
+    ContainerArrivedAtCFS: '',
     Delivery: '',
+    EmptyContainerRecieving: '',
     ShippingLine: '',
     CFS: '',
     StampDuty: '',
@@ -208,6 +211,27 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+          <CTableRow>
+            <CTableDataCell scope="row">
+              <label>
+                Port/CFS Nomination
+              </label>
+            </CTableDataCell>
+            <CTableDataCell scope="row">
+              <input type="checkbox" className='imp-access-label'
+                defaultChecked={visible}
+                name='PortCFSNomination'
+                checked={dataAccess.PortCFSNomination === 'PortCFSNomination'}
+                onChange={handleCheckboxChange}
+              />
+            </CTableDataCell>
+            <CTableDataCell>
+
+            </CTableDataCell>
+          </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -247,14 +271,14 @@ const ImpAccess = () => {
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
-                Filling BOE
+                Filing BOE
               </label>
             </CTableDataCell>
             <CTableDataCell scope="row">
               <input type="checkbox" className='imp-access-label'
                 defaultChecked={visible}
-                name='FillingBOE'
-                checked={dataAccess.FillingBOE === 'FillingBOE'}
+                name='FilingBOE'
+                checked={dataAccess.FilingBOE === 'FilingBOE'}
                 onChange={handleCheckboxChange}
               />
             </CTableDataCell>
@@ -319,14 +343,14 @@ const ImpAccess = () => {
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
-                EBL Status & Agent Name
+                BL Status & Agent Name
               </label>
             </CTableDataCell>
             <CTableDataCell scope="row">
               <input type="checkbox" className='imp-access-label'
                 defaultChecked={visible}
-                name='EBLStatusAgentName'
-                checked={dataAccess.EBLStatusAgentName === 'EBLStatusAgentName'}
+                name='BLStatusAgentName'
+                checked={dataAccess.BLStatusAgentName === 'BLStatusAgentName'}
                 onChange={handleCheckboxChange}
               />
             </CTableDataCell>
@@ -334,17 +358,18 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
-                Port/CFS Nomination
+                Shipping Line Bond
               </label>
             </CTableDataCell>
             <CTableDataCell scope="row">
               <input type="checkbox" className='imp-access-label'
                 defaultChecked={visible}
-                name='PortCFSNomination'
-                checked={dataAccess.PortCFSNomination === 'PortCFSNomination'}
+                name='ShippingLineBond'
+                checked={dataAccess.ShippingLineBond === 'ShippingLineBond'}
                 onChange={handleCheckboxChange}
               />
             </CTableDataCell>
@@ -352,17 +377,19 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
-                Scrutiny
+                BL Documents
               </label>
             </CTableDataCell>
             <CTableDataCell scope="row">
               <input type="checkbox" className='imp-access-label'
                 defaultChecked={visible}
-                name='Scrutiny'
-                checked={dataAccess.Scrutiny === 'Scrutiny'}
+                name='BLDocuments'
+                checked={dataAccess.BLDocuments === 'BLDocuments'}
                 onChange={handleCheckboxChange}
               />
             </CTableDataCell>
@@ -370,6 +397,9 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -388,6 +418,8 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -424,6 +456,8 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -442,6 +476,28 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
+          <CTableRow>
+            <CTableDataCell scope="row">
+              <label>
+                Container Arrived at CFS
+              </label>
+            </CTableDataCell>
+            <CTableDataCell scope="row">
+              <input type="checkbox" className='imp-access-label'
+                defaultChecked={visible}
+                name='ContainerArrivedAtCFS'
+                checked={dataAccess.ContainerArrivedAtCFS === 'ContainerArrivedAtCFS'}
+                onChange={handleCheckboxChange}
+              />
+            </CTableDataCell>
+            <CTableDataCell>
+
+            </CTableDataCell>
+          </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -460,6 +516,29 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
+          <CTableRow>
+            <CTableDataCell scope="row">
+              <label>
+                Empty Container Received
+              </label>
+            </CTableDataCell>
+            <CTableDataCell scope="row">
+              <input type="checkbox" className='imp-access-label'
+                defaultChecked={visible}
+                name='EmptyContainerRecieving'
+                checked={dataAccess.EmptyContainerRecieving === 'EmptyContainerRecieving'}
+                onChange={handleCheckboxChange}
+              />
+            </CTableDataCell>
+            <CTableDataCell>
+
+            </CTableDataCell>
+          </CTableRow>
+
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -514,6 +593,8 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -532,6 +613,8 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -550,6 +633,8 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
@@ -568,6 +653,8 @@ const ImpAccess = () => {
 
             </CTableDataCell>
           </CTableRow>
+
+          
           <CTableRow>
             <CTableDataCell scope="row">
               <label>
