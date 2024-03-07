@@ -44,20 +44,23 @@ const ImpTAT = () => {
 
     const [impTATData, setImpTATData] = useState([
         { document: 'ScrutinyDocument', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'PortCFSNomination', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'ChecklistApproval', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'ESanchit', tat: { days: '00', hours: '00', minutes: '00' } },
-        { document: 'FillingBOE', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'FilingBOE', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'Assesment', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'DutyCall', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'ExaminationOOC', tat: { days: '00', hours: '00', minutes: '00' } },
-        { document: 'EBLStatusAgentName', tat: { days: '00', hours: '00', minutes: '00' } },
-        { document: 'PortCFSNomination', tat: { days: '00', hours: '00', minutes: '00' } },
-        { document: 'Scrutiny', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'BLStatusAgentName', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'ShippingLineBond', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'BLDocuments', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'OriginalDocReceived', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'InvoiceReceivedfromShippingLine', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'PaymenttoShippingLine', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'DeliveryOrder', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'ContainerArrivedatCFS', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'Delivery', tat: { days: '00', hours: '00', minutes: '00' } },
+        { document: 'EmptyContainerReceiving', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'ShippingLine', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'CFS', tat: { days: '00', hours: '00', minutes: '00' } },
         { document: 'StampDuty', tat: { days: '00', hours: '00', minutes: '00' } },
@@ -158,6 +161,7 @@ const ImpTAT = () => {
 
     async function handleUpdate() {
         try {
+            
             const response = await axios.put('http://localhost:5000/updateImpTAT', { 
                 impTATData: impTATData,
                 orgname: localStorage.getItem('orgname'),

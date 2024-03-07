@@ -393,6 +393,7 @@ const Createjob = () => {
       const dataToUpdate = {
         alias: alias,
         branchname: localstorageobjtoupdate.branchname,
+        id: localstorageobjtoupdate.id,
         clientname: localstorageobjtoupdate.clientname,
         address: localstorageobjtoupdate.address,
         country: localstorageobjtoupdate.country,

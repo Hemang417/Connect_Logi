@@ -186,7 +186,7 @@ export const fetchBranchData = async (clientname, alias, branchname, id) => {
 
 
 
-export const updateRow = async (orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays) => {
+export const updateRow = async (orgcode, orgname, clientname, alias, branchname, id, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays) => {
     try {
         const connection = await connectMySQL();
 
@@ -209,7 +209,8 @@ export const updateRow = async (orgcode, orgname, clientname, alias, branchname,
                 orgname = ? AND
                 branchname = ? AND
                 clientname = ? AND
-                alias = ?
+                alias = ? AND
+                id = ?
         `, [
             address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays,
             orgcode,
@@ -217,6 +218,7 @@ export const updateRow = async (orgcode, orgname, clientname, alias, branchname,
             branchname,
             clientname,
             alias,
+            id
         ]);
 
 

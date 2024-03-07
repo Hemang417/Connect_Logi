@@ -111,10 +111,10 @@ app.get('/allFetch', async (req, res) => {
 
 app.put('/updateData', async (req, res) => {
     try {
-        const { orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays } = req.body;
+        const { orgcode, orgname, clientname, alias, branchname, id, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays } = req.body;
         console.log(orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays);
         // Call the updateRow function to update the row in the database
-        const allDataupdate = await updateRow(orgcode, orgname, clientname, alias, branchname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays);
+        const allDataupdate = await updateRow(orgcode, orgname, clientname, alias, branchname, id, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays);
 
         res.status(200).json(allDataupdate);
     } catch (error) {
@@ -497,6 +497,7 @@ app.get('/getImpTATData', async (req, res) => {
 app.put('/updateImpTAT', async (req, res) => {
     try {
         const { impTATData, orgname, orgcode } = req.body;
+        
         const updateTATdata = await updateImpTATData(impTATData, orgname, orgcode);
         res.send(updateTATdata);
     } catch (error) {
@@ -508,8 +509,8 @@ app.put('/updateImpTAT', async (req, res) => {
 
 app.get('/getTATofO2D', async (req, res) => {
     try {
-        const {orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC } = req.query;
-        const getTATofO2D = await TATget(orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC);
+        const {orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC } = req.query;
+        const getTATofO2D = await TATget(orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC);
         res.send(getTATofO2D);
     } catch (error) {
         console.log(error);

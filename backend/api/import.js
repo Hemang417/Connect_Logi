@@ -372,11 +372,11 @@ export const fetchImpTATData = async (orgname, orgcode) => {
 export const updateImpTATData = async (impTATData, orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
+        
         for (const item of impTATData) {
             const { document, tat } = item;
             const { days, hours, minutes } = tat;
 
-            // Assuming there is a table named 'impTATTable' with columns tatimpcolumn, days, hours, minutes
             await connection.execute(`UPDATE tatimport SET days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND tatimpcolumn = ?`, [days, hours, minutes, orgname, orgcode, document]);
         }
         return 'Update successful'; // Return statement moved outside of the loop
@@ -388,10 +388,10 @@ export const updateImpTATData = async (impTATData, orgname, orgcode) => {
 
 
 
-export const TATget = async (orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC) => {
+export const TATget = async (orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC) => {
     try {
         const connection = await connectMySQL();
-        const columnNames = [ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FillingBOE, Assesment, DutyCall, ExaminationOOC];
+        const columnNames = [ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC];
         const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         
         const result = [];
@@ -407,7 +407,7 @@ export const TATget = async (orgname, orgcode, ScrutinyDocument, PortCFSNominati
                 result.push({ [row.tatimpcolumn]: { days, hours, minutes } });
             }
         }
-      
+   
         return result;
     } catch (error) {
         console.log(error);

@@ -53,7 +53,7 @@ const O2D = () => {
         PortCFSNomination: '',
         ChecklistApproval: '',
         ESanchit: '',
-        FillingBOE: '',
+        FilingBOE: '',
         Assesment: '',
         DutyCall: '',
         ExaminationOOC: '',
@@ -61,7 +61,7 @@ const O2D = () => {
 
 
 
-
+    const [TATstore, setTATstore] = useState();
 
 
 
@@ -88,45 +88,92 @@ const O2D = () => {
     };
 
 
+    useEffect(() => {
+        const fetchAndStoreTAT = async () => {
+            try {
+                const orgName = localStorage.getItem('orgname');
+                const orgCode = localStorage.getItem('orgcode');
+                
+                if (!orgName || !orgCode) {
+                    console.error('Organization name or code not found in localStorage.');
+                    return;
+                }
 
+                const response = await axios.get('http://localhost:5000/getTATofO2D', {
+                    params: {
+                        orgname: orgName,
+                        orgcode: orgCode,
+                        ScrutinyDocument: 'ScrutinyDocument',
+                        PortCFSNomination: 'PortCFSNomination',
+                        ChecklistApproval: 'ChecklistApproval',
+                        ESanchit: 'ESanchit',
+                        FilingBOE: 'FilingBOE',
+                        Assesment: 'Assesment',
+                        DutyCall: 'DutyCall',
+                        ExaminationOOC: 'ExaminationOOC'
+                    }
+                });
 
-async function showTAT(){
-    try {
-        const nameoforg = localStorage.getItem('orgname');
-        const codeoforg = localStorage.getItem('orgcode');
-        const response = await axios.get('http://localhost:5000/getTATofO2D', {
-            params: {
-                orgname: nameoforg,
-                orgcode: codeoforg,
-                ScrutinyDocument: 'ScrutinyDocument',
-                PortCFSNomination: 'PortCFSNomination',
-                ChecklistApproval: 'ChecklistApproval',
-                ESanchit: 'ESanchit',
-                FillingBOE: 'FillingBOE',
-                Assesment: 'Assesment',
-                DutyCall: 'DutyCall',
-                ExaminationOOC: 'ExaminationOOC'
+                setTATstore(response.data);
+                
+            } catch (error) {
+                console.error('Error fetching or storing TAT data:', error);
             }
-        })
-        console.log(response.data);
-    } catch (error) {
-        console.log(error);
+        };
+
+        fetchAndStoreTAT();
+    }, []);
+
+    // localStorage.setItem('TATstore', JSON.stringify(TATstore));
+
+
+
+// const [fetchTAThere, setTAThere] = useState();
+// useEffect(() => {
+//     const fetchTATfromlocalstorage = async () => {
+//         try {
+//             const TATofO2D = JSON.parse(localStorage.getItem('TATofO2D'));
+            
+//             setTAThere(TATofO2D);
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     }
+//     fetchTATfromlocalstorage();
+// }, [])
+
+
+
+
+// useEffect(() => {
+//     const TATofO2D = JSON.parse(localStorage.getItem('TATofO2D'));
+// }, [])
+
+console.log(TATstore);
+
+const formatTAT = (TAT) => {
+    const days = parseInt(TAT.days);
+    const hours = parseInt(TAT.hours);
+    const minutes = parseInt(TAT.minutes);
+
+    let formattedTAT = '';
+    if (days > 0) {
+        formattedTAT += `${days} d `;
     }
-}
-
-
-
-
-
-
-
-
-
+    if (hours > 0) {
+        formattedTAT += `${hours} hr `;
+    }
+    if (minutes > 0) {
+        formattedTAT += `${minutes} min`;
+    }
+    console.log(formattedTAT);
+    return formattedTAT.trim();
+};
 
 
     useEffect(() => {
         fetchUserAccess();
-        showTAT()
+        
     }, []);
 
 
@@ -165,41 +212,43 @@ async function showTAT(){
                         </CTableRow>
 
 
-                        {/* {dataAccess.ScrutinyDocument == 'ScrutinyDocument' && (
-                            <CTableRow>
-                                <CTableDataCell>Scrutiny Document</CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                                <CTableDataCell><input type="time" placeholder="" className='o2d-field-4' /></CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="" className='remarks-field' /></CTableDataCell>
-                            </CTableRow>
-                        )} */}
+                
 
 
 
                         <CTableRow>
                             <CTableDataCell>Scrutiny Document</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="time" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell>
+                                <input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[0].ScrutinyDocument)}/>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} />
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} />
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} />
+                            </CTableDataCell>
+                            <CTableDataCell>
+                                <input type="time" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} />
+                            </CTableDataCell>
                             <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                        </CTableRow>
+                            <CTableDataCell>
+                                <input type="text" placeholder="" className='remarks-field' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} />
+                            </CTableDataCell>
+                            </CTableRow>
 
 
                         <CTableRow>
                             <CTableDataCell>Port/CFS Nomination</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="time" placeholder="" className='o2d-field-4' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[1].PortCFSNomination)}/></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.PortCFSNomination == 'PortCFSNomination' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.PortCFSNomination == 'PortCFSNomination' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.PortCFSNomination == 'PortCFSNomination' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="time" placeholder="" className='o2d-field-4' readOnly={dataAccess.PortCFSNomination == 'PortCFSNomination' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell readOnly>UnderProcess</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={dataAccess.ScrutinyDocument == 'ScrutinyDocument' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={dataAccess.PortCFSNomination == 'PortCFSNomination' ? visible : !visible} /></CTableDataCell>
                         </CTableRow>
 
 
@@ -212,7 +261,7 @@ async function showTAT(){
 
                         <CTableRow>
                             <CTableDataCell>Checklist Approval</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[2].ChecklistApproval)}/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ChecklistApproval == 'CheckListApproval' ? visible : !visible} /></CTableDataCell>
@@ -223,7 +272,7 @@ async function showTAT(){
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>E-Sanchit</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly  value={TATstore && formatTAT(TATstore[3].ESanchit)}/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
@@ -232,12 +281,12 @@ async function showTAT(){
                             <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={dataAccess.ESanchit == 'ESanchit' ? visible : !visible} /></CTableDataCell>
                         </CTableRow>
                         <CTableRow>
-                            <CTableDataCell>Filling BOE</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
-                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FillingBOE == 'FillingBOE' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell>Filing BOE</CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[4].FilingBOE)}/></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FilingBOE == 'FilingBOE' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FilingBOE == 'FilingBOE' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.FilingBOE == 'FilingBOE' ? visible : !visible} /></CTableDataCell>
+                            <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.FilingBOE == 'FilingBOE' ? visible : !visible} /></CTableDataCell>
                             <CDropdown>
                                 <CDropdownToggle className="dropdown-btn" color='secondary'>Select Query</CDropdownToggle>
                                 <CDropdownMenu className="text-field-4">
@@ -249,7 +298,7 @@ async function showTAT(){
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Assesment</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly /></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[5].Assesment)}/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.Assesment == 'Assesment' ? visible : !visible} /></CTableDataCell>
@@ -265,7 +314,7 @@ async function showTAT(){
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Duty Call</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly/></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[6].DutyCall)}/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.DutyCall == 'DutyCall' ? visible : !visible} /></CTableDataCell>
@@ -275,7 +324,7 @@ async function showTAT(){
                         </CTableRow>
                         <CTableRow>
                             <CTableDataCell>Examination/OOC</CTableDataCell>
-                            <CTableDataCell><input type="text" placeholder="" className='o2d-field-5' readOnly/></CTableDataCell>
+                            <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={TATstore && formatTAT(TATstore[7].ExaminationOOC)}/></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>
                             <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={dataAccess.ExaminationOOC == 'ExaminationOOC' ? visible : !visible} /></CTableDataCell>
