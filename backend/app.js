@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
-import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
+import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess} from './api/userlist.js';
 import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D} from './api/import.js';
 
 const app = express();
@@ -218,98 +218,98 @@ app.get('/fetchAllusers', async (req, res) => {
 })
 
 
-app.post('/impstore', async (req, res) => {
-    try {
-        // const {
-        //     ETAFollowUp,
-        //     ScrutinyDocument,
-        //     ChecklistApproval,
-        //     ESanchit,
-        //     FillingBOE,
-        //     Assesment,
-        //     DutyCall,
-        //     ExaminationOOC,
-        //     EBLStatusAgentName,
-        //     PortCFSNomination,
-        //     Scrutiny,
-        //     OriginalDocReceived,
-        //     InvoiceReceivedfromShippingLine,
-        //     PaymenttoShippingLine,
-        //     DeliveryOrder,
-        //     Delivery,
-        //     ShippingLine,
-        //     CFS,
-        //     StampDuty,
-        //     CustomDuty,
-        //     Insurance,
-        //     LREmptySlipBill,
-        //     Billing,
-        //     Dispatch,
-        //     Miscellaneous,
-        // } = req.body.dataAccess; 
-        const { username, ...dataAccess } = req.body; // Destructure username and dataAccess from req.body
-        const storeimp = await storeimpaccess(dataAccess, username);
-        res.json(storeimp)
+// app.post('/impstore', async (req, res) => {
+//     try {
+//         // const {
+//         //     ETAFollowUp,
+//         //     ScrutinyDocument,
+//         //     ChecklistApproval,
+//         //     ESanchit,
+//         //     FillingBOE,
+//         //     Assesment,
+//         //     DutyCall,
+//         //     ExaminationOOC,
+//         //     EBLStatusAgentName,
+//         //     PortCFSNomination,
+//         //     Scrutiny,
+//         //     OriginalDocReceived,
+//         //     InvoiceReceivedfromShippingLine,
+//         //     PaymenttoShippingLine,
+//         //     DeliveryOrder,
+//         //     Delivery,
+//         //     ShippingLine,
+//         //     CFS,
+//         //     StampDuty,
+//         //     CustomDuty,
+//         //     Insurance,
+//         //     LREmptySlipBill,
+//         //     Billing,
+//         //     Dispatch,
+//         //     Miscellaneous,
+//         // } = req.body.dataAccess; 
+//         const { username, ...dataAccess } = req.body; // Destructure username and dataAccess from req.body
+//         const storeimp = await storeimpaccess(dataAccess, username);
+//         res.json(storeimp)
 
-        // const allRows = [
-        //     ETAFollowUp,
-        //     ScrutinyDocument,
-        //     ChecklistApproval,
-        //     ESanchit,
-        //     FillingBOE,
-        //     Assesment,
-        //     DutyCall,
-        //     ExaminationOOC,
-        //     EBLStatusAgentName,
-        //     PortCFSNomination,
-        //     Scrutiny,
-        //     OriginalDocReceived,
-        //     InvoiceReceivedfromShippingLine,
-        //     PaymenttoShippingLine,
-        //     DeliveryOrder,
-        //     Delivery,
-        //     ShippingLine,
-        //     CFS,
-        //     StampDuty,
-        //     CustomDuty,
-        //     Insurance,
-        //     LREmptySlipBill,
-        //     Billing,
-        //     Dispatch,
-        //     Miscellaneous
-        // ]
+//         // const allRows = [
+//         //     ETAFollowUp,
+//         //     ScrutinyDocument,
+//         //     ChecklistApproval,
+//         //     ESanchit,
+//         //     FillingBOE,
+//         //     Assesment,
+//         //     DutyCall,
+//         //     ExaminationOOC,
+//         //     EBLStatusAgentName,
+//         //     PortCFSNomination,
+//         //     Scrutiny,
+//         //     OriginalDocReceived,
+//         //     InvoiceReceivedfromShippingLine,
+//         //     PaymenttoShippingLine,
+//         //     DeliveryOrder,
+//         //     Delivery,
+//         //     ShippingLine,
+//         //     CFS,
+//         //     StampDuty,
+//         //     CustomDuty,
+//         //     Insurance,
+//         //     LREmptySlipBill,
+//         //     Billing,
+//         //     Dispatch,
+//         //     Miscellaneous
+//         // ]
 
-        // const storeimp = await storeimpaccess(allRows, username);
+//         // const storeimp = await storeimpaccess(allRows, username);
 
-    } catch (error) {
-        console.log('Error during data update:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-})
-
-
-app.delete('/delimp', async (req, res) => {
-    try {
-        const { username, ...dataAccess } = req.body;
-        const removeimp = await removeimpaccess(dataAccess, username);
-        res.json(removeimp);
-    } catch (error) {
-        console.log('Error during data update:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-})
+//     } catch (error) {
+//         console.log('Error during data update:', error);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// })
 
 
-app.get('/getUserAccess', async (req, res) => {
-    try {
-        const { username } = req.query;
-        const userAccess = await getUserAccess(username);
-        res.json(userAccess);
-    } catch (error) {
-        console.log('Error during data update:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-})
+// app.delete('/delimp', async (req, res) => {
+//     try {
+//         const { username, ...dataAccess } = req.body;
+//         const removeimp = await removeimpaccess(dataAccess, username);
+//         res.json(removeimp);
+//     } catch (error) {
+//         console.log('Error during data update:', error);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// })
+
+
+// app.get('/getUserAccess', async (req, res) => {
+//     try {
+//         const { username } = req.query;
+//         const userAccess = await getUserAccess(username);
+//         res.json(userAccess);
+//     } catch (error) {
+//         console.log('Error during data update:', error);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// })
 
 
 
@@ -558,6 +558,48 @@ app.put('/updateO2D', async (req, res) => {
         const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
         const updatedO2DDATA = await updateO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
         res.status(200).json(updatedO2DDATA);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/getAllAccess', async(req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allpoints = await fetchAllaccesspoints(orgname, orgcode);
+        res.send(allpoints);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.post('/applyAccess', async (req, res) => {
+    try {
+        const {accessChecked, username} = req.body;
+        const accessgiven = await storeimpaccess(accessChecked, username);
+        res.send(accessgiven);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getAccessedRowsforauser', async (req, res) => {
+    try {
+        const {username} = req.query;
+        const alluserrows = await getUserAccess(username);
+        res.send(alluserrows);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/removeAccess', async (req, res) => {
+    try {
+        const {accessChecked, username} = req.body;
+        const deletedRow = await removeimpaccess(accessChecked, username);
+        res.send(deletedRow)
     } catch (error) {
         console.log(error);
     }

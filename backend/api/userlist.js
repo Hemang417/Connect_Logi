@@ -86,26 +86,26 @@ export const fetchAllusers = async (orgcode, orgname, username) => {
 
 
 // API function to store individual access values
-export const storeimpaccess = async (dataAccess, username) => {
-    try {
-        const connection = await connectMySQL();
-        const keys = Object.keys(dataAccess);
+// export const storeimpaccess = async (dataAccess, username) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const keys = Object.keys(dataAccess);
         
-        for (const key of keys) {
-            const value = dataAccess[key];
-            await connection.execute(
-                `INSERT INTO importaccess (rowname, value, username) VALUES (?, ?, ?)`,
-                [key, value, username]
-            );
-        }
+//         for (const key of keys) {
+//             const value = dataAccess[key];
+//             await connection.execute(
+//                 `INSERT INTO importaccess (rowname, value, username) VALUES (?, ?, ?)`,
+//                 [key, value, username]
+//             );
+//         }
 
-        // Optionally, you can return something indicating success
-        return { success: true, message: "Access values inserted successfully" };
-    } catch (error) {
-        console.log('Error in storeimpaccess:', error);
-        throw error; // Re-throw the error to be caught elsewhere if needed
-    }
-}
+//         // Optionally, you can return something indicating success
+//         return { success: true, message: "Access values inserted successfully" };
+//     } catch (error) {
+//         console.log('Error in storeimpaccess:', error);
+//         throw error; // Re-throw the error to be caught elsewhere if needed
+//     }
+// }
 
 
 
@@ -114,18 +114,8 @@ export const storeimpaccess = async (dataAccess, username) => {
 export const removeimpaccess = async (dataAccess, username) => {
     try {
         const connection = await connectMySQL();
-        const keys = Object.keys(dataAccess);
-        for (const key of keys) {
-            const value = dataAccess[key];
-            await connection.execute(
-                `DELETE FROM importaccess WHERE value = ? AND rowname = ? AND username = ?`,
-                [key, value, username]
-            );
-        }
-
-        // Optionally, you can return something indicating success
-        return { success: true, message: "Access values inserted successfully" };
-
+        const [row] = await connection.execute(`DELETE FROM importaccess WHERE username = ? AND rowname = ? AND value = ? `, [username, dataAccess, dataAccess]);
+        return row;
     } catch (error) {
         console.log('Error in storeimpaccess:', error);
         throw error;
@@ -138,7 +128,7 @@ export const getUserAccess = async (username) => {
     try {
         const connection = await connectMySQL();
         const [rows] = await connection.execute(
-            `SELECT rowname, value FROM importaccess WHERE username = ?`,
+            `SELECT value FROM importaccess WHERE username = ?`,
             [username]
         );
 
@@ -148,3 +138,30 @@ export const getUserAccess = async (username) => {
         throw error;
     }
 }
+
+
+
+
+export const fetchAllaccesspoints = async (orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`SELECT tatimpcolumn, id FROM o2dimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+export const storeimpaccess = async (dataAccess, username) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`INSERT INTO importaccess (value, rowname, username) VALUES (?, ?, ?)`, [dataAccess, dataAccess, username]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
+

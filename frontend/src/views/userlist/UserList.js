@@ -147,11 +147,18 @@ import {
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/styles.css';
+import {useLocation} from 'react-router-dom'
 
 const UserList = () => {
   const [allData, setAllData] = useState([]);
   const navigate = useNavigate();
   const [userAccessData, setuserAccessData] = useState([])
+  const location = useLocation();
+  if(location.pathname === '/userlist'){
+    localStorage.removeItem('empnameforaccess');
+    localStorage.removeItem('accessedRows')
+  }
+
 
   useEffect(() => {
     const fetchAllUsernames = async () => {
@@ -176,9 +183,15 @@ const UserList = () => {
     fetchAllUsernames();
   }, []);
 
-  const handleAccess = (index) => {
+  const handleAccess = async (index) => {
     // Access the username at the specified index in the allData state
     const username = allData[index].username;
+    const response = await axios.get('http://localhost:5000/getAccessedRowsforauser', {
+      params: {
+        username: username
+      }
+    });
+    localStorage.setItem('accessedRows', JSON.stringify(response.data));
     // Store the username in localStorage
     localStorage.setItem('empnameforaccess', username);
     // navigate('/#/UserListAccess');
