@@ -333,14 +333,7 @@ const impcreatejob = () => {
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
         </CNavItem>
-        {/* <CNavItem>
-  <CNavLink href="#">Link</CNavLink>
-</CNavItem> */}
-        {/* <CNavItem>
-  <CNavLink href="#" disabled>
-    Disabled
-  </CNavLink>
-</CNavItem> */}
+        
       </CNav>
 
 

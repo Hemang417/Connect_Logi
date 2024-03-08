@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, getUserAccess } from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeimpTAT, fetchImpTATData, updateImpTATData, TATget } from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D} from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -473,51 +473,95 @@ app.delete('/deleteBranch', async (req, res) => {
 
 // this is for ImpTAT file
 
-app.post('/storeimpTAT', async (req, res) => {
-    try {
-        const { impTATData, orgname, orgcode } = req.body;
-        const storedimpTATData = await storeimpTAT(impTATData, orgname, orgcode);
-    } catch (error) {
-        console.log(error);
-    }
-})
+// app.post('/storeimpTAT', async (req, res) => {
+//     try {
+//         const { impTATData, orgname, orgcode } = req.body;
+//         const storedimpTATData = await storeimpTAT(impTATData, orgname, orgcode);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
 
 
-app.get('/getImpTATData', async (req, res) => {
-    try {
-        const { orgname, orgcode } = req.query;
-        const getImpTATData = await fetchImpTATData(orgname, orgcode);
-        res.send(getImpTATData);
-    } catch (error) {
-        console.log(error);
-    }
-})
+// app.get('/getImpTATData', async (req, res) => {
+//     try {
+//         const { orgname, orgcode } = req.query;
+//         const getImpTATData = await fetchImpTATData(orgname, orgcode);
+//         res.send(getImpTATData);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
 
 
-app.put('/updateImpTAT', async (req, res) => {
-    try {
-        const { impTATData, orgname, orgcode } = req.body;
+// app.put('/updateImpTAT', async (req, res) => {
+//     try {
+//         const { impTATData, orgname, orgcode } = req.body;
         
-        const updateTATdata = await updateImpTATData(impTATData, orgname, orgcode);
-        res.send(updateTATdata);
-    } catch (error) {
-        console.log(error);
-    }
-})
+//         const updateTATdata = await updateImpTATData(impTATData, orgname, orgcode);
+//         res.send(updateTATdata);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
 
 
 
-app.get('/getTATofO2D', async (req, res) => {
+// app.get('/getTATofO2D', async (req, res) => {
+//     try {
+//         const {orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC } = req.query;
+//         const getTATofO2D = await TATget(orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC);
+//         res.send(getTATofO2D);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
+
+
+
+app.post('/storeO2D', async (req, res) => {
     try {
-        const {orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC } = req.query;
-        const getTATofO2D = await TATget(orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC);
-        res.send(getTATofO2D);
+        const {tatimpcolumn, days, hours, minutes, orgname, orgcode} = req.body;
+        const storedData = await storeO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode);
+        res.status(200).json(storedData);
     } catch (error) {
         console.log(error);
     }
 })
 
 
+app.get('/getAllO2D', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allo2ddata = await get02ddata(orgname, orgcode);
+        res.send(allo2ddata);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.delete('/deleteO2D', async (req, res) => {
+    try {
+        const { orgname, orgcode, deletionrowid } = req.body;
+        const deletedO2D = await deleteO2D(orgname, orgcode, deletionrowid);
+        res.status(200).json({ message: "O2D deleted successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
+app.put('/updateO2D', async (req, res) => {
+    try {
+        const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
+        const updatedO2DDATA = await updateO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
+        res.status(200).json(updatedO2DDATA);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 

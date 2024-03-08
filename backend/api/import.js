@@ -337,31 +337,23 @@ export const getClient = async (orgcode) => {
 }
 
 
+// TAT O2D
 
-export const storeimpTAT = async (impTATData, orgname, orgcode) => {
+export const storeO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
-        for (const item of impTATData) {
-            const { document, tat } = item;
-            const { days, hours, minutes } = tat;
-
-            // Assuming there is a table named 'impTATTable' with columns tatimpcolumn, days, hours, minutes
-            const [rows] = await connection.execute(`INSERT INTO tatimport 
-            (orgname, orgcode, tatimpcolumn, days, hours, minutes) VALUES (?, ?, ?, ?, ?, ?)`,
-                [orgname, orgcode, document, days, hours, minutes]);
-        }
-        
+        const [rows] = await connection.execute(`INSERT INTO o2dimport 
+        (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`,[tatimpcolumn, days, hours, minutes, orgname, orgcode]);
+        return rows;
     } catch (error) {
         console.log(error);
     }
 }
 
-
-
-export const fetchImpTATData = async (orgname, orgcode) => {
+export const get02ddata = async (orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const [rows] = await connection.execute(`SELECT tatimpcolumn, id, days, hours, minutes FROM o2dimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
         console.log(error);
@@ -369,17 +361,22 @@ export const fetchImpTATData = async (orgname, orgcode) => {
 }
 
 
-export const updateImpTATData = async (impTATData, orgname, orgcode) => {
+export const deleteO2D = async (orgname, orgcode, deletionrowid) => {
     try {
         const connection = await connectMySQL();
-        
-        for (const item of impTATData) {
-            const { document, tat } = item;
-            const { days, hours, minutes } = tat;
+        const [row] = await connection.execute(`DELETE FROM o2dimport WHERE orgname = ? AND orgcode = ? AND id = ?`, [orgname, orgcode, deletionrowid]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-            await connection.execute(`UPDATE tatimport SET days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND tatimpcolumn = ?`, [days, hours, minutes, orgname, orgcode, document]);
-        }
-        return 'Update successful'; // Return statement moved outside of the loop
+
+export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgcode, id) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`UPDATE o2dimport SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, id]);
+        return row;
     } catch (error) {
         console.log(error);
     }
@@ -387,29 +384,78 @@ export const updateImpTATData = async (impTATData, orgname, orgcode) => {
 
 
 
+// export const storeimpTAT = async (impTATData, orgname, orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+//         for (const item of impTATData) {
+//             const { document, tat } = item;
+//             const { days, hours, minutes } = tat;
 
-export const TATget = async (orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC) => {
-    try {
-        const connection = await connectMySQL();
-        const columnNames = [ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC];
-        const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+//             // Assuming there is a table named 'impTATTable' with columns tatimpcolumn, days, hours, minutes
+//             const [rows] = await connection.execute(`INSERT INTO tatimport 
+//             (orgname, orgcode, tatimpcolumn, days, hours, minutes) VALUES (?, ?, ?, ?, ?, ?)`,
+//                 [orgname, orgcode, document, days, hours, minutes]);
+//         }
         
-        const result = [];
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-        // Loop through each row
-        for (const row of rows) {
-            // Check if the tatimpcolumn value matches any of the specified column names
-            if (columnNames.includes(row.tatimpcolumn)) {
-                // Extract days, hours, and minutes from the row
-                const { days, hours, minutes } = row;
 
-                // Store the extracted values in the result array
-                result.push({ [row.tatimpcolumn]: { days, hours, minutes } });
-            }
-        }
+
+// export const fetchImpTATData = async (orgname, orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+//         return rows;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+// export const updateImpTATData = async (impTATData, orgname, orgcode) => {
+//     try {
+//         const connection = await connectMySQL();
+        
+//         for (const item of impTATData) {
+//             const { document, tat } = item;
+//             const { days, hours, minutes } = tat;
+
+//             await connection.execute(`UPDATE tatimport SET days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND tatimpcolumn = ?`, [days, hours, minutes, orgname, orgcode, document]);
+//         }
+//         return 'Update successful'; // Return statement moved outside of the loop
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+
+// export const TATget = async (orgname, orgcode, ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC) => {
+//     try {
+//         const connection = await connectMySQL();
+//         const columnNames = [ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC];
+//         const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        
+//         const result = [];
+
+//         // Loop through each row
+//         for (const row of rows) {
+//             // Check if the tatimpcolumn value matches any of the specified column names
+//             if (columnNames.includes(row.tatimpcolumn)) {
+//                 // Extract days, hours, and minutes from the row
+//                 const { days, hours, minutes } = row;
+
+//                 // Store the extracted values in the result array
+//                 result.push({ [row.tatimpcolumn]: { days, hours, minutes } });
+//             }
+//         }
    
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
-};
+//         return result;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
