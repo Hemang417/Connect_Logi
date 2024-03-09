@@ -39,6 +39,7 @@ import { Transactionhistory } from './Innerpage'
 import { Quotation } from './Innerpage'
 import axios from 'axios';
 import toast from 'react-hot-toast'
+import moment from 'moment';
 // import { General, Registration } from './Innerpage';
 
 
@@ -60,9 +61,21 @@ const impcreatejob = () => {
   //   }
   // }
 
+  // const dates = new Date();
+  // const now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+  //         date.getUTCDate(), date.getUTCHours(),
+  //         date.getUTCMinutes(), date.getUTCSeconds());
 
-  // const [showAll, setshowAll] = useState(false);
-  const currentdateandtime = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+  // console.log(new Date(now_utc));
+  // console.log(date.toISOString());
+
+  // var isoDateString = new Date().toISOString();
+  // console.log(isoDateString);
+
+
+
+const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
+
   const [JobformData, setJobFormData] = useState({
     jobDate: currentdateandtime,
     docReceivedOn: '',
@@ -123,13 +136,14 @@ const impcreatejob = () => {
       const username = localStorage.getItem('username');
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
-      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg });
+      console.log(JobformData);
+      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime });
       if (response.status === 200) {
         toast.success('Job created successfully.');
 
         const idofcol = response.data[0].id;
         const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode })
-        localStorage.setItem('jobNumber', sendupdate.data)
+        localStorage.setItem('jobNumber', sendupdate.data);
       }
     } catch (error) {
       console.log(error);
@@ -140,10 +154,85 @@ const impcreatejob = () => {
 
 
 
-
+  const [prefillData, setPrefillData] = useState(null);
   // const [isActive, setActive] = useState("false");
   const [isshown, setIsShown] = useState("general");
 
+
+  useEffect(() => {
+    // Function to fetch data for prefilling when "o2d" is shown
+    const fetchDataForO2D = async () => {
+      try {
+        const jobNumber = localStorage.getItem('jobNumber');
+        const response = await axios.get('http://localhost:5000/prefillCreateJob', { params: { jobnumber: jobNumber } });
+       
+        setPrefillData(response.data[0]);
+        // Set the prefill data here, you might want to set it in the state to render it in the O2D component
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    // Check if the shown component is "o2d" and localStorage has the flag set
+    if (isshown === "o2d" && localStorage.getItem('onO2D') === 'true' && localStorage.getItem('jobNumber')) {
+      fetchDataForO2D(); // Fetch data for prefilling
+      // localStorage.removeItem('onO2D'); 
+    }
+  }, [isshown]);
+
+
+
+  useEffect(() => {
+    // Set prefill data in the form fields
+    if (prefillData) {
+      setJobFormData({
+        jobDate: prefillData.jobdate,
+        docReceivedOn: moment(prefillData.docreceivedon).format('YYYY-MM-DDTHH:mm'),
+        transportMode: prefillData.transportmode,
+        customHouse: prefillData.customhouse,
+        ownBooking: prefillData.ownbooking,
+        deliveryMode: prefillData.deliverymode,
+        numberOfContainer: prefillData.noofcontainer,
+        ownTransportation: prefillData.owntransportation,
+        beType: prefillData.betype,
+        consignmentType: prefillData.consignmenttype,
+        cfsName: prefillData.cfsname,
+        shippingLineName: prefillData.shippinglinename,
+        blType: prefillData.bltype,
+        bltypenumber: prefillData.bltypenum,
+        blstatus: prefillData.blstatus,
+        freedays: prefillData.freedays
+      });
+    }else{
+      toast.error('No job is present with this job Number')
+    }
+  }, [prefillData]);
+
+
+
+  useEffect(() => {
+    if (isshown === "general") {
+      setPrefillData(null);
+      setJobFormData({
+        jobDate: '',
+        docReceivedOn: '',
+        transportMode: '',
+        customHouse: '',
+        ownBooking: '',
+        deliveryMode: '',
+        numberOfContainer: '',
+        ownTransportation: '',
+        beType: '',
+        consignmentType: '',
+        cfsName: '',
+        shippingLineName: '',
+        blType: '',
+        bltypenumber: '',
+        blstatus: '',
+        freedays: ''
+      })
+    }
+  }, [isshown]);
 
 
 
@@ -155,11 +244,11 @@ const impcreatejob = () => {
             <div className='grid-container'>
               <div>
                 <label for="Job No." className='text-field-3'>Job No.</label>
-                <input type="text" placeholder="" className='text-field-4' readOnly />
+                <input type="text" placeholder="" className='text-field-4' readOnly value={localStorage.getItem('jobNumber') ? localStorage.getItem('jobNumber') : ''} />
               </div>
               <div>
                 <label for="Job Date" className='text-field-3'>Job Date</label>
-                <input type="text" placeholder="" className='text-field-4' name='jobDate' value={JobformData.jobDate} readOnly />
+                <input type="datetime-local" placeholder="" className='text-field-4' name='jobDate' value={currentdateandtime} readOnly/>
               </div>
               <div>
                 <label for="Doc. Received On Date" className='text-field-3'>Doc. Received On</label>
@@ -199,7 +288,7 @@ const impcreatejob = () => {
               </div>
               <div>
                 <label for="Job Owner" className='text-field-3'>Job Owner</label>
-                <input type="text" placeholder="" className='text-field-4' readOnly />
+                <input type="text" placeholder="" className='text-field-4' readOnly value={localStorage.getItem('username') ? localStorage.getItem('username') : ''} />
               </div>
               <div>
                 <label for="Delivery Mode" className='text-field-3'>Own Booking</label>
@@ -305,10 +394,10 @@ const impcreatejob = () => {
 
       <CNav variant="tabs" className='nav-link-text'>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
+          <CNavLink onClick={() => { setIsShown("general"), localStorage.removeItem('onO2D') }}>General</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
+          <CNavLink onClick={() => { setIsShown("o2d"), localStorage.setItem('onO2D', true) }}>O2D</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
@@ -333,7 +422,7 @@ const impcreatejob = () => {
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
         </CNavItem>
-        
+
       </CNav>
 
 

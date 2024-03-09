@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess} from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D} from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData} from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -336,7 +336,7 @@ app.post('/storeJob', async (req, res) => {
             orgname, orgcode, lastIc, freedays, blstatus
         } = req.body;
         const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus);
-        console.log(storeandcreateJob);
+       
         res.status(200).json(storeandcreateJob);
 
     } catch (error) {
@@ -604,6 +604,28 @@ app.delete('/removeAccess', async (req, res) => {
         console.log(error);
     }
 })
+
+
+app.get('/getUseraccessforuser', async (req, res) => {
+    try {
+        const {username} = req.query;
+        const alluserrows = await fetchAlluseraccess(username);
+        res.send(alluserrows);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/prefillCreateJob', async (req, res) => {
+    try {
+        const {jobnumber} = req.query;
+        const currentJobData = await fetchJobData(jobnumber);
+        res.send(currentJobData);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 
 

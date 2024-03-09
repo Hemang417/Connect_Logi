@@ -121,7 +121,9 @@ const ImpAccess = () => {
   //   }, [allAccessData]);
 
 
-
+async function redirect(){
+  navigate('/userlist')
+}
 
 
 
@@ -149,7 +151,7 @@ const ImpAccess = () => {
           ))}
         </CTableBody>
       </CTable>
-      <CButton color="primary">
+      <CButton color="primary" onClick={redirect}>
         Apply Access
       </CButton>
     </div>

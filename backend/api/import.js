@@ -85,7 +85,7 @@ export const fetchBranches = async (importerName, orgcode, orgname) => {
         const connection = await connectMySQL();
 
         const [rows] = await connection.execute(`SELECT branchname, id FROM organizations WHERE clientname = ? AND orgcode = ? AND orgname = ?`, [importerName, orgcode, orgname]);
-        
+
         return rows;
     } catch (error) {
         console.log(error);
@@ -133,7 +133,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 //         const connection = await connectMySQL();
 //         const [rows] = await connection.execute(`SELECT clientname, GROUP_CONCAT(CONCAT_WS(':', id, branchname, address, GST, IEC) SEPARATOR ',') AS branches FROM organizations WHERE orgcode = ? GROUP BY clientname`, [orgcode]);
 //         // const allclients = [];
-   
+
 //         // Transform the rows into an array of objects with separate properties for client name and branches
 //         const clients = rows.map(row => {
 //             var client = {
@@ -160,8 +160,8 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 //             // sendClient(client);
 //             return client;
 //         });
-        
-        
+
+
 //     } catch (error) {
 //         console.log(error);
 //     }
@@ -205,7 +205,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 
 //             // Print out the client object and its branches separately
 //             // console.log('Client:', client);
-            
+
 //             return client;
 //         });
 
@@ -230,16 +230,16 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 //     try {
 //         const connection = await connectMySQL();
 //         const [rows] = await connection.execute(`SELECT clientname, GROUP_CONCAT(CONCAT_WS(':', id, branchname, address, GST, IEC) SEPARATOR ',') AS branches FROM organizations WHERE orgcode = ? GROUP BY clientname`, [orgcode]);
-        
+
 //         // Transform the rows into an array of objects with separate properties for client name and branches
 //         const clients = rows.map(row => {
-            
+
 //             // Split the concatenated string of branches and parse each branch into an object
 //             const branchDetails = row.branches.split(',');
-           
+
 //             branchDetails.forEach(branch => {
 //                 const [id, branchname, address, GST, IEC] = branch.split(':');
-               
+
 //                 const branchdata = {
 //                     id: id,
 //                     branchname: branchname,
@@ -247,16 +247,16 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 //                     GST: GST,
 //                     IEC: IEC
 //                 }
-            
+
 //                 const client = {
 //                     clientname: row.clientname,
 //                     branches: []
 //                 };
-                
+
 //                 client.branches.push(branchdata);
 //                 console.log(client);
 //             });
-        
+
 //         });
 
 //         // console.log(clients);
@@ -329,7 +329,7 @@ export const getClient = async (orgcode) => {
     try {
         const connection = await connectMySQL();
         const [rows] = await connection.execute(`SELECT clientname, id, branchname, address, GST, IEC FROM organizations WHERE orgcode = ?`, [orgcode]);
-        
+
         return rows;
     } catch (error) {
         console.log(error);
@@ -343,7 +343,7 @@ export const storeO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgc
     try {
         const connection = await connectMySQL();
         const [rows] = await connection.execute(`INSERT INTO o2dimport 
-        (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`,[tatimpcolumn, days, hours, minutes, orgname, orgcode]);
+        (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`, [tatimpcolumn, days, hours, minutes, orgname, orgcode]);
         return rows;
     } catch (error) {
         console.log(error);
@@ -396,7 +396,7 @@ export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, org
 //             (orgname, orgcode, tatimpcolumn, days, hours, minutes) VALUES (?, ?, ?, ?, ?, ?)`,
 //                 [orgname, orgcode, document, days, hours, minutes]);
 //         }
-        
+
 //     } catch (error) {
 //         console.log(error);
 //     }
@@ -418,7 +418,7 @@ export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, org
 // export const updateImpTATData = async (impTATData, orgname, orgcode) => {
 //     try {
 //         const connection = await connectMySQL();
-        
+
 //         for (const item of impTATData) {
 //             const { document, tat } = item;
 //             const { days, hours, minutes } = tat;
@@ -439,7 +439,7 @@ export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, org
 //         const connection = await connectMySQL();
 //         const columnNames = [ScrutinyDocument, PortCFSNomination, ChecklistApproval, ESanchit, FilingBOE, Assesment, DutyCall, ExaminationOOC];
 //         const [rows] = await connection.execute(`SELECT tatimpcolumn, days, hours, minutes FROM tatimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
-        
+
 //         const result = [];
 
 //         // Loop through each row
@@ -453,9 +453,39 @@ export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, org
 //                 result.push({ [row.tatimpcolumn]: { days, hours, minutes } });
 //             }
 //         }
-   
+
 //         return result;
 //     } catch (error) {
 //         console.log(error);
 //     }
 // };
+
+
+
+export const fetchAlluseraccess = async (username) => {
+
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(
+            `SELECT value FROM importaccess WHERE username = ?`,
+            [username]
+        );
+
+        return rows;
+    } catch (error) {
+        console.log('Error in storeimpaccess:', error);
+        throw error;
+    }
+}
+
+
+
+export const fetchJobData = async (jobnumber) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`SELECT * FROM impjobcreation WHERE jobnumber = ?`, [jobnumber]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
