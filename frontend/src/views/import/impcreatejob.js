@@ -144,6 +144,7 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
         const idofcol = response.data[0].id;
         const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode })
         localStorage.setItem('jobNumber', sendupdate.data);
+        localStorage.setItem('jobDate', JobformData.jobDate);
       }
     } catch (error) {
       console.log(error);
@@ -186,7 +187,7 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
     // Set prefill data in the form fields
     if (prefillData) {
       setJobFormData({
-        jobDate: prefillData.jobdate,
+        jobDate: moment(prefillData.jobdate).format('YYYY-MM-DDTHH:mm'),
         docReceivedOn: moment(prefillData.docreceivedon).format('YYYY-MM-DDTHH:mm'),
         transportMode: prefillData.transportmode,
         customHouse: prefillData.customhouse,
@@ -235,7 +236,6 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
   }, [isshown]);
 
 
-
   return (
     <div>
       <CCol xs={12}>
@@ -248,7 +248,7 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
               </div>
               <div>
                 <label for="Job Date" className='text-field-3'>Job Date</label>
-                <input type="datetime-local" placeholder="" className='text-field-4' name='jobDate' value={currentdateandtime} readOnly/>
+                <input type="datetime-local" placeholder="" className='text-field-4' name='jobDate' value={JobformData.jobDate ? JobformData.jobDate: currentdateandtime} readOnly/>
               </div>
               <div>
                 <label for="Doc. Received On Date" className='text-field-3'>Doc. Received On</label>

@@ -397,13 +397,12 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-// // import createjob from './CreateJob';
-
-
+import moment from 'moment';
+// import createjob from './CreateJob';
 
 
 const O2D = () => {
-
+    const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
     const [visible, setvisible] = useState(false);
     const [allo2dData, setallo2dData] = useState([]);
     const [allaccessofuser, setallaccessofuser] = useState([]);
@@ -442,7 +441,7 @@ const O2D = () => {
         if (minutes > 0) {
             formattedTAT += `${minutes} min`;
         }
-      
+
         return formattedTAT.trim();
     };
 
@@ -453,26 +452,111 @@ const O2D = () => {
             // Access the username at the specified index in the allData state
             const username = localStorage.getItem('username');
             const response = await axios.get('http://localhost:5000/getUseraccessforuser', {
-              params: {
-                username: username
-              }
+                params: {
+                    username: username
+                }
             });
             setallaccessofuser(response.data);
 
-          };
-          handleAccess();
+        };
+        handleAccess();
     }, [])
 
 
     const isEditable = (rowItem) => {
-        
-        if(localStorage.getItem('username') === 'admin'){
+
+        if (localStorage.getItem('username') === 'admin') {
             return true;
-        }else{
+        } else {
             return allaccessofuser.some((accessrow) => accessrow.value === rowItem.tatimpcolumn);
         }
-        
+
     };
+
+
+
+
+
+
+
+
+    // Function to calculate plan date
+    const calculatePlanDate = (TAT, jobDate) => {
+        const { days, hours, minutes } = TAT;
+        const planDateTime = new Date(jobDate); // Initialize planDateTime with jobDate
+
+        // Add days to the planDateTime
+        if (days) {
+            planDateTime.setDate(planDateTime.getDate() + parseInt(days));
+        }
+
+        // Add hours to the planDateTime
+        if (hours) {
+            planDateTime.setHours(planDateTime.getHours() + parseInt(hours));
+        }
+
+        // Add minutes to the planDateTime
+        if (minutes) {
+            planDateTime.setMinutes(planDateTime.getMinutes() + parseInt(minutes));
+        }
+        if (planDateTime.getDay() === 0) {
+            // If Sunday, add one more day (24 hours)
+            planDateTime.setDate(planDateTime.getDate() + 1);
+        }
+        handleTimeDelay(planDateTime);
+        return moment(planDateTime).format('YYYY-MM-DDTHH:mm'); // You can format this date as per your requirement
+    };
+
+
+
+
+
+    // const handleCheckboxChange = (index) => {
+        
+    //     const newData = [...allo2dData];
+    //     newData[index].actualDate = moment().format('YYYY-MM-DDTHH:mm');
+    //     newData[index].status = 'Completed';
+    //     newData[index].timedelay = 
+    //     setallo2dData(newData);
+    // };
+
+
+
+
+
+    const handleCheckboxChange = (index) => {
+        const newData = [...allo2dData];
+        const isChecked = newData[index].status === 'Completed';
+        if (isChecked) {
+            // If the checkbox was checked, remove the status and actual date
+            newData[index].status = '';
+            newData[index].actualDate = '';
+        } else {
+            // If the checkbox was unchecked, update the status and actual date
+            newData[index].actualDate = moment().format('YYYY-MM-DDTHH:mm');
+            newData[index].status = 'Completed';
+        }
+        setallo2dData(newData);
+    };
+    
+
+    async function handleTimeDelay(planDateTime){
+        try {
+            const newData = [...allo2dData];
+            const isChecked = newData[index].status === 'Completed';
+
+            if (isChecked) {
+
+            }else{
+                
+            }
+
+
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     return (
@@ -498,19 +582,19 @@ const O2D = () => {
                             <CTableRow key={index}>
 
                                 <CTableDataCell>{item.tatimpcolumn}</CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5'  readOnly value={formatTAT(item)} /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4'  readOnly={!isEditable(item)}/></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4'  readOnly={!isEditable(item)} /></CTableDataCell>
-                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4'  readOnly={!isEditable(item)}/></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4'  readOnly={!isEditable(item)}/></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={formatTAT(item)} /></CTableDataCell>
+                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly value={calculatePlanDate(item, localStorage.getItem('jobDate'))} /></CTableDataCell>
+                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly value={item.actualDate ? moment(item.actualDate).format('YYYY-MM-DDTHH:mm') : ''} /></CTableDataCell>
+                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' readOnly onChange={() => handleCheckboxChange(index)} /></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly/></CTableDataCell>
                                 <CDropdown>
-                                    <CDropdownToggle className="dropdown-btn" color='secondary'>Select Query</CDropdownToggle>
+                                    <CDropdownToggle className="dropdown-btn" color='secondary'>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
                                     <CDropdownMenu className="text-field-4">
-                                        <CDropdownItem href="#"  readOnly={!isEditable(item)}>Underprocess</CDropdownItem>
-                                        <CDropdownItem href="#"  readOnly={!isEditable(item)}>Completed</CDropdownItem>
+                                        <CDropdownItem href="#" readOnly={!isEditable(item)}>Underprocess</CDropdownItem>
+                                        <CDropdownItem href="#" readOnly={!isEditable(item)}>Completed</CDropdownItem>
                                     </CDropdownMenu>
                                 </CDropdown>
-                                <CTableDataCell><input type="text" placeholder="" className='remarks-field'  readOnly={!isEditable(item)}/></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={!isEditable(item)} /></CTableDataCell>
                             </CTableRow>
                         ))}
                     </CTableBody>
