@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -26,16 +26,32 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Import = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
-  
+  const [alljobs, setalljobs] = useState([]);
 
 
-
+  useEffect(() => {
+    const fetchAllJobs = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/allImporters', {
+          params: {
+            orgname: localStorage.getItem('orgname'),
+            orgcode: localStorage.getItem('orgcode')
+          }
+        });
+        setalljobs(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchAllJobs();
+  }, []);
 
 
 
@@ -156,6 +172,9 @@ const Import = () => {
               <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
                 <Link to={"/impcreatejob"}>
                   Edit
+                </Link> <br />
+                <Link>
+                  Delete
                 </Link>
               </th>
               <CTableHeaderCell scope="row" className='row-font'>06.09.2023 13:44:55</CTableHeaderCell>
@@ -181,7 +200,7 @@ const Import = () => {
 
 
 
-            
+
 
 
 

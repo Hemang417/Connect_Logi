@@ -136,15 +136,15 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
       const username = localStorage.getItem('username');
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
-      console.log(JobformData);
       const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime });
       if (response.status === 200) {
         toast.success('Job created successfully.');
 
         const idofcol = response.data[0].id;
-        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode })
-        localStorage.setItem('jobNumber', sendupdate.data);
-        localStorage.setItem('jobDate', JobformData.jobDate);
+        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode });
+        console.log(sendupdate);
+        localStorage.setItem('jobNumber', sendupdate.data.jobNumberlatest);
+        localStorage.setItem('jobDate', sendupdate.data.jobDaterow[0].jobdate);
       }
     } catch (error) {
       console.log(error);
@@ -443,23 +443,23 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
 
 
       <div className='all-buttons'>
-        <div className='search-button'>
+        {/* <div className='search-button'>
           <CButton color="primary" type="submit">
             Save
           </CButton>
-        </div>
+        </div> */}
 
         <div className='search-button'>
           <CButton color="primary" type="submit">
             Save & Close
           </CButton>
         </div>
-
+{/* 
         <div className='search-button'>
           <CButton color="primary" type="submit">
             Save & New
           </CButton>
-        </div>
+        </div> */}
 
         <div className='search-button'>
           <CButton color="primary" type="submit">

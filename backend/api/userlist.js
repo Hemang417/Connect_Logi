@@ -145,7 +145,7 @@ export const getUserAccess = async (username) => {
 export const fetchAllaccesspoints = async (orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
-        const [rows] = await connection.execute(`SELECT tatimpcolumn, id FROM o2dimport WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const [rows] = await connection.execute(`SELECT tatimpcolumn, id FROM o2dtat WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
         console.log(error);

@@ -406,7 +406,7 @@ const O2D = () => {
     const [visible, setvisible] = useState(false);
     const [allo2dData, setallo2dData] = useState([]);
     const [allaccessofuser, setallaccessofuser] = useState([]);
-
+    const [remarks, setremarks] = useState('');
     useEffect(() => {
         const fetchAllO2Drows = async () => {
             try {
@@ -416,7 +416,12 @@ const O2D = () => {
                         orgcode: localStorage.getItem('orgcode')
                     }
                 });
-                setallo2dData(response.data);
+                const updatedData = response.data.map(item => ({
+                    ...item,
+                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate'))
+                }));
+
+                setallo2dData(updatedData);
             } catch (error) {
                 console.log(error);
             }
@@ -426,7 +431,7 @@ const O2D = () => {
 
 
 
-    const formatTAT = (TAT) => {
+    const formatTAT = (TAT, index) => {
         const days = parseInt(TAT.days);
         const hours = parseInt(TAT.hours);
         const minutes = parseInt(TAT.minutes);
@@ -441,7 +446,7 @@ const O2D = () => {
         if (minutes > 0) {
             formattedTAT += `${minutes} min`;
         }
-
+        allo2dData[index].tat = formattedTAT.trim();
         return formattedTAT.trim();
     };
 
@@ -503,7 +508,7 @@ const O2D = () => {
             // If Sunday, add one more day (24 hours)
             planDateTime.setDate(planDateTime.getDate() + 1);
         }
-        handleTimeDelay(planDateTime);
+
         return moment(planDateTime).format('YYYY-MM-DDTHH:mm'); // You can format this date as per your requirement
     };
 
@@ -512,7 +517,7 @@ const O2D = () => {
 
 
     // const handleCheckboxChange = (index) => {
-        
+
     //     const newData = [...allo2dData];
     //     newData[index].actualDate = moment().format('YYYY-MM-DDTHH:mm');
     //     newData[index].status = 'Completed';
@@ -524,39 +529,244 @@ const O2D = () => {
 
 
 
-    const handleCheckboxChange = (index) => {
+
+    const handleCheckboxChange = async (index) => {
         const newData = [...allo2dData];
         const isChecked = newData[index].status === 'Completed';
+
         if (isChecked) {
-            // If the checkbox was checked, remove the status and actual date
-            newData[index].status = '';
-            newData[index].actualDate = '';
+            // If the checkbox was checked, remove the status, actual date, and time delay
+            try {
+                newData[index].status = '';
+                newData[index].actualDate = '';
+                newData[index].timedelay = '';
+                // Update the state with the modified data
+                setallo2dData(newData);
+                localStorage.setItem('tatimpcolumn', newData[index].tatimpcolumn)
+                // Send a request to update the backend
+                await axios.delete(`http://localhost:5000/deletefromO2Dtable`, {
+                    data: {
+                        tatimpcolumn: newData[index].tatimpcolumn,
+                        jobNumber: localStorage.getItem('jobNumber'),
+                        orgname: localStorage.getItem('orgname'),
+                        orgcode: localStorage.getItem('orgcode'),
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
         } else {
             // If the checkbox was unchecked, update the status and actual date
             newData[index].actualDate = moment().format('YYYY-MM-DDTHH:mm');
             newData[index].status = 'Completed';
-        }
-        setallo2dData(newData);
-    };
-    
-
-    async function handleTimeDelay(planDateTime){
-        try {
-            const newData = [...allo2dData];
-            const isChecked = newData[index].status === 'Completed';
-
-            if (isChecked) {
-
-            }else{
-                
+            // Convert actualDate and planDate to Date objects
+            const actualDate = new Date(newData[index].actualDate);
+            const planDate = new Date(newData[index].planDate);
+            // Calculate the difference in milliseconds
+            const timeDifference = actualDate - planDate;
+            // Convert milliseconds to hours, minutes, and seconds
+            const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            // Store the time delay in the format HH:mm
+            newData[index].timedelay = `${hours} hr ${minutes} min`;
+            // Update the state with the modified data
+            setallo2dData(newData);
+            try {
+                localStorage.setItem('tatimpcolumn', newData[index].tatimpcolumn);
+                // Send a request to update the backend
+                await axios.post('http://localhost:5000/insertO2D', {
+                    planDate: newData[index].planDate,
+                    actualDate: newData[index].actualDate,
+                    timedelay: newData[index].timedelay,
+                    status: newData[index].status,
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    jobnumber: localStorage.getItem('jobNumber'),
+                    jobdoneby: localStorage.getItem('username'),
+                    tatimpcolumn: newData[index].tatimpcolumn,
+                    tat: newData[index].tat
+                });
+            } catch (error) {
+                console.error('Error:', error);
             }
-
-
-
-        } catch (error) {
-            console.log(error);
         }
+    };
+
+
+
+
+
+
+
+
+
+
+
+async function storeRemark(e) {
+    e.preventDefault();
+    try {
+       
+        const response = await axios.put('http://localhost:5000/insertRemarks', {
+            userremark: remarks,
+            orgname: localStorage.getItem('orgname'),
+            orgcode: localStorage.getItem('orgcode'),
+            tatimpcolumn: localStorage.getItem('tatimpcolumn'),
+        });
+
+        setremarks('');
+
+    } catch (error) {
+        console.log(error);
     }
+}
+
+
+
+
+
+
+
+    // const handleCheckboxChange = async (index) => {
+    //     const newData = [...allo2dData];
+    //     const isChecked = newData[index].status === 'Completed';
+    //     if (isChecked) {
+    //         // If the checkbox was checked, remove the status, actual date, and time delay
+    //         try {
+    //             newData[index].status = ' ';
+    //             newData[index].actualDate = ' ';
+    //             newData[index].timedelay = ' ';
+    //             const response = await axios.put(`http://localhost:5000/deletefromO2Dtable`, {
+    //                 id: newData[index].id,
+    //                 orgname: localStorage.getItem('orgname'),
+    //                 orgcode: localStorage.getItem('orgcode'),
+    //             });
+    //             // Update the state with the modified data
+    //             setallo2dData(newData);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     } else {
+    //         // If the checkbox was unchecked, update the status and actual date
+    //         newData[index].actualDate = moment().format('YYYY-MM-DDTHH:mm');
+    //         newData[index].status = 'Completed';
+    //         // Convert actualDate and planDate to Date objects
+    //         const actualDate = new Date(newData[index].actualDate);
+    //         const planDate = new Date(newData[index].planDate);
+    //         // Calculate the difference in milliseconds
+    //         const timeDifference = actualDate - planDate;
+    //         // Convert milliseconds to hours, minutes, and seconds
+    //         const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    //         const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    //         // Store the time delay in the format HH:mm
+    //         newData[index].timedelay = `${hours} hr ${minutes} min`;
+    //         // Update the state with the modified data
+    //         setallo2dData(newData);
+    //         try {
+    //             const response = await axios.put('http://localhost:5000/insertO2D', {
+    //                 planDate: newData[index].planDate,
+    //                 actualDate: newData[index].actualDate,
+    //                 timedelay: newData[index].timedelay,
+    //                 status: newData[index].status,
+    //                 id: newData[index].id,
+    //             });
+    //         } catch (error) {
+    //             console.error('Error:', error);
+    //         }
+    //     }
+    // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const handleCheckboxChange = async (index) => {
+    //     const newData = [...allo2dData];
+    //     const isChecked = newData[index].status === 'Completed';
+    //     if (isChecked) {
+
+    //         // If the checkbox was checked, remove the status and actual date
+
+
+    //         try {
+    //             newData[index].status = '';
+    //             newData[index].actualDate = '';
+    //             newData[index].timedelay = '';
+    //             const response = await axios.put(`http://localhost:5000/deletefromO2Dtable`, {
+    //                 id: newData[index].id,
+    //                 orgname: localStorage.getItem('orgname'),
+    //                 orgcode: localStorage.getItem('orgcode'),
+    //             })
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+
+
+    //     } else {
+    //         // If the checkbox was unchecked, update the status and actual date
+    //         newData[index].actualDate = moment().format('YYYY-MM-DDTHH:mm');
+    //         newData[index].status = 'Completed';
+    //         // Convert actualDate and planDate to Date objects
+    //         const actualDate = new Date(newData[index].actualDate);
+    //         const planDate = new Date(newData[index].planDate);
+
+    //         // Calculate the difference in milliseconds
+    //         const timeDifference = actualDate - planDate;
+
+    //         // Convert milliseconds to hours, minutes, and seconds
+    //         const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+    //         const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    //         // Store the time delay in the format HH:mm
+    //         newData[index].timedelay = `${hours} hr ${minutes} min`;
+
+
+    //     }
+
+    //     setallo2dData(newData);
+    //     try {
+    //         const response = await axios.put('http://localhost:5000/insertO2D', {
+    //             planDate: newData[index].planDate,
+    //             actualDate: newData[index].actualDate,
+    //             timedelay: newData[index].timedelay,
+    //             status: newData[index].status,
+    //             id: newData[index].id,
+    //         });
+
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
+
+
+    const handleRemarksChange = (e) => {
+        setremarks(e.target.value);
+    };
+
+    // async function handleTimeDelay(planDateTime){
+    //     try {
+    //         const newData = [...allo2dData];
+    //         const isChecked = newData[index].status === 'Completed';
+
+    //         if (isChecked) {
+
+    //         }else{
+
+    //         }
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
 
     return (
@@ -582,11 +792,11 @@ const O2D = () => {
                             <CTableRow key={index}>
 
                                 <CTableDataCell>{item.tatimpcolumn}</CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={formatTAT(item)} /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly value={calculatePlanDate(item, localStorage.getItem('jobDate'))} /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' readOnly value={item.actualDate ? moment(item.actualDate).format('YYYY-MM-DDTHH:mm') : ''} /></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={formatTAT(item, index)} /></CTableDataCell>
+                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={calculatePlanDate(item, localStorage.getItem('jobDate'))} readOnly /></CTableDataCell>
+                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.actualDate ? moment(item.actualDate).format('YYYY-MM-DDTHH:mm') : ''} readOnly /></CTableDataCell>
                                 <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' readOnly onChange={() => handleCheckboxChange(index)} /></CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly/></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly value={item.timedelay ? item.timedelay : '00:00:00'} /></CTableDataCell>
                                 <CDropdown>
                                     <CDropdownToggle className="dropdown-btn" color='secondary'>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
                                     <CDropdownMenu className="text-field-4">
@@ -594,11 +804,17 @@ const O2D = () => {
                                         <CDropdownItem href="#" readOnly={!isEditable(item)}>Completed</CDropdownItem>
                                     </CDropdownMenu>
                                 </CDropdown>
-                                <CTableDataCell><input type="text" placeholder="" className='remarks-field' readOnly={!isEditable(item)} /></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={!isEditable(item)} onChange={handleRemarksChange}/></CTableDataCell>
                             </CTableRow>
                         ))}
                     </CTableBody>
                 </CTable>
+                
+            </div>
+            <div className='search-button'>
+                    <CButton color="primary" type="submit" onClick={storeRemark}>
+                        Save & Close
+                    </CButton>
             </div>
         </div>
     )

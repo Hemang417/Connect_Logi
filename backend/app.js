@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess} from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData} from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull, fetchAllImporters, storeRemark} from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -627,6 +627,48 @@ app.get('/prefillCreateJob', async (req, res) => {
 })
 
 
+
+app.post('/insertO2D', async (req, res) => {
+    try {
+        const {planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat} = req.body;
+        const storedInO2D = await storeinO2Dtable(planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+app.delete('/deletefromO2Dtable', async (req, res) => {
+    try {
+        const {tatimpcolumn, jobNumber, orgname, orgcode} = req.body;
+        const updatetherowtoNull = await deletetheO2DtoNull(tatimpcolumn, jobNumber, orgname, orgcode);
+        // res.send(updatetherowtoNull);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/allImporters', async (req, res) => {
+    try {
+        const { orgname, orgcode } = req.query;
+        const allJobsFetched = await fetchAllImporters(orgname, orgcode);
+        res.send(allJobsFetched);
+    } catch (error) {
+        console.error('Error fetching all importers:', error);
+        res.status(500).send('Internal Server Error'); // Send an internal server error response
+    }
+});
+
+
+app.put('/insertRemarks', async (req, res) => {
+    try {
+        const {userremark} = req.body;
+        const updateRemark = await storeRemark(userremark);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 app.listen(PORT, () => {
