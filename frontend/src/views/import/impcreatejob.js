@@ -367,8 +367,8 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
                 <CDropdown>
                   <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.blType ? JobformData.blType : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem onClick={() => handleDropdownChange('blType', 'HBL/MBL')}>HBL/MBL</CDropdownItem>
-                    <CDropdownItem onClick={() => handleDropdownChange('blType', 'HAWB/MAWB')}>HAWB/MAWB</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('blType', 'HBL/HAWB')}>HBL/HAWB</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('blType', 'MBL/MAWB')}>MBL/MAWB</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
                 <input type="text" placeholder="" className='text-field-4' name='bltypenumber' value={JobformData.bltypenumber} onChange={handleChange} />

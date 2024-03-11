@@ -32,20 +32,26 @@ const Import = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-
-  const [alljobs, setalljobs] = useState([]);
+  const [selectedMode, setselectedMode] = useState('');
+  const [allimpjobs, setallimpjobs] = useState();
+  const [allgenjobs, setallgenjobs] = useState();
+  const [importername, setimportername] = useState('');
+  const [selectedDropdown, setselectedDropdown] = useState('');
+  const [blTypeNum, setBlTypeNum] = useState('');
 
 
   useEffect(() => {
     const fetchAllJobs = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/allImporters', {
+        const response = await axios.get('http://localhost:5000/allimpjobs', {
           params: {
             orgname: localStorage.getItem('orgname'),
             orgcode: localStorage.getItem('orgcode')
           }
         });
-        setalljobs(response.data);
+
+        setallimpjobs(response.data.rows);
+        setallgenjobs(response.data.genrows);
       } catch (error) {
         console.log(error);
       }
@@ -53,6 +59,11 @@ const Import = () => {
     fetchAllJobs();
   }, []);
 
+
+
+  const handleModeChange = (mode) => {
+    setselectedMode(mode); // Update selected mode
+  };
 
 
 
@@ -92,31 +103,34 @@ const Import = () => {
           <CCardBody>
             <div className='grid-container-import'>
               <div>
-                {/* <label for="Transport Mode" className='text-field-3'>Job No.</label> */}
+
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Job No.</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedDropdown ? selectedDropdown: 'Job No.'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">BE No.</CDropdownItem>
-                    <CDropdownItem href="#">AWB/HAWB</CDropdownItem>
-                    <CDropdownItem href="#">HBL/HAWB</CDropdownItem>
-                    <CDropdownItem href="#">Container No.</CDropdownItem>
+                    {/* <CDropdownItem href="#">BE No.</CDropdownItem> */}
+                    <CDropdownItem onClick={(e) => setselectedDropdown('HBL/HAWB')}>HBL/HAWB</CDropdownItem>
+                    <CDropdownItem onClick={(e) => setselectedDropdown('MBL/MAWB')}>MBL/MAWB</CDropdownItem>
+                    <CDropdownItem onClick={(e) => setselectedDropdown('JobNumber')}>Job Number</CDropdownItem>
+                    <CDropdownItem onClick={(e) => setselectedDropdown('')}>All</CDropdownItem>
+                    {/* <CDropdownItem href="#">Container No.</CDropdownItem> */}
                   </CDropdownMenu>
                 </CDropdown>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => setBlTypeNum(e.target.value)} />
               </div>
               <div>
                 <label for="Mode" className='text-field-3'>Mode</label>
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>Both</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedMode ? selectedMode : 'Both'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
-                    <CDropdownItem href="#">Air</CDropdownItem>
-                    <CDropdownItem href="#">Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleModeChange('Air')}>Air</CDropdownItem>
+                    <CDropdownItem onClick={() => handleModeChange('Sea')}>Sea</CDropdownItem>
+                    <CDropdownItem onClick={() => handleModeChange('')}>Both</CDropdownItem>
                   </CDropdownMenu>
                 </CDropdown>
               </div>
               <div>
                 <label for="Job Date" className='text-field-3'>Importer Name</label>
-                <input type="text" placeholder="" className='text-field-4' />
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => setimportername(e.target.value)} />
               </div>
               <div>
                 <label for="Mode" className='text-field-3'>Status</label>
@@ -168,53 +182,151 @@ const Import = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            <CTableRow>
-              <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
-                <Link to={"/impcreatejob"}>
-                  Edit
-                </Link> <br />
-                <Link>
-                  Delete
-                </Link>
-              </th>
-              <CTableHeaderCell scope="row" className='row-font'>06.09.2023 13:44:55</CTableHeaderCell>
-              <CTableDataCell className='row-font'>S/I/0001/23-24</CTableDataCell>
-              <CTableDataCell className='row-font'>PERMANENT MAGNET LTD</CTableDataCell>
-              <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
-              <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-              <CTableDataCell className='row-font'></CTableDataCell>
 
-            </CTableRow>
+            {allimpjobs && allimpjobs
+              .filter(job => {
+                const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
+                return (
+                  (!selectedMode || job.transportmode === selectedMode) &&
+                  (!importername || (matchingGenJob && matchingGenJob.importername && matchingGenJob.importername.toLowerCase().includes(importername.toLowerCase()))) &&
+                  (!selectedDropdown || (selectedDropdown === 'HBL/HAWB' && job.bltype === 'HBL/HAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase()))) ||
+                  (selectedDropdown === 'MBL/MAWB' && job.bltype === 'MBL/MAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase())))) ||
+                  (selectedDropdown === 'JobNumber' && (!blTypeNum || job.jobnumber.toLowerCase().includes(blTypeNum.toLowerCase())))
+                );
+              })
+              .map((job, index) => {
+                const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
+                return (
+                  <CTableRow key={index}>
+                    <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
+                      <Link to={"/impcreatejob"}>
+                        Edit
+                      </Link> <br />
+                      <Link>
+                        Delete
+                      </Link>
+                    </th>
+                    <CTableHeaderCell scope="row" className='row-font'>{job.jobdate}</CTableHeaderCell>
+                    <CTableDataCell className='row-font'>{job.jobnumber}</CTableDataCell>
+                    <CTableDataCell className='row-font'>{matchingGenJob.importername}</CTableDataCell>
+                    <CTableDataCell className='row-font'>{job.bltypenum}</CTableDataCell>
+                    <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>{job.blstatus}</CTableDataCell>
+                    <CTableDataCell className='row-font'>{job.docreceivedon}</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                    <CTableDataCell className='row-font'></CTableDataCell>
 
-
-
-
-
-
-
-
-
-
+                  </CTableRow>
+                )
+              })}
 
           </CTableBody>
         </CTable>
+
       </CForm>
 
     </CRow>
-
 
   )
 }
 
 export default Import;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// <CTable hover responsive striped className=''>
+//           <CTableHead>
+//             <CTableRow color='dark'>
+//               <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Date</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Job No.</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Importer Name</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>HBL/HAWB No.</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>MBL/MAWB No.</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>ETA</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Filling BOE</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Assesment</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Examination/OOC</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>BL Status/Agent Name</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Original Doc. Received</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Delivery Order</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Delivery</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>LR/Empty Slip/Bill</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Billing</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Dispatch</CTableHeaderCell>
+//               <CTableHeaderCell scope="col" className='row-font'>Job Status</CTableHeaderCell>
+
+//             </CTableRow>
+//           </CTableHead>
+//           <CTableBody>
+//             <CTableRow>
+//               <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
+//                 <Link to={"/impcreatejob"}>
+//                   Edit
+//                 </Link> <br />
+//                 <Link>
+//                   Delete
+//                 </Link>
+//               </th>
+//               <CTableHeaderCell scope="row" className='row-font'>06.09.2023 13:44:55</CTableHeaderCell>
+//               <CTableDataCell className='row-font'>S/I/0001/23-24</CTableDataCell>
+//               <CTableDataCell className='row-font'>PERMANENT MAGNET LTD</CTableDataCell>
+//               <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
+//               <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+//               <CTableDataCell className='row-font'></CTableDataCell>
+
+//             </CTableRow>
+
+
+
+
+
+
+
+
+
+
+
+//           </CTableBody>
+//         </CTable>

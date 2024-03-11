@@ -25,7 +25,7 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 
 
         const [result] = await connection.execute(`INSERT INTO impjobcreation 
-        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgname, orgcode, freedays, blstatus)
+        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus]);
 
@@ -75,8 +75,8 @@ export const updateJobNumber = async (id, transportMode) => {
             `SELECT jobdate FROM impjobcreation WHERE jobnumber = ?`,
             [jobNumberlatest]
         );
-        
-        return {jobNumberlatest, jobDaterow};
+
+        return { jobNumberlatest, jobDaterow };
 
     } catch (error) {
         console.log(error);
@@ -520,12 +520,15 @@ export const deletetheO2DtoNull = async (tatimpcolumn, jobNumber, orgname, orgco
 }
 
 
-export const fetchAllImporters = async (orgname, orgcode) => {
+export const fetchallimpjobs = async (orgname, orgcode) => {
     try {
         const connection = await connectMySQL();
         const [rows] = await connection.execute('SELECT * FROM impjobcreation WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
-        console.log(rows);
-        return rows;
+        const [genrows] = await connection.execute(`SELECT * FROM impgeneral WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return {
+            rows,
+            genrows
+        };
     } catch (error) {
         console.log(error);
     }
@@ -533,11 +536,25 @@ export const fetchAllImporters = async (orgname, orgcode) => {
 
 
 
-export const storeRemark = async (userremark) => {
+export const storeRemark = async (remarkskaData, orgname, orgcode, jobnumber) => {
     try {
+
         const connection = await connectMySQL();
-        const [row] = await connection.execute(`UPDATE SET remarks = ? WHERE `)
+        const rowsToUpdate = [];
+
+        remarkskaData.forEach(item => {
+            if (item.remarks !== '') {
+                rowsToUpdate.push(item);
+            }
+        });
+        
+        for (const item of rowsToUpdate) {
+            const { tatimpcolumn, remarks } = item;
+            const [rows] = await connection.execute(`UPDATE o2dimport SET remarks = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`, [remarks, tatimpcolumn, orgname, orgcode, jobnumber]);
+        }
+
+
     } catch (error) {
         console.log(error);
     }
-}
+};

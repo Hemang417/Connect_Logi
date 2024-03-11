@@ -406,7 +406,7 @@ const O2D = () => {
     const [visible, setvisible] = useState(false);
     const [allo2dData, setallo2dData] = useState([]);
     const [allaccessofuser, setallaccessofuser] = useState([]);
-    const [remarks, setremarks] = useState('');
+
     useEffect(() => {
         const fetchAllO2Drows = async () => {
             try {
@@ -418,7 +418,8 @@ const O2D = () => {
                 });
                 const updatedData = response.data.map(item => ({
                     ...item,
-                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate'))
+                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
+                    remarks: ''
                 }));
 
                 setallo2dData(updatedData);
@@ -602,23 +603,25 @@ const O2D = () => {
 
 
 
-async function storeRemark(e) {
-    e.preventDefault();
-    try {
-       
-        const response = await axios.put('http://localhost:5000/insertRemarks', {
-            userremark: remarks,
-            orgname: localStorage.getItem('orgname'),
-            orgcode: localStorage.getItem('orgcode'),
-            tatimpcolumn: localStorage.getItem('tatimpcolumn'),
-        });
-
-        setremarks('');
-
-    } catch (error) {
-        console.log(error);
+    async function storeRemark(e) {
+        e.preventDefault();
+        try {
+            const remarksData = allo2dData.map(item => ({
+                tatimpcolumn: item.tatimpcolumn,
+                remarks: item.remarks
+            }));
+           
+            const response = await axios.put('http://localhost:5000/insertRemarks', {
+                remarkskaData: remarksData,
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode'),
+                jobnumber: localStorage.getItem('jobNumber')
+            });
+    
+        } catch (error) {
+            console.log(error);
+        }
     }
-}
 
 
 
@@ -748,9 +751,14 @@ async function storeRemark(e) {
     // };
 
 
-    const handleRemarksChange = (e) => {
-        setremarks(e.target.value);
+    const handleRemarksChange = (e, index) => {
+        // Get the value of remarks entered by the user
+        const remarksValue = e.target.value;
+        const newData = [...allo2dData];
+        newData[index].remarks = remarksValue; // Update remarks property of the corresponding row
+        setallo2dData(newData);
     };
+
 
     // async function handleTimeDelay(planDateTime){
     //     try {
@@ -804,17 +812,17 @@ async function storeRemark(e) {
                                         <CDropdownItem href="#" readOnly={!isEditable(item)}>Completed</CDropdownItem>
                                     </CDropdownMenu>
                                 </CDropdown>
-                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={!isEditable(item)} onChange={handleRemarksChange}/></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={!isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} /></CTableDataCell>
                             </CTableRow>
                         ))}
                     </CTableBody>
                 </CTable>
-                
+
             </div>
             <div className='search-button'>
-                    <CButton color="primary" type="submit" onClick={storeRemark}>
-                        Save & Close
-                    </CButton>
+                <CButton color="primary" type="submit" onClick={storeRemark}>
+                    Save & Close
+                </CButton>
             </div>
         </div>
     )
