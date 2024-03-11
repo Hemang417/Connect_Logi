@@ -66,6 +66,26 @@ const Import = () => {
   };
 
 
+  async function handleDelete(e, index){
+    try {
+        const thatdata = allimpjobs[index];
+        const orgname = thatdata.orgname;
+        const orgcode = thatdata.orgcode;
+        const jobnumber = thatdata.jobnumber;
+        const response = await axios.delete('http://localhost:5000/deletethatjob', {
+            data: {
+                orgname: orgname,
+                orgcode: orgcode,
+                jobnumber: jobnumber
+            }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
 
   return (
     // JOB SEARCH - DROPDOWN & TEXT FIELD
@@ -199,12 +219,12 @@ const Import = () => {
                 return (
                   <CTableRow key={index}>
                     <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
-                      <Link to={"/impcreatejob"}>
+                      <CButton>
                         Edit
-                      </Link> <br />
-                      <Link>
+                      </CButton>
+                      <CButton onClick={(e) => handleDelete(e, index)}>
                         Delete
-                      </Link>
+                      </CButton>
                     </th>
                     <CTableHeaderCell scope="row" className='row-font'>{job.jobdate}</CTableHeaderCell>
                     <CTableDataCell className='row-font'>{job.jobnumber}</CTableDataCell>

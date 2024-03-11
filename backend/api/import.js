@@ -558,3 +558,17 @@ export const storeRemark = async (remarkskaData, orgname, orgcode, jobnumber) =>
         console.log(error);
     }
 };
+
+
+
+export const deleteJob = async (orgname, orgcode, jobnumber) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`DELETE FROM impjobcreation WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
+        const [deletedgenrow] = await connection.execute(`DELETE FROM impgeneral WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
+        const [deletedo2drows] = await connection.execute(`DELETE FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
+        
+    } catch (error) {
+        console.log(error);
+    }
+}

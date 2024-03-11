@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess} from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull, fetchallimpjobs, storeRemark} from './api/import.js';
+import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull, fetchallimpjobs, storeRemark, deleteJob } from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -669,6 +669,18 @@ app.put('/insertRemarks', async (req, res) => {
         console.log(error);
     }
 })
+
+
+app.delete('/deletethatjob', async (req, res) => {
+    try {
+        const {orgname, orgcode, jobnumber} = req.body;
+        const deletedjob = await deleteJob(orgname, orgcode, jobnumber);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 
 
 app.listen(PORT, () => {
