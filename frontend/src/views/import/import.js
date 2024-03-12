@@ -27,6 +27,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';
 
 const Import = () => {
   const [date, setDate] = useState(new Date());
@@ -66,19 +67,27 @@ const Import = () => {
   };
 
 
-  async function handleDelete(e, index){
+  async function handleDelete(e, index) {
     try {
-        const thatdata = allimpjobs[index];
-        const orgname = thatdata.orgname;
-        const orgcode = thatdata.orgcode;
-        const jobnumber = thatdata.jobnumber;
-        const response = await axios.delete('http://localhost:5000/deletethatjob', {
-            data: {
-                orgname: orgname,
-                orgcode: orgcode,
-                jobnumber: jobnumber
-            }
-        });
+      const thatdata = allimpjobs[index];
+      const orgname = thatdata.orgname;
+      const orgcode = thatdata.orgcode;
+      const jobnumber = thatdata.jobnumber;
+      const response = await axios.delete('http://localhost:5000/deletethatjob', {
+        data: {
+          orgname: orgname,
+          orgcode: orgcode,
+          jobnumber: jobnumber
+        }
+      });
+
+
+      if (response.status === 200) {
+        const updatedJobs = [...allimpjobs];
+        updatedJobs.splice(index, 1);
+        setallimpjobs(updatedJobs);
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -125,7 +134,7 @@ const Import = () => {
               <div>
 
                 <CDropdown>
-                  <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedDropdown ? selectedDropdown: 'Job No.'}</CDropdownToggle>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedDropdown ? selectedDropdown : 'Job No.'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
                     {/* <CDropdownItem href="#">BE No.</CDropdownItem> */}
                     <CDropdownItem onClick={(e) => setselectedDropdown('HBL/HAWB')}>HBL/HAWB</CDropdownItem>
@@ -204,13 +213,15 @@ const Import = () => {
           <CTableBody>
 
             {allimpjobs && allimpjobs
+              .slice()
+              .reverse()
               .filter(job => {
                 const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
                 return (
                   (!selectedMode || job.transportmode === selectedMode) &&
                   (!importername || (matchingGenJob && matchingGenJob.importername && matchingGenJob.importername.toLowerCase().includes(importername.toLowerCase()))) &&
                   (!selectedDropdown || (selectedDropdown === 'HBL/HAWB' && job.bltype === 'HBL/HAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase()))) ||
-                  (selectedDropdown === 'MBL/MAWB' && job.bltype === 'MBL/MAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase())))) ||
+                    (selectedDropdown === 'MBL/MAWB' && job.bltype === 'MBL/MAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase())))) ||
                   (selectedDropdown === 'JobNumber' && (!blTypeNum || job.jobnumber.toLowerCase().includes(blTypeNum.toLowerCase())))
                 );
               })
@@ -226,7 +237,7 @@ const Import = () => {
                         Delete
                       </CButton>
                     </th>
-                    <CTableHeaderCell scope="row" className='row-font'>{job.jobdate}</CTableHeaderCell>
+                    <CTableHeaderCell scope="row" className='row-font'>{moment(job.jobdate).format('YYYY-MM-DDTHH:mm')}</CTableHeaderCell>
                     <CTableDataCell className='row-font'>{job.jobnumber}</CTableDataCell>
                     <CTableDataCell className='row-font'>{matchingGenJob.importername}</CTableDataCell>
                     <CTableDataCell className='row-font'>{job.bltypenum}</CTableDataCell>

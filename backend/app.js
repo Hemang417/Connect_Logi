@@ -675,6 +675,7 @@ app.delete('/deletethatjob', async (req, res) => {
     try {
         const {orgname, orgcode, jobnumber} = req.body;
         const deletedjob = await deleteJob(orgname, orgcode, jobnumber);
+        res.status(200).json(deletedjob)
     } catch (error) {
         console.log(error);
     }
