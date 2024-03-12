@@ -115,13 +115,13 @@ export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, 
 
 
 
-export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination) => {
+export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch) => {
     try {
         const connection = await connectMySQL();
         const [row] = await connection.execute(
-            `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination]
+            `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination, branchname) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch]
         );
         return row;
     } catch (error) {
@@ -547,7 +547,7 @@ export const storeRemark = async (remarkskaData, orgname, orgcode, jobnumber) =>
                 rowsToUpdate.push(item);
             }
         });
-        
+
         for (const item of rowsToUpdate) {
             const { tatimpcolumn, remarks } = item;
             const [rows] = await connection.execute(`UPDATE o2dimport SET remarks = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`, [remarks, tatimpcolumn, orgname, orgcode, jobnumber]);
@@ -567,7 +567,52 @@ export const deleteJob = async (orgname, orgcode, jobnumber) => {
         const [row] = await connection.execute(`DELETE FROM impjobcreation WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
         const [deletedgenrow] = await connection.execute(`DELETE FROM impgeneral WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
         const [deletedo2drows] = await connection.execute(`DELETE FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
-        
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const fetchingGeneralofJob = async (jobnumber, orgcode, orgname) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`SELECT * FROM impgeneral WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
+        return row[0];
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+export const updateGeneral = async (importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, orgname, orgcode, jobnumber, jobowner) => {
+    try {
+        const connection = await connectMySQL();
+
+        const [row] = await connection.execute(`
+            UPDATE impgeneral
+            SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, branchname = ?
+            WHERE jobnumber = ? AND orgname = ? AND orgcode = ? AND jobowner = ?
+        `, [importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, jobnumber, orgname, orgcode, jobowner]);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+export const updateCurrentJob = async (docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`
+        UPDATE impjobcreation
+        SET docreceivedon = ?, transportmode = ?, customhouse = ?, ownbooking = ?, deliverymode = ?, noofcontainer = ?, 
+            owntransportation = ?, betype = ?, consignmenttype = ?, cfsname = ?, shippinglinename = ?, bltype = ?,
+            bltypenum = ?, freedays = ?, blstatus = ?
+        WHERE jobnumber = ?
+        `, [docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber,freedays, blstatus, jobnumber])
     } catch (error) {
         console.log(error);
     }

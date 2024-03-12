@@ -398,6 +398,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
 import moment from 'moment';
+import {useNavigate} from 'react-router-dom';
 // import createjob from './CreateJob';
 
 
@@ -406,6 +407,7 @@ const O2D = () => {
     const [visible, setvisible] = useState(false);
     const [allo2dData, setallo2dData] = useState([]);
     const [allaccessofuser, setallaccessofuser] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAllO2Drows = async () => {
@@ -573,7 +575,7 @@ const O2D = () => {
             // Update the state with the modified data
             setallo2dData(newData);
             try {
-                localStorage.setItem('tatimpcolumn', newData[index].tatimpcolumn);
+                
                 // Send a request to update the backend
                 await axios.post('http://localhost:5000/insertO2D', {
                     planDate: newData[index].planDate,
@@ -617,7 +619,9 @@ const O2D = () => {
                 orgcode: localStorage.getItem('orgcode'),
                 jobnumber: localStorage.getItem('jobNumber')
             });
-    
+            window.close();
+            navigate('#/import');
+
         } catch (error) {
             console.log(error);
         }

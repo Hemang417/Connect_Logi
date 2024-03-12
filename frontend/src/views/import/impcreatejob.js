@@ -74,7 +74,7 @@ const impcreatejob = () => {
 
 
 
-const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
+  const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
 
   const [JobformData, setJobFormData] = useState({
     jobDate: currentdateandtime,
@@ -159,27 +159,36 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
   // const [isActive, setActive] = useState("false");
   const [isshown, setIsShown] = useState("general");
 
+  const fetchDataForO2D = async () => {
+    try {
+      const jobNumber = localStorage.getItem('jobNumber');
+      const response = await axios.get('http://localhost:5000/prefillCreateJob', { params: { jobnumber: jobNumber } });
+
+      setPrefillData(response.data[0]);
+      // Set the prefill data here, you might want to set it in the state to render it in the O2D component
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   useEffect(() => {
-    // Function to fetch data for prefilling when "o2d" is shown
-    const fetchDataForO2D = async () => {
-      try {
-        const jobNumber = localStorage.getItem('jobNumber');
-        const response = await axios.get('http://localhost:5000/prefillCreateJob', { params: { jobnumber: jobNumber } });
-       
-        setPrefillData(response.data[0]);
-        // Set the prefill data here, you might want to set it in the state to render it in the O2D component
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
     // Check if the shown component is "o2d" and localStorage has the flag set
-    if (isshown === "o2d" && localStorage.getItem('onO2D') === 'true' && localStorage.getItem('jobNumber')) {
+    if (isshown === "o2d") {
       fetchDataForO2D(); // Fetch data for prefilling
       // localStorage.removeItem('onO2D'); 
     }
+
+
   }, [isshown]);
+
+
+  useEffect(() => {
+    if(localStorage.getItem('onEdit')==='true'){
+      fetchDataForO2D();
+    }
+  }, [])
 
 
 
@@ -204,36 +213,53 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
         blstatus: prefillData.blstatus,
         freedays: prefillData.freedays
       });
-    }else{
-      toast.error('No job is present with this job Number')
     }
   }, [prefillData]);
 
 
 
-  useEffect(() => {
-    if (isshown === "general") {
-      setPrefillData(null);
-      setJobFormData({
-        jobDate: '',
-        docReceivedOn: '',
-        transportMode: '',
-        customHouse: '',
-        ownBooking: '',
-        deliveryMode: '',
-        numberOfContainer: '',
-        ownTransportation: '',
-        beType: '',
-        consignmentType: '',
-        cfsName: '',
-        shippingLineName: '',
-        blType: '',
-        bltypenumber: '',
-        blstatus: '',
-        freedays: ''
-      })
+  async function updateJob() {
+    try {
+      const jobNumber = localStorage.getItem('jobNumber');
+      const response = await axios.put(`http://localhost:5000/updateJob`, {
+        jobData: JobformData,
+        jobnumber: jobNumber
+      });
+      if (response.status === 200) {
+        toast.success('Job updated successfully.');
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [isshown]);
+  }
+  
+
+
+
+
+  // useEffect(() => {
+  //   if (isshown === "general") {
+  //     setPrefillData(null);
+  //     setJobFormData({
+  //       jobDate: '',
+  //       docReceivedOn: '',
+  //       transportMode: '',
+  //       customHouse: '',
+  //       ownBooking: '',
+  //       deliveryMode: '',
+  //       numberOfContainer: '',
+  //       ownTransportation: '',
+  //       beType: '',
+  //       consignmentType: '',
+  //       cfsName: '',
+  //       shippingLineName: '',
+  //       blType: '',
+  //       bltypenumber: '',
+  //       blstatus: '',
+  //       freedays: ''
+  //     })
+  //   }
+  // }, [isshown]);
 
 
   return (
@@ -248,7 +274,7 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
               </div>
               <div>
                 <label for="Job Date" className='text-field-3'>Job Date</label>
-                <input type="datetime-local" placeholder="" className='text-field-4' name='jobDate' value={JobformData.jobDate ? JobformData.jobDate: currentdateandtime} readOnly/>
+                <input type="datetime-local" placeholder="" className='text-field-4' name='jobDate' value={JobformData.jobDate ? JobformData.jobDate : currentdateandtime} readOnly />
               </div>
               <div>
                 <label for="Doc. Received On Date" className='text-field-3'>Doc. Received On</label>
@@ -384,7 +410,20 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
                 </CDropdown>
               </div>
               <div>
-                <CButton color="primary" type="submit" onClick={storeJob}>Create Job</CButton>
+
+
+                {localStorage.getItem('onEdit') === 'true' ?
+                  <CButton color="primary" type="submit" onClick={updateJob}>
+                    Update Job
+                  </CButton>
+                  :
+                  <CButton color="primary" type="submit" onClick={storeJob}>
+                    Create Job
+                  </CButton>
+                }
+
+
+
               </div>
             </div>
           </CCardBody>
@@ -394,10 +433,10 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
 
       <CNav variant="tabs" className='nav-link-text'>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("general"), localStorage.removeItem('onO2D') }}>General</CNavLink>
+          <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("o2d"), localStorage.setItem('onO2D', true) }}>O2D</CNavLink>
+          <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
@@ -454,7 +493,7 @@ const currentdateandtime = moment().format('YYYY-MM-DDTHH:mm');
             Save & Close
           </CButton>
         </div>
-{/* 
+        {/* 
         <div className='search-button'>
           <CButton color="primary" type="submit">
             Save & New

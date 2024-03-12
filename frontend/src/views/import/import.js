@@ -25,7 +25,7 @@ import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -39,6 +39,15 @@ const Import = () => {
   const [importername, setimportername] = useState('');
   const [selectedDropdown, setselectedDropdown] = useState('');
   const [blTypeNum, setBlTypeNum] = useState('');
+  const location = useLocation();
+  if (location.pathname === '/import') {
+    localStorage.removeItem('jobNumber');
+    localStorage.removeItem('jobDate');
+    localStorage.removeItem('onCreate');
+    localStorage.removeItem('allbranchesofclient');
+    localStorage.removeItem('onEdit')
+  }
+
 
 
   useEffect(() => {
@@ -70,6 +79,7 @@ const Import = () => {
   async function handleDelete(e, index) {
     try {
       const thatdata = allimpjobs[index];
+
       const orgname = thatdata.orgname;
       const orgcode = thatdata.orgcode;
       const jobnumber = thatdata.jobnumber;
@@ -94,6 +104,14 @@ const Import = () => {
   }
 
 
+  async function handleEdit(index) {
+    const thatdata = allimpjobs[index];
+    localStorage.setItem('jobNumber', thatdata.jobnumber);
+    localStorage.setItem('jobDate', thatdata.jobdate);
+    localStorage.setItem('onEdit', true);
+  }
+
+
 
 
   return (
@@ -102,7 +120,7 @@ const Import = () => {
       <CCardBody className='button-div'>
         <div className='createjob-button'>
           <Link to={'/impcreatejob'} target='_blank'>
-            <CButton color="primary" type="submit">
+            <CButton color="primary" type="submit" onClick={() => localStorage.setItem('onCreate', true)}>
               +
             </CButton>
           </Link>
@@ -230,10 +248,10 @@ const Import = () => {
                 return (
                   <CTableRow key={index}>
                     <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
-                      <CButton>
+                      <Link onClick={() => handleEdit(allimpjobs.length - 1 - index)} to={'/impcreatejob'}>
                         Edit
-                      </CButton>
-                      <CButton onClick={(e) => handleDelete(e, index)}>
+                      </Link>
+                      <CButton onClick={(e) => handleDelete(e, allimpjobs.length - 1 - index)}>
                         Delete
                       </CButton>
                     </th>

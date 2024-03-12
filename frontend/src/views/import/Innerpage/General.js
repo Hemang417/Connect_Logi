@@ -667,13 +667,30 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 import { CCard, CCardBody, CCol, CRow, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, CButton, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react';
 import '../../../css/styles.css';
 import { CChart } from '@coreui/react-chartjs'
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 
@@ -723,7 +740,7 @@ const General = () => {
             iec: '',
             gst: ''
         });
-    
+
     };
 
     useEffect(() => {
@@ -740,9 +757,9 @@ const General = () => {
             const username = localStorage.getItem('username');
             const nameoforg = localStorage.getItem('orgname');
             const codeoforg = localStorage.getItem('orgcode');
-           
             const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum });
             toast.success('Successfully stored General Details');
+
         } catch (error) {
             toast.error('Error storing General Details.');
             console.log(error);
@@ -759,8 +776,68 @@ const General = () => {
         await fetchOrganizationDetails(branchName, id);
     };
 
+
+    async function prefillData() {
+        try {
+            const jobnumber = localStorage.getItem('jobNumber');
+            const orgcode = localStorage.getItem('orgcode');
+            const orgname = localStorage.getItem('orgname');
+            const prefilledgeneral = await axios.get('http://localhost:5000/prefillGeneralJob', {
+                params: {
+                    jobnumber: jobnumber,
+                    orgcode: orgcode,
+                    orgname: orgname
+                }
+            })
+
+            // localStorage.setItem('jobData', JSON.stringify(prefilledgeneral.data));
+            const {importername, GST, IEC, address, portofshipment, finaldestination, branchname} = prefilledgeneral.data;
+            setFormData({
+                importerName: importername,
+                gst: GST,
+                iec: IEC,
+                address: address,
+                portShipment: portofshipment,
+                finalDestination: finaldestination,
+                selectedBranch: branchname
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    useEffect(() => {
+        if (localStorage.getItem('onEdit') === 'true') {
+            prefillData();
+        }
+    }, [])
+
     
-    
+
+    const handleUpdate = async () => {
+        try {
+            const jobkanum = localStorage.getItem('jobNumber');
+            const username = localStorage.getItem('username');
+            const nameoforg = localStorage.getItem('orgname');
+            const codeoforg = localStorage.getItem('orgcode');
+            const response = await axios.put('http://localhost:5000/updateGeneral', {
+                formData: formData,
+                orgname: nameoforg,
+                orgcode: codeoforg,
+                jobowner: username,
+                jobnumber: jobkanum
+            });
+            toast.success('Successfully updated General Details');
+        } catch (error) {
+            toast.error('Error updating General Details.');
+            console.log(error);
+        }
+    };
+
+
+
+
 
     const fetchBranches = async () => {
         try {
@@ -784,8 +861,8 @@ const General = () => {
     };
 
 
-    
-    
+
+
 
 
 
@@ -801,9 +878,10 @@ const General = () => {
                     id: id
                 }
             });
-            
+
             setFormData({
                 ...formData,
+                selectedBranch: branchName,
                 address: response.data[0].address,
                 gst: response.data[0].GST,
                 iec: response.data[0].IEC
@@ -828,7 +906,7 @@ const General = () => {
                                 placeholder="Importer Name"
                             />
                             <CDropdown className="impgen-text-field-1">
-                                <CDropdownToggle color="secondary">Branch Names</CDropdownToggle>
+                                <CDropdownToggle color="secondary">{formData.selectedBranch ? formData.selectedBranch: 'Branch Names'}</CDropdownToggle>
                                 <CDropdownMenu className="impgen-text-dropdown">
                                     {formData.branches && formData.branches.map((branch, index) => (
                                         <CDropdownItem key={index} onClick={() => handleBranchSelect(branch.branchname, branch.id)}>{branch.branchname}</CDropdownItem>
@@ -839,9 +917,12 @@ const General = () => {
                             <input type="text" name="gst" placeholder="GST" className='impgen-text-field-1' value={formData.gst} readOnly />
                             <input type="text" name="iec" placeholder="IEC Code" className='impgen-text-field-1' value={formData.iec} readOnly />
                             <input type="text" name="portShipment" placeholder="Port of Shipment" className='impgen-text-field-1' value={formData.portShipment} onChange={(e) => setFormData({ ...formData, portShipment: e.target.value })} />
-                            <input type="text" name="finalDestination" placeholder="Final Destination" className='impgen-text-field-1' value={formData.finalDestination}  onChange={(e) => setFormData({ ...formData, finalDestination: e.target.value })} />
-                            
-                            <CButton onClick={handleSubmit}>Submit</CButton>
+                            <input type="text" name="finalDestination" placeholder="Final Destination" className='impgen-text-field-1' value={formData.finalDestination} onChange={(e) => setFormData({ ...formData, finalDestination: e.target.value })} />
+
+                            {localStorage.getItem('onEdit') === 'true' ?
+                                <CButton onClick={handleUpdate}>Update</CButton> :
+                                <CButton onClick={handleSubmit}>Submit</CButton>
+                            }
                         </div>
                     </CCardBody>
                 </CCard>
@@ -869,6 +950,310 @@ const General = () => {
 };
 
 export default General;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import Select from 'react-select';
+// import { CCard, CCardBody, CCol, CRow, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, CButton, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react';
+// import '../../../css/styles.css';
+// import { CChart } from '@coreui/react-chartjs'
+// import { useNavigate } from 'react-router-dom';
+// import toast from 'react-hot-toast';
+
+
+// const General = () => {
+//     const [formData, setFormData] = useState({
+//         importerName: '',
+//         selectedBranch: '',
+//         branches: [],
+//         address: '',
+//         gst: '',
+//         iec: '',
+//         portShipment: '',
+//         finalDestination: '',
+//     });
+//     const [importers, setImporters] = useState([]);
+//     const [visible, setVisible] = useState(false);
+//     const [filtered, setFiltered] = useState([]);
+
+//     const navigate = useNavigate();
+
+//     useEffect(() => {
+//         const fetchAllClients = async () => {
+//             try {
+//                 const codeoforg = localStorage.getItem('orgcode');
+//                 const response = await axios.get(`http://localhost:5000/getimporters`, {
+//                     params: {
+//                         orgcode: codeoforg
+//                     }
+//                 });
+//                 setImporters(response.data);
+//             } catch (error) {
+//                 console.log(error);
+//             }
+//         }
+//         fetchAllClients();
+//     }, []);
+
+//     useEffect(() => {
+//         fetchBranches();
+//     }, [formData.importerName]);
+
+//     const handleInputChange = (newValue) => {
+//         setFormData({
+//             ...formData,
+//             importerName: newValue.value,
+//             address: '',
+//             iec: '',
+//             gst: ''
+//         });
+
+//     };
+
+//     useEffect(() => {
+//         // Create a Set to store unique client names
+//         const uniqueClientNames = new Set(importers.map(importer => importer.clientname));
+//         // Convert Set back to array and map to options format required by Select component
+//         const options = Array.from(uniqueClientNames).map(clientname => ({ value: clientname, label: clientname }));
+//         setFiltered(options);
+//     }, [importers]);
+
+//     async function handleSubmit() {
+//         try {
+//             const jobkanum = localStorage.getItem('jobNumber');
+//             const username = localStorage.getItem('username');
+//             const nameoforg = localStorage.getItem('orgname');
+//             const codeoforg = localStorage.getItem('orgcode');
+
+
+//             const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum });
+//             toast.success('Successfully stored General Details');
+
+
+//         } catch (error) {
+//             toast.error('Error storing General Details.');
+//             console.log(error);
+//         }
+//     }
+
+
+//     const handleBranchSelect = async (branchName, id) => {
+//         setFormData({
+//             ...formData,
+//             selectedBranch: branchName,
+//             id: id
+//         });
+//         await fetchOrganizationDetails(branchName, id);
+//     };
+
+
+//     async function prefillData() {
+//         try {
+//             const jobnumber = localStorage.getItem('jobNumber');
+//             const orgcode = localStorage.getItem('orgcode');
+//             const orgname = localStorage.getItem('orgname');
+//             const prefilledgeneral = await axios.get('http://localhost:5000/prefillGeneralJob', {
+//                 params: {
+//                     jobnumber: jobnumber,
+//                     orgcode: orgcode,
+//                     orgname: orgname
+//                 }
+//             })
+
+//             localStorage.setItem('jobData', JSON.stringify(prefilledgeneral.data));
+
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     }
+
+
+//     useEffect(() => {
+//         if (localStorage.getItem('onEdit') === 'true') {
+//             prefillData();
+//         }
+//     }, [])
+
+  
+    
+
+//     const handleUpdate = async () => {
+//         try {
+//             const jobkanum = localStorage.getItem('jobNumber');
+//             const username = localStorage.getItem('username');
+//             const nameoforg = localStorage.getItem('orgname');
+//             const codeoforg = localStorage.getItem('orgcode');
+
+//             const response = await axios.put('http://localhost:5000/updateGeneral', {
+//                 formData: updateFormData,
+//                 orgname: nameoforg,
+//                 orgcode: codeoforg,
+//                 jobowner: username,
+//                 jobnumber: jobkanum
+//             });
+//             toast.success('Successfully updated General Details');
+//         } catch (error) {
+//             toast.error('Error updating General Details.');
+//             console.log(error);
+//         }
+//     };
+
+
+
+
+
+//     const fetchBranches = async () => {
+//         try {
+//             const codeoforg = localStorage.getItem('orgcode');
+//             const nameoforg = localStorage.getItem('orgname');
+//             const response = await axios.get(`http://localhost:5000/getbranches`, {
+//                 params: {
+//                     importerName: formData.importerName,
+//                     orgcode: codeoforg,
+//                     orgname: nameoforg
+//                 }
+//             });
+//             localStorage.setItem('allbranchesofclient', JSON.stringify(response.data))
+//             setFormData({
+//                 ...formData,
+//                 branches: response.data
+//             });
+//         } catch (error) {
+//             console.error('Error fetching branches:', error);
+//         }
+//     };
+
+
+
+
+
+
+
+//     const fetchOrganizationDetails = async (branchName, id) => {
+//         try {
+//             const codeoforg = localStorage.getItem('orgcode');
+//             const response = await axios.get(`http://localhost:5000/getorganizationdetails`, {
+//                 params: {
+//                     clientName: formData.importerName,
+//                     branchName: branchName,
+//                     orgcode: codeoforg,
+//                     orgname: localStorage.getItem('orgname'),
+//                     id: id
+//                 }
+//             });
+
+//             setFormData({
+//                 ...formData,
+//                 address: response.data[0].address,
+//                 gst: response.data[0].GST,
+//                 iec: response.data[0].IEC
+//             });
+
+//         } catch (error) {
+//             console.error('Error fetching organization details:', error);
+//         }
+//     };
+
+//     return (
+//         <div>
+//             <CCol xs={12}>
+//                 <CCard className="mb-2 container-div">
+//                     <CCardBody className='main-div'>
+//                         <div className='left-div'>
+//                             <Select
+//                                 className="impgen-text-field-1"
+//                                 value={{ value: formData.importerName, label: formData.importerName }}
+//                                 options={filtered}
+//                                 onChange={handleInputChange}
+//                                 placeholder="Importer Name"
+//                             />
+//                             <CDropdown className="impgen-text-field-1">
+//                                 <CDropdownToggle color="secondary">Branch Names</CDropdownToggle>
+//                                 <CDropdownMenu className="impgen-text-dropdown">
+//                                     {formData.branches && formData.branches.map((branch, index) => (
+//                                         <CDropdownItem key={index} onClick={() => handleBranchSelect(branch.branchname, branch.id)}>{branch.branchname}</CDropdownItem>
+//                                     ))}
+//                                 </CDropdownMenu>
+//                             </CDropdown>
+//                             <textarea name="address" placeholder='Address' cols="50" rows="5" className='impgen-text-field-1' value={formData.address} readOnly></textarea>
+//                             <input type="text" name="gst" placeholder="GST" className='impgen-text-field-1' value={formData.gst} readOnly />
+//                             <input type="text" name="iec" placeholder="IEC Code" className='impgen-text-field-1' value={formData.iec} readOnly />
+//                             <input type="text" name="portShipment" placeholder="Port of Shipment" className='impgen-text-field-1' value={formData.portShipment} onChange={(e) => setFormData({ ...formData, portShipment: e.target.value })} />
+//                             <input type="text" name="finalDestination" placeholder="Final Destination" className='impgen-text-field-1' value={formData.finalDestination} onChange={(e) => setFormData({ ...formData, finalDestination: e.target.value })} />
+
+//                             {localStorage.getItem('onEdit') === 'true' ?
+//                                 <CButton onClick={handleUpdate}>Update</CButton> :
+//                                 <CButton onClick={handleSubmit}>Submit</CButton>
+//                             }
+//                         </div>
+//                     </CCardBody>
+//                 </CCard>
+//             </CCol>
+//             <CModal
+//                 visible={visible}
+//                 onClose={() => setVisible(false)}
+//                 aria-labelledby="LiveDemoExampleLabel"
+//             >
+//                 <CModalHeader onClose={() => setVisible(false)}>
+//                     <CModalTitle id="LiveDemoExampleLabel">Add new Branch</CModalTitle>
+//                 </CModalHeader>
+//                 <CModalBody>
+//                     <input type="text" placeholder="Name" className='text-field-1' />
+//                 </CModalBody>
+//                 <CModalFooter>
+//                     <CButton color="secondary" onClick={() => setVisible(false)}>
+//                         Close
+//                     </CButton>
+//                     <CButton color="primary">Add New</CButton>
+//                 </CModalFooter>
+//             </CModal>
+//         </div>
+//     );
+// };
+
+// export default General;
 
 
 

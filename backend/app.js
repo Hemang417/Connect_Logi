@@ -3,8 +3,12 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
-import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess} from './api/userlist.js';
-import { storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData, getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull, fetchallimpjobs, storeRemark, deleteJob } from './api/import.js';
+import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess } from './api/userlist.js';
+import {
+    storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
+    getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
+    fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob
+} from './api/import.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -336,7 +340,7 @@ app.post('/storeJob', async (req, res) => {
             orgname, orgcode, lastIc, freedays, blstatus
         } = req.body;
         const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus);
-       
+
         res.status(200).json(storeandcreateJob);
 
     } catch (error) {
@@ -384,8 +388,8 @@ app.get('/getorganizationdetails', async (req, res) => {
 app.post('/createGeneral', async (req, res) => {
     try {
         const { orgname, orgcode, jobowner, jobnumber } = req.body;
-        const { importerName, address, gst, iec, portShipment, finalDestination } = req.body.formData;
-        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination);
+        const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch } = req.body.formData;
+        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch);
         res.send(storingGeneralImportData);
     } catch (error) {
         console.log(error);
@@ -497,7 +501,7 @@ app.delete('/deleteBranch', async (req, res) => {
 // app.put('/updateImpTAT', async (req, res) => {
 //     try {
 //         const { impTATData, orgname, orgcode } = req.body;
-        
+
 //         const updateTATdata = await updateImpTATData(impTATData, orgname, orgcode);
 //         res.send(updateTATdata);
 //     } catch (error) {
@@ -521,7 +525,7 @@ app.delete('/deleteBranch', async (req, res) => {
 
 app.post('/storeO2D', async (req, res) => {
     try {
-        const {tatimpcolumn, days, hours, minutes, orgname, orgcode} = req.body;
+        const { tatimpcolumn, days, hours, minutes, orgname, orgcode } = req.body;
         const storedData = await storeO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode);
         res.status(200).json(storedData);
     } catch (error) {
@@ -532,7 +536,7 @@ app.post('/storeO2D', async (req, res) => {
 
 app.get('/getAllO2D', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allo2ddata = await get02ddata(orgname, orgcode);
         res.send(allo2ddata);
     } catch (error) {
@@ -555,7 +559,7 @@ app.delete('/deleteO2D', async (req, res) => {
 
 app.put('/updateO2D', async (req, res) => {
     try {
-        const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
+        const { tatimpcolumn, days, hours, minutes, orgname, orgcode, id } = req.body;
         const updatedO2DDATA = await updateO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
         res.status(200).json(updatedO2DDATA);
     } catch (error) {
@@ -564,9 +568,9 @@ app.put('/updateO2D', async (req, res) => {
 })
 
 
-app.get('/getAllAccess', async(req, res) => {
+app.get('/getAllAccess', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allpoints = await fetchAllaccesspoints(orgname, orgcode);
         res.send(allpoints);
     } catch (error) {
@@ -577,7 +581,7 @@ app.get('/getAllAccess', async(req, res) => {
 
 app.post('/applyAccess', async (req, res) => {
     try {
-        const {accessChecked, username} = req.body;
+        const { accessChecked, username } = req.body;
         const accessgiven = await storeimpaccess(accessChecked, username);
         res.send(accessgiven);
     } catch (error) {
@@ -587,7 +591,7 @@ app.post('/applyAccess', async (req, res) => {
 
 app.get('/getAccessedRowsforauser', async (req, res) => {
     try {
-        const {username} = req.query;
+        const { username } = req.query;
         const alluserrows = await getUserAccess(username);
         res.send(alluserrows);
     } catch (error) {
@@ -597,7 +601,7 @@ app.get('/getAccessedRowsforauser', async (req, res) => {
 
 app.delete('/removeAccess', async (req, res) => {
     try {
-        const {accessChecked, username} = req.body;
+        const { accessChecked, username } = req.body;
         const deletedRow = await removeimpaccess(accessChecked, username);
         res.send(deletedRow)
     } catch (error) {
@@ -608,7 +612,7 @@ app.delete('/removeAccess', async (req, res) => {
 
 app.get('/getUseraccessforuser', async (req, res) => {
     try {
-        const {username} = req.query;
+        const { username } = req.query;
         const alluserrows = await fetchAlluseraccess(username);
         res.send(alluserrows);
     } catch (error) {
@@ -618,7 +622,7 @@ app.get('/getUseraccessforuser', async (req, res) => {
 
 app.get('/prefillCreateJob', async (req, res) => {
     try {
-        const {jobnumber} = req.query;
+        const { jobnumber } = req.query;
         const currentJobData = await fetchJobData(jobnumber);
         res.send(currentJobData);
     } catch (error) {
@@ -630,7 +634,7 @@ app.get('/prefillCreateJob', async (req, res) => {
 
 app.post('/insertO2D', async (req, res) => {
     try {
-        const {planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat} = req.body;
+        const { planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat } = req.body;
         const storedInO2D = await storeinO2Dtable(planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat);
     } catch (error) {
         console.log(error);
@@ -640,7 +644,7 @@ app.post('/insertO2D', async (req, res) => {
 
 app.delete('/deletefromO2Dtable', async (req, res) => {
     try {
-        const {tatimpcolumn, jobNumber, orgname, orgcode} = req.body;
+        const { tatimpcolumn, jobNumber, orgname, orgcode } = req.body;
         const updatetherowtoNull = await deletetheO2DtoNull(tatimpcolumn, jobNumber, orgname, orgcode);
         // res.send(updatetherowtoNull);
     } catch (error) {
@@ -663,7 +667,7 @@ app.get('/allimpjobs', async (req, res) => {
 
 app.put('/insertRemarks', async (req, res) => {
     try {
-        const {remarkskaData, orgname,orgcode, jobnumber} = req.body;
+        const { remarkskaData, orgname, orgcode, jobnumber } = req.body;
         const updateRemark = await storeRemark(remarkskaData, orgname, orgcode, jobnumber);
     } catch (error) {
         console.log(error);
@@ -673,7 +677,7 @@ app.put('/insertRemarks', async (req, res) => {
 
 app.delete('/deletethatjob', async (req, res) => {
     try {
-        const {orgname, orgcode, jobnumber} = req.body;
+        const { orgname, orgcode, jobnumber } = req.body;
         const deletedjob = await deleteJob(orgname, orgcode, jobnumber);
         res.status(200).json(deletedjob)
     } catch (error) {
@@ -681,6 +685,38 @@ app.delete('/deletethatjob', async (req, res) => {
     }
 })
 
+
+app.get('/prefillGeneralJob', async (req, res) => {
+    try {
+        const { jobnumber, orgcode, orgname } = req.query;
+        const fetchedRowforgeneral = await fetchingGeneralofJob(jobnumber, orgcode, orgname);
+        res.send(fetchedRowforgeneral);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.put('/updateGeneral', async (req, res) => {
+    try {
+        const {orgname, orgcode, jobnumber, jobowner} = req.body;
+        const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch } = req.body.formData;
+
+        const updatedGeneral = await updateGeneral(importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, orgname, orgcode, jobnumber, jobowner);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updateJob', async (req, res) => {
+    try {
+        const {jobnumber} = req.body;
+        const {docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays} = req.body.jobData;
+        const updatedJob = await updateCurrentJob(docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber)
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 
