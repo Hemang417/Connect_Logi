@@ -7,7 +7,7 @@ import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, g
 import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
-    fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob
+    fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport
 } from './api/import.js';
 
 const app = express();
@@ -717,6 +717,18 @@ app.put('/updateJob', async (req, res) => {
         console.log(error);
     }
 })
+
+
+app.get('/getO2Dimport', async (req, res) => {
+    try {
+        const {orgname, orgcode, jobNumber} = req.query;
+        const allo2drows = await getO2Ddatafromo2dimport(orgname, orgcode, jobNumber);
+        res.send(allo2drows);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 
 

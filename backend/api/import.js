@@ -617,3 +617,14 @@ export const updateCurrentJob = async (docReceivedOn, transportMode, customHouse
         console.log(error);
     }
 }
+
+
+export const getO2Ddatafromo2dimport = async (orgname, orgcode, jobNumber) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobNumber]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
