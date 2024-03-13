@@ -388,8 +388,9 @@ app.get('/getorganizationdetails', async (req, res) => {
 app.post('/createGeneral', async (req, res) => {
     try {
         const { orgname, orgcode, jobowner, jobnumber } = req.body;
-        const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch } = req.body.formData;
-        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch);
+        const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id } = req.body.formData;
+        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id);
+
         res.send(storingGeneralImportData);
     } catch (error) {
         console.log(error);
@@ -635,6 +636,7 @@ app.get('/prefillCreateJob', async (req, res) => {
 app.post('/insertO2D', async (req, res) => {
     try {
         const { planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat } = req.body;
+
         const storedInO2D = await storeinO2Dtable(planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat);
     } catch (error) {
         console.log(error);

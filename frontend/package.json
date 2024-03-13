@@ -35,6 +35,7 @@
     "core-js": "^3.31.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
+    "nodemailer": "^6.9.12",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",

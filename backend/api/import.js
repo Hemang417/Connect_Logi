@@ -1,4 +1,45 @@
 import { connectMySQL } from "../config/sqlconfig.js";
+import nodemailer from 'nodemailer'
+
+
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    type: "SMTP",
+    secure: true,
+    auth: {
+        user: 'shreyashpingle752@gmail.com',
+        pass: 'vircbhwmcnqfinrb'
+    }
+});
+// var mailOptions = {
+//     from: 'shreyashpingle752@gmail.com',
+//     to: orderData[0].email,
+//     subject: 'Your Order Details',
+//     html: `
+// <p>Here's your order details & shipping details:</p>
+// <ul>
+// <li>Email: ${wholeOrderObject.email}</li>
+// <li>Phone: ${wholeOrderObject.phone}</li>
+// <li>Address: ${wholeOrderObject.address}</li>
+// <li>Quantity: ${wholeOrderObject.quantity}</li>
+// <li>Total Price: Rs. ${wholeOrderObject.totalPrice}</li>
+// <li>Payment Method: ${wholeOrderObject.paymentMethod}</li>
+// <li>Name: ${wholeOrderObject.name}</li>
+// <li>Description: ${wholeOrderObject.description}</li>
+// <li>Categories: ${wholeOrderObject.Categories}</li>
+// </ul>
+// `,
+// };
+
+// transporter.sendMail(mailOptions, function (error, info) {
+//     if (error) {
+//         return { success: false, message: 'Works Email has been sent' };
+//     } else {
+//         return { success: false, message: 'Internal server error.' };
+//     }
+// });
+
+
 
 let incrementNumber = 0;
 export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus) => {
@@ -115,7 +156,7 @@ export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, 
 
 
 
-export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch) => {
+export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id) => {
     try {
         const connection = await connectMySQL();
         const [row] = await connection.execute(
@@ -123,6 +164,49 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch]
         );
+
+
+        const [emailofbranch] = await connection.execute(`SELECT email FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
+        const [emailofcontacts] = await connection.execute(`SELECT email from contacts WHERE orgname = ? AND orgcode = ? AND branchname = ? AND clientname = ? AND bid = ?`, [orgname, orgcode, selectedBranch, importerName, id])
+
+
+        const allEmails = [...emailofbranch.map(item => item.email), ...emailofcontacts.map(item => item.email)];
+
+        // Loop through the combined email addresses and send emails
+        allEmails.forEach(email => {
+            const mailOptions = {
+                from: 'shreyashpingle752@gmail.com',
+                to: email,
+                subject: 'Connect Logi',
+                html: `Hello your mail is here` // Add your HTML content here
+            };
+        
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log('Error sending email:', error);
+                } else {
+                    console.log('Email sent successfully:', info.response);
+                }
+            });
+        });
+
+
+
+        // var mailOptions = {
+        //     from: 'shreyashpingle752@gmail.com',
+        //     to: ,
+        //     subject: 'Your Order Details',s
+        //     html: ``,
+        // };
+
+        // transporter.sendMail(mailOptions, function (error, info) {
+        //     if (error) {
+        //         return { success: false, message: 'Works Email has been sent' };
+        //     } else {
+        //         return { success: false, message: 'Internal server error.' };
+        //     }
+        // });
+
         return row;
     } catch (error) {
         console.log(error);
@@ -612,7 +696,7 @@ export const updateCurrentJob = async (docReceivedOn, transportMode, customHouse
             owntransportation = ?, betype = ?, consignmenttype = ?, cfsname = ?, shippinglinename = ?, bltype = ?,
             bltypenum = ?, freedays = ?, blstatus = ?
         WHERE jobnumber = ?
-        `, [docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber,freedays, blstatus, jobnumber])
+        `, [docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, freedays, blstatus, jobnumber])
     } catch (error) {
         console.log(error);
     }

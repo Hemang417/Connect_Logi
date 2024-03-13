@@ -698,6 +698,7 @@ const General = () => {
     const [formData, setFormData] = useState({
         importerName: '',
         selectedBranch: '',
+        id: 0,
         branches: [],
         address: '',
         gst: '',
@@ -757,6 +758,7 @@ const General = () => {
             const username = localStorage.getItem('username');
             const nameoforg = localStorage.getItem('orgname');
             const codeoforg = localStorage.getItem('orgcode');
+            
             const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum });
             toast.success('Successfully stored General Details');
 
@@ -768,11 +770,13 @@ const General = () => {
 
 
     const handleBranchSelect = async (branchName, id) => {
+        
         setFormData({
             ...formData,
             selectedBranch: branchName,
             id: id
         });
+        
         await fetchOrganizationDetails(branchName, id);
     };
 
@@ -878,13 +882,13 @@ const General = () => {
                     id: id
                 }
             });
-
             setFormData({
                 ...formData,
                 selectedBranch: branchName,
                 address: response.data[0].address,
                 gst: response.data[0].GST,
-                iec: response.data[0].IEC
+                iec: response.data[0].IEC,
+                id: id
             });
 
         } catch (error) {
