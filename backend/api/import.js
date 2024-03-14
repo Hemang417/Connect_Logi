@@ -1,7 +1,7 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 
-const client = twilio(accountSid, authToken);
+// const client = twilio(accountSid, authToken);
 
 
 let transporter = nodemailer.createTransport({
@@ -13,33 +13,6 @@ let transporter = nodemailer.createTransport({
         pass: 'vircbhwmcnqfinrb'
     }
 });
-// var mailOptions = {
-//     from: 'shreyashpingle752@gmail.com',
-//     to: orderData[0].email,
-//     subject: 'Your Order Details',
-//     html: `
-// <p>Here's your order details & shipping details:</p>
-// <ul>
-// <li>Email: ${wholeOrderObject.email}</li>
-// <li>Phone: ${wholeOrderObject.phone}</li>
-// <li>Address: ${wholeOrderObject.address}</li>
-// <li>Quantity: ${wholeOrderObject.quantity}</li>
-// <li>Total Price: Rs. ${wholeOrderObject.totalPrice}</li>
-// <li>Payment Method: ${wholeOrderObject.paymentMethod}</li>
-// <li>Name: ${wholeOrderObject.name}</li>
-// <li>Description: ${wholeOrderObject.description}</li>
-// <li>Categories: ${wholeOrderObject.Categories}</li>
-// </ul>
-// `,
-// };
-
-// transporter.sendMail(mailOptions, function (error, info) {
-//     if (error) {
-//         return { success: false, message: 'Works Email has been sent' };
-//     } else {
-//         return { success: false, message: 'Internal server error.' };
-//     }
-// });
 
 
 
@@ -193,41 +166,26 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         });
 
 
-
-        // var mailOptions = {
-        //     from: 'shreyashpingle752@gmail.com',
-        //     to: ,
-        //     subject: 'Your Order Details',s
-        //     html: ``,
-        // };
-
-        // transporter.sendMail(mailOptions, function (error, info) {
-        //     if (error) {
-        //         return { success: false, message: 'Works Email has been sent' };
-        //     } else {
-        //         return { success: false, message: 'Internal server error.' };
+        // const [contactofbranch] = await connection.execute(`SELECT phone FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
+        // const [mobileofcontacts] = await connection.execute(`SELECT mobile from contacts WHERE orgname = ? AND orgcode = ? AND branchname = ? AND clientname = ? AND bid = ?`, [orgname, orgcode, selectedBranch, importerName, id]);
+        // const allPhoneNumbers = [...contactofbranch.map(item => item.phone), ...mobileofcontacts.map(item => item.mobile)];
+        // async function sendWhatsAppMessages(numbers) {
+        //     try {
+        //         for (const number of numbers) {
+        //             const message = await client.messages.create({
+        //                 from: 'whatsapp:+14155238886',
+        //                 to: `whatsapp:+91${number}`,
+        //                 body: 'Hello from Twilio! This is a sandbox environment and we found your contact number', 
+        //             });
+        //             console.log(`Message sent to ${number}:`, message.sid);
+        //         }
+        //     } catch (error) {
+        //         console.error('Error sending message:', error);
         //     }
-        // });
-        const [contactofbranch] = await connection.execute(`SELECT phone FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
-        const [mobileofcontacts] = await connection.execute(`SELECT mobile from contacts WHERE orgname = ? AND orgcode = ? AND branchname = ? AND clientname = ? AND bid = ?`, [orgname, orgcode, selectedBranch, importerName, id]);
-        const allPhoneNumbers = [...contactofbranch.map(item => item.phone), ...mobileofcontacts.map(item => item.mobile)];
-        async function sendWhatsAppMessages(numbers) {
-            try {
-                for (const number of numbers) {
-                    const message = await client.messages.create({
-                        from: 'whatsapp:+14155238886',
-                        to: `whatsapp:+91${number}`,
-                        body: 'Hello from Twilio! This is a sandbox environment and we found your contact number', 
-                    });
-                    console.log(`Message sent to ${number}:`, message.sid);
-                }
-            } catch (error) {
-                console.error('Error sending message:', error);
-            }
-        }
+        // }
           
-          // Call the function to send the WhatsApp message
-          sendWhatsAppMessages(allPhoneNumbers)
+        //   // Call the function to send the WhatsApp message
+        //   sendWhatsAppMessages(allPhoneNumbers)
           
         return row;
     } catch (error) {
@@ -734,3 +692,109 @@ export const getO2Ddatafromo2dimport = async (orgname, orgcode, jobNumber) => {
         console.log(error);
     }
 }
+
+
+
+
+
+
+
+
+export const getDND = async (orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`SELECT * FROM dondelivery WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const storeDNDintable = async (tatimpcolumn, days, hours, minutes, orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute('INSERT INTO dondelivery (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)', [tatimpcolumn, days, hours, minutes, orgname, orgcode]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const updateDND = async (tatimpcolumn, days, hours, minutes, orgname, orgcode, id) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`UPDATE dondelivery SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, id]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteDND = async (orgname, orgcode, deletionrowid) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`DELETE FROM dondelivery WHERE orgname = ? AND orgcode = ? AND id = ?`, [orgname, orgcode, deletionrowid]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const getDispatch = async (orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const [rows] = await connection.execute(`SELECT * FROM dispatch WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const storeDispatchintable = async (tatimpcolumn, days, hours, minutes, orgname, orgcode) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute('INSERT INTO dispatch (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)', [tatimpcolumn, days, hours, minutes, orgname, orgcode]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateDispatch = async (tatimpcolumn, days, hours, minutes, orgname, orgcode, id) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`UPDATE dispatch SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, id]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteDispatch = async (orgname, orgcode, deletionrowid) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`DELETE FROM dispatch WHERE orgname = ? AND orgcode = ? AND id = ?`, [orgname, orgcode, deletionrowid]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+

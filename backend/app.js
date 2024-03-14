@@ -7,7 +7,8 @@ import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, g
 import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
-    fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport
+    fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
+    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch
 } from './api/import.js';
 
 const app = express();
@@ -732,6 +733,95 @@ app.get('/getO2Dimport', async (req, res) => {
 })
 
 
+app.get('/getDoNDelivery', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allDD = await getDND(orgname, orgcode);
+        res.send(allDD);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/storeDND', async (req, res) => {
+    try {
+        const {tatimpcolumn, days, hours, minutes, orgname, orgcode} = req.body;
+        const storedDND = await storeDNDintable(tatimpcolumn, days, hours, minutes, orgname, orgcode);
+        res.status(200).json(storedDND);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.put('/updateDND', async (req, res) => {
+    try {
+        const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
+        const updatedDND = await updateDND(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
+        res.status(200).json(updateDND);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteDND', async (req, res) => {
+    try {
+        const {orgname, orgcode, deletionrowid} = req.body;
+        const deletedDND = await deleteDND(orgname, orgcode, deletionrowid);
+        res.status(200).json(deletedDND);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+
+
+
+
+
+
+app.get('/getDispatch', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allDispatch = await getDispatch(orgname, orgcode);
+        res.send(allDispatch);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/storeDispatch', async (req, res) => {
+    try {
+        const {tatimpcolumn, days, hours, minutes, orgname, orgcode} = req.body;
+        const storedDispatch = await storeDispatchintable(tatimpcolumn, days, hours, minutes, orgname, orgcode);
+        res.status(200).json(storedDispatch);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.put('/updateDispatch', async (req, res) => {
+    try {
+        const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
+        const updatedDispatch = await updateDispatch(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
+        res.status(200).json(updatedDispatch);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteDispatch', async (req, res) => {
+    try {
+        const {orgname, orgcode, deletionrowid} = req.body;
+        const deletedDispatch = await deleteDispatch(orgname, orgcode, deletionrowid);
+        res.status(200).json(deletedDispatch);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 app.listen(PORT, () => {

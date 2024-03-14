@@ -37,6 +37,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 import O2DTAT from './O2DTAT';
+import DoNDelivery from './DoNDelivery';
+import DeliverytoDispatch from './DeliverytoDispatch';
 
 const ImpTAT = () => {
     const [date, setDate] = useState(new Date());
@@ -291,10 +293,10 @@ const ImpTAT = () => {
           <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
+          <CNavLink onClick={() => { setIsShown("doanddelivery") }}>Do & Delivery</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
+          <CNavLink onClick={() => { setIsShown("deliverytodispatch") }}>Delivery to Disptach</CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
@@ -320,6 +322,8 @@ const ImpTAT = () => {
 
 
       {isshown === "o2d" && <O2DTAT />}
+      {isshown === "doanddelivery" && <DoNDelivery />}
+      {isshown === "deliverytodispatch" && <DeliverytoDispatch />}
       {/* {isshown === "o2d" && <O2D />}
       {isshown === "DoNDelivery" && <DoNDelivery />}
       {isshown === "d2c" && <D2C />}
