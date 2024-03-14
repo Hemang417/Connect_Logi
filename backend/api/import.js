@@ -1,6 +1,8 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 
+const client = twilio(accountSid, authToken);
+
 
 let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -206,7 +208,27 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         //         return { success: false, message: 'Internal server error.' };
         //     }
         // });
-
+        const [contactofbranch] = await connection.execute(`SELECT phone FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
+        const [mobileofcontacts] = await connection.execute(`SELECT mobile from contacts WHERE orgname = ? AND orgcode = ? AND branchname = ? AND clientname = ? AND bid = ?`, [orgname, orgcode, selectedBranch, importerName, id]);
+        const allPhoneNumbers = [...contactofbranch.map(item => item.phone), ...mobileofcontacts.map(item => item.mobile)];
+        async function sendWhatsAppMessages(numbers) {
+            try {
+                for (const number of numbers) {
+                    const message = await client.messages.create({
+                        from: 'whatsapp:+14155238886',
+                        to: `whatsapp:+91${number}`,
+                        body: 'Hello from Twilio! This is a sandbox environment and we found your contact number', 
+                    });
+                    console.log(`Message sent to ${number}:`, message.sid);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+          
+          // Call the function to send the WhatsApp message
+          sendWhatsAppMessages(allPhoneNumbers)
+          
         return row;
     } catch (error) {
         console.log(error);
