@@ -230,7 +230,8 @@ const Import = () => {
           </CTableHead>
           <CTableBody>
 
-            {allimpjobs && allimpjobs
+            {
+            allimpjobs && allimpjobs
               .slice()
               .reverse()
               .filter(job => {

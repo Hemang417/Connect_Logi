@@ -338,9 +338,9 @@ app.post('/storeJob', async (req, res) => {
             blType,
             bltypenumber,
             jobOwner,
-            orgname, orgcode, lastIc, freedays, blstatus
+            orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond
         } = req.body;
-        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus);
+        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus, benumber, shippinglinebond);
 
         res.status(200).json(storeandcreateJob);
 
@@ -714,8 +714,8 @@ app.put('/updateGeneral', async (req, res) => {
 app.put('/updateJob', async (req, res) => {
     try {
         const {jobnumber} = req.body;
-        const {docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays} = req.body.jobData;
-        const updatedJob = await updateCurrentJob(docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber)
+        const {docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, benumber, shippinglinebond} = req.body.jobData;
+        const updatedJob = await updateCurrentJob(docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber, benumber, shippinglinebond)
     } catch (error) {
         console.log(error);
     }

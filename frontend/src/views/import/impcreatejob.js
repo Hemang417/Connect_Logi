@@ -92,7 +92,9 @@ const impcreatejob = () => {
     blType: '',
     bltypenumber: '',
     blstatus: '',
-    freedays: ''
+    freedays: '',
+    benumber: '',
+    shippinglinebond: ''
   });
 
 
@@ -211,7 +213,9 @@ const impcreatejob = () => {
         blType: prefillData.bltype,
         bltypenumber: prefillData.bltypenum,
         blstatus: prefillData.blstatus,
-        freedays: prefillData.freedays
+        freedays: prefillData.freedays,
+        benumber: prefillData.benumber,
+        shippinglinebond: prefillData.shippinglinebond
       });
     }
   }, [prefillData]);
@@ -352,6 +356,10 @@ const impcreatejob = () => {
                 </CDropdown>
               </div>
               <div>
+                <label for="BE Number" className='text-field-3'>BE No.</label>
+                <input type="text" placeholder="" className='text-field-4' name='benumber' onChange={handleChange} value={JobformData.benumber} />
+              </div>
+              <div>
                 <label for="BE Type" className='text-field-3'>BE Type</label>
                 <CDropdown>
                   <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.beType ? JobformData.beType : 'Select'}</CDropdownToggle>
@@ -385,9 +393,20 @@ const impcreatejob = () => {
                 <input type="text" placeholder="" className='text-field-4' name='shippingLineName' onChange={handleChange} value={JobformData.shippingLineName} />
               </div>
               <div>
+                <label for="Delivery Mode" className='text-field-3'>Shipping Line Bond</label>
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.shippinglinebond ? JobformData.shippinglinebond : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem onClick={() => handleDropdownChange('shippinglinebond', 'Yearly')}>Yearly</CDropdownItem>
+                    <CDropdownItem onClick={() => handleDropdownChange('shippinglinebond', 'OneTime')}>One-Time</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+              </div>
+              <div>
                 <label for="Free Days" className='text-field-3'>Free Days</label>
                 <input type="text" placeholder="" className='text-field-4' name='freedays' onChange={handleChange} value={JobformData.freedays} />
               </div>
+              
               <div>
                 {/* <label for="Delivery Mode" className='text-field-3'></label> */}
                 <CDropdown>
