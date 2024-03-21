@@ -409,6 +409,42 @@ const O2D = () => {
     const [allaccessofuser, setallaccessofuser] = useState([]);
     const navigate = useNavigate();
 
+    const [underprocessedRows, setunderprocessedRows] = useState([]);
+
+    async function fetchUnderprocess() {
+        try {
+
+            const underprocessrow = await axios.get('http://localhost:5000/findunderprocess', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    status: 'Underprocess',
+                    jobNumber: localStorage.getItem('jobNumber')
+                }
+            });
+            console.log(underprocessrow);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    useEffect(() => {
+        fetchUnderprocess();
+    }, [])
+
+
+
+
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         const fetchAllO2Drows = async () => {
             try {
@@ -486,9 +522,20 @@ const O2D = () => {
     const [underprocessId, setUnderprocessId] = useState(null);
 
     // Function to handle the selection of dropdown items and update the 'Underprocess' row id
-    const handleDropdownItemClick = (id, status) => {
+    const handleDropdownItemClick = async (id, status) => {
         if (status === 'Underprocess') {
             setUnderprocessId(id);
+            const obj = allo2dData.find(item => item.id === id);
+            const tatimpcolumn = obj.tatimpcolumn;
+            const response = await axios.post('http://localhost:5000/insertUnderprocess', {
+                username: localStorage.getItem('username'),
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode'),
+                jobNumber: localStorage.getItem('jobNumber'),
+                rowname: tatimpcolumn,
+                status: 'Underprocess'
+            })
+
         } else {
             setUnderprocessId(null);
         }
@@ -505,20 +552,20 @@ const O2D = () => {
     const isEditable = (rowItem) => {
         if (localStorage.getItem('username') === 'admin') {
             return true;
-        } else if(underprocessId != null){
-            if(rowItem.id>underprocessId){
+        } else if (underprocessId != null) {
+            if (rowItem.id > underprocessId) {
                 return false;
-            }else if(rowItem.id < underprocessId){
+            } else if (rowItem.id < underprocessId) {
                 return false;
-            }else {
+            } else {
                 return true;
             }
-        }else{
-           return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
+        } else {
+            return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
         }
     };
-    
-    
+
+
 
 
     useEffect(() => {
@@ -562,11 +609,11 @@ const O2D = () => {
                 console.log(error);
             }
         };
-    
+
         // Call the fetchO2DData function when the component mounts
         fetchO2DData();
     }, []);
-    
+
 
 
 
@@ -773,7 +820,7 @@ const O2D = () => {
         setallo2dData(newData);
     };
 
- 
+
 
 
     return (
@@ -796,14 +843,14 @@ const O2D = () => {
                     </CTableHead>
                     <CTableBody>
                         {allo2dData && allo2dData.map((item, index) => (
-                            
+
                             <CTableRow key={index}>
 
                                 <CTableDataCell>{item.tatimpcolumn}</CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={item.tat? item.tat:formatTAT(item, index)} /></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={item.tat ? item.tat : formatTAT(item, index)} /></CTableDataCell>
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={calculatePlanDate(item, localStorage.getItem('jobDate'))} readOnly /></CTableDataCell>
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.actualdate ? moment(item.actualdate).format('YYYY-MM-DDTHH:mm') : ''} readOnly /></CTableDataCell>
-                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={!isEditable(item)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'}/></CTableDataCell>
+                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={!isEditable(item)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly value={item.timedelay ? item.timedelay : '00:00:00'} /></CTableDataCell>
                                 <CDropdown>
                                     <CDropdownToggle className="dropdown-btn" color='secondary' disabled={!isEditable(item)}>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
@@ -812,9 +859,9 @@ const O2D = () => {
                                         <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Completed')}>Completed</CDropdownItem>
                                     </CDropdownMenu>
                                 </CDropdown>
-                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={!isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks}/></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={!isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
                             </CTableRow>
-                        
+
                         ))}
                     </CTableBody>
                 </CTable>

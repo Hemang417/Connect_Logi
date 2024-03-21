@@ -798,3 +798,25 @@ export const deleteDispatch = async (orgname, orgcode, deletionrowid) => {
 }
 
 
+export const O2DinsertUnderprocess = async (username, orgname, orgcode, jobNumber, rowname, status) => {
+    try {
+        const connection = await connectMySQL();
+        const [insertedRow] = await connection.execute(`INSERT INTO o2dimport 
+        (jobdoneby, jobnumber, status, orgname, orgcode, tatimpcolumn)
+        VALUES (?, ?, ?, ?, ?, ?)
+        `, [username, jobNumber, status, orgname, orgcode, rowname]);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const GetUnderprocess = async (orgname, orgcode, status, jobNumber) => {
+    try {
+        const connection = await connectMySQL();
+        const [row] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND status = ? AND jobnumber = ?`, [orgname, orgcode, status, jobNumber]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}

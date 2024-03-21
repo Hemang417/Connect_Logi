@@ -8,7 +8,7 @@ import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
     fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
-    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch
+    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, GetUnderprocess
 } from './api/import.js';
 
 const app = express();
@@ -822,6 +822,34 @@ app.delete('/deleteDispatch', async (req, res) => {
         console.log(error);
     }
 })
+
+
+
+app.post('/insertUnderprocess', async (req, res) => {
+    try {
+        const {username, orgname, orgcode, jobNumber, rowname, status} = req.body;
+  
+        const insertUnderprocess = await O2DinsertUnderprocess(username, orgname, orgcode, jobNumber, rowname, status);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/findunderprocess', async (req, res) => {
+    try {
+        const {orgname, orgcode, status, jobNumber} = req.query;
+        const underprocessed = await GetUnderprocess(orgname, orgcode, status, jobNumber);
+        res.send(underprocessed);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
+
+
 
 
 app.listen(PORT, () => {
