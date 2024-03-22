@@ -2,7 +2,7 @@ import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 
 // const client = twilio(accountSid, authToken);
-
+const connection = await connectMySQL();
 
 let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -19,7 +19,7 @@ let transporter = nodemailer.createTransport({
 let incrementNumber = 0;
 export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond) => {
     try {
-        const connection = await connectMySQL();
+        
         const firstletter = transportMode.charAt(0).toUpperCase();
 
 
@@ -61,8 +61,7 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 
 export const updateJobNumber = async (id, transportMode) => {
     try {
-        const connection = await connectMySQL();
-
+       
         const firstletter = transportMode.charAt(0).toUpperCase();
 
 
@@ -103,8 +102,7 @@ export const updateJobNumber = async (id, transportMode) => {
 
 export const fetchBranches = async (importerName, orgcode, orgname) => {
     try {
-        const connection = await connectMySQL();
-
+   
         const [rows] = await connection.execute(`SELECT branchname, id FROM organizations WHERE clientname = ? AND orgcode = ? AND orgname = ?`, [importerName, orgcode, orgname]);
 
         return rows;
@@ -117,8 +115,7 @@ export const fetchBranches = async (importerName, orgcode, orgname) => {
 
 export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, id) => {
     try {
-        const connection = await connectMySQL();
-
+   
         const [rows] = await connection.execute(`SELECT GST, IEC, address FROM organizations WHERE clientname = ? AND orgcode = ? AND branchname = ? AND orgname = ? AND id = ?`, [clientName, orgcode, branchName, orgname, id]);
 
         return rows;
@@ -133,7 +130,7 @@ export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, 
 
 export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute(
             `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination, branchname) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -155,7 +152,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
                 subject: 'Connect Logi',
                 html: `Hello your mail is here` // Add your HTML content here
             };
-        
+
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log('Error sending email:', error);
@@ -183,10 +180,10 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         //         console.error('Error sending message:', error);
         //     }
         // }
-          
+
         //   // Call the function to send the WhatsApp message
         //   sendWhatsAppMessages(allPhoneNumbers)
-          
+
         return row;
     } catch (error) {
         console.log(error);
@@ -396,7 +393,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 
 export const getClient = async (orgcode) => {
     try {
-        const connection = await connectMySQL();
+ 
         const [rows] = await connection.execute(`SELECT clientname, id, branchname, address, GST, IEC FROM organizations WHERE orgcode = ?`, [orgcode]);
 
         return rows;
@@ -410,7 +407,7 @@ export const getClient = async (orgcode) => {
 
 export const storeO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+   
         const [rows] = await connection.execute(`INSERT INTO o2dtat 
         (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`, [tatimpcolumn, days, hours, minutes, orgname, orgcode]);
         return rows;
@@ -421,7 +418,7 @@ export const storeO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgc
 
 export const get02ddata = async (orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+        
         const [rows] = await connection.execute(`SELECT tatimpcolumn, id, days, hours, minutes FROM o2dtat WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
@@ -432,7 +429,7 @@ export const get02ddata = async (orgname, orgcode) => {
 
 export const deleteO2D = async (orgname, orgcode, deletionrowid) => {
     try {
-        const connection = await connectMySQL();
+     
         const [row] = await connection.execute(`DELETE FROM o2dtat WHERE orgname = ? AND orgcode = ? AND id = ?`, [orgname, orgcode, deletionrowid]);
         return row;
     } catch (error) {
@@ -443,7 +440,7 @@ export const deleteO2D = async (orgname, orgcode, deletionrowid) => {
 
 export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgcode, id) => {
     try {
-        const connection = await connectMySQL();
+   
         const [row] = await connection.execute(`UPDATE o2dtat SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, id]);
         return row;
     } catch (error) {
@@ -534,9 +531,9 @@ export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, org
 export const fetchAlluseraccess = async (username) => {
 
     try {
-        const connection = await connectMySQL();
+        
         const [rows] = await connection.execute(
-            `SELECT value FROM importaccess WHERE username = ?`,
+            `SELECT value, id FROM importaccess WHERE username = ?`,
             [username]
         );
 
@@ -551,7 +548,7 @@ export const fetchAlluseraccess = async (username) => {
 
 export const fetchJobData = async (jobnumber) => {
     try {
-        const connection = await connectMySQL();
+     
         const [row] = await connection.execute(`SELECT * FROM impjobcreation WHERE jobnumber = ?`, [jobnumber]);
         return row;
     } catch (error) {
@@ -563,9 +560,17 @@ export const fetchJobData = async (jobnumber) => {
 
 export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat) => {
     try {
-        const connection = await connectMySQL();
-        const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, actualdate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, actualDate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat]);
+      
+        const tempstatus = "Underprocess"
+        const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND status = ? AND jobnumber = ?`, [orgname, orgcode, tempstatus, jobnumber]);
+        if (underrow.length > 0) {
+            const [row] = await connection.execute(`UPDATE o2dimport SET plandate = ?, actualdate = ?, timedelay = ?, status = ?, tat = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
+                [planDate, actualDate, timedelay, status, tat, tatimpcolumn, orgname, orgcode, jobnumber]);
+        } else {
+            const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, actualdate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, actualDate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat]);
+        }
+
     } catch (error) {
         console.log(error);
     }
@@ -574,7 +579,7 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
 
 export const deletetheO2DtoNull = async (tatimpcolumn, jobNumber, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+       
         const [updatedRow] = await connection.execute(`DELETE FROM o2dimport WHERE tatimpcolumn = ? AND jobnumber = ? AND orgname = ? AND orgcode = ?`, [tatimpcolumn, jobNumber, orgname, orgcode]);
         // const [row] = await connection.execute(`SELECT id, planDate, actualDate, timedelay, status FROM o2dimport WHERE id = ? AND orgname = ? AND orgcode = ?`, [id, orgname, orgcode]);
         // return row;
@@ -586,7 +591,7 @@ export const deletetheO2DtoNull = async (tatimpcolumn, jobNumber, orgname, orgco
 
 export const fetchallimpjobs = async (orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+  
         const [rows] = await connection.execute('SELECT * FROM impjobcreation WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
         const [genrows] = await connection.execute(`SELECT * FROM impgeneral WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return {
@@ -603,7 +608,6 @@ export const fetchallimpjobs = async (orgname, orgcode) => {
 export const storeRemark = async (remarkskaData, orgname, orgcode, jobnumber) => {
     try {
 
-        const connection = await connectMySQL();
         const rowsToUpdate = [];
 
         remarkskaData.forEach(item => {
@@ -627,7 +631,7 @@ export const storeRemark = async (remarkskaData, orgname, orgcode, jobnumber) =>
 
 export const deleteJob = async (orgname, orgcode, jobnumber) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute(`DELETE FROM impjobcreation WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
         const [deletedgenrow] = await connection.execute(`DELETE FROM impgeneral WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
         const [deletedo2drows] = await connection.execute(`DELETE FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
@@ -640,7 +644,7 @@ export const deleteJob = async (orgname, orgcode, jobnumber) => {
 
 export const fetchingGeneralofJob = async (jobnumber, orgcode, orgname) => {
     try {
-        const connection = await connectMySQL();
+     
         const [row] = await connection.execute(`SELECT * FROM impgeneral WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
         return row[0];
     } catch (error) {
@@ -652,7 +656,6 @@ export const fetchingGeneralofJob = async (jobnumber, orgcode, orgname) => {
 
 export const updateGeneral = async (importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, orgname, orgcode, jobnumber, jobowner) => {
     try {
-        const connection = await connectMySQL();
 
         const [row] = await connection.execute(`
             UPDATE impgeneral
@@ -669,7 +672,7 @@ export const updateGeneral = async (importerName, address, gst, iec, portShipmen
 
 export const updateCurrentJob = async (docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber, benumber, shippinglinebond) => {
     try {
-        const connection = await connectMySQL();
+  
         const [row] = await connection.execute(`
         UPDATE impjobcreation
         SET docreceivedon = ?, transportmode = ?, customhouse = ?, ownbooking = ?, deliverymode = ?, noofcontainer = ?, 
@@ -685,7 +688,7 @@ export const updateCurrentJob = async (docReceivedOn, transportMode, customHouse
 
 export const getO2Ddatafromo2dimport = async (orgname, orgcode, jobNumber) => {
     try {
-        const connection = await connectMySQL();
+
         const [rows] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobNumber]);
         return rows;
     } catch (error) {
@@ -702,7 +705,7 @@ export const getO2Ddatafromo2dimport = async (orgname, orgcode, jobNumber) => {
 
 export const getDND = async (orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+
         const [rows] = await connection.execute(`SELECT * FROM dondelivery WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
@@ -712,7 +715,7 @@ export const getDND = async (orgname, orgcode) => {
 
 export const storeDNDintable = async (tatimpcolumn, days, hours, minutes, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute('INSERT INTO dondelivery (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)', [tatimpcolumn, days, hours, minutes, orgname, orgcode]);
         return row;
     } catch (error) {
@@ -723,7 +726,7 @@ export const storeDNDintable = async (tatimpcolumn, days, hours, minutes, orgnam
 
 export const updateDND = async (tatimpcolumn, days, hours, minutes, orgname, orgcode, id) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute(`UPDATE dondelivery SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, id]);
         return row;
     } catch (error) {
@@ -733,7 +736,7 @@ export const updateDND = async (tatimpcolumn, days, hours, minutes, orgname, org
 
 export const deleteDND = async (orgname, orgcode, deletionrowid) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute(`DELETE FROM dondelivery WHERE orgname = ? AND orgcode = ? AND id = ?`, [orgname, orgcode, deletionrowid]);
         return row;
     } catch (error) {
@@ -813,7 +816,7 @@ export const O2DinsertUnderprocess = async (username, orgname, orgcode, jobNumbe
 
 export const GetUnderprocess = async (orgname, orgcode, status, jobNumber) => {
     try {
-        const connection = await connectMySQL();
+        
         const [row] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND status = ? AND jobnumber = ?`, [orgname, orgcode, status, jobNumber]);
         return row;
     } catch (error) {

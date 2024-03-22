@@ -1,10 +1,9 @@
 import { connectMySQL } from "../config/sqlconfig.js";
-
+const connection = await connectMySQL();
 
 // LOGIN API
 export const getTheUser = async (username, password, orgcode) => {
     try {
-        const connection = await connectMySQL();
 
         if (username === "admin") {
             const [rows] = await connection.execute(
@@ -37,7 +36,7 @@ export const getTheUser = async (username, password, orgcode) => {
 // REGISTER API
 export const insertUser = async (username, password, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+ 
         const firstEmptyIndex = orgname.indexOf(' ');
         const orgNamehaiye = orgname.slice(0, firstEmptyIndex !== -1 ? firstEmptyIndex : orgname.length).toLowerCase();
         const newOrgcode = orgNamehaiye + '@' + orgcode

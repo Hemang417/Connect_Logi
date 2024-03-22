@@ -1,11 +1,11 @@
 
 import { connectMySQL } from "../config/sqlconfig.js";
-
+const connection = await connectMySQL();
 
 // STORING 
 export const OrgDataStorage = async (clientname, orgname, orgcode, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, branchName, username) => {
     try {
-        const connection = await connectMySQL();
+        
         // Check if data exists in the users table for the provided orgname and orgcode
         const [row] = await connection.execute(`
             SELECT * FROM users WHERE orgname = ? AND orgcode = ?
@@ -91,8 +91,7 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 
 export const OrgRender = async (orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
-
+       
         const [rows] = await connection.execute(`
             SELECT clientname, alias, branchname, id
             FROM organizations
@@ -142,7 +141,6 @@ export const OrgRender = async (orgname, orgcode) => {
 // ADD USER VIA ADMIN API
 export const insertEmployees = async (username, password, orgcode, branchname, orgname) => {
     try {
-        const connection = await connectMySQL();
 
         // Check if the organization exists in the users table
         const [rows] = await connection.execute(`
@@ -171,7 +169,7 @@ export const insertEmployees = async (username, password, orgcode, branchname, o
 
 export const fetchBranchData = async (clientname, alias, branchname, id) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute(`SELECT * FROM organizations WHERE clientname = ? AND alias = ? AND branchname = ? AND id = ?`, [clientname, alias, branchname, id]);
 
         return row[0];
@@ -188,7 +186,6 @@ export const fetchBranchData = async (clientname, alias, branchname, id) => {
 
 export const updateRow = async (orgcode, orgname, clientname, alias, branchname, id, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays) => {
     try {
-        const connection = await connectMySQL();
 
         const [row] = await connection.execute(`
             UPDATE organizations
@@ -235,7 +232,6 @@ export const updateRow = async (orgcode, orgname, clientname, alias, branchname,
 // STORE CONTACTS
 export const insertContact = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode, id, clientname) => {
     try {
-        const connection = await connectMySQL();
         const row = await connection.execute(`INSERT INTO contacts 
         (contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, bid) 
         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -251,7 +247,7 @@ export const insertContact = async (contactName, designation, department, mobile
 
 export const fetchAllContacts = async (branchname, clientname, id, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+
         const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid = ?`, [branchname, orgname, orgcode, clientname, id]);
         return rows;
     } catch (error) {
@@ -262,7 +258,7 @@ export const fetchAllContacts = async (branchname, clientname, id, orgname, orgc
 
 export const fetchAllContactsofNew = async (branchname, clientname, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+
         const [rows] = await connection.execute(`SELECT * FROM contacts WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid IS NULL`, [branchname, orgname, orgcode, clientname]);
         return rows;
     } catch (error) {
@@ -274,7 +270,7 @@ export const fetchAllContactsofNew = async (branchname, clientname, orgname, org
 
 export const updateContactduringNew = async (contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname) => {
     try {
-        const connection = await connectMySQL();
+   
         const row = await connection.execute(`UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND mobile = ?`,
             [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, mobile]);
         return row;
@@ -288,7 +284,7 @@ export const updateContactduringNew = async (contactName, designation, departmen
 
 export const deleteContact = async (email, mobile, contactName, designation, department) => {
     try {
-        const connection = await connectMySQL();
+   
         const row = await connection.execute(`DELETE FROM contacts WHERE email = ? AND mobile = ? AND contactName = ? AND designation = ? AND department = ?`, [email, mobile, contactName, designation, department]);
         return row;
     } catch (error) {
@@ -300,7 +296,7 @@ export const deleteContact = async (email, mobile, contactName, designation, dep
 
 export const updateContact = async (contactName, designation, department, mobile, email, branchname, clientname, id, orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+  
         const row = await connection.execute(
             `UPDATE contacts SET contactName = ?, designation = ?, department = ?, mobile = ?, email = ? WHERE branchname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND bid = ? AND mobile = ?`,
             [contactName, designation, department, mobile, email, branchname, orgname, orgcode, clientname, id, mobile]
@@ -317,7 +313,6 @@ export const updateContact = async (contactName, designation, department, mobile
 
 export const saveBranchinTable = async (clientname, orgcode, branchname) => {
     try {
-        const connection = await connectMySQL();
 
         const [row] = await connection.execute(`INSERT INTO branches (clientname, orgcode, branchname) VALUES (?, ?, ?)`, [clientname, orgcode, branchname]);
         return {
@@ -333,7 +328,7 @@ export const saveBranchinTable = async (clientname, orgcode, branchname) => {
 
 export const updateBID = async (BID, clientname, orgcode, branchname) => {
     try {
-        const connection = await connectMySQL();
+   
         const [row] = await connection.execute(`
             UPDATE branches 
             SET bid = ? 
@@ -354,7 +349,7 @@ export const updateBID = async (BID, clientname, orgcode, branchname) => {
 
 export const updateBIDContact = async (BID, clientname, orgcode, orgname, branchname) => {
     try {
-        const connection = await connectMySQL();
+     
         const [row] = await connection.execute(`
             UPDATE contacts 
             SET bid = ? 
@@ -373,7 +368,6 @@ export const updateBIDContact = async (BID, clientname, orgcode, orgname, branch
 
 export const deleteBranch = async (id, branchname, orgcode, orgname, clientname) => {
     try {
-        const connection = await connectMySQL();
 
         // Delete branch from organizations table
         const [orgRow] = await connection.execute(`

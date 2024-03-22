@@ -407,7 +407,6 @@ const O2D = () => {
     const [allo2dData, setallo2dData] = useState([]);
     const [allaccessofuser, setallaccessofuser] = useState([]);
     const navigate = useNavigate();
-
     const [underprocessedRows, setunderprocessedRows] = useState([]);
     const [highestUnderprocessId, setHighestUnderprocessId] = useState(null);
     async function fetchUnderprocess() {
@@ -430,12 +429,10 @@ const O2D = () => {
     }
 
 
-    useEffect(() => {
-        fetchUnderprocess();
-    }, [])
+   
 
 
-    useEffect(() => {
+    
         const fetchAllO2Drows = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/getAllO2D', {
@@ -444,7 +441,7 @@ const O2D = () => {
                         orgcode: localStorage.getItem('orgcode')
                     }
                 });
-
+                
                 const updatedData = response.data.map(item => ({
                     ...item,
                     planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
@@ -457,7 +454,7 @@ const O2D = () => {
             }
         }
         fetchAllO2Drows();
-    }, [])
+    
 
 
     const formatTAT = (TAT, index) => {
@@ -480,8 +477,7 @@ const O2D = () => {
     };
 
 
-
-    useEffect(() => {
+  
         const handleAccess = async () => {
             // Access the username at the specified index in the allData state
             const username = localStorage.getItem('username');
@@ -493,8 +489,8 @@ const O2D = () => {
             setallaccessofuser(response.data);
 
         };
-        handleAccess();
-    }, [])
+     
+   
 
 
     // const isEditable = (rowItem) => {
@@ -508,7 +504,6 @@ const O2D = () => {
     // };
 
 
-
     // async function matcho2dandunderprocess() {
     //     try {
     //         const theurow = underprocessedRows.length > 0 ? underprocessedRows[0] : null;
@@ -518,7 +513,6 @@ const O2D = () => {
     //         console.log(error);
     //     }
     // }
-
 
 
     const [underprocessId, setUnderprocessId] = useState(null);
@@ -570,8 +564,6 @@ const O2D = () => {
 
 
 
-
-
     // const isEditable = (rowItem) => {
     //     if (localStorage.getItem('username') === 'admin') {
     //         // Admin has full access
@@ -592,14 +584,11 @@ const O2D = () => {
     // };
 
 
-
-
-
     const isEditable = (rowItem) => {
-       
+
         if (localStorage.getItem('username') === 'admin') {
             return true; // Admin has full access
-        } else if (underprocessedRows.status === "Underprocess") {
+        } else if (underprocessedRows && underprocessedRows.status === "Underprocess") {
             // const id = allo2dData.find(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
             const underprocessRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
 
@@ -608,64 +597,20 @@ const O2D = () => {
                 return rowItem.id === underprocessRowIndex.id; // Allow editing for the "Underprocess" row
             } else {
                 // Find the index of the "Underprocess" row
-                
+
                 // Make rows readonly whose indices are greater than the index of the "Underprocess" row
                 return allo2dData.indexOf(rowItem) >= underprocessRowIndex;
             }
 
+        }
 
-
-
-            // allo2dData.forEach(item => {
-            //     if(item.id === id.id){
-            //         return true;
-            //     }else {
-            //         return false;
-            //     }
-
-                // } else {
-                //     return true;
-                // }
-            
-            }
-            // Check if the current row is the "Underprocess" row
-            // if (rowItem.tatimpcolumn === underprocessedRows.tatimpcolumn) {
-
-
-            //     const matchedRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows[0].tatimpcolumn);
-            //     console.log(matchedRowIndex);
-            //     // return allo2dData.indexOf(rowItem) > matchedRowIndex;
-            //      // Allow editing for the "Underprocess" row
-            // }
-            // } else {
-            //     // For rows other than the "Underprocess" row, check if they are below it and allow editing accordingly
-            //     const matchedRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows[0].tatimpcolumn);
-            //     return allo2dData.indexOf(rowItem) > matchedRowIndex;
-            // }
-         else {
+        else {
             // No "Underprocess" row, check user access for editing based on your logic
-            
-            return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
+            const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
+            // Return true if the row has access, otherwise return false to make it read-only
+            return !hasAccess;
         }
     };
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
 
 
     // const isEditable = (rowItem) => {
@@ -690,9 +635,7 @@ const O2D = () => {
     // };
 
 
-
-
-    useEffect(() => {
+    
         const fetchO2DData = async () => {
             try {
                 // Fetch data from o2dtat
@@ -735,20 +678,8 @@ const O2D = () => {
         };
 
         // Call the fetchO2DData function when the component mounts
-        fetchO2DData();
-    }, []);
-
-
-
-
-
-
-
-
-
-
-
-
+        
+   
 
 
 
@@ -773,9 +704,6 @@ const O2D = () => {
     //     }
     //     // Call the fetchO2DData function when the component mounts
     // }, []);
-
-
-
 
 
     let previousPlanDate = null;
@@ -814,10 +742,6 @@ const O2D = () => {
     };
 
 
-
-
-
-
     // const calculatePlanDate = (TAT, jobDate) => {
     //     const { days, hours, minutes } = TAT;
     //     const planDateTime = new Date(jobDate); // Initialize planDateTime with jobDate
@@ -843,8 +767,6 @@ const O2D = () => {
 
     //     return moment(planDateTime).format('YYYY-MM-DDTHH:mm'); // You can format this date as per your requirement
     // };
-
-
 
 
     const handleCheckboxChange = async (index) => {
@@ -934,8 +856,6 @@ const O2D = () => {
     }
 
 
-
-
     const handleRemarksChange = (e, index) => {
         // Get the value of remarks entered by the user
         const remarksValue = e.target.value;
@@ -944,6 +864,13 @@ const O2D = () => {
         setallo2dData(newData);
     };
 
+
+    useEffect(() => {
+        fetchUnderprocess();
+        fetchAllO2Drows();
+        handleAccess();
+        fetchO2DData();
+    }, [])
 
 
 

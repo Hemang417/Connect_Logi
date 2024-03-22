@@ -1,8 +1,7 @@
 import { connectMySQL } from "../config/sqlconfig.js";
-
+const connection = await connectMySQL();
 export const fetchAllusers = async (orgcode, orgname, username) => {
     try {
-        const connection = await connectMySQL();
 
         const [rows] = await connection.execute(`
         SELECT username
@@ -113,7 +112,7 @@ export const fetchAllusers = async (orgcode, orgname, username) => {
 
 export const removeimpaccess = async (dataAccess, username) => {
     try {
-        const connection = await connectMySQL();
+
         const [row] = await connection.execute(`DELETE FROM importaccess WHERE username = ? AND rowname = ? AND value = ? `, [username, dataAccess, dataAccess]);
         return row;
     } catch (error) {
@@ -126,7 +125,7 @@ export const removeimpaccess = async (dataAccess, username) => {
 
 export const getUserAccess = async (username) => {
     try {
-        const connection = await connectMySQL();
+     
         const [rows] = await connection.execute(
             `SELECT value FROM importaccess WHERE username = ?`,
             [username]
@@ -144,7 +143,7 @@ export const getUserAccess = async (username) => {
 
 export const fetchAllaccesspoints = async (orgname, orgcode) => {
     try {
-        const connection = await connectMySQL();
+  
         const [rows] = await connection.execute(`SELECT tatimpcolumn, id FROM o2dtat WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
@@ -157,7 +156,7 @@ export const fetchAllaccesspoints = async (orgname, orgcode) => {
 
 export const storeimpaccess = async (dataAccess, username) => {
     try {
-        const connection = await connectMySQL();
+   
         const [rows] = await connection.execute(`INSERT INTO importaccess (value, rowname, username) VALUES (?, ?, ?)`, [dataAccess, dataAccess, username]);
         return rows;
     } catch (error) {
