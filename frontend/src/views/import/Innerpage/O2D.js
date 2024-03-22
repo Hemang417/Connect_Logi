@@ -399,7 +399,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios'
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-// import createjob from './CreateJob';
 
 
 const O2D = () => {
@@ -410,7 +409,7 @@ const O2D = () => {
     const navigate = useNavigate();
 
     const [underprocessedRows, setunderprocessedRows] = useState([]);
-
+    const [highestUnderprocessId, setHighestUnderprocessId] = useState(null);
     async function fetchUnderprocess() {
         try {
 
@@ -422,7 +421,9 @@ const O2D = () => {
                     jobNumber: localStorage.getItem('jobNumber')
                 }
             });
-            console.log(underprocessrow);
+
+            setunderprocessedRows(underprocessrow.data[0]);
+
         } catch (error) {
             console.log(error);
         }
@@ -434,17 +435,6 @@ const O2D = () => {
     }, [])
 
 
-
-
-
-
-
-
-
-
-
-
-
     useEffect(() => {
         const fetchAllO2Drows = async () => {
             try {
@@ -454,6 +444,7 @@ const O2D = () => {
                         orgcode: localStorage.getItem('orgcode')
                     }
                 });
+
                 const updatedData = response.data.map(item => ({
                     ...item,
                     planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
@@ -467,7 +458,6 @@ const O2D = () => {
         }
         fetchAllO2Drows();
     }, [])
-
 
 
     const formatTAT = (TAT, index) => {
@@ -519,12 +509,25 @@ const O2D = () => {
 
 
 
+    // async function matcho2dandunderprocess() {
+    //     try {
+    //         const theurow = underprocessedRows.length > 0 ? underprocessedRows[0] : null;
+    //         const matchedid = allo2dData.find(item => theurow.id === item.id);
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
+
+
     const [underprocessId, setUnderprocessId] = useState(null);
 
     // Function to handle the selection of dropdown items and update the 'Underprocess' row id
     const handleDropdownItemClick = async (id, status) => {
         if (status === 'Underprocess') {
             setUnderprocessId(id);
+            setHighestUnderprocessId(id);
             const obj = allo2dData.find(item => item.id === id);
             const tatimpcolumn = obj.tatimpcolumn;
             const response = await axios.post('http://localhost:5000/insertUnderprocess', {
@@ -549,21 +552,142 @@ const O2D = () => {
         setallo2dData(updatedData);
     };
 
+    // const isEditable = (rowItem) => {
+    //     if (localStorage.getItem('username') === 'admin') {
+    //         return true;
+    //     } else if (underprocessId != null) {
+    //         if (rowItem.id > underprocessId) {
+    //             return false;
+    //         } else if (rowItem.id < underprocessId) {
+    //             return false;
+    //         } else {
+    //             return true;
+    //         }
+    //     } else {
+    //         return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
+    //     }
+    // };
+
+
+
+
+
+    // const isEditable = (rowItem) => {
+    //     if (localStorage.getItem('username') === 'admin') {
+    //         // Admin has full access
+    //         return true;
+    //     } else if (underprocessId != null) {
+    //         // Check if the row belongs to the same organization as the user
+    //         if (rowItem.orgname === localStorage.getItem('orgname') && rowItem.orgcode === localStorage.getItem('orgcode')) {
+    //             // If underprocessed row exists, make rows with IDs greater than underprocessed row's ID read-only
+    //             return rowItem.id <= underprocessId;
+    //         } else {
+    //             // Rows from different organizations are not editable
+    //             return false;
+    //         }
+    //     } else {
+    //         // Check user access for editing based on your logic
+    //         return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
+    //     }
+    // };
+
+
+
+
+
     const isEditable = (rowItem) => {
+       
         if (localStorage.getItem('username') === 'admin') {
-            return true;
-        } else if (underprocessId != null) {
-            if (rowItem.id > underprocessId) {
-                return false;
-            } else if (rowItem.id < underprocessId) {
-                return false;
+            return true; // Admin has full access
+        } else if (underprocessedRows.status === "Underprocess") {
+            // const id = allo2dData.find(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
+            const underprocessRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
+
+            if (rowItem.tatimpcolumn === underprocessedRows.tatimpcolumn) {
+                // console.log("Going True");
+                return rowItem.id === underprocessRowIndex.id; // Allow editing for the "Underprocess" row
             } else {
-                return true;
+                // Find the index of the "Underprocess" row
+                
+                // Make rows readonly whose indices are greater than the index of the "Underprocess" row
+                return allo2dData.indexOf(rowItem) >= underprocessRowIndex;
             }
-        } else {
+
+
+
+
+            // allo2dData.forEach(item => {
+            //     if(item.id === id.id){
+            //         return true;
+            //     }else {
+            //         return false;
+            //     }
+
+                // } else {
+                //     return true;
+                // }
+            
+            }
+            // Check if the current row is the "Underprocess" row
+            // if (rowItem.tatimpcolumn === underprocessedRows.tatimpcolumn) {
+
+
+            //     const matchedRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows[0].tatimpcolumn);
+            //     console.log(matchedRowIndex);
+            //     // return allo2dData.indexOf(rowItem) > matchedRowIndex;
+            //      // Allow editing for the "Underprocess" row
+            // }
+            // } else {
+            //     // For rows other than the "Underprocess" row, check if they are below it and allow editing accordingly
+            //     const matchedRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows[0].tatimpcolumn);
+            //     return allo2dData.indexOf(rowItem) > matchedRowIndex;
+            // }
+         else {
+            // No "Underprocess" row, check user access for editing based on your logic
+            
             return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
         }
     };
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    // const isEditable = (rowItem) => {
+    //     if (localStorage.getItem('username') === 'admin') {
+    //         return true; // Admin has full access
+    //     } else if (underprocessedRows && underprocessedRows.length > 0) {
+
+    //         const matchedRow = allo2dData.find(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
+    //         if (matchedRow && rowItem.id > matchedRow.id) {
+    //             // Make rows with IDs greater than the matched row's ID read-only
+    //             return false;
+    //         } else {
+    //             return true;
+    //         }
+
+
+    //         // Make rows with IDs greater than the highest underprocessed row's ID read-only
+    //     } else if (underprocessedRows && underprocessedRows.length === 0) {
+    //         // Check user access for editing based on your logic
+    //         return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
+    //     }
+    // };
 
 
 
@@ -850,16 +974,16 @@ const O2D = () => {
                                 <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={item.tat ? item.tat : formatTAT(item, index)} /></CTableDataCell>
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={calculatePlanDate(item, localStorage.getItem('jobDate'))} readOnly /></CTableDataCell>
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.actualdate ? moment(item.actualdate).format('YYYY-MM-DDTHH:mm') : ''} readOnly /></CTableDataCell>
-                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={!isEditable(item)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
+                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={isEditable(item)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly value={item.timedelay ? item.timedelay : '00:00:00'} /></CTableDataCell>
                                 <CDropdown>
-                                    <CDropdownToggle className="dropdown-btn" color='secondary' disabled={!isEditable(item)}>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
+                                    <CDropdownToggle className="dropdown-btn" color='secondary' disabled={isEditable(item)}>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
                                     <CDropdownMenu className="text-field-4">
                                         <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Underprocess')}>Underprocess</CDropdownItem>
                                         <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Completed')}>Completed</CDropdownItem>
                                     </CDropdownMenu>
                                 </CDropdown>
-                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={!isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
                             </CTableRow>
 
                         ))}
