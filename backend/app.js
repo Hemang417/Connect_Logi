@@ -637,7 +637,6 @@ app.get('/prefillCreateJob', async (req, res) => {
 app.post('/insertO2D', async (req, res) => {
     try {
         const { planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat } = req.body;
-
         const storedInO2D = await storeinO2Dtable(planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat);
     } catch (error) {
         console.log(error);
@@ -827,9 +826,9 @@ app.delete('/deleteDispatch', async (req, res) => {
 
 app.post('/insertUnderprocess', async (req, res) => {
     try {
-        const {username, orgname, orgcode, jobNumber, rowname, status} = req.body;
+        const {username, orgname, orgcode, jobNumber, rowname, status, tat, planDate} = req.body;
   
-        const insertUnderprocess = await O2DinsertUnderprocess(username, orgname, orgcode, jobNumber, rowname, status);
+        const insertUnderprocess = await O2DinsertUnderprocess(username, orgname, orgcode, jobNumber, rowname, status, tat, planDate);
     } catch (error) {
         console.log(error);
     }

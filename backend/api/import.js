@@ -145,22 +145,22 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         const allEmails = [...emailofbranch.map(item => item.email), ...emailofcontacts.map(item => item.email)];
 
         // Loop through the combined email addresses and send emails
-        allEmails.forEach(email => {
-            const mailOptions = {
-                from: 'shreyashpingle752@gmail.com',
-                to: email,
-                subject: 'Connect Logi',
-                html: `Hello your mail is here` // Add your HTML content here
-            };
+        // allEmails.forEach(email => {
+        //     const mailOptions = {
+        //         from: 'shreyashpingle752@gmail.com',
+        //         to: email,
+        //         subject: 'Connect Logi',
+        //         html: `Hello your mail is here` // Add your HTML content here
+        //     };
 
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log('Error sending email:', error);
-                } else {
-                    console.log('Email sent successfully:', info.response);
-                }
-            });
-        });
+        //     transporter.sendMail(mailOptions, function (error, info) {
+        //         if (error) {
+        //             console.log('Error sending email:', error);
+        //         } else {
+        //             console.log('Email sent successfully:', info.response);
+        //         }
+        //     });
+        // });
 
 
         // const [contactofbranch] = await connection.execute(`SELECT phone FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
@@ -564,8 +564,8 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
         const tempstatus = "Underprocess"
         const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND status = ? AND jobnumber = ?`, [orgname, orgcode, tempstatus, jobnumber]);
         if (underrow.length > 0) {
-            const [row] = await connection.execute(`UPDATE o2dimport SET plandate = ?, actualdate = ?, timedelay = ?, status = ?, tat = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
-                [planDate, actualDate, timedelay, status, tat, tatimpcolumn, orgname, orgcode, jobnumber]);
+            const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ?, tat = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
+                [actualDate, timedelay, status, tat, tatimpcolumn, orgname, orgcode, jobnumber]);
         } else {
             const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, actualdate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, actualDate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat]);
@@ -801,13 +801,13 @@ export const deleteDispatch = async (orgname, orgcode, deletionrowid) => {
 }
 
 
-export const O2DinsertUnderprocess = async (username, orgname, orgcode, jobNumber, rowname, status) => {
+export const O2DinsertUnderprocess = async (username, orgname, orgcode, jobNumber, rowname, status, tat, planDate) => {
     try {
         const connection = await connectMySQL();
         const [insertedRow] = await connection.execute(`INSERT INTO o2dimport 
-        (jobdoneby, jobnumber, status, orgname, orgcode, tatimpcolumn)
-        VALUES (?, ?, ?, ?, ?, ?)
-        `, [username, jobNumber, status, orgname, orgcode, rowname]);
+        (jobdoneby, jobnumber, status, orgname, orgcode, tatimpcolumn, tat, plandate)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `, [username, jobNumber, status, orgname, orgcode, rowname, tat, planDate]);
     } catch (error) {
         console.log(error);
     }

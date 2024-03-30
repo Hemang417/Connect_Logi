@@ -358,7 +358,7 @@
 
 
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
     CCard,
     CCardBody,
@@ -409,6 +409,8 @@ const O2D = () => {
     const navigate = useNavigate();
     const [underprocessedRows, setunderprocessedRows] = useState([]);
     const [highestUnderprocessId, setHighestUnderprocessId] = useState(null);
+
+
     async function fetchUnderprocess() {
         try {
 
@@ -429,32 +431,97 @@ const O2D = () => {
     }
 
 
-   
+    const fetchAllO2Drows = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/getAllO2D', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode')
+                }
+            });
+
+            const updatedData = response.data.map(item => ({
+                ...item,
+                remarks: '',
+                status: 'Underprocess'
+            }));
+
+            setallo2dData(updatedData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
-    
-        const fetchAllO2Drows = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/getAllO2D', {
+    const handleAccess = async () => {
+        // Access the username at the specified index in the allData state
+        const username = localStorage.getItem('username');
+        const response = await axios.get('http://localhost:5000/getUseraccessforuser', {
+            params: {
+                username: username
+            }
+        });
+        setallaccessofuser(response.data);
+
+    };
+
+    let previousPlanDate = null;
+
+    const fetchO2DData = async () => {
+        try {
+            // Fetch data from o2dtat
+            const responseTat = await axios.get('http://localhost:5000/getAllO2D', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode')
+                }
+            });
+
+            // Fetch data from o2dimport only if it's an edit mode
+            if (localStorage.getItem('onEdit') === 'true') {
+                const responseImport = await axios.get('http://localhost:5000/getO2Dimport', {
                     params: {
                         orgname: localStorage.getItem('orgname'),
-                        orgcode: localStorage.getItem('orgcode')
+                        orgcode: localStorage.getItem('orgcode'),
+                        jobNumber: localStorage.getItem('jobNumber')
                     }
                 });
-                
-                const updatedData = response.data.map(item => ({
+                // Combine the data from both sources
+                const combinedData = responseTat.data.map(tatItem => {
+                    const matchingImportItem = responseImport.data.find(importItem => importItem.tatimpcolumn === tatItem.tatimpcolumn);
+                    return matchingImportItem ? matchingImportItem : tatItem;
+                });
+
+
+                // setallo2dData(combinedData.map(item => {
+                //     const planDate = calculatePlanDate(item, localStorage.getItem('jobDate'), previousPlanDate);
+                //     // Update previousPlanDate for the next iteration
+                //     previousPlanDate = planDate;
+                //     return {
+                //         ...item,
+                //         planDate: planDate
+                //     };
+                // }));
+
+                // Set the fetched data to the state
+                setallo2dData(combinedData.map(item => ({
                     ...item,
                     planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
-                    remarks: ''
-                }));
 
-                setallo2dData(updatedData);
-            } catch (error) {
-                console.log(error);
+                })));
+
+            } else {
+                // If it's not an edit mode, only set the data from o2dtat to the state
+                setallo2dData(responseTat.data.map(item => ({
+                    ...item,
+                    remarks: '',
+                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate'))
+                })));
             }
+        } catch (error) {
+            console.log(error);
         }
-        fetchAllO2Drows();
-    
+    };
 
 
     const formatTAT = (TAT, index) => {
@@ -476,45 +543,6 @@ const O2D = () => {
         return formattedTAT.trim();
     };
 
-
-  
-        const handleAccess = async () => {
-            // Access the username at the specified index in the allData state
-            const username = localStorage.getItem('username');
-            const response = await axios.get('http://localhost:5000/getUseraccessforuser', {
-                params: {
-                    username: username
-                }
-            });
-            setallaccessofuser(response.data);
-
-        };
-     
-   
-
-
-    // const isEditable = (rowItem) => {
-
-    //     if (localStorage.getItem('username') === 'admin') {
-    //         return true;
-    //     } else {
-    //         return allaccessofuser.some((accessrow) => accessrow.value === rowItem.tatimpcolumn);
-    //     }
-
-    // };
-
-
-    // async function matcho2dandunderprocess() {
-    //     try {
-    //         const theurow = underprocessedRows.length > 0 ? underprocessedRows[0] : null;
-    //         const matchedid = allo2dData.find(item => theurow.id === item.id);
-
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
-
     const [underprocessId, setUnderprocessId] = useState(null);
 
     // Function to handle the selection of dropdown items and update the 'Underprocess' row id
@@ -524,192 +552,131 @@ const O2D = () => {
             setHighestUnderprocessId(id);
             const obj = allo2dData.find(item => item.id === id);
             const tatimpcolumn = obj.tatimpcolumn;
+            const planDate = obj.planDate;
             const response = await axios.post('http://localhost:5000/insertUnderprocess', {
                 username: localStorage.getItem('username'),
                 orgname: localStorage.getItem('orgname'),
                 orgcode: localStorage.getItem('orgcode'),
                 jobNumber: localStorage.getItem('jobNumber'),
                 rowname: tatimpcolumn,
-                status: 'Underprocess'
+                status: 'Underprocess',
+                tat: obj.tat,
+                planDate: planDate
             })
+            // const underprocessIndex = allo2dData.findIndex(item => item.id === id);
+            // const updatedData = [...allo2dData];
+            // const underprocessPlanDate = new Date(planDate);
 
+            // for (let i = underprocessIndex + 1; i < allo2dData.length; i++) {
+            //     const row = updatedData[i];
+            //     const planDate = calculatePlanDate(row, underprocessPlanDate);
+            //     updatedData[i].planDate = planDate;
+            // }
+
+            // setallo2dData(updatedData);
         } else {
             setUnderprocessId(null);
+            // const updatedData = allo2dData.map(row => {
+            //     if (row.id === id) {
+            //         return { ...row, status: status };
+            //     }
+            //     return row;
+            // });
+            // setallo2dData(updatedData);
         }
         // Update the status of the selected row based on the dropdown item clicked
-        const updatedData = allo2dData.map(row => {
-            if (row.id === id) {
-                return { ...row, status: status };
-            }
-            return row;
-        });
-        setallo2dData(updatedData);
-    };
-
-    // const isEditable = (rowItem) => {
-    //     if (localStorage.getItem('username') === 'admin') {
-    //         return true;
-    //     } else if (underprocessId != null) {
-    //         if (rowItem.id > underprocessId) {
-    //             return false;
-    //         } else if (rowItem.id < underprocessId) {
-    //             return false;
-    //         } else {
-    //             return true;
-    //         }
-    //     } else {
-    //         return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
-    //     }
-    // };
-
-
-
-    // const isEditable = (rowItem) => {
-    //     if (localStorage.getItem('username') === 'admin') {
-    //         // Admin has full access
-    //         return true;
-    //     } else if (underprocessId != null) {
-    //         // Check if the row belongs to the same organization as the user
-    //         if (rowItem.orgname === localStorage.getItem('orgname') && rowItem.orgcode === localStorage.getItem('orgcode')) {
-    //             // If underprocessed row exists, make rows with IDs greater than underprocessed row's ID read-only
-    //             return rowItem.id <= underprocessId;
-    //         } else {
-    //             // Rows from different organizations are not editable
-    //             return false;
-    //         }
-    //     } else {
-    //         // Check user access for editing based on your logic
-    //         return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
-    //     }
-    // };
-
-
-    const isEditable = (rowItem) => {
-
-        if (localStorage.getItem('username') === 'admin') {
-            return true; // Admin has full access
-        } else if (underprocessedRows && underprocessedRows.status === "Underprocess") {
-            // const id = allo2dData.find(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
-            const underprocessRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
-
-            if (rowItem.tatimpcolumn === underprocessedRows.tatimpcolumn) {
-                // console.log("Going True");
-                return rowItem.id === underprocessRowIndex.id; // Allow editing for the "Underprocess" row
-            } else {
-                // Find the index of the "Underprocess" row
-
-                // Make rows readonly whose indices are greater than the index of the "Underprocess" row
-                return allo2dData.indexOf(rowItem) >= underprocessRowIndex;
-            }
-
-        }
-
-        else {
-            // No "Underprocess" row, check user access for editing based on your logic
-            const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
-            // Return true if the row has access, otherwise return false to make it read-only
-            return !hasAccess;
-        }
+        // const updatedData = allo2dData.map(row => {
+        //     if (row.id === id) {
+        //         return { ...row, status: status };
+        //     }
+        //     return row;
+        // });
+        // setallo2dData(updatedData);
+        // console.log(allo2dData);
+        // fetchO2DData();
     };
 
 
-    // const isEditable = (rowItem) => {
-    //     if (localStorage.getItem('username') === 'admin') {
-    //         return true; // Admin has full access
-    //     } else if (underprocessedRows && underprocessedRows.length > 0) {
 
-    //         const matchedRow = allo2dData.find(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
-    //         if (matchedRow && rowItem.id > matchedRow.id) {
-    //             // Make rows with IDs greater than the matched row's ID read-only
-    //             return false;
-    //         } else {
-    //             return true;
-    //         }
+    const isEditable = (rowItem, index) => {
+        try {
+            if (localStorage.getItem('username') === 'admin') {
+                return false; // Admin has full access
+            }
+            else if (index === 0) {
+                const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
+                // Return true if the user has access, otherwise keep the current row read-only
+                return !hasAccess;
+            }
+            else if(index === 1){
+                const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
+                // Return true if the user has access, otherwise keep the current row read-only
+                return !hasAccess;
+            }
+            else {
 
-
-    //         // Make rows with IDs greater than the highest underprocessed row's ID read-only
-    //     } else if (underprocessedRows && underprocessedRows.length === 0) {
-    //         // Check user access for editing based on your logic
-    //         return allaccessofuser.some(accessrow => accessrow.value === rowItem.tatimpcolumn);
-    //     }
-    // };
-
-
-    
-        const fetchO2DData = async () => {
-            try {
-                // Fetch data from o2dtat
-                const responseTat = await axios.get('http://localhost:5000/getAllO2D', {
-                    params: {
-                        orgname: localStorage.getItem('orgname'),
-                        orgcode: localStorage.getItem('orgcode')
-                    }
-                });
-                // Fetch data from o2dimport only if it's an edit mode
-                if (localStorage.getItem('onEdit') === 'true') {
-                    const responseImport = await axios.get('http://localhost:5000/getO2Dimport', {
-                        params: {
-                            orgname: localStorage.getItem('orgname'),
-                            orgcode: localStorage.getItem('orgcode'),
-                            jobNumber: localStorage.getItem('jobNumber')
-                        }
-                    });
-                    // Combine the data from both sources
-                    const combinedData = responseTat.data.map(tatItem => {
-                        const matchingImportItem = responseImport.data.find(importItem => importItem.tatimpcolumn === tatItem.tatimpcolumn);
-                        return matchingImportItem ? matchingImportItem : tatItem;
-                    });
-                    // Set the fetched data to the state
-                    setallo2dData(combinedData.map(item => ({
-                        ...item,
-                        planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
-                    })));
+                const previousRow = allo2dData[index - 1];
+                const previousRowStatus = previousRow.status;
+                if (previousRowStatus === 'Completed') {
+                    // Previous row is completed, so check for access control
+                    const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
+                    // Return true if the user has access, otherwise keep the current row read-only
+                    return !hasAccess;
                 } else {
-                    // If it's not an edit mode, only set the data from o2dtat to the state
-                    setallo2dData(responseTat.data.map(item => ({
-                        ...item,
-                        planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
-                        remarks: ''
-                    })));
+                    // Previous row is not completed, so make the current row read-only
+                    return true;
                 }
-            } catch (error) {
-                console.log(error);
             }
-        };
+        } catch (error) {
+            console.log(error);
+            return false; // Return false in case of any error
+        }
+    }
 
-        // Call the fetchO2DData function when the component mounts
-        
-   
 
 
 
-    // useEffect(() => {
-    //     if (localStorage.getItem('onEdit') === 'true') {
-    //         const fetchO2DData = async () => {
-    //             try {
-    //                 const response = await axios.get('http://localhost:5000/getO2Dimport', {
-    //                     params: {
-    //                         orgname: localStorage.getItem('orgname'),
-    //                         orgcode: localStorage.getItem('orgcode'),
-    //                         jobNumber: localStorage.getItem('jobNumber')
-    //                     }
-    //                 });
-    //                 console.log(response.data);
-    //                 setallo2dData(response.data); // Set the fetched data to the state
-    //             } catch (error) {
-    //                 console.log(error);
-    //             }
-    //         };
-    //         fetchO2DData();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const isEditable = (rowItem) => {
+    //     if (localStorage.getItem('username') === 'admin') {
+    //         return false; // Admin has full access
+    //     } else if (underprocessedRows && underprocessedRows.status === "Underprocess") {
+    //         // const id = allo2dData.find(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
+    //         const underprocessRowIndex = allo2dData.findIndex(item => item.tatimpcolumn === underprocessedRows.tatimpcolumn);
+    //         const jobdoneby = underprocessedRows.jobdoneby;
+    //         if (localStorage.getItem('username') === jobdoneby) {
+    //             return allo2dData.indexOf(rowItem) !== underprocessRowIndex;
+    //         } else {
+    //             return true;
+    //         }
+
     //     }
-    //     // Call the fetchO2DData function when the component mounts
-    // }, []);
+    //     else {
+    //         // No "Underprocess" row, check user access for editing based on your logic
+    //         const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
+    //         // Return true if the row has access, otherwise return false to make it read-only
+    //         return !hasAccess;
+    //     }
+    // };
 
 
-    let previousPlanDate = null;
+    const [planDate, setplanDate] = useState(null);
 
     const calculatePlanDate = (TAT, jobDate) => {
-        const { days, hours, minutes } = TAT;
+        const { days, hours, minutes, id } = TAT;
         let planDateTime;
 
         // Initialize planDateTime with previousPlanDate if it exists; otherwise, use jobDate
@@ -734,39 +701,24 @@ const O2D = () => {
         if (planDateTime.getDay() === 0) {
             planDateTime.setDate(planDateTime.getDate() + 1); // If Sunday, add one more day (24 hours)
         }
+        let formatteddate = moment(planDateTime).format('YYYY-MM-DDTHH:mm')
 
         // Store the current planDateTime as the previousPlanDate for the next iteration
         previousPlanDate = planDateTime;
+        // const planObject = { id, planDate: moment(planDateTime).format('YYYY-MM-DDTHH:mm') };
+
+        // Retrieve existing plan dates array from localStorage or initialize as empty array
+        // const existingPlanDates = JSON.parse(localStorage.getItem('planDates')) || [];
+
+        // Push the new plan object into the array
+        // existingPlanDates.push(planObject);
+
+        // Store the updated array back into localStorage
+        // localStorage.setItem('planDates', JSON.stringify(existingPlanDates));
 
         return moment(planDateTime).format('YYYY-MM-DDTHH:mm'); // Return the formatted date for the current row
     };
 
-
-    // const calculatePlanDate = (TAT, jobDate) => {
-    //     const { days, hours, minutes } = TAT;
-    //     const planDateTime = new Date(jobDate); // Initialize planDateTime with jobDate
-
-    //     // Add days to the planDateTime
-    //     if (days) {
-    //         planDateTime.setDate(planDateTime.getDate() + parseInt(days));
-    //     }
-
-    //     // Add hours to the planDateTime
-    //     if (hours) {
-    //         planDateTime.setHours(planDateTime.getHours() + parseInt(hours));
-    //     }
-
-    //     // Add minutes to the planDateTime
-    //     if (minutes) {
-    //         planDateTime.setMinutes(planDateTime.getMinutes() + parseInt(minutes));
-    //     }
-    //     if (planDateTime.getDay() === 0) {
-    //         // If Sunday, add one more day (24 hours)
-    //         planDateTime.setDate(planDateTime.getDate() + 1);
-    //     }
-
-    //     return moment(planDateTime).format('YYYY-MM-DDTHH:mm'); // You can format this date as per your requirement
-    // };
 
 
     const handleCheckboxChange = async (index) => {
@@ -780,7 +732,7 @@ const O2D = () => {
                 newData[index].actualdate = '';
                 newData[index].timedelay = '';
                 // Update the state with the modified data
-                setallo2dData(newData);
+                setallo2dData(newData); // Log the updated state
                 localStorage.setItem('tatimpcolumn', newData[index].tatimpcolumn)
                 // Send a request to update the backend
                 await axios.delete(`http://localhost:5000/deletefromO2Dtable`, {
@@ -809,9 +761,9 @@ const O2D = () => {
             // Store the time delay in the format HH:mm
             newData[index].timedelay = `${hours} hr ${minutes} min`;
             // Update the state with the modified data
-            setallo2dData(newData);
-            try {
+            setallo2dData(newData); // Log the updated state
 
+            try {
                 // Send a request to update the backend
                 await axios.post('http://localhost:5000/insertO2D', {
                     planDate: newData[index].planDate,
@@ -825,6 +777,7 @@ const O2D = () => {
                     tatimpcolumn: newData[index].tatimpcolumn,
                     tat: newData[index].tat
                 });
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -899,17 +852,19 @@ const O2D = () => {
 
                                 <CTableDataCell>{item.tatimpcolumn}</CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={item.tat ? item.tat : formatTAT(item, index)} /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={calculatePlanDate(item, localStorage.getItem('jobDate'))} readOnly /></CTableDataCell>
+                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.planDate} readOnly /></CTableDataCell>
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.actualdate ? moment(item.actualdate).format('YYYY-MM-DDTHH:mm') : ''} readOnly /></CTableDataCell>
-                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={isEditable(item)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
+                                <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={isEditable(item, index)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly value={item.timedelay ? item.timedelay : '00:00:00'} /></CTableDataCell>
-                                <CDropdown>
+                                {/* <CDropdown>
                                     <CDropdownToggle className="dropdown-btn" color='secondary' disabled={isEditable(item)}>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
                                     <CDropdownMenu className="text-field-4">
                                         <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Underprocess')}>Underprocess</CDropdownItem>
                                         <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Completed')}>Completed</CDropdownItem>
                                     </CDropdownMenu>
-                                </CDropdown>
+                                    <input readOnly value={item.status==="Completed" ? "Completed" : "Underprocess"} />
+                                </CDropdown> */}
+                                <CTableDataCell>{item.status === "Completed" ? "Completed" : "Underprocess"}</CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
                             </CTableRow>
 
