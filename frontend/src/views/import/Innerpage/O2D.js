@@ -465,7 +465,6 @@ const O2D = () => {
 
     };
 
-    let previousPlanDate = null;
 
     const fetchO2DData = async () => {
         try {
@@ -492,30 +491,18 @@ const O2D = () => {
                     return matchingImportItem ? matchingImportItem : tatItem;
                 });
 
-
-                // setallo2dData(combinedData.map(item => {
-                //     const planDate = calculatePlanDate(item, localStorage.getItem('jobDate'), previousPlanDate);
-                //     // Update previousPlanDate for the next iteration
-                //     previousPlanDate = planDate;
-                //     return {
-                //         ...item,
-                //         planDate: planDate
-                //     };
-                // }));
-
                 // Set the fetched data to the state
-                setallo2dData(combinedData.map(item => ({
+                setallo2dData(combinedData.map((item, index) => ({
                     ...item,
-                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate')),
-
+                    planDate: index === 0 && item.planDate ? item.planDate : calculatePlanDate(item, localStorage.getItem('jobDate'), index),
                 })));
 
             } else {
                 // If it's not an edit mode, only set the data from o2dtat to the state
-                setallo2dData(responseTat.data.map(item => ({
+                setallo2dData(responseTat.data.map((item, index) => ({
                     ...item,
                     remarks: '',
-                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate'))
+                    planDate: calculatePlanDate(item, localStorage.getItem('jobDate'), index)
                 })));
             }
         } catch (error) {
@@ -563,37 +550,12 @@ const O2D = () => {
                 tat: obj.tat,
                 planDate: planDate
             })
-            // const underprocessIndex = allo2dData.findIndex(item => item.id === id);
-            // const updatedData = [...allo2dData];
-            // const underprocessPlanDate = new Date(planDate);
 
-            // for (let i = underprocessIndex + 1; i < allo2dData.length; i++) {
-            //     const row = updatedData[i];
-            //     const planDate = calculatePlanDate(row, underprocessPlanDate);
-            //     updatedData[i].planDate = planDate;
-            // }
-
-            // setallo2dData(updatedData);
         } else {
             setUnderprocessId(null);
-            // const updatedData = allo2dData.map(row => {
-            //     if (row.id === id) {
-            //         return { ...row, status: status };
-            //     }
-            //     return row;
-            // });
-            // setallo2dData(updatedData);
+
         }
-        // Update the status of the selected row based on the dropdown item clicked
-        // const updatedData = allo2dData.map(row => {
-        //     if (row.id === id) {
-        //         return { ...row, status: status };
-        //     }
-        //     return row;
-        // });
-        // setallo2dData(updatedData);
-        // console.log(allo2dData);
-        // fetchO2DData();
+
     };
 
 
@@ -608,7 +570,7 @@ const O2D = () => {
                 // Return true if the user has access, otherwise keep the current row read-only
                 return !hasAccess;
             }
-            else if(index === 1){
+            else if (index === 1) {
                 const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
                 // Return true if the user has access, otherwise keep the current row read-only
                 return !hasAccess;
@@ -618,6 +580,7 @@ const O2D = () => {
                 const previousRow = allo2dData[index - 1];
                 const previousRowStatus = previousRow.status;
                 if (previousRowStatus === 'Completed') {
+                    
                     // Previous row is completed, so check for access control
                     const hasAccess = allaccessofuser.find(accessrow => accessrow.value === rowItem.tatimpcolumn);
                     // Return true if the user has access, otherwise keep the current row read-only
@@ -632,21 +595,6 @@ const O2D = () => {
             return false; // Return false in case of any error
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -675,8 +623,19 @@ const O2D = () => {
 
     const [planDate, setplanDate] = useState(null);
 
-    const calculatePlanDate = (TAT, jobDate) => {
+    let previousPlanDate = null;
+    const calculatePlanDate = (TAT, jobDate, rowIndex) => {
+
+        if (rowIndex === 0) {
+            if (TAT.plandate) {
+                return TAT.plandate;
+            } else {
+                return null;
+            }
+
+        }
         const { days, hours, minutes, id } = TAT;
+
         let planDateTime;
 
         // Initialize planDateTime with previousPlanDate if it exists; otherwise, use jobDate
@@ -701,20 +660,23 @@ const O2D = () => {
         if (planDateTime.getDay() === 0) {
             planDateTime.setDate(planDateTime.getDate() + 1); // If Sunday, add one more day (24 hours)
         }
+
         let formatteddate = moment(planDateTime).format('YYYY-MM-DDTHH:mm')
 
+
+        // if (rowIndex < allo2dData.length - 1 && previousTAT && previousTAT.timedelay && previousTAT.timedelay > 0) {
+        //     const nextRowPlanDate = new Date(allo2dData[rowIndex + 1].planDate);
+        //     const timeDifference = planDateTime - nextRowPlanDate;
+
+        //     if (timeDifference > 0) {
+        //         nextRowPlanDate.setTime(nextRowPlanDate.getTime() + timeDifference);
+        //         allo2dData[rowIndex + 1].planDate = nextRowPlanDate.toISOString().slice(0, 16);
+        //         // Update state with the modified planDate for the next row
+        //         setallo2dData([...allo2dData]);
+        //     }
+        // }
         // Store the current planDateTime as the previousPlanDate for the next iteration
         previousPlanDate = planDateTime;
-        // const planObject = { id, planDate: moment(planDateTime).format('YYYY-MM-DDTHH:mm') };
-
-        // Retrieve existing plan dates array from localStorage or initialize as empty array
-        // const existingPlanDates = JSON.parse(localStorage.getItem('planDates')) || [];
-
-        // Push the new plan object into the array
-        // existingPlanDates.push(planObject);
-
-        // Store the updated array back into localStorage
-        // localStorage.setItem('planDates', JSON.stringify(existingPlanDates));
 
         return moment(planDateTime).format('YYYY-MM-DDTHH:mm'); // Return the formatted date for the current row
     };
@@ -755,17 +717,23 @@ const O2D = () => {
             const planDate = new Date(newData[index].planDate);
             // Calculate the difference in milliseconds
             const timeDifference = actualDate - planDate;
+
             // Convert milliseconds to hours, minutes, and seconds
-            const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const hours = Math.floor(Math.abs(timeDifference) / (1000 * 60 * 60));
+            const minutes = Math.floor((Math.abs(timeDifference) % (1000 * 60 * 60)) / (1000 * 60));
             // Store the time delay in the format HH:mm
             newData[index].timedelay = `${hours} hr ${minutes} min`;
             // Update the state with the modified data
-            setallo2dData(newData); // Log the updated state
-
+            // Log the updated state
+            if (index < newData.length - 1 && timeDifference > 0) {
+                const nextRowPlanDate = new Date(newData[index + 1].planDate);
+                nextRowPlanDate.setTime(nextRowPlanDate.getTime() + timeDifference);
+                newData[index + 1].planDate = nextRowPlanDate.toISOString().slice(0, 16);
+            }
+            setallo2dData(newData);
             try {
                 // Send a request to update the backend
-                await axios.post('http://localhost:5000/insertO2D', {
+                const responseofinsert = await axios.post('http://localhost:5000/insertO2D', {
                     planDate: newData[index].planDate,
                     actualDate: newData[index].actualdate,
                     timedelay: newData[index].timedelay,
@@ -777,7 +745,7 @@ const O2D = () => {
                     tatimpcolumn: newData[index].tatimpcolumn,
                     tat: newData[index].tat
                 });
-
+                console.log(responseofinsert);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -825,6 +793,23 @@ const O2D = () => {
         fetchO2DData();
     }, [])
 
+    const [plannedDate, setplannedDate] = useState(null);
+
+    function getColor(timeDelay) {
+        let color;
+        let sign;
+
+        if (timeDelay < 0) {
+            color = 'green'; // Early completion color
+
+        } else {
+            color = 'red'; // Late completion color
+
+        }
+
+        // Return an object containing the color and the sign
+        return color;
+    }
 
 
     return (
@@ -852,7 +837,51 @@ const O2D = () => {
 
                                 <CTableDataCell>{item.tatimpcolumn}</CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={item.tat ? item.tat : formatTAT(item, index)} /></CTableDataCell>
-                                <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.planDate} readOnly /></CTableDataCell>
+                                {/* <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.planDate} readOnly /></CTableDataCell> */}
+                                {/* <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={index === 0 ? planDate : item.planDate} readOnly={index!==0} onChange={(e) => {
+                                    if (index === 0) {
+                                        setplanDate(e.target.value);
+                                    }
+                                }} /></CTableDataCell> */}
+
+
+                                <CTableDataCell>
+                                    <input
+                                        type="datetime-local"
+                                        placeholder=""
+                                        className='o2d-field-4'
+                                        value={(index === 0 && isEditable(item, index)) ? item.planDate : item.planDate}
+                                        readOnly={((index === 0 && isEditable(item, index)) || index !== 0)}
+                                        onChange={async (e) => {
+                                            const newValue = e.target.value;
+                                            if (index === 0 && isEditable(item, index)) {
+                                                setplannedDate(newValue); // Set the planDate for the first row if editable
+                                            } else {
+                                                const updatedData = [...allo2dData]; // Create a copy of the allo2dData array
+                                                updatedData[index].planDate = newValue; // Update the planDate for the row
+                                                setallo2dData(updatedData); // Update the state with the modified data
+
+                                                if (newValue && newValue.length === 16) {
+                                                    try {
+                                                        // Make the axios POST request to insert planDate and other values into the table
+                                                        const sendingETA = await axios.post('http://localhost:5000/insertPlanDateETA', {
+                                                            orgname: localStorage.getItem('orgname'),
+                                                            orgcode: localStorage.getItem('orgcode'),
+                                                            jobNumber: localStorage.getItem('jobNumber'),
+                                                            jobdoneby: localStorage.getItem('username'),
+                                                            tatdayhrmin: '00:00:00',
+                                                            planDate: newValue,
+                                                            tatimpcolumn: updatedData[index].tatimpcolumn
+                                                        });
+                                                    } catch (error) {
+                                                        console.error('Error:', error);
+                                                    }
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </CTableDataCell>
+
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.actualdate ? moment(item.actualdate).format('YYYY-MM-DDTHH:mm') : ''} readOnly /></CTableDataCell>
                                 <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={isEditable(item, index)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly value={item.timedelay ? item.timedelay : '00:00:00'} /></CTableDataCell>
@@ -865,7 +894,7 @@ const O2D = () => {
                                     <input readOnly value={item.status==="Completed" ? "Completed" : "Underprocess"} />
                                 </CDropdown> */}
                                 <CTableDataCell>{item.status === "Completed" ? "Completed" : "Underprocess"}</CTableDataCell>
-                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={isEditable(item)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
+                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={isEditable(item, index)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
                             </CTableRow>
 
                         ))}

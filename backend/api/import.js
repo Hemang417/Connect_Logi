@@ -562,13 +562,15 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
     try {
       
         const tempstatus = "Underprocess"
-        const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND status = ? AND jobnumber = ?`, [orgname, orgcode, tempstatus, jobnumber]);
+        const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
         if (underrow.length > 0) {
-            const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ?, tat = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
-                [actualDate, timedelay, status, tat, tatimpcolumn, orgname, orgcode, jobnumber]);
+            const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
+                [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
+            return row;
         } else {
             const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, actualdate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, actualDate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat]);
+            return row;
         }
 
     } catch (error) {
@@ -821,5 +823,28 @@ export const GetUnderprocess = async (orgname, orgcode, status, jobNumber) => {
         return row;
     } catch (error) {
         console.log(error);
+    }
+}
+
+
+
+export const putETA = async (orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn) => {
+    try {
+        // Execute the SELECT query and await the result
+        const [row] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND jobdoneby = ? AND tatimpcolumn = ?`, 
+            [orgname, orgcode, jobNumber, jobdoneby, tatimpcolumn]);
+
+        // Check if the row exists
+        if (row && row.length > 0) {
+            // If the row exists, execute the UPDATE query
+            const [updatedRow] = await connection.execute(`UPDATE o2dimport SET plandate = ? WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND jobdoneby = ? AND tatimpcolumn = ?`, 
+                [planDate, orgname, orgcode, jobNumber, jobdoneby, tatimpcolumn]);
+        } else {
+            // If the row does not exist, execute the INSERT query
+            const [insertedRow] = await connection.execute(`INSERT INTO o2dimport (jobdoneby, jobnumber, plandate, tat, tatimpcolumn, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+                [jobdoneby, jobNumber, planDate, tatdayhrmin, tatimpcolumn, orgname, orgcode]);
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
 }

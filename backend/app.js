@@ -8,7 +8,7 @@ import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
     fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
-    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, GetUnderprocess
+    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, GetUnderprocess, putETA
 } from './api/import.js';
 
 const app = express();
@@ -638,6 +638,7 @@ app.post('/insertO2D', async (req, res) => {
     try {
         const { planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat } = req.body;
         const storedInO2D = await storeinO2Dtable(planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat);
+        return storedInO2D;
     } catch (error) {
         console.log(error);
     }
@@ -846,7 +847,14 @@ app.get('/findunderprocess', async (req, res) => {
 })
 
 
-
+app.post('/insertPlanDateETA', async (req, res) => {
+    try {
+        const {orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn} = req.body;
+        const storedETAdate = putETA(orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 
