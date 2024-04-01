@@ -8,7 +8,8 @@ import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
     fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
-    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, GetUnderprocess, putETA
+    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, 
+    GetUnderprocess, putETA, fetchPlanDateETA
 } from './api/import.js';
 
 const app = express();
@@ -644,6 +645,16 @@ app.post('/insertO2D', async (req, res) => {
     }
 });
 
+// app.post('/updateNextRowPlanDate', async (req, res) => {
+//     try {
+//         const {planDate, tatimpcolumn, orgname, orgcode, jobnumber, jobdoneby, tat, status, actualDate, timedelay} = req.body;
+//         const storednextRow = await storeNextRow(planDate, tatimpcolumn, orgname, orgcode, jobnumber, jobdoneby, tat, status, actualDate, timedelay);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
+
+
 
 app.delete('/deletefromO2Dtable', async (req, res) => {
     try {
@@ -856,7 +867,15 @@ app.post('/insertPlanDateETA', async (req, res) => {
     }
 })
 
-
+app.get('/pullPlanDateETA', async(req, res) => {
+    try {
+        const {orgname, orgcode, jobNumber, tatimpcolumn} = req.query;
+        const fetchedETA = await fetchPlanDateETA(orgname, orgcode, jobNumber, tatimpcolumn);
+        res.send(fetchedETA);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 app.listen(PORT, () => {

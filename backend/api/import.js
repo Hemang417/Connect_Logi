@@ -560,10 +560,9 @@ export const fetchJobData = async (jobnumber) => {
 
 export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat) => {
     try {
+        const [existingRow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
       
-        const tempstatus = "Underprocess"
-        const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
-        if (underrow.length > 0) {
+        if (existingRow.length > 0) {
             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
             return row;
@@ -577,6 +576,69 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
         console.log(error);
     }
 }
+
+// export const storeNextRow = async (planDate, tatimpcolumn, orgname, orgcode, jobnumber, jobdoneby, tat, status, actualDate, timedelay) => {
+//     try {
+//         const [nextRow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
+        
+//         if (nextRow.length > 0) {
+//             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
+//                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
+//             return row;
+//         } else {
+//             const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, orgname, orgcode, jobnumber, jobdoneby, tat) 
+//             VALUES (?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, orgname, orgcode, jobnumber, jobdoneby, tat]);
+//             return row;
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+
+
+
+// export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat) => {
+//     try {
+      
+//         const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
+//         if (underrow.length > 0) {
+//             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
+//                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
+//             return row;
+//         } else {
+//             const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, actualdate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat) 
+//             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, actualDate, timedelay, orgname, orgcode, status, jobnumber, jobdoneby, tat]);
+//             return row;
+//         }
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+
+
+// export const storeNextRow = async (planDate, tatimpcolumn, orgname, orgcode, jobnumber, jobdoneby, tat, status, actualDate, timedelay) => {
+//     try {
+//         const [nextRow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
+        
+//         if (nextRow.length > 0) {
+//             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
+//                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
+//             return row;
+//         } else {
+//             const [row] = await connection.execute(`INSERT INTO o2dimport (tatimpcolumn, plandate, orgname, orgcode, jobnumber, jobdoneby, tat) 
+//             VALUES (?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, planDate, orgname, orgcode, jobnumber, jobdoneby, tat]);
+//             return row;
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
 
 
 export const deletetheO2DtoNull = async (tatimpcolumn, jobNumber, orgname, orgcode) => {
@@ -846,5 +908,16 @@ export const putETA = async (orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin
         }
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+
+export const fetchPlanDateETA = async (orgname, orgcode, jobNumber, tatimpcolumn) => {
+    try {
+        const [row] = await connection.execute(`SELECT plandate FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ?`, [orgname, orgcode, jobNumber, tatimpcolumn]);
+        console.log(row);
+        return row;
+    } catch (error) {
+        console.log(error);
     }
 }
