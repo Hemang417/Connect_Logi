@@ -50,7 +50,8 @@ const O2DTAT = () => {
         typeofO2D: '',
         days: '',
         hours: '',
-        minutes: ''
+        minutes: '',
+        dstatus: ''
     })
 
     const [allO2Ddata, setallO2Ddata] = useState([]);
@@ -87,6 +88,7 @@ const O2DTAT = () => {
                 days: typeofO2DData.days,
                 hours: typeofO2DData.hours,
                 minutes: typeofO2DData.minutes,
+                dstatus: typeofO2DData.dstatus,
                 orgname: localStorage.getItem('orgname'),
                 orgcode: localStorage.getItem('orgcode')
             });
@@ -98,7 +100,8 @@ const O2DTAT = () => {
                     typeofO2D: '',
                     days: '',
                     hours: '',
-                    minutes: ''
+                    minutes: '',
+                    dstatus: ''
                 })
                 toast.success('Type of O2D added successfully');
             }
@@ -115,6 +118,170 @@ const O2DTAT = () => {
     useEffect(() => {
         fetchAllO2D();
     }, [])
+
+
+
+
+
+    const handleEdit = (item) => {
+        setEditData(item);
+        settypeofO2DData({
+            typeofO2D: item.tatimpcolumn,
+            days: item.days,
+            hours: item.hours,
+            minutes: item.minutes,
+            dstatus: item.dstatus
+        });
+        setVisible(true);
+    }
+
+
+
+    async function handleUpdate() {
+        try {
+            const response = await axios.put('http://localhost:5000/updateO2D', {
+                tatimpcolumn: typeofO2DData.typeofO2D,
+                days: typeofO2DData.days,
+                hours: typeofO2DData.hours,
+                minutes: typeofO2DData.minutes,
+                dstatus: typeofO2DData.dstatus,
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode'),
+                id: editData.id // Pass the ID of the item being updated
+            });
+            // Close the modal
+            if (response.status === 200) {
+                fetchAllO2D();
+                setVisible(false);
+                settypeofO2DData({
+                    typeofO2D: '',
+                    days: '',
+                    hours: '',
+                    minutes: '',
+                    dstatus: ''
+                });
+                setEditData(null); // Reset edit data after successful operation
+                toast.success('Type of O2D updated successfully');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
+
+    async function handleDelete(id) {
+        try {
+            const deletedO2Drow = await axios.delete('http://localhost:5000/deleteO2D', {
+                data: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    deletionrowid: id
+                }
+            });
+            fetchAllO2D();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
+
+    return (
+        <div>
+            <CTable hover responsive striped className=''>
+                <CTableHead>
+                    <CTableRow color='dark' >
+                        {/* <CTableHeaderCell scope="col"></CTableHeaderCell> */}
+                        <CTableHeaderCell scope="col">Document</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
+                        <CTableHeaderCell scope="col"></CTableHeaderCell>
+
+                    </CTableRow>
+                </CTableHead>
+
+
+                <CTableBody>
+                    {allO2Ddata.length === 0 ? (
+                        <CTableRow>
+                            <CTableDataCell colSpan={3}>No O2D data</CTableDataCell>
+                        </CTableRow>
+                    ) : (
+                        allO2Ddata.map((item, index) => {
+                            return (
+                                <CTableRow key={index}>
+                                    <CTableDataCell scope="row">{item.tatimpcolumn}</CTableDataCell>
+                                    <CTableDataCell>{item.days} days {item.hours} hours {item.minutes} minutes</CTableDataCell>
+                                    <CTableDataCell>
+                                        <Link onClick={() => handleEdit(item)}>Edit</Link>
+                                    </CTableDataCell>
+                                    <CTableDataCell>
+                                        <Link onClick={() => handleDelete(item.id)}>Delete</Link>
+                                    </CTableDataCell>
+                                </CTableRow>
+                            )
+                        })
+                    )}
+                </CTableBody>
+            
+
+            </CTable>
+            <div className='search-button'>
+                <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); }}>
+                    +
+                </CButton>
+            </div>
+            <CModal
+                visible={visible}
+                onClose={() => { setVisible(false) }}
+                aria-labelledby="LiveDemoExampleLabel"
+            >
+                <CModalHeader onClose={() => setVisible(false)}>
+                    <CModalTitle id="LiveDemoExampleLabel">Add TAT</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <div>
+                        <input type="text" name='typeofO2D' placeholder="Type of O2D" className='text-field-1' value={typeofO2DData.typeofO2D} onChange={handleChange} />
+                        <input type="text" name='days' placeholder="Days" className='text-field-1' value={typeofO2DData.days} onChange={handleChange} />
+                        <input type="text" name='hours' placeholder="Hours" className='text-field-1' value={typeofO2DData.hours} onChange={handleChange} />
+                        <input type="text" name='minutes' placeholder="Minutes" className='text-field-1' value={typeofO2DData.minutes} onChange={handleChange} />
+                        {/* <select 
+                            value={typeofO2DData.dstatus}
+                            name="dstatus"
+                            onChange={handleChange}
+                        >
+                        <option>Select Status</option>
+                        <option value="Underprocess">Underprocess & Completed</option>
+                        </select> */}
+
+                    </div>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={() => setVisible(false)}>
+                        Close
+                    </CButton>
+
+                    {editData ?
+                        <CButton color="secondary" style={{ backgroundColor: 'blue', color: 'white' }} onClick={handleUpdate}>Update O2D</CButton>
+                        :
+                        <CButton color="secondary" style={{ backgroundColor: 'blue', color: 'white' }} onClick={storeO2D}>Add O2D</CButton>
+                    }
+                </CModalFooter>
+            </CModal>
+        </div>
+    )
+}
+
+export default O2DTAT;
+
+
+
+
+
+
+
 
 
 
@@ -339,165 +506,3 @@ const O2DTAT = () => {
     //         </div>
     //     );
     // };
-
-
-
-
-    const handleEdit = (item) => {
-        setEditData(item);
-        settypeofO2DData({
-            typeofO2D: item.tatimpcolumn,
-            days: item.days,
-            hours: item.hours,
-            minutes: item.minutes
-        });
-        setVisible(true);
-    }
-
-
-
-    async function handleUpdate() {
-        try {
-            const response = await axios.put('http://localhost:5000/updateO2D', {
-                tatimpcolumn: typeofO2DData.typeofO2D,
-                days: typeofO2DData.days,
-                hours: typeofO2DData.hours,
-                minutes: typeofO2DData.minutes,
-                orgname: localStorage.getItem('orgname'),
-                orgcode: localStorage.getItem('orgcode'),
-                id: editData.id // Pass the ID of the item being updated
-            });
-            // Close the modal
-            if (response.status === 200) {
-                fetchAllO2D();
-                setVisible(false);
-                settypeofO2DData({
-                    typeofO2D: '',
-                    days: '',
-                    hours: '',
-                    minutes: ''
-                });
-                setEditData(null); // Reset edit data after successful operation
-                toast.success('Type of O2D updated successfully');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    async function handleDelete(id) {
-        try {
-            const deletedO2Drow = await axios.delete('http://localhost:5000/deleteO2D', {
-                data: {
-                    orgname: localStorage.getItem('orgname'),
-                    orgcode: localStorage.getItem('orgcode'),
-                    deletionrowid: id
-                }
-            });
-            fetchAllO2D();
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
-
-
-    return (
-        <div>
-            <CTable hover responsive striped className=''>
-                <CTableHead>
-                    <CTableRow color='dark' >
-                        {/* <CTableHeaderCell scope="col"></CTableHeaderCell> */}
-                        <CTableHeaderCell scope="col">Document</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
-                        <CTableHeaderCell scope="col"></CTableHeaderCell>
-
-                    </CTableRow>
-                </CTableHead>
-
-
-                <CTableBody>
-                    {allO2Ddata.length === 0 ? (
-                        <CTableRow>
-                            <CTableDataCell colSpan={3}>No O2D data</CTableDataCell>
-                        </CTableRow>
-                    ) : (
-                        allO2Ddata.map((item, index) => {
-                            return (
-                                <CTableRow key={index}>
-                                    <CTableDataCell scope="row">{item.tatimpcolumn}</CTableDataCell>
-                                    <CTableDataCell>{item.days} days {item.hours} hours {item.minutes} minutes</CTableDataCell>
-                                    <CTableDataCell>
-                                        <Link onClick={() => handleEdit(item)}>Edit</Link>
-                                    </CTableDataCell>
-                                    <CTableDataCell>
-                                        <Link onClick={() => handleDelete(item.id)}>Delete</Link>
-                                    </CTableDataCell>
-                                </CTableRow>
-                            )
-                        })
-                    )}
-                </CTableBody>
-
-
-            </CTable>
-            <div className='search-button'>
-                <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); }}>
-                    +
-                </CButton>
-            </div>
-            <CModal
-                visible={visible}
-                onClose={() => { setVisible(false) }}
-                aria-labelledby="LiveDemoExampleLabel"
-            >
-                <CModalHeader onClose={() => setVisible(false)}>
-                    <CModalTitle id="LiveDemoExampleLabel">Add TAT</CModalTitle>
-                </CModalHeader>
-                <CModalBody>
-                    <div>
-                        <input type="text" name='typeofO2D' placeholder="Type of O2D" className='text-field-1' value={typeofO2DData.typeofO2D} onChange={handleChange} />
-                        <input type="text" name='days' placeholder="Days" className='text-field-1' value={typeofO2DData.days} onChange={handleChange} />
-                        <input type="text" name='hours' placeholder="Hours" className='text-field-1' value={typeofO2DData.hours} onChange={handleChange} />
-                        <input type="text" name='minutes' placeholder="Minutes" className='text-field-1' value={typeofO2DData.minutes} onChange={handleChange} />
-                    </div>
-                </CModalBody>
-                <CModalFooter>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>
-                        Close
-                    </CButton>
-
-                    {editData ?
-                        <CButton color="secondary" style={{ backgroundColor: 'blue', color: 'white' }} onClick={handleUpdate}>Update O2D</CButton>
-                        :
-                        <CButton color="secondary" style={{ backgroundColor: 'blue', color: 'white' }} onClick={storeO2D}>Add O2D</CButton>
-                    }
-
-                    {/* {
-                        editVisible ?
-                            <CButton color="primary" onClick={handleUpdate}>Update</CButton> :
-                            <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
-
-                    } */}
-                    {/* <CButton color="primary" onClick={handleSubmit}>Add New</CButton> */}
-
-
-
-                </CModalFooter>
-            </CModal>
-        </div>
-    )
-}
-
-export default O2DTAT;

@@ -1,5 +1,8 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
+import cron from 'node-cron';
+import {CompletedJobsbasedonPreviousDataofFunctions} from './mail.js';
+
 
 // const client = twilio(accountSid, authToken);
 const connection = await connectMySQL();
@@ -138,11 +141,11 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         );
 
 
-        const [emailofbranch] = await connection.execute(`SELECT email FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
-        const [emailofcontacts] = await connection.execute(`SELECT email from contacts WHERE orgname = ? AND orgcode = ? AND branchname = ? AND clientname = ? AND bid = ?`, [orgname, orgcode, selectedBranch, importerName, id])
+        // const [emailofbranch] = await connection.execute(`SELECT email FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);
+        // const [emailofcontacts] = await connection.execute(`SELECT email from contacts WHERE orgname = ? AND orgcode = ? AND branchname = ? AND clientname = ? AND bid = ?`, [orgname, orgcode, selectedBranch, importerName, id])
 
 
-        const allEmails = [...emailofbranch.map(item => item.email), ...emailofcontacts.map(item => item.email)];
+        // const allEmails = [...emailofbranch.map(item => item.email), ...emailofcontacts.map(item => item.email)];
 
         // Loop through the combined email addresses and send emails
         // allEmails.forEach(email => {
@@ -190,6 +193,32 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         throw error; // Rethrow the error or handle it appropriately
     }
 };
+
+
+
+
+
+cron.schedule('53 21 * * *', async () => {
+    try {
+        const data = CompletedJobsbasedonPreviousDataofFunctions();
+        // Your email sending logic here
+        const mailOptions = {
+            from: 'shreyashpingle752@gmail.com',
+            to: 'shreypingle23@gmail.com',
+            subject: 'Daily Report',
+            text: `${data}`
+        };
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully.');
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+});
+
+
+
+
+
 
 
 
@@ -405,11 +434,10 @@ export const getClient = async (orgcode) => {
 
 // TAT O2D
 
-export const storeO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgcode) => {
+export const storeO2D = async (tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode) => {
     try {
-   
         const [rows] = await connection.execute(`INSERT INTO o2dtat 
-        (tatimpcolumn, days, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`, [tatimpcolumn, days, hours, minutes, orgname, orgcode]);
+        (tatimpcolumn, days, hours, minutes, orgname, orgcode, dstatus) VALUES (?, ?, ?, ?, ?, ?, ?)`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, dstatus]);
         return rows;
     } catch (error) {
         console.log(error);
@@ -419,7 +447,7 @@ export const storeO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgc
 export const get02ddata = async (orgname, orgcode) => {
     try {
         
-        const [rows] = await connection.execute(`SELECT tatimpcolumn, id, days, hours, minutes FROM o2dtat WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const [rows] = await connection.execute(`SELECT tatimpcolumn, id, days, hours, minutes, dstatus FROM o2dtat WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
         console.log(error);
@@ -438,10 +466,10 @@ export const deleteO2D = async (orgname, orgcode, deletionrowid) => {
 }
 
 
-export const updateO2D = async (tatimpcolumn, days, hours, minutes, orgname, orgcode, id) => {
+export const updateO2D = async (tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode, id) => {
     try {
    
-        const [row] = await connection.execute(`UPDATE o2dtat SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, orgname, orgcode, id]);
+        const [row] = await connection.execute(`UPDATE o2dtat SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ?, dstatus = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode, id]);
         return row;
     } catch (error) {
         console.log(error);
@@ -807,21 +835,6 @@ export const deleteDND = async (orgname, orgcode, deletionrowid) => {
         console.log(error);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 export const getDispatch = async (orgname, orgcode) => {

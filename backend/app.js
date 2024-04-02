@@ -528,8 +528,8 @@ app.delete('/deleteBranch', async (req, res) => {
 
 app.post('/storeO2D', async (req, res) => {
     try {
-        const { tatimpcolumn, days, hours, minutes, orgname, orgcode } = req.body;
-        const storedData = await storeO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode);
+        const { tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode } = req.body;
+        const storedData = await storeO2D(tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode);
         res.status(200).json(storedData);
     } catch (error) {
         console.log(error);
@@ -562,8 +562,8 @@ app.delete('/deleteO2D', async (req, res) => {
 
 app.put('/updateO2D', async (req, res) => {
     try {
-        const { tatimpcolumn, days, hours, minutes, orgname, orgcode, id } = req.body;
-        const updatedO2DDATA = await updateO2D(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
+        const { tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode, id } = req.body;
+        const updatedO2DDATA = await updateO2D(tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode, id);
         res.status(200).json(updatedO2DDATA);
     } catch (error) {
         console.log(error);

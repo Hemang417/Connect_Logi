@@ -830,13 +830,11 @@ const O2D = () => {
         return color;
     }
 
-
     return (
         <div>
             <div className='left-div-table'>
                 <CTable striped responsive hover>
                     <CTableHead className='c-table-head'>
-
                         <CTableRow color='dark'>
                             <CTableHeaderCell scope="col">Type of O2D</CTableHeaderCell>
                             <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
@@ -847,23 +845,12 @@ const O2D = () => {
                             <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Remarks</CTableHeaderCell>
                         </CTableRow>
-
                     </CTableHead>
                     <CTableBody>
                         {allo2dData && allo2dData.map((item, index) => (
-
                             <CTableRow key={index}>
-
                                 <CTableDataCell>{item.tatimpcolumn}</CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="00d:00h:00m" className='o2d-field-5' readOnly value={item.tat ? item.tat : formatTAT(item, index)} /></CTableDataCell>
-                                {/* <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.planDate} readOnly /></CTableDataCell> */}
-                                {/* <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={index === 0 ? planDate : item.planDate} readOnly={index!==0} onChange={(e) => {
-                                    if (index === 0) {
-                                        setplanDate(e.target.value);
-                                    }
-                                }} /></CTableDataCell> */}
-
-
                                 <CTableDataCell>
                                     <input
                                         type="datetime-local"
@@ -875,13 +862,11 @@ const O2D = () => {
                                             const newValue = e.target.value;
                                             setetaplanneddate(e.target.value);
                                             if (index === 0 && isEditable(item, index)) {
-
                                                 setplannedDate(newValue); // Set the planDate for the first row if editable
                                             } else {
                                                 const updatedData = [...allo2dData]; // Create a copy of the allo2dData array
                                                 updatedData[index].planDate = newValue; // Update the planDate for the row
                                                 setallo2dData(updatedData); // Update the state with the modified data
-
                                                 if (newValue && newValue.length === 16) {
                                                     try {
                                                         // Make the axios POST request to insert planDate and other values into the table
@@ -894,30 +879,20 @@ const O2D = () => {
                                                             planDate: newValue,
                                                             tatimpcolumn: updatedData[index].tatimpcolumn
                                                         });
-
                                                     } catch (error) {
                                                         console.error('Error:', error);
                                                     }
                                                 }
-
                                             }
                                         }}
                                     />
                                 </CTableDataCell>
-
                                 <CTableDataCell><input type="datetime-local" placeholder="" className='o2d-field-4' value={item.actualdate ? moment(item.actualdate).format('YYYY-MM-DDTHH:mm') : ''} readOnly /></CTableDataCell>
                                 <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' disabled={isEditable(item, index)} onChange={() => handleCheckboxChange(index)} checked={item.status === 'Completed'} /></CTableDataCell>
                                 <CTableDataCell><input type="text" placeholder="" className='o2d-field-4' readOnly value={item.timedelay ? item.timedelay : '00:00:00'} /></CTableDataCell>
-                                {/* <CDropdown>
-                                    <CDropdownToggle className="dropdown-btn" color='secondary' disabled={isEditable(item)}>{item.status ? item.status : 'Select Query'}</CDropdownToggle>
-                                    <CDropdownMenu className="text-field-4">
-                                        <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Underprocess')}>Underprocess</CDropdownItem>
-                                        <CDropdownItem onClick={() => handleDropdownItemClick(item.id, 'Completed')}>Completed</CDropdownItem>
-                                    </CDropdownMenu>
-                                    <input readOnly value={item.status==="Completed" ? "Completed" : "Underprocess"} />
-                                </CDropdown> */}
-                                {/* <CTableDataCell>{item.status === "Completed" ? "Completed" : "Pending"}</CTableDataCell> */}
-                                <CTableDataCell>
+                                
+
+                            <CTableDataCell>
                                     {index === 8 ? (
                                         <select
                                         value={item.status}
@@ -936,13 +911,15 @@ const O2D = () => {
                                     )}
                                 </CTableDataCell>
 
-                                <CTableDataCell><input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={isEditable(item, index)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} /></CTableDataCell>
-                            </CTableRow>
 
+
+                                <CTableDataCell>
+                                    <input type="text" placeholder="remarks of the process" className='remarks-field' readOnly={isEditable(item, index)} onChange={(e) => handleRemarksChange(e, index)} value={item.remarks} />
+                                </CTableDataCell>
+                            </CTableRow>
                         ))}
                     </CTableBody>
                 </CTable>
-
             </div>
             <div className='search-button'>
                 <CButton color="primary" type="submit" onClick={storeRemark}>
