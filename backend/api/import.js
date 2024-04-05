@@ -1,7 +1,7 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 import cron from 'node-cron';
-import {getJobsCompletedRow} from './mail.js';
+import { getJobsCompletedRow } from './mail.js';
 
 
 // const client = twilio(accountSid, authToken);
@@ -19,40 +19,81 @@ let transporter = nodemailer.createTransport({
 
 
 
-let incrementNumber = 0;
 export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond) => {
     try {
-        
+
         const firstletter = transportMode.charAt(0).toUpperCase();
 
+        let currentDate = new Date();
+        // Get the current month (zero-based index)
+        let currentMonth = currentDate.getMonth();
+        // Get the current year
+        let currentYear = currentDate.getFullYear();
 
-        let currentYear = new Date().getFullYear();
-        let currentMonth = new Date().getMonth() - 1; // April (zero-based index)
+        let startYearPart, endYearPart;
+        let count;
 
-        // Determine the year range based on the current month
-        let startYear = currentMonth >= 3 ? currentYear : currentYear - 1;
-        let endYear = startYear + 1;
-
-        // Extract the last two digits of the years
-        let startYearPart = startYear.toString().slice(-2);
-        let endYearPart = endYear.toString().slice(-2);
-
-        // Construct the year range
+        if (currentMonth >= 3) {
+            // April or later, use the current year as the start year
+            startYearPart = currentYear.toString().slice(-2);
+            endYearPart = (currentYear + 1).toString().slice(-2);
+            // if(currentMonth === 3){
+            //     count = 1;
+            // }
+        }
+        // else {
+        //     // Construct the year range for the previous financial year
+        //     startYearPart = (currentYear - 1).toString().slice(-2);
+        //     endYearPart = currentYear.toString().slice(-2);
+        // }
         let yearPart = `${startYearPart}-${endYearPart}`;
+        const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation ORDER BY id DESC LIMIT 1');
+
+
+        if (!lastYearRow || lastYearRow.length === 0) {
+            count = 1; // Initialize count to 1 if table is empty
+        } else {
+            if (currentMonth === 3) {
+                if (lastYearRow[0].jobnumber.slice(-5) !== yearPart) {
+                    count = 1; // Reset count to 1 for new financial year
+                } else {
+                    const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+                    count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+                }
+            } else {
+                const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+                count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+            }
+        }
+
+
+
+        // if (currentMonth === 3) {
+        //     if (lastYearRow && lastYearRow[0].jobnumber.slice(-5) !== yearPart) {
+        //         count = 1;
+        //     } else {
+        //         const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+        //         count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+        //     }
+        // } else {
+        //     const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+        //     count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+        // }
+        // const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+        // count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+
 
         let jobNumber = `${firstletter}/I/${yearPart}`
 
-
         const [result] = await connection.execute(`INSERT INTO impjobcreation 
-        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus, benumber, shippinglinebond)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond]);
+        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus, benumber, shippinglinebond, count)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond, count]);
 
+        // const insertedId = result.insertId;
         const insertedId = result.insertId;
-
-        // Retrieve the inserted row
         const [row] = await connection.execute('SELECT * FROM impjobcreation WHERE id = ?', [insertedId]);
-
+        
         return row;
 
     } catch (error) {
@@ -62,27 +103,45 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 
 
 
-export const updateJobNumber = async (id, transportMode) => {
+export const updateJobNumber = async (id, transportMode, count) => {
     try {
-       
+
         const firstletter = transportMode.charAt(0).toUpperCase();
 
+        let currentDate = new Date();
+        // Get the current month (zero-based index)
+        let currentMonth = currentDate.getMonth();
+        // Get the current year
+        let currentYear = currentDate.getFullYear();
 
-        let currentYear = new Date().getFullYear();
-        let currentMonth = new Date().getMonth() - 1; // April (zero-based index)
+        let startYearPart, endYearPart;
 
-        // Determine the year range based on the current month
-        let startYear = currentMonth >= 3 ? currentYear : currentYear - 1;
-        let endYear = startYear + 1;
-
-        // Extract the last two digits of the years
-        let startYearPart = startYear.toString().slice(-2);
-        let endYearPart = endYear.toString().slice(-2);
+        // Check if the current month is April or later
+        if (currentMonth >= 3) {
+            // April or later, use the current year as the start year
+            startYearPart = currentYear.toString().slice(-2);
+            endYearPart = (currentYear + 1).toString().slice(-2);
+        }
 
         // Construct the year range
         let yearPart = `${startYearPart}-${endYearPart}`;
 
-        let jobNumberlatest = `${firstletter}/I/${id}/${yearPart}`
+
+        // let currentYear = new Date().getFullYear();
+        // let currentMonth = new Date().getMonth() - 1; // April (zero-based index)
+
+        // // Determine the year range based on the current month
+        // let startYear = currentMonth >= 3 ? currentYear : currentYear - 1;
+        // let endYear = startYear + 1;
+
+        // // Extract the last two digits of the years
+        // let startYearPart = startYear.toString().slice(-2);
+        // let endYearPart = endYear.toString().slice(-2);
+
+        // // Construct the year range
+        // let yearPart = `${startYearPart}-${endYearPart}`;
+
+        let jobNumberlatest = `${firstletter}/I/${count}/${yearPart}`
 
 
         const [row] = await connection.execute(
@@ -105,7 +164,7 @@ export const updateJobNumber = async (id, transportMode) => {
 
 export const fetchBranches = async (importerName, orgcode, orgname) => {
     try {
-   
+
         const [rows] = await connection.execute(`SELECT branchname, id FROM organizations WHERE clientname = ? AND orgcode = ? AND orgname = ?`, [importerName, orgcode, orgname]);
 
         return rows;
@@ -118,7 +177,7 @@ export const fetchBranches = async (importerName, orgcode, orgname) => {
 
 export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, id) => {
     try {
-   
+
         const [rows] = await connection.execute(`SELECT GST, IEC, address FROM organizations WHERE clientname = ? AND orgcode = ? AND branchname = ? AND orgname = ? AND id = ?`, [clientName, orgcode, branchName, orgname, id]);
 
         return rows;
@@ -215,7 +274,7 @@ const data = await getJobsCompletedRow();
 
 //         emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${completedRows[0].actualdate}</td></tr>`;
 //     }
-    
+
 //     emailContent += '</table><br>';
 // }
 
@@ -229,7 +288,7 @@ cron.schedule('02 21 * * *', async () => {
             emailContent += `<p>Branch: ${item.branchname}</p>`;
             emailContent += '<table border="1">';
             emailContent += '<tr><th>Job Number</th><th>Completed Rows</th><th>Actual Time</th></tr>';
-            
+
             for (const job of item.jobs) {
                 const allJobdata = JSON.parse(job);
                 const { completedRows, jobnumber } = allJobdata;
@@ -241,12 +300,12 @@ cron.schedule('02 21 * * *', async () => {
                     actualDatesHtml += `<p>${actualDate}</p>`;
 
                 }
-        
+
                 emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
             }
-            
+
             emailContent += '</table><br>';
-        
+
             // Loop through the contacts of the current item
             for (const contact of item.contacts) {
                 try {
@@ -476,7 +535,7 @@ cron.schedule('02 21 * * *', async () => {
 
 export const getClient = async (orgcode) => {
     try {
- 
+
         const [rows] = await connection.execute(`SELECT clientname, id, branchname, address, GST, IEC FROM organizations WHERE orgcode = ?`, [orgcode]);
 
         return rows;
@@ -500,7 +559,7 @@ export const storeO2D = async (tatimpcolumn, days, hours, minutes, dstatus, orgn
 
 export const get02ddata = async (orgname, orgcode) => {
     try {
-        
+
         const [rows] = await connection.execute(`SELECT tatimpcolumn, id, days, hours, minutes, dstatus FROM o2dtat WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
@@ -511,7 +570,7 @@ export const get02ddata = async (orgname, orgcode) => {
 
 export const deleteO2D = async (orgname, orgcode, deletionrowid) => {
     try {
-     
+
         const [row] = await connection.execute(`DELETE FROM o2dtat WHERE orgname = ? AND orgcode = ? AND id = ?`, [orgname, orgcode, deletionrowid]);
         return row;
     } catch (error) {
@@ -522,7 +581,7 @@ export const deleteO2D = async (orgname, orgcode, deletionrowid) => {
 
 export const updateO2D = async (tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode, id) => {
     try {
-   
+
         const [row] = await connection.execute(`UPDATE o2dtat SET tatimpcolumn = ?, days = ?, hours = ?, minutes = ?, dstatus = ? WHERE orgname = ? AND orgcode = ? AND id = ?`, [tatimpcolumn, days, hours, minutes, dstatus, orgname, orgcode, id]);
         return row;
     } catch (error) {
@@ -613,7 +672,7 @@ export const updateO2D = async (tatimpcolumn, days, hours, minutes, dstatus, org
 export const fetchAlluseraccess = async (username) => {
 
     try {
-        
+
         const [rows] = await connection.execute(
             `SELECT value, id FROM importaccess WHERE username = ?`,
             [username]
@@ -630,7 +689,7 @@ export const fetchAlluseraccess = async (username) => {
 
 export const fetchJobData = async (jobnumber) => {
     try {
-     
+
         const [row] = await connection.execute(`SELECT * FROM impjobcreation WHERE jobnumber = ?`, [jobnumber]);
         return row;
     } catch (error) {
@@ -643,7 +702,7 @@ export const fetchJobData = async (jobnumber) => {
 export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat) => {
     try {
         const [existingRow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
-      
+
         if (existingRow.length > 0) {
             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
@@ -662,7 +721,7 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
 // export const storeNextRow = async (planDate, tatimpcolumn, orgname, orgcode, jobnumber, jobdoneby, tat, status, actualDate, timedelay) => {
 //     try {
 //         const [nextRow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
-        
+
 //         if (nextRow.length > 0) {
 //             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
 //                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
@@ -684,7 +743,7 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
 
 // export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, orgname, orgcode, jobnumber, jobdoneby, tatimpcolumn, tat) => {
 //     try {
-      
+
 //         const [underrow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
 //         if (underrow.length > 0) {
 //             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
@@ -706,7 +765,7 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
 // export const storeNextRow = async (planDate, tatimpcolumn, orgname, orgcode, jobnumber, jobdoneby, tat, status, actualDate, timedelay) => {
 //     try {
 //         const [nextRow] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND tatimpcolumn = ? AND jobdoneby = ?`, [orgname, orgcode, jobnumber, tatimpcolumn, jobdoneby]);
-        
+
 //         if (nextRow.length > 0) {
 //             const [row] = await connection.execute(`UPDATE o2dimport SET actualdate = ?, timedelay = ?, status = ? WHERE tatimpcolumn = ? AND orgname = ? AND orgcode = ? AND jobnumber = ?`,
 //                 [actualDate, timedelay, status, tatimpcolumn, orgname, orgcode, jobnumber]);
@@ -725,7 +784,7 @@ export const storeinO2Dtable = async (planDate, actualDate, timedelay, status, o
 
 export const deletetheO2DtoNull = async (tatimpcolumn, jobNumber, orgname, orgcode) => {
     try {
-       
+
         const [updatedRow] = await connection.execute(`DELETE FROM o2dimport WHERE tatimpcolumn = ? AND jobnumber = ? AND orgname = ? AND orgcode = ?`, [tatimpcolumn, jobNumber, orgname, orgcode]);
         // const [row] = await connection.execute(`SELECT id, planDate, actualDate, timedelay, status FROM o2dimport WHERE id = ? AND orgname = ? AND orgcode = ?`, [id, orgname, orgcode]);
         // return row;
@@ -737,7 +796,7 @@ export const deletetheO2DtoNull = async (tatimpcolumn, jobNumber, orgname, orgco
 
 export const fetchallimpjobs = async (orgname, orgcode) => {
     try {
-  
+
         const [rows] = await connection.execute('SELECT * FROM impjobcreation WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
         const [genrows] = await connection.execute(`SELECT * FROM impgeneral WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return {
@@ -790,7 +849,7 @@ export const deleteJob = async (orgname, orgcode, jobnumber) => {
 
 export const fetchingGeneralofJob = async (jobnumber, orgcode, orgname) => {
     try {
-     
+
         const [row] = await connection.execute(`SELECT * FROM impgeneral WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [orgname, orgcode, jobnumber]);
         return row[0];
     } catch (error) {
@@ -818,7 +877,7 @@ export const updateGeneral = async (importerName, address, gst, iec, portShipmen
 
 export const updateCurrentJob = async (docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber, benumber, shippinglinebond) => {
     try {
-  
+
         const [row] = await connection.execute(`
         UPDATE impjobcreation
         SET docreceivedon = ?, transportmode = ?, customhouse = ?, ownbooking = ?, deliverymode = ?, noofcontainer = ?, 
@@ -947,7 +1006,7 @@ export const O2DinsertUnderprocess = async (username, orgname, orgcode, jobNumbe
 
 export const GetUnderprocess = async (orgname, orgcode, status, jobNumber) => {
     try {
-        
+
         const [row] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND status = ? AND jobnumber = ?`, [orgname, orgcode, status, jobNumber]);
         return row;
     } catch (error) {
@@ -960,17 +1019,17 @@ export const GetUnderprocess = async (orgname, orgcode, status, jobNumber) => {
 export const putETA = async (orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn) => {
     try {
         // Execute the SELECT query and await the result
-        const [row] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND jobdoneby = ? AND tatimpcolumn = ?`, 
+        const [row] = await connection.execute(`SELECT * FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND jobdoneby = ? AND tatimpcolumn = ?`,
             [orgname, orgcode, jobNumber, jobdoneby, tatimpcolumn]);
 
         // Check if the row exists
         if (row && row.length > 0) {
             // If the row exists, execute the UPDATE query
-            const [updatedRow] = await connection.execute(`UPDATE o2dimport SET plandate = ? WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND jobdoneby = ? AND tatimpcolumn = ?`, 
+            const [updatedRow] = await connection.execute(`UPDATE o2dimport SET plandate = ? WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND jobdoneby = ? AND tatimpcolumn = ?`,
                 [planDate, orgname, orgcode, jobNumber, jobdoneby, tatimpcolumn]);
         } else {
             // If the row does not exist, execute the INSERT query
-            const [insertedRow] = await connection.execute(`INSERT INTO o2dimport (jobdoneby, jobnumber, plandate, tat, tatimpcolumn, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+            const [insertedRow] = await connection.execute(`INSERT INTO o2dimport (jobdoneby, jobnumber, plandate, tat, tatimpcolumn, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?, ?)`,
                 [jobdoneby, jobNumber, planDate, tatdayhrmin, tatimpcolumn, orgname, orgcode]);
         }
     } catch (error) {

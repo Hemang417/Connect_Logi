@@ -353,8 +353,9 @@ app.post('/storeJob', async (req, res) => {
 
 app.put('/updateId', async (req, res) => {
     try {
-        const { jobno, transportMode } = req.body;
-        const sendtoAPI = await updateJobNumber(jobno, transportMode);
+        const { jobno, transportMode, count } = req.body;
+        
+        const sendtoAPI = await updateJobNumber(jobno, transportMode, count);
         res.status(200).json(sendtoAPI);
     } catch (error) {
         console.log(error);

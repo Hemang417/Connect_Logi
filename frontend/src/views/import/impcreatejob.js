@@ -139,12 +139,12 @@ const impcreatejob = () => {
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime });
+      
       if (response.status === 200) {
         toast.success('Job created successfully.');
-
         const idofcol = response.data[0].id;
-        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode });
-        console.log(sendupdate);
+        let countofrow = response.data[0].count;
+        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode, count: countofrow });
         localStorage.setItem('jobNumber', sendupdate.data.jobNumberlatest);
         localStorage.setItem('jobDate', sendupdate.data.jobDaterow[0].jobdate);
       }
