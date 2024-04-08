@@ -13,7 +13,7 @@ import {
 } from './api/import.js';
 
 import {setMail, fetchMail} from './api/mail.js'
-
+import {getCompletedRows} from './api/userreport.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -899,6 +899,18 @@ app.get('/gettimeandmail', async (req, res) => {
         console.log(error);
     }
 })
+
+app.get('/getAllRowsofUsername', async (req, res) => {
+    try {
+        const {username} = req.query;
+        const alltherows = await getCompletedRows(username.username);
+        res.send(alltherows);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 
 
 app.listen(PORT, () => {

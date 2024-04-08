@@ -142,7 +142,8 @@ import {
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
-  CTableRow
+  CTableRow,
+  CButton,
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -198,6 +199,25 @@ const UserList = () => {
     // Optionally, you can redirect or perform any other action here
   };
 
+
+
+  async function getThatUserdata(username) {
+      try {
+        const alltherows = await axios.get('http://localhost:5000/getAllRowsofUsername', {
+          params: {
+            username: username
+          }
+        })
+
+        console.log(alltherows);
+      } catch (error) {
+        console.log(error);
+      }
+  }
+
+
+
+
   return (
     <div>
       <CTable hover responsive striped className=''>
@@ -206,6 +226,7 @@ const UserList = () => {
             <CTableHeaderCell scope="col"></CTableHeaderCell>
             <CTableHeaderCell scope="col">Username</CTableHeaderCell>
             <CTableHeaderCell scope="col">Access</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Report</CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
@@ -217,6 +238,9 @@ const UserList = () => {
               <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
               <CTableDataCell>
                 {userAccessData.some(accessUser => accessUser.username === userData.username) ? 'Import' : 'Access'}
+              </CTableDataCell>
+              <CTableDataCell>
+                <CButton onClick={() => getThatUserdata(userData)}>Generate Report</CButton>
               </CTableDataCell>
             </CTableRow>
           ))}

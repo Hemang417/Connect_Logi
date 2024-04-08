@@ -142,23 +142,73 @@ const accessRowsforEmployees = async () => {
 
 accessRowsforEmployees();
 
-let currentDate = new Date();
-// Get the current month (zero-based index)
-let currentMonth = currentDate.getMonth();
-// Get the current year
-let currentYear = currentDate.getFullYear();
+// let currentDate = new Date();
+// // Get the current month (zero-based index)
+// let currentMonth = currentDate.getMonth();
+// // Get the current year
+// let currentYear = currentDate.getFullYear();
 
-let startYearPart, endYearPart;
+// let startYearPart, endYearPart;
 
-// Check if the current month is April or later
-if (currentMonth >= 3) {
-    // April or later, use the current year as the start year
-    startYearPart = currentYear.toString().slice(-2);
-    endYearPart = (currentYear + 1).toString().slice(-2);
+// // Check if the current month is April or later
+// if (currentMonth >= 3) {
+//     // April or later, use the current year as the start year
+//     startYearPart = currentYear.toString().slice(-2);
+//     endYearPart = (currentYear + 1).toString().slice(-2);
+// }
+
+// // Construct the year range
+// let yearPart = `${startYearPart}-${endYearPart}`;
+// const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation ORDER BY id DESC LIMIT 1');
+// console.log(lastYearRow[0].jobnumber.slice(-5));
+// // && item.name !== 'User List' && item.name !== 'TAT' && item.name!== 'Mailing'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const getCompletedRows = async (username) => {
+    try {
+        const jobdata = await getAllJobs();
+        const [accessRowsResult] = await connection.execute(`SELECT value FROM importaccess WHERE username = ?`, [username]);
+        const [rows] = await connection.execute(`SELECT * FROM o2dimport WHERE jobdoneby = ?`, [username]);
+        const structuredData = {
+            totalJobs: jobdata,
+            access: accessRowsResult,
+            completedRows: rows
+        }
+        return structuredData;
+    } catch (error) {
+        console.log(error);
+    }
 }
-
-// Construct the year range
-let yearPart = `${startYearPart}-${endYearPart}`;
-const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation ORDER BY id DESC LIMIT 1');
-console.log(lastYearRow[0].jobnumber.slice(-5));
-// && item.name !== 'User List' && item.name !== 'TAT' && item.name!== 'Mailing'
