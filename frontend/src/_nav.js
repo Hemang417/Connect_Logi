@@ -14,6 +14,9 @@ import {
   cilStar,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+
+import { Mailing } from './views/mailing'
+
 // const [readOnly, setReadOnly] = useState(false);
 const isAdmin = localStorage.getItem('username')==='admin';
 // const isNotAdmin = localStorage.getItem('username')!=='admin';
@@ -251,36 +254,13 @@ const _nav = [
         name: 'Job Creation & Process',
         to: '/forms/select',
       },
-      // {
-      //   component: CNavItem,
-      //   name: 'Checks & Radios',
-      //   to: '/forms/checks-radios',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Range',
-      //   to: '/forms/range',
-      // },
+     
       {
         component: CNavItem,
         name: 'Input Group',
         to: '/forms/input-group',
       },
-      // {
-      //   component: CNavItem,
-      //   name: 'Floating Labels',
-      //   to: '/forms/floating-labels',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Layout',
-      //   to: '/forms/layout',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Validation',
-      //   to: '/forms/validation',
-      // },
+      
     ],
   },
   // {
@@ -344,45 +324,60 @@ const _nav = [
       },
     ],
   },
-
-
-
-
   {
-    component: CNavItem,
-    name: 'New User',
-    to: '/new_user',
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+    component: CNavGroup,
+    name: 'Admin',
+    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
 
-  
-    // setVisible: true,
-    // badge: {
-    //   color: 'info',
-    //   text: 'NEW',
-    // },
+    items: [
+      {
+        component: CNavItem,
+        name: 'New User',
+        to: '/new_user',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: 'User List',
+        to: '/userlist',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: 'TAT',
+        to: '/tat',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: 'Mailing',
+        to: '/mailing',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+    ],
   },
-  {
-    component: CNavItem,
-    name: 'User List',
-    to: '/userlist',
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
 
-    // badge: {
-    //   color: 'info',
-    //   text: 'NEW',
-    // },
-  },
-  {
-    component: CNavItem,
-    name: 'TAT',
-    to: '/tat',
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
 
-    // badge: {
-    //   color: 'info',
-    //   text: 'NEW',
-    // },
-  },
+
+
+  // {
+  //   component: CNavItem,
+  //   name: 'New User',
+  //   to: '/new_user',
+  //   icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'User List',
+  //   to: '/userlist',
+  //   icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'TAT',
+  //   to: '/tat',
+  //   icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+  // },
 
 
   {
@@ -441,7 +436,7 @@ const _nav = [
 
 const visibleNav = isAdmin
   ? _nav // If isAdmin is true, show all items
-  : _nav.filter(item => item.name !== 'New User' && item.name !== 'User List' && item.name !== 'TAT'); // Exclude "New User" and "User List" if isAdmin is false
+  : _nav.filter(item => item.name !== 'Admin' ); // Exclude "New User" and "User List" if isAdmin is false
 
 
 export default visibleNav;

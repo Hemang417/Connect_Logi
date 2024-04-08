@@ -161,3 +161,4 @@ if (currentMonth >= 3) {
 let yearPart = `${startYearPart}-${endYearPart}`;
 const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation ORDER BY id DESC LIMIT 1');
 console.log(lastYearRow[0].jobnumber.slice(-5));
+// && item.name !== 'User List' && item.name !== 'TAT' && item.name!== 'Mailing'

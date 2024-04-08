@@ -59,6 +59,14 @@ const Login = () => {
         toast.success('Logged in successfully. Navigating to dashboard.');
         // Successful login, navigate to the dashboard
         navigate('/dashboard');
+
+        // const sendTimeMailreq = await axios.get('http://localhost:5000/afterlogintimemail', {
+        //   params: {
+        //     orgname: localStorage.getItem('orgname'),
+        //     orgcode: localStorage.getItem('orgcode'),
+        //   }
+        // })
+
       } else {
         // Invalid credentials, display an error message to the user
         // You can also clear the input fields here if needed

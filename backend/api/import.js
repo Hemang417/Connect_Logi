@@ -1,21 +1,36 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 import cron from 'node-cron';
-import { getJobsCompletedRow } from './mail.js';
+// import { getJobsCompletedRow } from './mail.js';
 
-
+// let globalTime = null;
 // const client = twilio(accountSid, authToken);
 const connection = await connectMySQL();
+// let organame = '';
+// let orgacode = '';
+// const [row] = await connection.execute(`SELECT email, passcode, hours, minutes FROM maildata WHERE orgname = ? AND orgcode = ?`, [organame, orgacode]);
+// console.log(row);
+// export const fetchedMail = async (orgname, orgcode) => {
+//     organame = orgname;
+//     orgacode = orgcode;
+// }
 
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    type: "SMTP",
-    secure: true,
-    auth: {
-        user: 'shreyashpingle752@gmail.com',
-        pass: 'vircbhwmcnqfinrb'
-    }
-});
+
+
+
+
+
+
+// let transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     type: "SMTP",
+//     secure: true,
+//     auth: {
+//         user: 'shreyashpingle752@gmail.com',
+//         pass: 'vircbhwmcnqfinrb'
+//     }
+// });
+
 
 
 
@@ -255,7 +270,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 
 
 
-const data = await getJobsCompletedRow();
+// const data = await getJobsCompletedRow();
 
 // let emailContent = '';
 // for (const item of data) {
@@ -280,52 +295,52 @@ const data = await getJobsCompletedRow();
 
 
 
-cron.schedule('02 21 * * *', async () => {
-    try {
-        for (const item of data) {
-            let emailContent = '';
-            emailContent += `<h2>Client: ${item.clientname}</h2>`;
-            emailContent += `<p>Branch: ${item.branchname}</p>`;
-            emailContent += '<table border="1">';
-            emailContent += '<tr><th>Job Number</th><th>Completed Rows</th><th>Actual Time</th></tr>';
+// cron.schedule('02 21 * * *', async () => {
+//     try {
+//         for (const item of data) {
+//             let emailContent = '';
+//             emailContent += `<h2>Client: ${item.clientname}</h2>`;
+//             emailContent += `<p>Branch: ${item.branchname}</p>`;
+//             emailContent += '<table border="1">';
+//             emailContent += '<tr><th>Job Number</th><th>Completed Rows</th><th>Actual Time</th></tr>';
 
-            for (const job of item.jobs) {
-                const allJobdata = JSON.parse(job);
-                const { completedRows, jobnumber } = allJobdata;
-                let completedRowsHtml = '';
-                let actualDatesHtml = '';
-                for (const row of completedRows) {
-                    completedRowsHtml += `<p>${row.tatimpcolumn}</p>`;
-                    const actualDate = row.actualdate.includes('T') ? row.actualdate.replace('T', ' ') : row.actualdate;
-                    actualDatesHtml += `<p>${actualDate}</p>`;
+//             for (const job of item.jobs) {
+//                 const allJobdata = JSON.parse(job);
+//                 const { completedRows, jobnumber } = allJobdata;
+//                 let completedRowsHtml = '';
+//                 let actualDatesHtml = '';
+//                 for (const row of completedRows) {
+//                     completedRowsHtml += `<p>${row.tatimpcolumn}</p>`;
+//                     const actualDate = row.actualdate.includes('T') ? row.actualdate.replace('T', ' ') : row.actualdate;
+//                     actualDatesHtml += `<p>${actualDate}</p>`;
 
-                }
+//                 }
 
-                emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
-            }
+//                 emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
+//             }
 
-            emailContent += '</table><br>';
+//             emailContent += '</table><br>';
 
-            // Loop through the contacts of the current item
-            for (const contact of item.contacts) {
-                try {
-                    const mailOptions = {
-                        from: 'shreyashpingle752@gmail.com',
-                        to: contact,
-                        subject: 'Daily Report',
-                        html: emailContent
-                    };
-                    await transporter.sendMail(mailOptions);
-                    console.log(`Email sent successfully to ${contact}`);
-                } catch (error) {
-                    console.error(`Error sending email to ${contact}:`, error);
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error sending email:', error);
-    }
-});
+//             // Loop through the contacts of the current item
+//             for (const contact of item.contacts) {
+//                 try {
+//                     const mailOptions = {
+//                         from: 'shreyashpingle752@gmail.com',
+//                         to: contact,
+//                         subject: 'Daily Report',
+//                         html: emailContent
+//                     };
+//                     await transporter.sendMail(mailOptions);
+//                     console.log(`Email sent successfully to ${contact}`);
+//                 } catch (error) {
+//                     console.error(`Error sending email to ${contact}:`, error);
+//                 }
+//             }
+//         }
+//     } catch (error) {
+//         console.error('Error sending email:', error);
+//     }
+// });
 
 
 

@@ -12,6 +12,9 @@ import {
     GetUnderprocess, putETA, fetchPlanDateETA
 } from './api/import.js';
 
+import {setMail, fetchMail} from './api/mail.js'
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -873,6 +876,25 @@ app.get('/pullPlanDateETA', async(req, res) => {
         const {orgname, orgcode, jobNumber, tatimpcolumn} = req.query;
         const fetchedETA = await fetchPlanDateETA(orgname, orgcode, jobNumber, tatimpcolumn);
         res.send(fetchedETA);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/settimeandmail', async (req, res) => {
+    try {
+        const {email, passcode, hours, minutes, orgname, orgcode} = req.body;
+        const settedmail = await setMail(email, passcode, hours, minutes, orgname, orgcode);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/gettimeandmail', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const fetchedMail = await fetchMail(orgname, orgcode);
+        res.json(fetchedMail);
     } catch (error) {
         console.log(error);
     }

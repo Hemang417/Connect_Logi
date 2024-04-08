@@ -11,6 +11,7 @@ const UserList = React.lazy(() => import('./views/userlist/UserList'))
 const TAT = React.lazy(() => import('./views/tat/tat'));
 const IMPTAT = React.lazy(() => import('./views/tat/InnerPage/ImpTAT'))
 const UserListAccess = React.lazy(() => import('./views/userlist/InnerPage/UserListAccess'))
+const Mailing = React.lazy(() => import('./views/mailing/Mailing'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -73,6 +74,7 @@ const routes = [
   { path: '/tat', element: TAT },
   { path: '/ImpTAT', element: IMPTAT },
   { path: '/UserListAccess', element: UserListAccess },
+  { path: '/mailing', element: Mailing },
   { path: '/theme', element: Colors, exact: true },
   { path: '/theme/colors', element: Colors },
   { path: '/theme/typography', element: Typography },
