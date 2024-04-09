@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Import = React.lazy(() => import('./views/import/import'))
 const impcreatejob = React.lazy(() => import('./views/import/impcreatejob'))
@@ -9,9 +10,12 @@ const addnewBranch = React.lazy(() => import('./views/organization/Innerpage/add
 const NewUser = React.lazy(() => import('./views/new_user/NewUser'))
 const UserList = React.lazy(() => import('./views/userlist/UserList'))
 const TAT = React.lazy(() => import('./views/tat/tat'));
+// const generateReport = React.lazy(() => import('./views/userreport/generateReport'));
 const IMPTAT = React.lazy(() => import('./views/tat/InnerPage/ImpTAT'))
 const UserListAccess = React.lazy(() => import('./views/userlist/InnerPage/UserListAccess'))
 const Mailing = React.lazy(() => import('./views/mailing/Mailing'))
+const User_Report = React.lazy(() => import('./views/user_report/User_Report'))
+const Generate_Report = React.lazy(() => import('./views/user_report/Generate_Report'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -75,6 +79,9 @@ const routes = [
   { path: '/ImpTAT', element: IMPTAT },
   { path: '/UserListAccess', element: UserListAccess },
   { path: '/mailing', element: Mailing },
+  { path: '/User_Report', element: User_Report },
+  { path: '/Generate_Report', element: Generate_Report },
+  // { path: '/generatereportImport', element: generatereportImport },
   { path: '/theme', element: Colors, exact: true },
   { path: '/theme/colors', element: Colors },
   { path: '/theme/typography', element: Typography },

@@ -354,6 +354,12 @@ const _nav = [
         to: '/mailing',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
       },
+      {
+        component: CNavItem,
+        name: 'User Report',
+        to: '/user_report',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
     ],
   },
 

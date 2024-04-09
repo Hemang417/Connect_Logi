@@ -201,19 +201,19 @@ const UserList = () => {
 
 
 
-  async function getThatUserdata(username) {
-      try {
-        const alltherows = await axios.get('http://localhost:5000/getAllRowsofUsername', {
-          params: {
-            username: username
-          }
-        })
+  // async function getThatUserdata(username) {
+  //     try {
+  //       const alltherows = await axios.get('http://localhost:5000/getAllRowsofUsername', {
+  //         params: {
+  //           username: username
+  //         }
+  //       })
 
-        console.log(alltherows);
-      } catch (error) {
-        console.log(error);
-      }
-  }
+  //       console.log(alltherows);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  // }
 
 
 
@@ -239,9 +239,9 @@ const UserList = () => {
               <CTableDataCell>
                 {userAccessData.some(accessUser => accessUser.username === userData.username) ? 'Import' : 'Access'}
               </CTableDataCell>
-              <CTableDataCell>
+              {/* <CTableDataCell>
                 <CButton onClick={() => getThatUserdata(userData)}>Generate Report</CButton>
-              </CTableDataCell>
+              </CTableDataCell> */}
             </CTableRow>
           ))}
         </CTableBody>

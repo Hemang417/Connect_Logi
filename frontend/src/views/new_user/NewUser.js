@@ -27,7 +27,8 @@ const NewUser = () => {
         orgcode: ' ',
         // orgname: ' ',
         repeatPassword: ' ',
-        branchname: ' '
+        branchname: ' ',
+        fullname: ' '
     });
 
 
@@ -44,34 +45,36 @@ const NewUser = () => {
         e.preventDefault();
         try {
             const nameoforg = localStorage.getItem('orgname')
-            
+
             const response = await axios.post('http://localhost:5000/emp/store', {
                 username: regForm.username,
                 password: regForm.password,
                 orgname: nameoforg,
                 orgcode: regForm.orgcode,
                 repeatPassword: regForm.repeatPassword,
-                branchname: regForm.branchname
+                branchname: regForm.branchname,
+                fullname: regForm.fullname
             });
-            
-            
+
+
             setregForm({
                 username: '',
                 password: '',
                 orgcode: '',
                 repeatPassword: '',
-                branchname: ''
+                branchname: '',
+                fullname: ''
             });
-            
-            
-            
+
+
+
             // localStorage.setItem('orgname', regForm.orgname);
             // localStorage.setItem('orgcode', response.data.register.orgcode);
-            if(response.statusCode === 200){
+            if (response.statusCode === 200) {
                 toast.success('New user added successfully');
                 navigate('/dashboard');
             }
-            
+
             navigate('/dashboard');
         } catch (error) {
             toast.error('Error creating new user')
@@ -97,6 +100,21 @@ const NewUser = () => {
                     </CInputGroupText>
                     <CFormInput placeholder="Organization Name" autoComplete="orgname" name='orgname' onChange={handleChange}/>
                   </CInputGroup> */}
+
+
+                                    <CInputGroup className="mb-3">
+                                        <CInputGroupText>
+                                            <CIcon icon={cilBuilding} />
+                                        </CInputGroupText>
+                                        <CFormInput
+                                            type="text"
+                                            placeholder="Full Name"
+                                            name='fullname'
+                                            onChange={handleChange}
+                                        />
+                                    </CInputGroup>
+
+
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>OC</CInputGroupText>
                                         <CFormInput placeholder="Organization Code" autoComplete="orgcode" name='orgcode' onChange={handleChange} />
@@ -141,6 +159,7 @@ const NewUser = () => {
                                             onChange={handleChange}
                                         />
                                     </CInputGroup>
+
                                     <div className="d-grid">
                                         <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
                                     </div>

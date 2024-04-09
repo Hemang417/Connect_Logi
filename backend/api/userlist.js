@@ -4,7 +4,7 @@ export const fetchAllusers = async (orgcode, orgname, username) => {
     try {
 
         const [rows] = await connection.execute(`
-        SELECT username
+        SELECT username, branchname, fullname
         FROM employees
         WHERE orgname = ? AND orgcode = ?
     `, [orgname, orgcode]);

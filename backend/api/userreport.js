@@ -197,15 +197,18 @@ accessRowsforEmployees();
 
 
 
-export const getCompletedRows = async (username) => {
+export const getCompletedRows = async (username, fullname, branchname) => {
     try {
         const jobdata = await getAllJobs();
+        
         const [accessRowsResult] = await connection.execute(`SELECT value FROM importaccess WHERE username = ?`, [username]);
+        console.log(accessRowsResult);
         const [rows] = await connection.execute(`SELECT * FROM o2dimport WHERE jobdoneby = ?`, [username]);
         const structuredData = {
             totalJobs: jobdata,
             access: accessRowsResult,
-            completedRows: rows
+            completedRows: rows,
+            name: username
         }
         return structuredData;
     } catch (error) {

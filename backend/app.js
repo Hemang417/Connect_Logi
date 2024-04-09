@@ -86,15 +86,15 @@ app.get('/getOrg', async (req, res) => {
 
 app.post('/emp/store', async (req, res) => {
     try {
-        const { username, password, orgcode, branchname, repeatPassword, orgname } = req.body;
+        const { username, password, orgcode, branchname, repeatPassword, orgname, fullname } = req.body;
 
-        if (!username || !password || !orgcode || !branchname || !orgname) {
+        if (!username || !password || !orgcode || !branchname || !orgname || !fullname) {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
         if (password !== repeatPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
-        const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname);
+        const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname, fullname);
 
         res.status(200).json(allStorageofemp);
     } catch (error) {
@@ -902,8 +902,8 @@ app.get('/gettimeandmail', async (req, res) => {
 
 app.get('/getAllRowsofUsername', async (req, res) => {
     try {
-        const {username} = req.query;
-        const alltherows = await getCompletedRows(username.username);
+        const {username, fullname, branchname} = req.query;
+        const alltherows = await getCompletedRows(username, fullname, branchname);
         res.send(alltherows);
     } catch (error) {
         console.log(error);
