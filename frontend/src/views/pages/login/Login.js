@@ -25,6 +25,8 @@ import toast from 'react-hot-toast';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+
   const [loginData, setloginData] = useState({
     username: ' ',
     password: ' ',
@@ -38,9 +40,6 @@ const Login = () => {
       [e.target.name]: e.target.value
     })
   }
-
-
-
 
 
   async function handleSubmit(e) {
@@ -58,7 +57,7 @@ const Login = () => {
         localStorage.setItem('username', response.data.username);
         toast.success('Logged in successfully. Navigating to dashboard.');
         // Successful login, navigate to the dashboard
-        navigate('/dashboard');
+        // navigate('/dashboard');
 
         // const sendTimeMailreq = await axios.get('http://localhost:5000/afterlogintimemail', {
         //   params: {
@@ -66,7 +65,8 @@ const Login = () => {
         //     orgcode: localStorage.getItem('orgcode'),
         //   }
         // })
-
+        setShowDropdown(true);
+        fetchBranchesofOwnOrg(response.data.orgcode, response.data.orgname);
       } else {
         // Invalid credentials, display an error message to the user
         // You can also clear the input fields here if needed
@@ -80,6 +80,29 @@ const Login = () => {
     }
   }
 
+  const [allBranchesofourOwn, setallbranchesofourOwn] = useState([]);
+  const [selectedBranch, setselectedBranch] = useState([]);
+  const fetchBranchesofOwnOrg = async (orgcode, orgname) => {
+    try {
+      const response = await axios.get('http://localhost:5000/fetchallownbranchname', {
+        params: {
+          orgcode: orgcode,
+          orgname: orgname
+        }
+      })
+      setallbranchesofourOwn(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
+  async function handleSelect(branchname, branchcode) {
+    setselectedBranch({ branchname, branchcode });
+    localStorage.setItem('branchnameofemp', branchname);
+    localStorage.setItem('branchcodeofemp', branchcode);
+    navigate('/dashboard');
+  }
 
 
   return (
@@ -117,6 +140,20 @@ const Login = () => {
                         onChange={handleChange}
                       />
                     </CInputGroup>
+                    {showDropdown && (
+                      <CCard className="p-4">
+                        <CCardBody>
+                          <CDropdown className="mb-3">
+                          <CDropdownToggle color="secondary">{selectedBranch ? selectedBranch.branchname : 'Branch Names'}</CDropdownToggle>
+                            <CDropdownMenu>
+                              {allBranchesofourOwn && allBranchesofourOwn.map((branch, index) => (
+                                <CDropdownItem key={index} onClick={() => handleSelect(branch.ownbranchname, branch.branchcode)}>{branch.ownbranchname}</CDropdownItem>
+                              ))}
+                            </CDropdownMenu>
+                          </CDropdown>
+                        </CCardBody>
+                      </CCard>
+                    )}
                     <CRow>
                       <CCol xs={6}>
 
@@ -151,7 +188,7 @@ const Login = () => {
                   </div>
                 </CCardBody>
               </CCard> */}
-              
+
             </CCardGroup>
           </CCol>
         </CRow>

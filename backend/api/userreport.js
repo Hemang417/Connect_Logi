@@ -36,7 +36,7 @@ const getAllEmployees = async () => {
 
 const getAllJobs = async () => {
     try {
-        const [rows] = await connection.execute(`SELECT jobnumber FROM impjobcreation WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const [rows] = await connection.execute(`SELECT * FROM impjobcreation WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         return rows;
     } catch (error) {
         console.log(error);
@@ -202,7 +202,7 @@ export const getCompletedRows = async (username, fullname, branchname) => {
         const jobdata = await getAllJobs();
         
         const [accessRowsResult] = await connection.execute(`SELECT value FROM importaccess WHERE username = ?`, [username]);
-        console.log(accessRowsResult);
+
         const [rows] = await connection.execute(`SELECT * FROM o2dimport WHERE jobdoneby = ?`, [username]);
         const structuredData = {
             totalJobs: jobdata,

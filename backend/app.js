@@ -11,7 +11,7 @@ import {
     getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, 
     GetUnderprocess, putETA, fetchPlanDateETA
 } from './api/import.js';
-
+import {storeOwnBranch, getOwnBranches, fetchBranchskhudka} from './api/user.js'
 import {setMail, fetchMail} from './api/mail.js'
 import {getCompletedRows} from './api/userreport.js'
 
@@ -86,7 +86,7 @@ app.get('/getOrg', async (req, res) => {
 
 app.post('/emp/store', async (req, res) => {
     try {
-        const { username, password, orgcode, branchname, repeatPassword, orgname, fullname } = req.body;
+        const { username, password, orgcode, branchname, repeatPassword, orgname, fullname, branchcode } = req.body;
 
         if (!username || !password || !orgcode || !branchname || !orgname || !fullname) {
             return res.status(400).json({ message: 'Invalid Credentials' });
@@ -94,7 +94,7 @@ app.post('/emp/store', async (req, res) => {
         if (password !== repeatPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
-        const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname, fullname);
+        const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname, fullname, branchcode);
 
         res.status(200).json(allStorageofemp);
     } catch (error) {
@@ -911,7 +911,35 @@ app.get('/getAllRowsofUsername', async (req, res) => {
 })
 
 
+app.post('/createownbranch', async(req, res) => {
+    try {
+        const {orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname} = req.body;
+        const storedOwnBranch = await storeOwnBranch(orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname);
+        res.status(200).send(storedOwnBranch);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
+app.get('/fetchBranchesofOwn', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const sendOwnBranches = await getOwnBranches(orgname, orgcode);
+        res.send(sendOwnBranches);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/fetchallownbranchname', async (req, res) => {
+    try {
+        const {orgcode, orgname} = req.query;
+        const sendAllBranches = await fetchBranchskhudka(orgname, orgcode);
+        res.send(sendAllBranches);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

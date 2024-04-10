@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     CButton,
     CCard,
@@ -10,6 +10,10 @@ import {
     CInputGroup,
     CInputGroupText,
     CRow,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilBuilding } from '@coreui/icons'
@@ -20,17 +24,17 @@ import toast from 'react-hot-toast'
 const NewUser = () => {
 
     const navigate = useNavigate();
-
+    const [allBranchesofourOwn, setallbranchesofourOwn] = useState([]);
     const [regForm, setregForm] = useState({
         username: ' ',
         password: ' ',
-        orgcode: ' ',
-        // orgname: ' ',
+        orgcode: localStorage.getItem('orgcode'),
         repeatPassword: ' ',
         branchname: ' ',
-        fullname: ' '
+        fullname: ' ',
+        branchcode: ' '
     });
-
+    const [selectedBranch, setselectedBranch] = useState('');
 
     function handleChange(e) {
         setregForm({
@@ -53,7 +57,8 @@ const NewUser = () => {
                 orgcode: regForm.orgcode,
                 repeatPassword: regForm.repeatPassword,
                 branchname: regForm.branchname,
-                fullname: regForm.fullname
+                fullname: regForm.fullname,
+                branchcode: regForm.branchcode
             });
 
 
@@ -83,6 +88,31 @@ const NewUser = () => {
     }
 
 
+    useEffect(() => {
+        const fetchBranchesofOwnOrg = async (req, res) => {
+            try {
+                const response = await axios.get('http://localhost:5000/fetchallownbranchname', {
+                    params: {
+                        orgcode: localStorage.getItem('orgcode'),
+                        orgname: localStorage.getItem('orgname')
+                    }
+                })
+                setallbranchesofourOwn(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchBranchesofOwnOrg();
+    }, [])
+
+async function handleSelect(branchname, branchcode){
+    setregForm({
+        ...regForm,
+        branchname: branchname,
+        branchcode: branchcode
+    })
+    setselectedBranch(branchname);
+}
 
     return (
         <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -117,7 +147,8 @@ const NewUser = () => {
 
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>OC</CInputGroupText>
-                                        <CFormInput placeholder="Organization Code" autoComplete="orgcode" name='orgcode' onChange={handleChange} />
+                                        <CFormInput placeholder="Organization Code" autoComplete="orgcode" name='orgcode' onChange={handleChange}
+                                            value={localStorage.getItem('orgcode')} />
                                     </CInputGroup>
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>@</CInputGroupText>
@@ -152,12 +183,20 @@ const NewUser = () => {
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
                                         </CInputGroupText>
-                                        <CFormInput
+                                        <CDropdown className="impgen-text-field-1">
+                                            <CDropdownToggle color="secondary">{selectedBranch ? selectedBranch : 'Branch Names'}</CDropdownToggle>
+                                            <CDropdownMenu className="impgen-text-dropdown">
+                                                {allBranchesofourOwn && allBranchesofourOwn.map((branch, index) => (
+                                                    <CDropdownItem key={index} onClick={()=> handleSelect(branch.ownbranchname, branch.branchcode)}>{branch.ownbranchname}</CDropdownItem>
+                                                ))}
+                                            </CDropdownMenu>
+                                        </CDropdown>
+                                        {/* <CFormInput
                                             type="text"
                                             placeholder="Branch Name"
                                             name='branchname'
                                             onChange={handleChange}
-                                        />
+                                        /> */}
                                     </CInputGroup>
 
                                     <div className="d-grid">

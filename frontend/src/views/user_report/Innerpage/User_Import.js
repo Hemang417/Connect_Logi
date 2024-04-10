@@ -72,15 +72,27 @@
 
 // './Innerpage/User_Import.js'
 
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { CCard, CCol, CCardBody } from '@coreui/react';
+import { CCard, CCol, CCardBody, CButton } from '@coreui/react';
 import { CChart } from '@coreui/react-chartjs';
 import '../../../css/styles.css';
+import moment from 'moment';
 
 const User_Import = () => {
   const [allData, setallData] = useState([]);
   const [groupedData, setGroupedData] = useState([]);
+
+  const [startDate, setstartDate] = useState('');
+  const [endDate, setendDate] = useState('');
+
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -119,20 +131,78 @@ const User_Import = () => {
       '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
       '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
       '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']
-      const selectedColors = [];
-      for (let i = 0; i < numColors; i++) {
-        const randomIndex = Math.floor(Math.random() * randomColor.length);
-        selectedColors.push(randomColor[randomIndex]);
-      }
-      return selectedColors;
+    const selectedColors = [];
+    for (let i = 0; i < numColors; i++) {
+      const randomIndex = Math.floor(Math.random() * randomColor.length);
+      selectedColors.push(randomColor[randomIndex]);
+    }
+    return selectedColors;
   };
 
+
+  // async function filterData() {
+  //   try {
+  //     const filteredRows = allData.completedRows.filter(row => {
+  //       const actualDate = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
+  //       const startDateObj = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
+  //       const endDateObj = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
+  //       return actualDate >= startDateObj && actualDate <= endDateObj;
+  //     });
+
+  //     // const updatedAllData = { ...allData, completedRows: filteredRows };
+  //     // setallData(updatedAllData);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+
+
+  async function filterData(){
+    try {
+      const filteredRows = allData.completedRows.filter(row => {
+        const actualDate = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
+        const startDateObj = moment(startDate).format('YYYY-MM-DDTHH:mm');
+        const endDateObj = moment(endDate).format('YYYY-MM-DDTHH:mm');
+        return actualDate>=startDateObj && actualDate<=endDateObj;
+      });
+    //  console.log(filteredRows);
+      const updatedAllData = { ...allData, completedRows: filteredRows };
+      console.log(updatedAllData);
+      // setallData(updatedAllData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+console.log(allData);
 
   return (
     <div>
       <CCol xs={12}>
         <CCard className="mb-2 container-div">
           <CCardBody className='main-div'>
+
+
+            <div className="date-filters">
+              <input
+                type="datetime-local"
+                placeholder="Start Date"
+                name='startDate'
+                value={startDate}
+                onChange={(e) => setstartDate(e.target.value)}
+              />
+              <input
+                type="datetime-local"
+                placeholder="End Date"
+                name='endDate'
+                value={endDate}
+                onChange={(e) => setendDate(e.target.value)}
+              />
+              <CButton color="primary" onClick={filterData}>Filter</CButton>
+            </div>
+
+
             <div className='left-div'>
               {allData.access && allData.access.map((accessItem, index) => {
                 const groupName = accessItem.value;
@@ -145,6 +215,7 @@ const User_Import = () => {
                   </div>
                 );
               })}
+
             </div>
             <div className='right-div'>
 
@@ -155,7 +226,7 @@ const User_Import = () => {
                   datasets: [
                     {
                       backgroundColor: allData.access ? generateRandomColor(allData.access.length) : [],
-                      data: allData.access ? allData.access.map(accessItem => groupedData[accessItem.value] ? groupedData[accessItem.value].length : 0): [],
+                      data: allData.access ? allData.access.map(accessItem => groupedData[accessItem.value] ? groupedData[accessItem.value].length : 0) : [],
                     },
                   ],
                 }}

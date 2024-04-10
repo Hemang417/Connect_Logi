@@ -50,5 +50,42 @@ export const insertUser = async (username, password, orgname, orgcode) => {
     }
 }
 
+function extractNumbersAfterAt(orgcode) {
+    const numbersAfterAt = orgcode.match(/@(\d+)/);
+    if (numbersAfterAt && numbersAfterAt.length > 1) {
+      return numbersAfterAt[1];
+    } else {
+      return null;
+    }
+  }
+  
 
+export const storeOwnBranch = async (orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname) => {
+    try {
+        const codecode = extractNumbersAfterAt(orgcode);
+        const branchcode = ownbranchname + '-' + codecode;
+        const [row] = await connection.execute(`INSERT INTO ownbranches (orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [orgcode, orgname, ownbranchname, gst, iec, headname, headnum, address, branchcode]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
+export const getOwnBranches = async (orgname, orgcode) => {
+    try {
+        const [rows] = await connection.execute(`SELECT * FROM ownbranches WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const fetchBranchskhudka = async (orgname, orgcode) => {
+    try {
+        const [rows] = await connection.execute(`SELECT ownbranchname, branchcode FROM ownbranches WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}

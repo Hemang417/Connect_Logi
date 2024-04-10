@@ -338,6 +338,12 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: 'User Report',
+        to: '/user_report',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
         name: 'User List',
         to: '/userlist',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
@@ -356,10 +362,17 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'User Report',
-        to: '/user_report',
+        name: 'Create Branch',
+        to: '/branches',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
       },
+      {
+        component: CNavItem,
+        name: 'Branch List',
+        to: '/branchlist',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+      
     ],
   },
 

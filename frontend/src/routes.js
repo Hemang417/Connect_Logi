@@ -1,3 +1,4 @@
+import { element } from 'prop-types';
 import React from 'react';
 
 
@@ -8,6 +9,8 @@ const organization = React.lazy(() => import('./views/organization/organization'
 const CreateJob = React.lazy(() => import('./views/organization/Createjob'))  
 const addnewBranch = React.lazy(() => import('./views/organization/Innerpage/addnewBranch'))
 const NewUser = React.lazy(() => import('./views/new_user/NewUser'))
+const branches = React.lazy(() => import('./views/branches/branches'))
+const branchlist = React.lazy(() => import('./views/branches/branchlist'))
 const UserList = React.lazy(() => import('./views/userlist/UserList'))
 const TAT = React.lazy(() => import('./views/tat/tat'));
 // const generateReport = React.lazy(() => import('./views/userreport/generateReport'));
@@ -76,6 +79,8 @@ const routes = [
   { path: '/new_user', element: NewUser },
   { path: '/userlist', element: UserList },
   { path: '/tat', element: TAT },
+  { path: '/branches', element: branches},
+  { path: '/branchlist', element: branchlist},
   { path: '/ImpTAT', element: IMPTAT },
   { path: '/UserListAccess', element: UserListAccess },
   { path: '/mailing', element: Mailing },
