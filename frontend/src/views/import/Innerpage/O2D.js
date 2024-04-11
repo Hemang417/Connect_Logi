@@ -730,17 +730,11 @@ const O2D = () => {
             const timeDifference = actualDate - planDate;
 
             // Convert milliseconds to hours, minutes, and seconds
-            const hours = Math.floor(Math.abs(timeDifference) / (1000 * 60 * 60));
-            const minutes = Math.floor((Math.abs(timeDifference) % (1000 * 60 * 60)) / (1000 * 60));
+            const hours = Math.floor((timeDifference) / (1000 * 60 * 60));
+            const minutes = Math.floor(((timeDifference) % (1000 * 60 * 60)) / (1000 * 60));
             // Store the time delay in the format HH:mm
             newData[index].timedelay = `${hours} hr ${minutes} min`;
-            // Update the state with the modified data
-            // Log the updated state
-            // if (index < newData.length - 1 && timeDifference > 0) {
-            //     const nextRowPlanDate = new Date(newData[index + 1].planDate);
-            //     nextRowPlanDate.setTime(nextRowPlanDate.getTime() + timeDifference);
-            //     newData[index + 1].planDate = nextRowPlanDate.toISOString().slice(0, 16);
-            // }
+            
             setallo2dData(newData);
             try {
                 // Send a request to update the backend
@@ -762,12 +756,6 @@ const O2D = () => {
             }
         }
     }
-
-
-
-
-
-
 
 
     async function storeRemark(e) {
@@ -811,7 +799,6 @@ const O2D = () => {
         fetchO2DData();
 
     }, [etaplanneddate]);
-
 
 
     function getColor(timeDelay) {

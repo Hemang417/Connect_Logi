@@ -16,9 +16,6 @@ import toast from 'react-hot-toast'
 import { useLocation, Link } from 'react-router-dom'
 const User_Report = () => {
 
-
-
-
     const [allData, setAllData] = useState([]);
     const navigate = useNavigate();
     const [userAccessData, setuserAccessData] = useState([])
@@ -52,7 +49,7 @@ const User_Report = () => {
         };
         fetchAllUsernames();
     }, []);
-
+    
     const handleAccess = async (index) => {
         // Access the username at the specified index in the allData state
         const username = allData[index].username;

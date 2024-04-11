@@ -11,7 +11,7 @@ import {
     getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, 
     GetUnderprocess, putETA, fetchPlanDateETA
 } from './api/import.js';
-import {storeOwnBranch, getOwnBranches, fetchBranchskhudka} from './api/user.js'
+import {storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, updatedOwnBranch} from './api/user.js'
 import {setMail, fetchMail} from './api/mail.js'
 import {getCompletedRows} from './api/userreport.js'
 
@@ -940,6 +940,27 @@ app.get('/fetchallownbranchname', async (req, res) => {
         console.log(error);
     }
 })
+
+app.delete('/deleteOwnBranch', async (req, res) => {
+    try {
+        const {id, orgname, orgcode} = req.query;
+        const deletedOwnBranch = await deletekhudkaBranch(id, orgname, orgcode);
+        res.send(deletedOwnBranch);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updateOwnBranch', async (req, res) => {
+    try {
+        const {id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode} = req.body;
+        const updatedownbranch = await updatedOwnBranch(id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode);
+        res.send(updatedownbranch);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

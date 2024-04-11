@@ -89,3 +89,25 @@ export const fetchBranchskhudka = async (orgname, orgcode) => {
         console.log(error);
     }
 }
+
+export const deletekhudkaBranch = async (id, orgname, orgcode) => {
+    try {
+        const [row] = await connection.execute(`DELETE FROM ownbranches WHERE id = ? AND orgname = ? AND orgcode = ?`, [id, orgname, orgcode]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updatedOwnBranch = async (id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode) => {
+    try {
+        const [row] = await connection.execute(`UPDATE ownbranches SET 
+            ownbranchname = ?, gstnum = ?, headname = ?, headnum = ?, iecnum = ?, address = ? 
+            WHERE id = ? AND orgcode = ? AND orgname = ? AND branchcode = ?`, 
+            [ownbranchname, gstnum, headname, headnum, iecnum, address, id, orgcode, orgname, branchcode]);
+        return row; // Assuming you want to return the updated row
+    } catch (error) {
+        console.log(error);
+        throw error; // Rethrow the error so it can be handled by the caller
+    }
+}

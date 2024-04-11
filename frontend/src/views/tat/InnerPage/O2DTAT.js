@@ -77,9 +77,6 @@ const O2DTAT = () => {
     }
 
 
-
-
-
     const storeO2D = async (e) => {
         try {
             e.preventDefault();
@@ -106,8 +103,6 @@ const O2DTAT = () => {
                 toast.success('Type of O2D added successfully');
             }
 
-
-
         } catch (error) {
             console.log(error);
         }
@@ -118,9 +113,6 @@ const O2DTAT = () => {
     useEffect(() => {
         fetchAllO2D();
     }, [])
-
-
-
 
 
     const handleEdit = (item) => {
@@ -134,7 +126,6 @@ const O2DTAT = () => {
         });
         setVisible(true);
     }
-
 
 
     async function handleUpdate() {

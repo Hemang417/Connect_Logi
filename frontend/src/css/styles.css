@@ -227,3 +227,16 @@
 .row-font{
     font-size: small;
 }
+/* .all-buttons-user-import{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.clear-button{
+    margin-left: 30px;
+} */
+
+.date-filters{
+    display: flex;
+    flex-direction: row;
+}
