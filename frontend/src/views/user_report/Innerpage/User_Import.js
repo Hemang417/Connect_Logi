@@ -7,12 +7,13 @@
 // import moment from 'moment';
 
 // const User_Import = () => {
-//   const [allData, setallData] = useState([]);
+//   const [allData, setAllData] = useState([]);
+//   const [originalData, setOriginalData] = useState([]);
 //   const [groupedData, setGroupedData] = useState([]);
-
-//   const [startDate, setstartDate] = useState('');
-//   const [endDate, setendDate] = useState('');
+//   const [startDate, setStartDate] = useState('');
+//   const [endDate, setEndDate] = useState('');
 //   const [nonNegativeCount, setNonNegativeCount] = useState(0);
+
 //   const fetchAllData = async () => {
 //     try {
 //       const response = await axios.get('http://localhost:5000/getAllRowsofUsername', {
@@ -22,14 +23,16 @@
 //           branchname: localStorage.getItem('branchname')
 //         }
 //       });
-//       setallData(response.data);
-//       // grouping code
+//       setAllData(response.data);
+//       setOriginalData(response.data);
+//       // Grouping code
 //       const grouped = response.data.completedRows.reduce((acc, item) => {
 //         const key = item.tatimpcolumn;
 //         acc[key] = [...(acc[key] || []), item];
 //         return acc;
 //       }, {});
 //       setGroupedData(grouped);
+//       // Count non-negative rows
 //       let count = 0;
 //       response.data.completedRows.forEach(item => {
 //         if (!item.timedelay.includes('-')) {
@@ -41,12 +44,10 @@
 //       console.log(error);
 //     }
 //   };
+
 //   useEffect(() => {
-
 //     fetchAllData();
-
 //   }, []);
-
 
 //   const generateRandomColor = (numColors) => {
 //     const randomColor = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
@@ -58,7 +59,7 @@
 //       '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
 //       '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
 //       '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
-//       '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']
+//       '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 //     const selectedColors = [];
 //     for (let i = 0; i < numColors; i++) {
 //       const randomIndex = Math.floor(Math.random() * randomColor.length);
@@ -67,20 +68,17 @@
 //     return selectedColors;
 //   };
 
-
-
-
-
-//   async function filterData() {
+//   const filterData = () => {
 //     try {
-//       const filteredRows = allData.completedRows.filter(row => {
+//       const filteredRows = originalData.completedRows.filter(row => {
 //         const actualDate = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
 //         const startDateObj = moment(startDate).format('YYYY-MM-DDTHH:mm');
 //         const endDateObj = moment(endDate).format('YYYY-MM-DDTHH:mm');
 //         return actualDate >= startDateObj && actualDate <= endDateObj;
 //       });
 
-//       setallData({ ...allData, completedRows: filteredRows });
+//       setAllData({ ...allData, completedRows: filteredRows });
+
 //       // Count non-negative rows
 //       let count = 0;
 //       filteredRows.forEach(row => {
@@ -89,52 +87,46 @@
 //         }
 //       });
 //       setNonNegativeCount(count);
-
 //     } catch (error) {
 //       console.log(error);
 //     }
-//   }
-
-
-
-
-
-//   const clearFilters = () => {
-//     setstartDate('');
-//     setendDate('');
-//     fetchAllData();
 //   };
 
-
-
-
+//   const clearFilters = () => {
+//     setStartDate('');
+//     setEndDate('');
+//     setAllData(originalData);
+//   };
+// console.log(groupedData);
 //   return (
 //     <div>
 //       <CCol xs={12}>
 //         <CCard className="mb-2 container-div">
-//           <CCardBody className='main-div'>
-
-
-//             <div className="date-filters">
+//           <CCardBody>
+//           <div className="date-filters">
 //               <input
 //                 type="datetime-local"
 //                 placeholder="Start Date"
 //                 name='startDate'
 //                 value={startDate}
-//                 onChange={(e) => setstartDate(e.target.value)}
+//                 onChange={(e) => setStartDate(e.target.value)}
 //               />
 //               <input
 //                 type="datetime-local"
 //                 placeholder="End Date"
 //                 name='endDate'
 //                 value={endDate}
-//                 onChange={(e) => setendDate(e.target.value)}
+//                 onChange={(e) => setEndDate(e.target.value)}
 //               />
+//               <div className='mt-4 all-buttons-user-import'>
 //               <CButton color="primary" onClick={filterData}>Filter</CButton>
-//               <CButton color="primary" onClick={clearFilters}>Clear</CButton>
+//               <CButton color="primary" onClick={clearFilters} className='clear-button'>Clear</CButton>
+//               </div>
+//             <div className='main-div'>
+
+
 //             </div>
-
-
+//             </div>
 //             <div className='left-div'>
 //               {allData.access && allData.access.map((accessItem, index) => {
 //                 const groupName = accessItem.value;
@@ -147,29 +139,11 @@
 //                   </div>
 //                 );
 //               })}
-
 //             </div>
 //             <div>
-
-//               {/* {allData.completedRows && allData.completedRows.map((item, index) => {
-//                 if (item.timedelay.includes('-')) {
-//                   return null;
-//                 } else {
-//                   nonNegativeCount++; // Increment count for non-negative time delay
-//                   return (
-//                     <div key={index}>
-
-//                     </div>
-//                   );
-//                 }
-//               })} */}
-
-//               {/* Display the count */}
 //               <div>Total rows completed with time delay: {nonNegativeCount}/{allData.totalJobs ? allData.totalJobs.length : 0}</div>
-
 //             </div>
 //             <div className='right-div'>
-
 //               <CChart
 //                 type="doughnut"
 //                 data={{
@@ -191,7 +165,6 @@
 //                   },
 //                 }}
 //               />
-
 //             </div>
 //           </CCardBody>
 //         </CCard>
@@ -217,14 +190,21 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+
+
+
+
+
+
+
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import axios from 'axios';
-import { CCard, CCol, CCardBody, CButton } from '@coreui/react';
+import { CCard, CCol, CCardBody, CButton, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell } from '@coreui/react';
 import { CChart } from '@coreui/react-chartjs';
 import '../../../css/styles.css';
 import moment from 'moment';
 
-const User_Import = () => {
+const User_Import = ({onDataFetch}) => {
   const [allData, setAllData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [groupedData, setGroupedData] = useState([]);
@@ -258,6 +238,12 @@ const User_Import = () => {
         }
       });
       setNonNegativeCount(count);
+      onDataFetch({
+        allData: response.data,
+        originalData: response.data,
+        groupedData: grouped,
+        nonNegativeCount: count
+      });
     } catch (error) {
       console.log(error);
     }
@@ -305,6 +291,10 @@ const User_Import = () => {
         }
       });
       setNonNegativeCount(count);
+      onDataFetch({
+        allData: { ...allData, completedRows: filteredRows },
+        nonNegativeCount: count
+      });
     } catch (error) {
       console.log(error);
     }
@@ -316,13 +306,21 @@ const User_Import = () => {
     setAllData(originalData);
   };
 
+
+
+
+
+
+
+
   return (
     <div>
       <CCol xs={12}>
         <CCard className="mb-2 container-div">
           <CCardBody>
-          <div className="date-filters">
+            <div className="date-filters-report">
               <input
+              className='start-date-filters-report'
                 type="datetime-local"
                 placeholder="Start Date"
                 name='startDate'
@@ -330,6 +328,7 @@ const User_Import = () => {
                 onChange={(e) => setStartDate(e.target.value)}
               />
               <input
+              className='end-date-filters-report'
                 type="datetime-local"
                 placeholder="End Date"
                 name='endDate'
@@ -337,31 +336,71 @@ const User_Import = () => {
                 onChange={(e) => setEndDate(e.target.value)}
               />
               <div className='mt-4 all-buttons-user-import'>
-              <CButton color="primary" onClick={filterData}>Filter</CButton>
-              <CButton color="primary" onClick={clearFilters} className='clear-button'>Clear</CButton>
+                <CButton color="primary" onClick={filterData} className='filter-button'>Search</CButton>
+                <CButton color="primary" onClick={clearFilters} className='clear-button'>Clear</CButton>
               </div>
-            <div className='main-div'>
-            
-              
             </div>
-            </div>
-            <div className='left-div'>
-              {allData.access && allData.access.map((accessItem, index) => {
+            <div>
+              {/* {allData.access && allData.access.map((accessItem, index) => {
                 const groupName = accessItem.value;
-                const groupLength = groupedData[groupName] ? groupedData[groupName].length : 0;
+                const groupData = groupedData[groupName] || []; // Get group data or an empty array if groupName doesn't exist
+                const groupLength = groupData.length;
+                let nonNegativeCount = 0;
+                groupData.forEach(item => {
+                  if (!item.timedelay.includes('-')) {
+                    nonNegativeCount++;
+                  }
+                });
 
                 return (
-                  <div key={index}>
-                    <h6>{groupName}</h6>
-                    <p>{groupLength + '/' + allData.totalJobs.length}</p>
+                  <div >
+                    <div key={index} className='main-div-report'>
+                      <h6>{groupName}</h6>
+                      <p>{groupLength}/{allData.totalJobs.length}</p>
+                      <p>Non-negative time delay: {nonNegativeCount}</p>
+                    </div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
+
+            <CTable className='left-div-report'>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="col">Assigned</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Completed</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Delayed</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">%</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {allData.access && allData.access.map((accessItem, index) => {
+                  const groupName = accessItem.value;
+                  const groupData = groupedData[groupName] || [];
+                  const groupLength = groupData.length;
+                  let nonNegativeCount = 0;
+                  groupData.forEach(item => {
+                    if (!item.timedelay.includes('-')) {
+                      nonNegativeCount++;
+                    }
+                  });
+                  const percentage = ((groupLength / allData.totalJobs.length) * 100).toFixed(2);
+                  return (
+                    <CTableRow key={index}>
+                      <CTableHeaderCell>{groupName}</CTableHeaderCell>
+                      <CTableHeaderCell scope="row">{groupLength}/{allData.totalJobs.length}</CTableHeaderCell>
+                      <CTableHeaderCell>{nonNegativeCount}</CTableHeaderCell>
+                      <CTableHeaderCell>{percentage + '%'}</CTableHeaderCell>
+                    </CTableRow>
+                  );
+                })}
+              </CTableBody>
+            </CTable>
             <div>
               <div>Total rows completed with time delay: {nonNegativeCount}/{allData.totalJobs ? allData.totalJobs.length : 0}</div>
             </div>
-            <div className='right-div'>
+
+            <div className='right-div-report'>
               <CChart
                 type="doughnut"
                 data={{
@@ -389,12 +428,7 @@ const User_Import = () => {
       </CCol>
     </div>
   );
-};
+}
+
 
 export { User_Import };
-
-
-
-
-
-

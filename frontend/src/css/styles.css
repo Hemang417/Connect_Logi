@@ -240,3 +240,52 @@
     display: flex;
     flex-direction: row;
 }
+
+.main-div-report{
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
+.O2D-values{
+    padding: 0px;
+}
+
+.left-div-report{
+    width: 50%;
+    position: relative;
+}
+
+.main-div-report{
+    border-right: 1px solid black;
+
+}
+
+.right-div-report{
+    width: 30%;
+    position: absolute;
+    float: right;
+    margin-top: -350px;
+    margin-left: 650px;
+}
+
+.date-filters-report{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.date-filters-report .start-date-filters-report, .date-filters-report .end-date-filters-report, .date-filters-report .start-date-filters-report:active, .date-filters-report .end-date-filters-report:active, .date-filters-report .start-date-filters-report:focus, .date-filters-report .end-date-filters-report:focus{
+    border-top: 0px;
+    border-right: 0px;
+    border-left: 0px;
+    border-bottom: 1px solid black;
+    margin-right: 20px;
+    height: 30px;
+}
+.filter-button, .clear-button{
+    margin-top: -45px;
+    margin-right: 20px;
+    border-radius: 20px;;
+}
