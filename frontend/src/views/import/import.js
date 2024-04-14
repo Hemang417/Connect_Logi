@@ -56,7 +56,9 @@ const Import = () => {
         const response = await axios.get('http://localhost:5000/allimpjobs', {
           params: {
             orgname: localStorage.getItem('orgname'),
-            orgcode: localStorage.getItem('orgcode')
+            orgcode: localStorage.getItem('orgcode'),
+            branchname: localStorage.getItem('branchnameofemp'),
+            branchcode: localStorage.getItem('branchcodeofemp')
           }
         });
 

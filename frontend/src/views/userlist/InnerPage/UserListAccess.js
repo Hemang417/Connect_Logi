@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import {
   CCard,
   CCardBody,
@@ -24,7 +24,7 @@ import {
   CModalBody,
   CModalFooter,
   CForm,
-  CButton, 
+  CButton,
   CNav,
   CNavItem,
   CNavLink,
@@ -37,6 +37,7 @@ import { Link } from 'react-router-dom';
 import ImpAccess from './ImpAccess';
 import ExpAccess from './ExpAccess';
 import TranspAccess from './TranspAccess';
+import BranchAccess from './BranchAccess';
 
 const UserListAccess = () => {
   const [date, setDate] = useState(new Date());
@@ -48,7 +49,28 @@ const UserListAccess = () => {
 
   return (
     <div>
-        <CNav variant="tabs">
+
+
+      <CCol xs={12}>
+        <CCard className="mb-2 container-div">
+          <CCardBody>
+            <div className='grid-container'>
+              <div>
+                <label for="Branch" className='text-field-3'>Full Name</label>
+                <h4>{localStorage.getItem('fullnameforaccess')}</h4>
+              </div>
+              <div>
+                <label for="User Name" className='text-field-3'>User Name</label>
+                <h4>{localStorage.getItem('empnameforaccess')}</h4>
+              </div>
+              
+            </div>
+          </CCardBody>
+        </CCard>
+      </CCol>
+
+
+      <CNav variant="tabs">
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("import") }}>Import</CNavLink>
         </CNavItem>
@@ -58,13 +80,17 @@ const UserListAccess = () => {
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("transport") }}>Transport</CNavLink>
         </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("branches") }}>Branches</CNavLink>
+        </CNavItem>
 
       </CNav>
       {isshown === "import" && <ImpAccess />}
       {isshown === "export" && <ExpAccess />}
       {isshown === "transport" && <TranspAccess />}
+      {isshown === "branches" && <BranchAccess />}
       {/* {isshown === "contactdetails" && <Contactdetails />} */}
-    {/* <label>
+      {/* <label>
       <input type="checkbox"
         defaultChecked={visible}
         onChange={() => setVisible(!visible)}

@@ -138,7 +138,9 @@ const impcreatejob = () => {
       const username = localStorage.getItem('username');
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
-      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime });
+      const branchnameoftheorg = localStorage.getItem('branchnameofemp');
+      const branchcodeoftheorg = localStorage.getItem('branchcodeofemp');
+      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime, branchname: branchnameoftheorg, branchcode: branchcodeoftheorg });
       
       if (response.status === 200) {
         toast.success('Job created successfully.');
@@ -440,7 +442,6 @@ const impcreatejob = () => {
                     Create Job
                   </CButton>
                 }
-
 
 
               </div>

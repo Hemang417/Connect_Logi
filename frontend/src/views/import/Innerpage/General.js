@@ -758,8 +758,10 @@ const General = () => {
             const username = localStorage.getItem('username');
             const nameoforg = localStorage.getItem('orgname');
             const codeoforg = localStorage.getItem('orgcode');
+            const branchnameofemp = localStorage.getItem('branchnameofemp');
+            const branchcodeofemp = localStorage.getItem('branchcodeofemp');
             
-            const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum });
+            const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp});
             toast.success('Successfully stored General Details');
 
         } catch (error) {

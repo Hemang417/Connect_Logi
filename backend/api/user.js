@@ -36,7 +36,7 @@ export const getTheUser = async (username, password, orgcode) => {
 // REGISTER API
 export const insertUser = async (username, password, orgname, orgcode) => {
     try {
- 
+
         const firstEmptyIndex = orgname.indexOf(' ');
         const orgNamehaiye = orgname.slice(0, firstEmptyIndex !== -1 ? firstEmptyIndex : orgname.length).toLowerCase();
         const newOrgcode = orgNamehaiye + '@' + orgcode
@@ -53,12 +53,12 @@ export const insertUser = async (username, password, orgname, orgcode) => {
 function extractNumbersAfterAt(orgcode) {
     const numbersAfterAt = orgcode.match(/@(\d+)/);
     if (numbersAfterAt && numbersAfterAt.length > 1) {
-      return numbersAfterAt[1];
+        return numbersAfterAt[1];
     } else {
-      return null;
+        return null;
     }
-  }
-  
+}
+
 
 export const storeOwnBranch = async (orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname) => {
     try {
@@ -81,14 +81,23 @@ export const getOwnBranches = async (orgname, orgcode) => {
     }
 }
 
-export const fetchBranchskhudka = async (orgname, orgcode) => {
+export const fetchBranchskhudka = async (orgname, orgcode, username) => {
     try {
-        const [rows] = await connection.execute(`SELECT ownbranchname, branchcode FROM ownbranches WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        let query;
+        let params;
+        if (username === 'admin') {
+            query = `SELECT ownbranchname, branchcode FROM ownbranches WHERE orgname = ? AND orgcode = ?`;
+            params = [orgname, orgcode];
+        } else {
+            query = `SELECT ownbranchname, branchcode FROM branchaccess WHERE orgname = ? AND orgcode = ? AND username = ?`;
+            params = [orgname, orgcode, username];
+        }
+        const [rows] = await connection.execute(query, params);
         return rows;
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 export const deletekhudkaBranch = async (id, orgname, orgcode) => {
     try {
@@ -103,7 +112,7 @@ export const updatedOwnBranch = async (id, orgcode, orgname, ownbranchname, gstn
     try {
         const [row] = await connection.execute(`UPDATE ownbranches SET 
             ownbranchname = ?, gstnum = ?, headname = ?, headnum = ?, iecnum = ?, address = ? 
-            WHERE id = ? AND orgcode = ? AND orgname = ? AND branchcode = ?`, 
+            WHERE id = ? AND orgcode = ? AND orgname = ? AND branchcode = ?`,
             [ownbranchname, gstnum, headname, headnum, iecnum, address, id, orgcode, orgname, branchcode]);
         return row; // Assuming you want to return the updated row
     } catch (error) {

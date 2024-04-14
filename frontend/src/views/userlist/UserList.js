@@ -195,7 +195,8 @@ const UserList = () => {
     localStorage.setItem('accessedRows', JSON.stringify(response.data));
     // Store the username in localStorage
     localStorage.setItem('empnameforaccess', username);
-    // navigate('/#/UserListAccess');
+    localStorage.setItem('fullnameforaccess', allData[index].fullname);
+    navigate('/UserListAccess');
     // Optionally, you can redirect or perform any other action here
   };
 
@@ -226,14 +227,14 @@ const UserList = () => {
             <CTableHeaderCell scope="col"></CTableHeaderCell>
             <CTableHeaderCell scope="col">Username</CTableHeaderCell>
             <CTableHeaderCell scope="col">Access</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Report</CTableHeaderCell>
+          
           </CTableRow>
         </CTableHead>
         <CTableBody>
           {allData.map((userData, index) => (
             <CTableRow key={index}>
               <CTableHeaderCell scope="row">
-                <Link to={'/UserListAccess'} onClick={() => handleAccess(index)}>Edit</Link>
+                <Link onClick={() => handleAccess(index)}>Edit</Link>
               </CTableHeaderCell>
               <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
               <CTableDataCell>

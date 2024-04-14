@@ -164,3 +164,29 @@ export const storeimpaccess = async (dataAccess, username) => {
     }
 }
 
+
+
+export const storeBranchAccessforUser = async (orgcode, orgname, ownbranchname, branchcode, username) => {
+    try {
+        const [row] = await connection.execute(`INSERT INTO branchaccess (ownbranchname, branchcode, username, orgname, orgcode) VALUES (?,?,?,?,?)`, [ownbranchname, branchcode, username, orgname, orgcode]);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deletethatbranchaccess = async (branchcode) => {
+    try {
+        const [row] = await connection.execute(`DELETE FROM branchaccess WHERE branchcode = ?`, [branchcode]);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const fetchExistingBranches = async (username, orgname, orgcode) => {
+    try {
+        const [rows] = await connection.execute('SELECT * FROM branchaccess WHERE orgname = ? AND orgcode = ? AND username = ?', [orgname, orgcode, username]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}

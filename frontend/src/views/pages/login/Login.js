@@ -66,7 +66,7 @@ const Login = () => {
         //   }
         // })
         setShowDropdown(true);
-        fetchBranchesofOwnOrg(response.data.orgcode, response.data.orgname);
+        fetchBranchesofOwnOrg(response.data.orgcode, response.data.orgname, response.data.username);
       } else {
         // Invalid credentials, display an error message to the user
         // You can also clear the input fields here if needed
@@ -80,16 +80,19 @@ const Login = () => {
     }
   }
 
+
   const [allBranchesofourOwn, setallbranchesofourOwn] = useState([]);
   const [selectedBranch, setselectedBranch] = useState([]);
-  const fetchBranchesofOwnOrg = async (orgcode, orgname) => {
+  const fetchBranchesofOwnOrg = async (orgcode, orgname, username) => {
     try {
       const response = await axios.get('http://localhost:5000/fetchallownbranchname', {
         params: {
           orgcode: orgcode,
-          orgname: orgname
+          orgname: orgname,
+          username: username
         }
       })
+    
       setallbranchesofourOwn(response.data);
     } catch (error) {
       console.log(error);

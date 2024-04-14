@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTheUser, insertUser } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
-import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess } from './api/userlist.js';
+import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess, storeBranchAccessforUser, deletethatbranchaccess, fetchExistingBranches } from './api/userlist.js';
 import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
@@ -342,9 +342,10 @@ app.post('/storeJob', async (req, res) => {
             blType,
             bltypenumber,
             jobOwner,
-            orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond
+            orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond,
+            branchname, branchcode
         } = req.body;
-        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus, benumber, shippinglinebond);
+        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode);
 
         res.status(200).json(storeandcreateJob);
 
@@ -357,7 +358,6 @@ app.post('/storeJob', async (req, res) => {
 app.put('/updateId', async (req, res) => {
     try {
         const { jobno, transportMode, count } = req.body;
-        
         const sendtoAPI = await updateJobNumber(jobno, transportMode, count);
         res.status(200).json(sendtoAPI);
     } catch (error) {
@@ -393,9 +393,9 @@ app.get('/getorganizationdetails', async (req, res) => {
 
 app.post('/createGeneral', async (req, res) => {
     try {
-        const { orgname, orgcode, jobowner, jobnumber } = req.body;
+        const { orgname, orgcode, jobowner, jobnumber, branchname, branchcode } = req.body;
         const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id } = req.body.formData;
-        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id);
+        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode);
 
         res.send(storingGeneralImportData);
     } catch (error) {
@@ -673,8 +673,8 @@ app.delete('/deletefromO2Dtable', async (req, res) => {
 
 app.get('/allimpjobs', async (req, res) => {
     try {
-        const { orgname, orgcode } = req.query;
-        const allJobsFetched = await fetchallimpjobs(orgname, orgcode);
+        const { orgname, orgcode, branchname, branchcode } = req.query;
+        const allJobsFetched = await fetchallimpjobs(orgname, orgcode, branchname, branchcode);
         res.send(allJobsFetched);
     } catch (error) {
         console.error('Error fetching all importers:', error);
@@ -933,8 +933,8 @@ app.get('/fetchBranchesofOwn', async (req, res) => {
 
 app.get('/fetchallownbranchname', async (req, res) => {
     try {
-        const {orgcode, orgname} = req.query;
-        const sendAllBranches = await fetchBranchskhudka(orgname, orgcode);
+        const {orgcode, orgname, username} = req.query;
+        const sendAllBranches = await fetchBranchskhudka(orgname, orgcode, username);
         res.send(sendAllBranches);
     } catch (error) {
         console.log(error);
@@ -956,6 +956,35 @@ app.put('/updateOwnBranch', async (req, res) => {
         const {id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode} = req.body;
         const updatedownbranch = await updatedOwnBranch(id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode);
         res.send(updatedownbranch);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/insertBranchaccess', async (req, res) => {
+    try {
+        const {orgcode, orgname, ownbranchname, branchcode} = req.body.branch;
+        const {username} = req.body;
+        const storedBranchAccess = await storeBranchAccessforUser(orgcode, orgname, ownbranchname, branchcode, username);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteBranchaccess', async (req, res) => {
+    try {
+        const {branchcode} = req.body;
+        const deletedBranchAccess = await deletethatbranchaccess(branchcode);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/fetchExistingBranches', async (req, res) => {
+    try {
+        const {username, orgname, orgcode} = req.query;
+        const fetchexisting = await fetchExistingBranches(username, orgname, orgcode);
+        res.send(fetchexisting);
     } catch (error) {
         console.log(error);
     }
