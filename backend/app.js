@@ -13,7 +13,8 @@ import {
 } from './api/import.js';
 import {storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, updatedOwnBranch} from './api/user.js'
 import {setMail, fetchMail} from './api/mail.js'
-import {getCompletedRows} from './api/userreport.js'
+import {getCompletedRows} from './api/userreport.js';
+import {switchBranchsogetBranch} from './api/dashboard.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -989,6 +990,17 @@ app.get('/fetchExistingBranches', async (req, res) => {
         console.log(error);
     }
 })
+
+app.get('/getAllBranches', async (req, res) => {
+    try {
+        const {orgname, orgcode, username} = req.query;
+        const response = await switchBranchsogetBranch(orgname, orgcode, username);
+        res.send(response);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 
 app.listen(PORT, () => {

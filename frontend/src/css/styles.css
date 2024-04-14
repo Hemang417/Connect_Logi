@@ -289,3 +289,11 @@
     margin-right: 20px;
     border-radius: 20px;;
 }
+.selected-branch {
+    color: blue; /* Change the color to your desired color */
+    font-weight: bold; /* Optionally, make the text bold or apply other styles */
+    /* cursor: default; */
+}
+.allbranches{
+    cursor: default;
+}
