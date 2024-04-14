@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -19,9 +19,24 @@ import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
 
 const AppHeader = () => {
-  const dispatch = useDispatch()
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+ 
+  const [currentBranch, setCurrentBranch] = useState('');
 
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // Retrieve the current branch name from localStorage
+      const branchName = localStorage.getItem('branchnameofemp');
+      setCurrentBranch(branchName);
+     
+    }, 1000); // Interval set to 1 second
+  
+    // Cleanup function to clear the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []); 
+  
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -49,6 +64,9 @@ const AppHeader = () => {
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
+            <CNavLink style={{fontWeight: 700, color:'blue'}}>Current Branch: {currentBranch}</CNavLink>
+          </CNavItem>
+          <CNavItem>
             <CNavLink href="#">
               <CIcon icon={cilBell} size="lg" />
             </CNavLink>
@@ -63,17 +81,16 @@ const AppHeader = () => {
               <CIcon icon={cilEnvelopeOpen} size="lg" />
             </CNavLink>
           </CNavItem>
+
         </CHeaderNav>
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-      <CHeaderDivider />
-      <CContainer fluid>
-        <AppBreadcrumb />
-      </CContainer>
+
+
     </CHeader>
   )
 }
 
-export default AppHeader
+export default AppHeader;

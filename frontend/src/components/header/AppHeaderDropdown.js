@@ -49,6 +49,7 @@ const AppHeaderDropdown = () => {
 
 
   const handleBranchSelection = (branch) => {
+    alert(`Are you sure you want to switch to ${branch.ownbranchname}?`)
     // Update localStorage with the selected branch's details
     localStorage.setItem('branchnameofemp', branch.ownbranchname);
     localStorage.setItem('branchcodeofemp', branch.branchcode);
