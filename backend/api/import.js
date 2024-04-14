@@ -34,69 +34,49 @@ const connection = await connectMySQL();
 
 
 
+
+
+
 export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode) => {
     try {
 
         const firstletter = transportMode.charAt(0).toUpperCase();
 
         let currentDate = new Date();
-        // Get the current month (zero-based index)
         let currentMonth = currentDate.getMonth();
-        // Get the current year
         let currentYear = currentDate.getFullYear();
 
         let startYearPart, endYearPart;
         let count;
 
         if (currentMonth >= 3) {
-            // April or later, use the current year as the start year
             startYearPart = currentYear.toString().slice(-2);
             endYearPart = (currentYear + 1).toString().slice(-2);
-            // if(currentMonth === 3){
-            //     count = 1;
-            // }
         }
-        // else {
-        //     // Construct the year range for the previous financial year
-        //     startYearPart = (currentYear - 1).toString().slice(-2);
-        //     endYearPart = currentYear.toString().slice(-2);
-        // }
         let yearPart = `${startYearPart}-${endYearPart}`;
-        const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation ORDER BY id DESC LIMIT 1');
-
+        const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation WHERE branchcode = ? ORDER BY id DESC LIMIT 1', [branchcode]);
 
         if (!lastYearRow || lastYearRow.length === 0) {
-            count = 1; // Initialize count to 1 if table is empty
+            count = 1;
         } else {
             if (currentMonth === 3) {
                 if (lastYearRow[0].jobnumber.slice(-5) !== yearPart) {
-                    count = 1; // Reset count to 1 for new financial year
+                    count = 1;
                 } else {
-                    const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
-                    count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+                    const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM impjobcreation WHERE branchcode = ?', [branchcode]);
+                    const maxCount = lastCountRow[0].maxCount || 0;
+
+                    // Increment the count for the new job
+                    count = maxCount + 1;
                 }
             } else {
-                const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
-                count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+                const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM impjobcreation WHERE branchcode = ?', [branchcode]);
+                const maxCount = lastCountRow[0].maxCount || 0;
+
+                // Increment the count for the new job
+                count = maxCount + 1;
             }
         }
-
-
-
-        // if (currentMonth === 3) {
-        //     if (lastYearRow && lastYearRow[0].jobnumber.slice(-5) !== yearPart) {
-        //         count = 1;
-        //     } else {
-        //         const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
-        //         count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
-        //     }
-        // } else {
-        //     const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
-        //     count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
-        // }
-        // const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
-        // count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
-
 
         let jobNumber = `${firstletter}/I/${yearPart}`
 
@@ -105,16 +85,103 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode]);
 
-        // const insertedId = result.insertId;
         const insertedId = result.insertId;
         const [row] = await connection.execute('SELECT * FROM impjobcreation WHERE id = ?', [insertedId]);
-        
+
         return row;
 
     } catch (error) {
         console.log(error);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode) => {
+//     try {
+
+//         const firstletter = transportMode.charAt(0).toUpperCase();
+
+//         let currentDate = new Date();
+//         // Get the current month (zero-based index)
+//         let currentMonth = currentDate.getMonth();
+//         // Get the current year
+//         let currentYear = currentDate.getFullYear();
+
+//         let startYearPart, endYearPart;
+//         let count;
+
+//         if (currentMonth >= 3) {
+//             // April or later, use the current year as the start year
+//             startYearPart = currentYear.toString().slice(-2);
+//             endYearPart = (currentYear + 1).toString().slice(-2);
+//             // if(currentMonth === 3){
+//             //     count = 1;
+//             // }
+//         }
+//         // else {
+//         //     // Construct the year range for the previous financial year
+//         //     startYearPart = (currentYear - 1).toString().slice(-2);
+//         //     endYearPart = currentYear.toString().slice(-2);
+//         // }
+//         let yearPart = `${startYearPart}-${endYearPart}`;
+//         const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation ORDER BY id DESC LIMIT 1');
+
+
+//         if (!lastYearRow || lastYearRow.length === 0) {
+//             count = 1; // Initialize count to 1 if table is empty
+//         } else {
+//             if (currentMonth === 3) {
+//                 if (lastYearRow[0].jobnumber.slice(-5) !== yearPart) {
+//                     count = 1; // Reset count to 1 for new financial year
+//                 } else {
+//                     const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+//                     count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+//                 }
+//             } else {
+//                 const [lastCountRow] = await connection.execute('SELECT count FROM impjobcreation ORDER BY id DESC LIMIT 1');
+//                 count = lastCountRow.length > 0 ? lastCountRow[0].count + 1 : 1;
+//             }
+//         }
+
+
+//         let jobNumber = `${firstletter}/I/${yearPart}`
+
+//         const [result] = await connection.execute(`INSERT INTO impjobcreation 
+//         (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode)
+//         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+//             [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode]);
+
+//         // const insertedId = result.insertId;
+//         const insertedId = result.insertId;
+//         const [row] = await connection.execute('SELECT * FROM impjobcreation WHERE id = ?', [insertedId]);
+
+//         return row;
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 
 
