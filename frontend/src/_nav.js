@@ -356,6 +356,12 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: 'Workflow',
+        to: '/workflow',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
         name: 'Mailing',
         to: '/mailing',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,

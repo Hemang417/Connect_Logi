@@ -15,6 +15,7 @@ import {storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, 
 import {setMail, fetchMail} from './api/mail.js'
 import {getCompletedRows} from './api/userreport.js';
 import {switchBranchsogetBranch} from './api/dashboard.js';
+import { storethelob,getAlltheLOB, deleteLOB, updateLOB } from './api/lineofbusiness.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1001,7 +1002,45 @@ app.get('/getAllBranches', async (req, res) => {
     }
 })
 
+app.post('/storelob', async(req, res) => {
+    try {
+        const {lobname, orgname, orgcode} = req.body;
+        const lobstorehua = await storethelob(lobname, orgname, orgcode);
+        res.status(200).send(lobstorehua);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
+app.get('/getlob', async(req, res) => {
+    try {
+        const {orgcode, orgname} = req.query;
+        const allDataofLOB = await getAlltheLOB(orgcode, orgname);
+        res.send(allDataofLOB);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deletelob', async (req, res) => {
+    try {
+        const {id} = req.body;
+        const deletedLOB = await deleteLOB(id);
+        res.status(200).send(deletedLOB);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updatelob', async(req, res) => {
+    try {
+        const {id, lobname} = req.body;
+        const updatedLOB = await updateLOB(id, lobname);
+        res.status(200).send(updatedLOB);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

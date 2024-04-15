@@ -12,6 +12,7 @@ const NewUser = React.lazy(() => import('./views/new_user/NewUser'))
 const branches = React.lazy(() => import('./views/branches/branches'))
 const branchlist = React.lazy(() => import('./views/branches/branchlist'))
 const UserList = React.lazy(() => import('./views/userlist/UserList'))
+const workflow = React.lazy(() => import('./views/workflow/workflow'))
 const TAT = React.lazy(() => import('./views/tat/tat'));
 // const generateReport = React.lazy(() => import('./views/userreport/generateReport'));
 const IMPTAT = React.lazy(() => import('./views/tat/InnerPage/ImpTAT'))
@@ -86,6 +87,7 @@ const routes = [
   { path: '/mailing', element: Mailing },
   { path: '/User_Report', element: User_Report },
   { path: '/Generate_Report', element: Generate_Report },
+  { path: '/workflow', element: workflow },
   // { path: '/generatereportImport', element: generatereportImport },
   { path: '/theme', element: Colors, exact: true },
   { path: '/theme/colors', element: Colors },
