@@ -13,6 +13,7 @@ const branches = React.lazy(() => import('./views/branches/branches'))
 const branchlist = React.lazy(() => import('./views/branches/branchlist'))
 const UserList = React.lazy(() => import('./views/userlist/UserList'))
 const workflow = React.lazy(() => import('./views/workflow/workflow'))
+const setWorkflow = React.lazy(() => import('./views/workflow/Innerpage/setWorkflow'))
 const TAT = React.lazy(() => import('./views/tat/tat'));
 // const generateReport = React.lazy(() => import('./views/userreport/generateReport'));
 const IMPTAT = React.lazy(() => import('./views/tat/InnerPage/ImpTAT'))
@@ -88,6 +89,7 @@ const routes = [
   { path: '/User_Report', element: User_Report },
   { path: '/Generate_Report', element: Generate_Report },
   { path: '/workflow', element: workflow },
+  { path: '/setWorkflow', element: setWorkflow },
   // { path: '/generatereportImport', element: generatereportImport },
   { path: '/theme', element: Colors, exact: true },
   { path: '/theme/colors', element: Colors },

@@ -40,7 +40,7 @@ import toast from 'react-hot-toast'
 const Wf = () => {
 
     const [lobdata, setLobdata] = useState([]);
-
+    const { visible, setvisible } = useState(false);
     const fetchLOBdata = async () => {
         try {
             const response = await axios.get('http://localhost:5000/getlob', {
@@ -123,10 +123,14 @@ const Wf = () => {
             <CRow>
                 <CCardBody className='button-div'>
                     <div className='createjob-button'>
-
-                        <CButton color="primary" type="submit" onClick={() => setvisible(true)}>
+                        <Link to={'/setWorkflow'} target='_blank'>
+                            <CButton color="primary" type="submit">
+                                +
+                            </CButton>
+                        </Link>
+                        {/* <CButton color="primary" type="submit" onClick={() => setvisible(true)}>
                             +
-                        </CButton>
+                        </CButton> */}
 
                     </div>
                 </CCardBody>
