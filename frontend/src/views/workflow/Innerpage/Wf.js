@@ -39,8 +39,28 @@ import toast from 'react-hot-toast'
 
 const Wf = () => {
 
+    const [allbranches, setallbranches] = useState([]);
     const [lobdata, setLobdata] = useState([]);
     const { visible, setvisible } = useState(false);
+
+    const getAllBranches = async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/fetchBranchesofOwn', {
+            params: {
+              orgname: localStorage.getItem('orgname'),
+              orgcode: localStorage.getItem('orgcode'),
+            }
+          })
+          setallbranches(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      useEffect(() => {
+        getAllBranches();
+      }, [])
+
     const fetchLOBdata = async () => {
         try {
             const response = await axios.get('http://localhost:5000/getlob', {
@@ -66,8 +86,17 @@ const Wf = () => {
                 <CCardBody>
                     <div className='grid-container-import'>
                         <div>
-                            <label for="Locations" className='text-field-3'>Locations</label>
-                            <input type="text" placeholder="" className='text-field-4' />
+                            <label htmlFor="Locations" className='text-field-3'>Locations</label>
+                            <CDropdown>
+                                <CDropdownToggle className="dropdown-btn" color='secondary'>All</CDropdownToggle>
+                                <CDropdownMenu className="text-field-4">
+                                    {allbranches && allbranches.map((item, index) => (
+                                        <CDropdownItem key={index}>
+                                            {item.ownbranchname}
+                                        </CDropdownItem>
+                                    ))}
+                                </CDropdownMenu>
+                            </CDropdown>
                         </div>
                         <div>
                             <label htmlFor="LOB" className='text-field-3'>Line of Business</label>

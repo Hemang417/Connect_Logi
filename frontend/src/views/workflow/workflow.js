@@ -38,7 +38,7 @@ import moment from 'moment';
 import Lob from './Innerpage/Lob';
 import Wf from './Innerpage/Wf';
 import toast from 'react-hot-toast';
-
+import MileStone from './Innerpage/milestone';
 
 const workflow = () => {
 
@@ -55,10 +55,14 @@ const workflow = () => {
             <CNavLink onClick={() => { setIsShown("Lob") }}>Line of Business</CNavLink>
           </CNavItem>
           <CNavItem>
+            <CNavLink onClick={() => { setIsShown("Milestone") }}>Milestone</CNavLink>
+          </CNavItem>
+          <CNavItem>
             <CNavLink onClick={() => { setIsShown("Wf") }}>Workflow</CNavLink>
           </CNavItem>
         </CNav>
         {isshown === "Lob" && <Lob />}
+        {isshown === "Milestone" && <MileStone />}
         {isshown === "Wf" && <Wf />}
 
       </div>

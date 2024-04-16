@@ -15,7 +15,8 @@ import {storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, 
 import {setMail, fetchMail} from './api/mail.js'
 import {getCompletedRows} from './api/userreport.js';
 import {switchBranchsogetBranch} from './api/dashboard.js';
-import { storethelob,getAlltheLOB, deleteLOB, updateLOB } from './api/lineofbusiness.js';
+import { storethelob,getAlltheLOB, deleteLOB, updateLOB,fetchorgTAT } from './api/lineofbusiness.js';
+import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1004,8 +1005,8 @@ app.get('/getAllBranches', async (req, res) => {
 
 app.post('/storelob', async(req, res) => {
     try {
-        const {lobname, orgname, orgcode} = req.body;
-        const lobstorehua = await storethelob(lobname, orgname, orgcode);
+        const {lobname, transportmode, orgname, orgcode} = req.body;
+        const lobstorehua = await storethelob(lobname, transportmode, orgname, orgcode);
         res.status(200).send(lobstorehua);
     } catch (error) {
         console.log(error);
@@ -1037,6 +1038,56 @@ app.put('/updatelob', async(req, res) => {
         const {id, lobname} = req.body;
         const updatedLOB = await updateLOB(id, lobname);
         res.status(200).send(updatedLOB);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getorgforTAT', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const data = await fetchorgTAT(orgname, orgcode);
+        res.status(200).send(data)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/addmilestone', async (req, res) => {
+    try {
+        const {orgname, orgcode, milestonename, lob, ownbranchname} = req.body;
+        const addedMilestone = await storeMilestone(orgname, orgcode, milestonename, lob, ownbranchname);
+        res.send(addedMilestone);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getmilestones', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allmilestones = await getAllMilestones(orgname, orgcode);
+        res.send(allmilestones);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+app.delete('/deletemilestone', async (req, res) => {
+    try {
+        const {id} = req.body;
+        const deletedMilestone = await deleteMilestone(id);
+        res.status(200).send(deletedMilestone);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updatemilestone', async (req, res) => {
+    try {
+        const {orgname, orgcode, milestonename, lob, ownbranchname, id} = req.body;
+        const updatedData = await updateMilestone(orgname, orgcode, milestonename, lob, ownbranchname, id);
+        res.status(200).send(updatedData);
     } catch (error) {
         console.log(error);
     }
