@@ -16,7 +16,8 @@ import {setMail, fetchMail} from './api/mail.js'
 import {getCompletedRows} from './api/userreport.js';
 import {switchBranchsogetBranch} from './api/dashboard.js';
 import { storethelob,getAlltheLOB, deleteLOB, updateLOB,fetchorgTAT } from './api/lineofbusiness.js';
-import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js'
+import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js';
+import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow } from './api/workflow.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1088,6 +1089,48 @@ app.put('/updatemilestone', async (req, res) => {
         const {orgname, orgcode, milestonename, lob, ownbranchname, id} = req.body;
         const updatedData = await updateMilestone(orgname, orgcode, milestonename, lob, ownbranchname, id);
         res.status(200).send(updatedData);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/createworkflow', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchName, lob, importername} = req.body;
+        const {workflowname, workflowbranchname, duration, days, hours, minutes, milestone, plandatechange} = req.body.workflowData;
+        const storedWorkflow = await storeWorkflow(orgname, orgcode, workflowname, workflowbranchname, duration, days, hours, minutes, milestone, plandatechange, branchName, lob, importername);
+        res.status(200).send(storedWorkflow);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/readallworkflows', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allWorkflow = await readAllWorkflow(orgname, orgcode);
+        res.send(allWorkflow);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.post('/createOverviewofWorkflow', async (req, res) => {
+    try {
+        const {orgname, orgcode, client, lob, branch} = req.body;
+        const createdoverview = await createOverviewofWorkflow(orgname, orgcode, client, lob, branch);
+        res.status(200).send(createdoverview);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteWorkflow', async (req, res) => {
+    try {
+        const {orgname, orgcode, id} = req.body;
+        const deletedRow = await deletedWorkflowRow(orgname, orgcode, id);
+        res.status(200).send(deletedRow);
     } catch (error) {
         console.log(error);
     }

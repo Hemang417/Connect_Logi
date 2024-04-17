@@ -31,12 +31,56 @@ import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import Select from 'react-select';
+import toast from 'react-hot-toast';
 const setWorkflow = () => {
 
   const [allbranches, setallbranches] = useState([]);
   const [allineofbusinesses, setalllineofbusinesses] = useState([]);
   const [allorgs, setallorgs] = useState([]);
   const [visible, setVisible] = useState(false);
+
+  const [selectedLOB, setselectedLOB] = useState('');
+  const [selectedBranch, setselectedBranch] = useState('');
+  const [selectedOrg, setselectedOrg] = useState('');
+
+  const [WorkFlowsData, setWorkflowsData] = useState([]);
+
+  const [filteredMilestones, setFilteredMilestones] = useState([]);
+  const [allmilestones, setallmilestones] = useState([]);
+  // const [editFormData, setEditFormData] = useState({
+  //   milestone: '',
+  //   branchName: '',
+  // });
+
+
+  const [workflowData, setworkflowData] = useState({
+    workflowname: '',
+    duration: '',
+    days: '',
+    hours: '',
+    minutes: '',
+    milestone: '',
+    plandatechange: '',
+
+  })
+
+
+
+  const readAllWorkflows = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/readallworkflows', {
+        params: {
+          orgname: localStorage.getItem('orgname'),
+          orgcode: localStorage.getItem('orgcode'),
+        }
+      });
+      setWorkflowsData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
   const getAllBranches = async () => {
     try {
       const response = await axios.get('http://localhost:5000/fetchBranchesofOwn', {
@@ -80,6 +124,47 @@ const setWorkflow = () => {
     }
   }
 
+  const getMilestones = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/getmilestones', {
+        params: {
+          orgname: localStorage.getItem('orgname'),
+          orgcode: localStorage.getItem('orgcode')
+        }
+      });
+      setallmilestones(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  const handleChange = (name, value) => {
+    setworkflowData({ ...workflowData, [name]: value });
+  };
+  const handleCheckboxChange = (name, checked) => {
+    let checkvalue = 0;
+    if (checked) {
+      checkvalue = 1;
+    }
+    setworkflowData({ ...workflowData, [name]: checkvalue });
+  };
+
+
+  const handleModalClose = () => {
+    setVisible(false);
+    setworkflowData({
+      workflowname: '',
+      duration: '',
+      days: '',
+      hours: '',
+      minutes: '',
+      milestone: '',
+      plandatechange: '',
+    });
+  };
+
 
 
   useEffect(() => {
@@ -87,22 +172,20 @@ const setWorkflow = () => {
       getAllBranches();
       getAllLineofBusinesses();
       getAllOrgs();
+      getMilestones();
+      readAllWorkflows();
     } catch (error) {
       console.log(error);
     }
   }, [])
 
 
-
-  // const combineData = (data) => {
-  //   const combinedData = {};
-  //   data.forEach((item) => {
-  //     if (!combinedData[item.clientname]) {
-  //       combinedData[item.clientname] = [];
-  //     }
-  //     combinedData[item.clientname].push(item);
+  // const openEditModal = (milestone) => {
+  //   setEditFormData({
+  //     milestone: milestone.milestonename,
+  //     branchName: milestone.ownbranchname, // Prefill branch name
   //   });
-  //   return combinedData;
+  //   setVisible(true);
   // };
 
 
@@ -119,22 +202,69 @@ const setWorkflow = () => {
   };
 
 
+
+
+  const CreateWorkflow = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/createworkflow', {
+        orgname: localStorage.getItem('orgname'),
+        orgcode: localStorage.getItem('orgcode'),
+        workflowData: workflowData,
+        branchName: selectedBranch,
+        lob: selectedLOB,
+        importername: selectedOrg.label
+      });
+      
+        toast.success('Workflow created successfully');
+        setVisible(false);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+
+
+
+
+
+
+  // const handleDelete = async (milestone) => {
+  //   try {
+  //     const response = await axios.delete('http://localhost:5000/deletemilestone', {
+  //       data: {
+  //         id: milestone.id,
+  //       }
+  //     });
+  //     if (response.status === 200) {
+  //       toast.success('Milestone deleted successfully');
+  //       // getMilestones();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+
+  const handleorg = (selectedOrg) => {
+    setselectedOrg(selectedOrg)
+  }
+
+
   return (
     <CCol xs={12}>
       <CCard className="mb-2 container-div">
         <CCardBody>
           <div className='grid-container-import'>
             <div>
-              <label for="Locations" className='text-field-3'>Name of Workflow</label>
-              <input type="text" placeholder="" className='text-field-4' />
-            </div>
-            <div>
               <label htmlFor="Locations" className='text-field-3'>Applicable for</label>
               <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>All</CDropdownToggle>
+                <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedBranch ? selectedBranch : 'Select Branch'}</CDropdownToggle>
                 <CDropdownMenu className="text-field-4">
                   {allbranches && allbranches.map((item, index) => (
-                    <CDropdownItem key={index}>
+                    <CDropdownItem key={index} value={selectedBranch} onClick={() => setselectedBranch(item.ownbranchname)}>
                       {item.ownbranchname}
                     </CDropdownItem>
                   ))}
@@ -144,10 +274,10 @@ const setWorkflow = () => {
             <div>
               <label htmlFor="Locations" className='text-field-3'>Line of Business</label>
               <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>All</CDropdownToggle>
+                <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedLOB ? selectedLOB : 'Select LOB'}</CDropdownToggle>
                 <CDropdownMenu className="text-field-4">
                   {allineofbusinesses && allineofbusinesses.map((item, index) => (
-                    <CDropdownItem key={index}>{item.lobname}</CDropdownItem>
+                    <CDropdownItem key={index} value={selectedLOB} onClick={() => setselectedLOB(item.lobname)}>{item.lobname}</CDropdownItem>
                   ))}
                 </CDropdownMenu>
               </CDropdown>
@@ -160,6 +290,7 @@ const setWorkflow = () => {
                 <Select
                   className="impgen-text-field-1"
                   options={renderOrgOptions()}
+                  onChange={handleorg}
                   placeholder="Importer Name"
                 />
               </div>
@@ -176,10 +307,52 @@ const setWorkflow = () => {
             <CTableHeaderCell scope="col">Milestone Name</CTableHeaderCell>
             <CTableHeaderCell scope="col">TAT</CTableHeaderCell>
             <CTableHeaderCell scope="col">Assigned Person</CTableHeaderCell>
-            <CTableHeaderCell scope="col"></CTableHeaderCell>
-            <CTableHeaderCell scope="col"></CTableHeaderCell>
+            <CTableHeaderCell scope="col">Operation</CTableHeaderCell>
+
           </CTableRow>
         </CTableHead>
+
+
+
+                  <CTableBody>
+                    {WorkFlowsData && WorkFlowsData.map((workflow, index) => {
+                      return (
+                        <CTableRow key={index}>
+                          <CTableDataCell>{workflow.workflowname}</CTableDataCell>
+                          <CTableDataCell>{workflow.days ? `${workflow.days + ' days ' + workflow.hours + ' hours ' + workflow.minutes + ' mins '}` : 'NA'}</CTableDataCell>
+                          <CTableDataCell>{workflow.assignedPerson ? workflow.assignedPerson : 'NA'}</CTableDataCell>
+                          <CTableDataCell>
+                            <CButton onClick={() => openEditModal(workflow)}>Edit</CButton>
+                            <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )
+                    })}
+                  </CTableBody>
+
+
+        {/* <CTableBody>
+          {allmilestones
+            .filter(milestone => {
+              // Filter the milestones based on selectedBranch and selectedLOB
+              return (
+                (!selectedBranch || milestone.ownbranchname === selectedBranch) &&
+                (!selectedLOB || milestone.lobname === selectedLOB)
+              );
+            })
+            .map((milestone, index) => (
+              <CTableRow key={index}>
+                <CTableDataCell>{milestone.milestonename}</CTableDataCell>
+                <CTableDataCell>{milestone.tat ? milestone.tat : 'NA'}</CTableDataCell>
+                <CTableDataCell>{milestone.assignedPerson ? milestone.assignedPerson : 'NA'}</CTableDataCell>
+                <CTableDataCell>
+                  <CButton onClick={() => openEditModal(milestone)}>Edit</CButton>
+                  <CButton onClick={() => handleDelete(milestone)}>Delete</CButton>
+                </CTableDataCell>
+              </CTableRow>
+            ))}
+        </CTableBody> */}
+
 
 
         <CTableBody>
@@ -191,7 +364,6 @@ const setWorkflow = () => {
         </CTableBody>
 
 
-
         <CModal
           visible={visible}
           onClose={() => setVisible(false)}
@@ -199,7 +371,7 @@ const setWorkflow = () => {
           className='workflow-modal custom-modal '
           size="xl"
         >
-          <CModalHeader onClose={() => setVisible(false)}>
+          <CModalHeader onClose={handleModalClose}>
             <CModalTitle id="LiveDemoExampleLabel">
               Add Workflow
             </CModalTitle>
@@ -207,63 +379,83 @@ const setWorkflow = () => {
           <CModalBody>
             <div>
               <div>
-                <label for="Job Date" className='text-field-3'>Milestone Name</label>
-                <input type="text" placeholder="" className='text-field-4' />
-              </div>
+                <label for="Job Date" className='text-field-3'>Milestone Names</label>
 
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.workflowname ? workflowData.workflowname : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    {allmilestones && allmilestones.map((milestone, index) => (
+                      <CDropdownItem key={index} onClick={() => handleChange('workflowname', milestone.milestonename)}>{milestone.milestonename}</CDropdownItem>
+                    ))}
+                  </CDropdownMenu>
+                </CDropdown>
+
+
+                {/* <label for="Branch Name" className='text-field-3'>Branch Name</label>
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedBranch ? selectedBranch : 'Select Branch'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    {allbranches && allbranches.map((item, index) => (
+                      <CDropdownItem key={index} value={selectedBranch} onClick={() => handleChange('workflowbranchname', item.ownbranchname)}>
+                        {item.ownbranchname}
+                      </CDropdownItem>
+                    ))}
+                  </CDropdownMenu>
+                </CDropdown> */}
+
+              </div>
+              {/* value={editFormData.branchName}
+                  onChange={(e) => setEditFormData({ ...editFormData, branchName: e.target.value })} */}
               <CModalTitle id="LiveDemoExampleLabel">
                 Planning
               </CModalTitle>
+
               <div>
-              <label for="Job Date" className='text-field-3'>Duration</label>
-              <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                <CDropdownMenu className="text-field-4">
-                  <CDropdownItem>Before</CDropdownItem>
-                  <CDropdownItem>After</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              <input type="text" placeholder="" className='text-field-4' />
-              <label for="Job Date" className='text-field-3'>Days</label>
-              <input type="text" placeholder="" className='text-field-4' />
-              <label for="Job Date" className='text-field-3'>Hours</label>
-              <input type="text" placeholder="" className='text-field-4' />
-              <label for="Job Date" className='text-field-3'>Mins.</label>
-              <label for="Job Date" className='text-field-3'>of</label>
-              <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                <CDropdownMenu className="text-field-4">
-                  <CDropdownItem></CDropdownItem>
-                  <CDropdownItem>Another Milestone</CDropdownItem>
-                  <CDropdownItem>Job Creation Date</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>Select Milestone</CDropdownToggle>
-                <CDropdownMenu className="text-field-4">
-                  <CDropdownItem></CDropdownItem>
-                  <CDropdownItem>Another Milestone</CDropdownItem>
-                  <CDropdownItem>Job Creation Date</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
+                <label for="Job Date" className='text-field-3'>Duration</label>
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.duration ? workflowData.duration : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem onClick={() => handleChange('duration', 'Before')}>Before</CDropdownItem>
+                    <CDropdownItem onClick={() => handleChange('duration', 'After')}>After</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('days', e.target.value)} />
+                <label for="Job Date" className='text-field-3'>Days</label>
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('hours', e.target.value)} />
+                <label for="Job Date" className='text-field-3'>Hours</label>
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('minutes', e.target.value)} />
+                <label for="Job Date" className='text-field-3'>Mins.</label>
+                <label for="Job Date" className='text-field-3'>of</label>
+
+                <CDropdown>
+                  <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.milestone ? workflowData.milestone : 'Select'}</CDropdownToggle>
+                  <CDropdownMenu className="text-field-4">
+                    <CDropdownItem onClick={() => handleChange('milestone', 'Job Creation Date')}>Job Creation Date</CDropdownItem>
+                    {allmilestones && allmilestones.map((milestone, index) => (
+                      <React.Fragment key={index}>
+                        <CDropdownItem onClick={() => handleChange('milestone', milestone.milestonename)}>{milestone.milestonename}</CDropdownItem>
+                      </React.Fragment>
+                    ))}
+                  </CDropdownMenu>
+                </CDropdown>
+
               </div>
               <div>
-              <label for="Job Date" className='text-field-3'>Can Change Plan Date</label> </div>
-              <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' /></CTableDataCell>
+                <label for="Job Date" className='text-field-3'>Can Change Plan Date</label> </div>
+              <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' onChange={(e) => handleCheckboxChange('plandatechange', e.target.checked)} /></CTableDataCell>
             </div>
           </CModalBody>
 
 
           <CModalFooter>
-            <CButton color="secondary">
+            <CButton color="secondary" onClick={handleModalClose}>
               Close
             </CButton>
-            <CButton color="primary">
-              Handle
+            <CButton color="primary" onClick={CreateWorkflow}>
+              Create Workflow
             </CButton>
           </CModalFooter>
         </CModal>
-
 
 
       </CTable>
