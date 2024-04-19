@@ -17,7 +17,7 @@ import {getCompletedRows} from './api/userreport.js';
 import {switchBranchsogetBranch} from './api/dashboard.js';
 import { storethelob,getAlltheLOB, deleteLOB, updateLOB,fetchorgTAT } from './api/lineofbusiness.js';
 import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js';
-import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow,getSetAllWorkflow } from './api/workflow.js';
+import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow } from './api/workflow.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1141,6 +1141,26 @@ app.get('/readsetworkflow', async (req, res) => {
         const {orgname, orgcode, branchname, importername, lobname} = req.query;
         const gotallthesetworkflow = await getSetAllWorkflow(orgname, orgcode, branchname, importername, lobname);
         res.send(gotallthesetworkflow);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deletesetworkflow', async (req, res) => {
+    try {
+        const {id, orgname, orgcode, importername, ownbranchname, lobname} = req.body;
+        const deletedSetWorkflow = await deletesetworkflow(id, orgname, orgcode, importername, ownbranchname, lobname);
+        res.status(200).send(deletedSetWorkflow);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updatesetworkflow', async (req, res) => {
+    try {
+        const {id, workflowname, days, hours, minutes, milestone, plandatechange} = req.body;
+        const updatedWorkflowHaiYe = await updatesetworkflow(id, workflowname, days, hours, minutes, milestone, plandatechange);
+        res.status(200).send(updatedWorkflowHaiYe);
     } catch (error) {
         console.log(error);
     }

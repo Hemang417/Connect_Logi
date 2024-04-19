@@ -37,6 +37,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import Select from 'react-select';
+import { useLocation } from 'react-router-dom';
 
 
 const Wf = () => {
@@ -50,6 +51,16 @@ const Wf = () => {
     const [selectedOrg, setselectedOrg] = useState('');
     const [WorkFlowsData, setWorkflowsData] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    if (location.pathname === '/workflow') {
+        localStorage.removeItem('idofworkflow');
+        localStorage.removeItem('workflowlobname');
+        localStorage.removeItem('workflowbranchname');
+        localStorage.removeItem('workflowimportername');
+    }
+
+
     const getAllBranches = async () => {
         try {
             const response = await axios.get('http://localhost:5000/fetchBranchesofOwn', {
@@ -142,10 +153,10 @@ const Wf = () => {
                     id: workflow.id
                 }
             });
-            if(response.status === 200){
+            if (response.status === 200) {
                 readAllWorkflows();
             }
-            
+
         } catch (error) {
             console.log(error);
         }
@@ -182,16 +193,16 @@ const Wf = () => {
 
 
 
-async function handleEdit(workflow){
-    try {
-        localStorage.setItem('idofworkflow', workflow.id);
-        localStorage.setItem('workflowlobname', workflow.lobname);
-        localStorage.setItem('workflowbranchname', workflow.ownbranchname);
-        localStorage.setItem('workflowimportername', workflow.importername);
-    } catch (error) {
-        console.log(error);
+    async function handleEdit(workflow) {
+        try {
+            localStorage.setItem('idofworkflow', workflow.id);
+            localStorage.setItem('workflowlobname', workflow.lobname);
+            localStorage.setItem('workflowbranchname', workflow.ownbranchname);
+            localStorage.setItem('workflowimportername', workflow.importername);
+        } catch (error) {
+            console.log(error);
+        }
     }
-}
 
 
 
@@ -254,10 +265,10 @@ async function handleEdit(workflow){
                         <CTableRow color='dark'>
                             {/* <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell> */}
                             <CTableHeaderCell scope="col" className='row-font'>Locations</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className='row-font'>Name of Workflow</CTableHeaderCell>
+
                             <CTableHeaderCell scope="col" className='row-font'>Organization/Customer</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Line of Business</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className='row-font'>Active Status</CTableHeaderCell>
+                            <CTableHeaderCell scope="col" className='row-font'>Operation</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
 
@@ -269,7 +280,6 @@ async function handleEdit(workflow){
                                 <CTableRow key={index}>
                                     <CTableDataCell>{workflow.ownbranchname}</CTableDataCell>
 
-                                    <CTableDataCell>{workflow.workflowname ? workflow.workflowname : 'NA'}</CTableDataCell>
                                     <CTableDataCell>{workflow.importername}</CTableDataCell>
                                     <CTableDataCell>{workflow.lobname}</CTableDataCell>
                                     <CTableDataCell>
