@@ -66,19 +66,19 @@ const setWorkflow = () => {
 
 
 
-  const readAllWorkflows = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/readallworkflows', {
-        params: {
-          orgname: localStorage.getItem('orgname'),
-          orgcode: localStorage.getItem('orgcode'),
-        }
-      });
-      setWorkflowsData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // const readAllWorkflows = async () => {
+  //   try {
+  //     const response = await axios.get('http://localhost:5000/readallworkflows', {
+  //       params: {
+  //         orgname: localStorage.getItem('orgname'),
+  //         orgcode: localStorage.getItem('orgcode'),
+  //       }
+  //     });
+  //     setWorkflowsData(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
 
   const getAllBranches = async () => {
@@ -94,6 +94,7 @@ const setWorkflow = () => {
       console.log(error);
     }
   }
+
 
   const getAllLineofBusinesses = async () => {
     try {
@@ -123,6 +124,7 @@ const setWorkflow = () => {
       console.log(error);
     }
   }
+
 
   const getMilestones = async () => {
     try {
@@ -167,17 +169,7 @@ const setWorkflow = () => {
 
 
 
-  useEffect(() => {
-    try {
-      getAllBranches();
-      getAllLineofBusinesses();
-      getAllOrgs();
-      getMilestones();
-      readAllWorkflows();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [])
+
 
 
   // const openEditModal = (milestone) => {
@@ -202,32 +194,24 @@ const setWorkflow = () => {
   };
 
 
-
-
   const CreateWorkflow = async () => {
     try {
       const response = await axios.post('http://localhost:5000/createworkflow', {
         orgname: localStorage.getItem('orgname'),
         orgcode: localStorage.getItem('orgcode'),
         workflowData: workflowData,
-        branchName: selectedBranch,
-        lob: selectedLOB,
-        importername: selectedOrg.label
+        branchName: localStorage.getItem('workflowbranchname'),
+        lob: localStorage.getItem('workflowlobname'),
+        importername: localStorage.getItem('workflowimportername')
       });
-      
-        toast.success('Workflow created successfully');
-        setVisible(false);
-      
+      readsetworkflow();
+      toast.success('Workflow created successfully');
+      setVisible(false);
+
     } catch (error) {
       console.log(error);
     }
   }
-
-
-
-
-
-
 
 
 
@@ -253,6 +237,40 @@ const setWorkflow = () => {
   }
 
 
+  async function readsetworkflow() {
+    try {
+      const response = await axios.get('http://localhost:5000/readsetworkflow', {
+        params: {
+          orgname: localStorage.getItem('orgname'),
+          orgcode: localStorage.getItem('orgcode'),
+          importername: localStorage.getItem('workflowimportername'),
+          lobname: localStorage.getItem('workflowlobname'),
+          branchname: localStorage.getItem('workflowbranchname')
+        }
+      })
+      setWorkflowsData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+  useEffect(() => {
+    try {
+      getAllBranches();
+      getAllLineofBusinesses();
+      getAllOrgs();
+      getMilestones();
+      // readAllWorkflows();
+      readsetworkflow();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [])
+
+
+
   return (
     <CCol xs={12}>
       <CCard className="mb-2 container-div">
@@ -260,39 +278,26 @@ const setWorkflow = () => {
           <div className='grid-container-import'>
             <div>
               <label htmlFor="Locations" className='text-field-3'>Applicable for</label>
-              <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedBranch ? selectedBranch : 'Select Branch'}</CDropdownToggle>
-                <CDropdownMenu className="text-field-4">
-                  {allbranches && allbranches.map((item, index) => (
-                    <CDropdownItem key={index} value={selectedBranch} onClick={() => setselectedBranch(item.ownbranchname)}>
-                      {item.ownbranchname}
-                    </CDropdownItem>
-                  ))}
-                </CDropdownMenu>
-              </CDropdown>
+              <input value={localStorage.getItem('workflowbranchname')} readOnly/>
+
             </div>
             <div>
               <label htmlFor="Locations" className='text-field-3'>Line of Business</label>
-              <CDropdown>
-                <CDropdownToggle className="dropdown-btn" color='secondary'>{selectedLOB ? selectedLOB : 'Select LOB'}</CDropdownToggle>
-                <CDropdownMenu className="text-field-4">
-                  {allineofbusinesses && allineofbusinesses.map((item, index) => (
-                    <CDropdownItem key={index} value={selectedLOB} onClick={() => setselectedLOB(item.lobname)}>{item.lobname}</CDropdownItem>
-                  ))}
-                </CDropdownMenu>
-              </CDropdown>
+              <input value={localStorage.getItem('workflowlobname')} readOnly/>
+
             </div>
 
             <div>
               <label for="Locations" className='text-field-3'>Customer/Organization</label>
 
               <div className='left-div'>
-                <Select
+                {/* <Select
                   className="impgen-text-field-1"
                   options={renderOrgOptions()}
                   onChange={handleorg}
                   placeholder="Importer Name"
-                />
+                /> */}
+                <input value={localStorage.getItem('workflowimportername')} readOnly/>
               </div>
             </div>
           </div>
@@ -314,21 +319,21 @@ const setWorkflow = () => {
 
 
 
-                  <CTableBody>
-                    {WorkFlowsData && WorkFlowsData.map((workflow, index) => {
-                      return (
-                        <CTableRow key={index}>
-                          <CTableDataCell>{workflow.workflowname}</CTableDataCell>
-                          <CTableDataCell>{workflow.days ? `${workflow.days + ' days ' + workflow.hours + ' hours ' + workflow.minutes + ' mins '}` : 'NA'}</CTableDataCell>
-                          <CTableDataCell>{workflow.assignedPerson ? workflow.assignedPerson : 'NA'}</CTableDataCell>
-                          <CTableDataCell>
-                            <CButton onClick={() => openEditModal(workflow)}>Edit</CButton>
-                            <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
-                          </CTableDataCell>
-                        </CTableRow>
-                      )
-                    })}
-                  </CTableBody>
+        <CTableBody>
+          {WorkFlowsData && WorkFlowsData.map((workflow, index) => {
+            return (
+              <CTableRow key={index}>
+                <CTableDataCell>{workflow.workflowmilestone}</CTableDataCell>
+                <CTableDataCell>{workflow.days ? `${workflow.days + ' days ' + workflow.hours + ' hours ' + workflow.minutes + ' mins '}` : 'NA'}</CTableDataCell>
+                <CTableDataCell>{workflow.assignedPerson ? workflow.assignedPerson : 'NA'}</CTableDataCell>
+                <CTableDataCell>
+                  <CButton>Edit</CButton>
+                  <CButton>Delete</CButton>
+                </CTableDataCell>
+              </CTableRow>
+            )
+          })}
+        </CTableBody>
 
 
         {/* <CTableBody>

@@ -49,7 +49,7 @@ const Wf = () => {
     const [selectedBranch, setselectedBranch] = useState('');
     const [selectedOrg, setselectedOrg] = useState('');
     const [WorkFlowsData, setWorkflowsData] = useState([]);
-
+    const navigate = useNavigate();
     const getAllBranches = async () => {
         try {
             const response = await axios.get('http://localhost:5000/fetchBranchesofOwn', {
@@ -182,6 +182,19 @@ const Wf = () => {
 
 
 
+async function handleEdit(workflow){
+    try {
+        localStorage.setItem('idofworkflow', workflow.id);
+        localStorage.setItem('workflowlobname', workflow.lobname);
+        localStorage.setItem('workflowbranchname', workflow.ownbranchname);
+        localStorage.setItem('workflowimportername', workflow.importername);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
     return (
         <CCol xs={12}>
             <CCard className="mb-2 container-div">
@@ -260,7 +273,7 @@ const Wf = () => {
                                     <CTableDataCell>{workflow.importername}</CTableDataCell>
                                     <CTableDataCell>{workflow.lobname}</CTableDataCell>
                                     <CTableDataCell>
-                                        <CButton>Edit</CButton>
+                                        <Link to={'/setWorkflow'} target='_blank' onClick={() => handleEdit(workflow)}>Edit</Link>
                                         <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
                                     </CTableDataCell>
                                 </CTableRow>

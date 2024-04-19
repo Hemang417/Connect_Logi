@@ -17,7 +17,7 @@ import {getCompletedRows} from './api/userreport.js';
 import {switchBranchsogetBranch} from './api/dashboard.js';
 import { storethelob,getAlltheLOB, deleteLOB, updateLOB,fetchorgTAT } from './api/lineofbusiness.js';
 import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js';
-import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow } from './api/workflow.js';
+import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow,getSetAllWorkflow } from './api/workflow.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1097,8 +1097,8 @@ app.put('/updatemilestone', async (req, res) => {
 app.post('/createworkflow', async (req, res) => {
     try {
         const {orgname, orgcode, branchName, lob, importername} = req.body;
-        const {workflowname, workflowbranchname, duration, days, hours, minutes, milestone, plandatechange} = req.body.workflowData;
-        const storedWorkflow = await storeWorkflow(orgname, orgcode, workflowname, workflowbranchname, duration, days, hours, minutes, milestone, plandatechange, branchName, lob, importername);
+        const {workflowname, duration, days, hours, minutes, milestone, plandatechange} = req.body.workflowData;
+        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange);
         res.status(200).send(storedWorkflow);
     } catch (error) {
         console.log(error);
@@ -1131,6 +1131,16 @@ app.delete('/deleteWorkflow', async (req, res) => {
         const {orgname, orgcode, id} = req.body;
         const deletedRow = await deletedWorkflowRow(orgname, orgcode, id);
         res.status(200).send(deletedRow);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/readsetworkflow', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, importername, lobname} = req.query;
+        const gotallthesetworkflow = await getSetAllWorkflow(orgname, orgcode, branchname, importername, lobname);
+        res.send(gotallthesetworkflow);
     } catch (error) {
         console.log(error);
     }
