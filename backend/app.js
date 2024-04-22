@@ -19,6 +19,8 @@ import { storethelob,getAlltheLOB, deleteLOB, updateLOB,fetchorgTAT } from './ap
 import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js';
 import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow } from './api/workflow.js';
 
+import {getallthelobdataofbranchandlob} from './api/newimport.js'
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -1165,6 +1167,17 @@ app.put('/updatesetworkflow', async (req, res) => {
         console.log(error);
     }
 })
+
+app.get('/readlobdataspecific', async (req, res) => {
+    try {
+        const {orgname, orgcode, lobname, ownbranchname} = req.query;
+        const allThatLOBdata = await getallthelobdataofbranchandlob(orgname, orgcode, lobname, ownbranchname);
+        res.send(allThatLOBdata);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

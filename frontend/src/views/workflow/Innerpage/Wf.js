@@ -215,26 +215,19 @@ const Wf = () => {
                             <label htmlFor="Locations" className='text-field-3'>Locations</label>
                             <CDropdown>
                                 <CDropdownToggle className="dropdown-btn" color='secondary'>All</CDropdownToggle>
+                                
                                 <CDropdownMenu className="text-field-4">
                                     {allbranches && allbranches.map((item, index) => (
-                                        <CDropdownItem key={index}>
+                                        <CDropdownItem key={index} onClick={() => setselectedBranch(item.ownbranchname)}>
                                             {item.ownbranchname}
                                         </CDropdownItem>
+
                                     ))}
+                                    <CDropdownItem onClick={() => setselectedBranch('')}>All</CDropdownItem>
                                 </CDropdownMenu>
                             </CDropdown>
                         </div>
-                        {/* <div>
-                            <label htmlFor="LOB" className='text-field-3'>Line of Business</label>
-                            <CDropdown>
-                                <CDropdownToggle className="dropdown-btn" color='secondary'>All</CDropdownToggle>
-                                <CDropdownMenu className="text-field-4">
-                                    {lobdata && lobdata.map((item, index) => (
-                                        <CDropdownItem key={index}>{item.lobname}</CDropdownItem>
-                                    ))}
-                                </CDropdownMenu>
-                            </CDropdown>
-                        </div> */}
+
 
                         <div>
                             <label for="Active" className='text-field-3'>Active</label>
@@ -275,6 +268,30 @@ const Wf = () => {
 
 
                     <CTableBody>
+                        {WorkFlowsData && (selectedBranch
+                            ? WorkFlowsData.filter(workflow => workflow.ownbranchname === selectedBranch) // Filter workflows by selected branch
+                            : WorkFlowsData)
+                            .map((workflow, index) => {
+                                return (
+                                    <CTableRow key={index}>
+                                        <CTableDataCell>{workflow.ownbranchname}</CTableDataCell>
+                                        <CTableDataCell>{workflow.importername}</CTableDataCell>
+                                        <CTableDataCell>{workflow.lobname}</CTableDataCell>
+                                        <CTableDataCell>
+                                            <Link to={'/setWorkflow'} target='_blank' onClick={() => handleEdit(workflow)}>Edit</Link>
+                                            <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
+                                        </CTableDataCell>
+                                    </CTableRow>
+                                )
+                            })}
+                    </CTableBody>
+
+
+
+
+
+
+                    {/* <CTableBody>
                         {WorkFlowsData && WorkFlowsData.map((workflow, index) => {
                             return (
                                 <CTableRow key={index}>
@@ -289,7 +306,7 @@ const Wf = () => {
                                 </CTableRow>
                             )
                         })}
-                    </CTableBody>
+                    </CTableBody> */}
 
 
 

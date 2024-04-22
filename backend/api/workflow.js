@@ -3,9 +3,14 @@ const connection = await connectMySQL();
 
 export const storeWorkflow = async (orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange) => {
     try {
-        const [row] = await connection.execute(`INSERT INTO setworkflow (orgname, orgcode, lobname, ownbranchname, importername, duration, days, hours, minutes, workflowmilestone, plandatechange, workflowname) 
-        VALUES (?,?,?,?,?,?,?, ?, ?, ?, ?, ?)`, [orgname, orgcode, lob, branchName, importername, duration, days, hours, minutes, milestone, plandatechange, workflowname]);
+        // Check if plandatechange is empty
+        const plandatechangeValue = plandatechange ? plandatechange : 0;
 
+        const [row] = await connection.execute(`
+            INSERT INTO setworkflow (orgname, orgcode, lobname, ownbranchname, importername, duration, days, hours, minutes, workflowmilestone, plandatechange, workflowname) 
+            VALUES (?,?,?,?,?,?,?, ?, ?, ?, ?, ?)`, 
+            [orgname, orgcode, lob, branchName, importername, duration, days, hours, minutes, milestone, plandatechangeValue, workflowname]
+        );
     } catch (error) {
         console.log(error);
     }

@@ -139,12 +139,12 @@ const setWorkflow = () => {
   const openEditModal = (workflow) => {
     setSelectedWorkflow(workflow); // Set the selected workflow data
     setworkflowData({ // Populate the workflowData state with the selected workflow data
-      workflowname: workflow.workflowmilestone,
+      workflowname: workflow.workflowname,
       duration: workflow.duration,
       days: workflow.days,
       hours: workflow.hours,
       minutes: workflow.minutes,
-      milestone: workflow.workflowname,
+      milestone: workflow.workflowmilestone,
       plandatechange: workflow.plandatechange,
     });
     setVisible(true); // Open the modal
@@ -336,7 +336,7 @@ const setWorkflow = () => {
           {WorkFlowsData && WorkFlowsData.map((workflow, index) => {
             return (
               <CTableRow key={index}>
-                <CTableDataCell>{workflow.workflowmilestone}</CTableDataCell>
+                <CTableDataCell>{workflow.workflowname}</CTableDataCell>
                 <CTableDataCell>{workflow.days ? `${workflow.days + ' days ' + workflow.hours + ' hours ' + workflow.minutes + ' mins '}` : 'NA'}</CTableDataCell>
                 <CTableDataCell>{workflow.assignedPerson ? workflow.assignedPerson : 'NA'}</CTableDataCell>
                 <CTableDataCell>

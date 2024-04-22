@@ -16,6 +16,7 @@ export const storethelob = async (lobname, transportmode, orgname, orgcode) => {
 }
 
 
+
 export const getAlltheLOB = async (orgcode, orgname) => {
     try {
         const [rows] = await connection.execute('SELECT * FROM lob WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);

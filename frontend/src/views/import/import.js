@@ -107,10 +107,12 @@ const Import = () => {
 
 
   async function handleEdit(index) {
+    
     const thatdata = allimpjobs[index];
     localStorage.setItem('jobNumber', thatdata.jobnumber);
     localStorage.setItem('jobDate', thatdata.jobdate);
     localStorage.setItem('onEdit', true);
+    localStorage.setItem('modeoftransport', thatdata.transportmode + ' ' + 'Import');
   }
 
 
