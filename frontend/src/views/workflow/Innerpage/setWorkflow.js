@@ -48,8 +48,6 @@ const setWorkflow = () => {
   const [filteredMilestones, setFilteredMilestones] = useState([]);
   const [allmilestones, setallmilestones] = useState([]);
 
-
-
   const [workflowData, setworkflowData] = useState({
     workflowname: '',
     duration: '',
@@ -158,7 +156,6 @@ const setWorkflow = () => {
   };
 
 
-
   const updateWorkflow = async () => {
     try {
 
@@ -167,7 +164,7 @@ const setWorkflow = () => {
         id: selectedWorkflow.id,
         ...workflowData,
       });
-
+      readsetworkflow();
       setVisible(false);
 
 
@@ -175,8 +172,6 @@ const setWorkflow = () => {
       console.log(error);
     }
   };
-
-
 
 
   const handleCheckboxChange = (name, checked) => {
@@ -201,12 +196,6 @@ const setWorkflow = () => {
     });
     setSelectedWorkflow(null);
   };
-
-
-
-
-
-
 
 
   // const renderOrgOptions = () => {
@@ -242,7 +231,6 @@ const setWorkflow = () => {
   }
 
 
-
   const handleDelete = async (workflow) => {
     try {
 
@@ -269,7 +257,6 @@ const setWorkflow = () => {
   const handleorg = (selectedOrg) => {
     setselectedOrg(selectedOrg)
   }
-
 
 
   async function readsetworkflow() {
