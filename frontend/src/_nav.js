@@ -332,12 +332,6 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Hi',
-        to: '/new_user',
-        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
         name: 'New User',
         to: '/new_user',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
