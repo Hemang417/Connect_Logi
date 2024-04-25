@@ -28,6 +28,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
+import './css/import-styles.css';
 
 const Import = () => {
   const [date, setDate] = useState(new Date());
@@ -107,7 +108,7 @@ const Import = () => {
 
 
   async function handleEdit(index) {
-    
+
     const thatdata = allimpjobs[index];
     localStorage.setItem('jobNumber', thatdata.jobnumber);
     localStorage.setItem('jobDate', thatdata.jobdate);
@@ -206,11 +207,12 @@ const Import = () => {
         </CCard>
       </CCol>
 
-      <CForm>
+      <CForm className='form-import'>
 
-        <CTable hover responsive striped className=''>
-          <CTableHead>
+        <CTable hover borderless className='table-import'>
+          <CTableHead className='head-import'>
             <CTableRow color='dark'>
+              <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell>
               <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell>
               <CTableHeaderCell scope="col" className='row-font'>Date</CTableHeaderCell>
               <CTableHeaderCell scope="col" className='row-font'>Job No.</CTableHeaderCell>
@@ -235,52 +237,57 @@ const Import = () => {
           <CTableBody>
 
             {
-            allimpjobs && allimpjobs
-              .slice()
-              .reverse()
-              .filter(job => {
-                const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
-                return (
-                  (!selectedMode || job.transportmode === selectedMode) &&
-                  (!importername || (matchingGenJob && matchingGenJob.importername && matchingGenJob.importername.toLowerCase().includes(importername.toLowerCase()))) &&
-                  (!selectedDropdown || (selectedDropdown === 'HBL/HAWB' && job.bltype === 'HBL/HAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase()))) ||
-                    (selectedDropdown === 'MBL/MAWB' && job.bltype === 'MBL/MAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase())))) ||
-                  (selectedDropdown === 'JobNumber' && (!blTypeNum || job.jobnumber.toLowerCase().includes(blTypeNum.toLowerCase())))
-                );
-              })
-              .map((job, index) => {
-                const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
-                return (
-                  <CTableRow key={index}>
-                    <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
-                      <Link onClick={() => handleEdit(allimpjobs.length - 1 - index)} to={'/impcreatejob'}>
-                        Edit
-                      </Link>
-                      <CButton onClick={(e) => handleDelete(e, allimpjobs.length - 1 - index)}>
-                        Delete
-                      </CButton>
-                    </th>
-                    <CTableHeaderCell scope="row" className='row-font'>{moment(job.jobdate).format('YYYY-MM-DDTHH:mm')}</CTableHeaderCell>
-                    <CTableDataCell className='row-font'>{job.jobnumber}</CTableDataCell>
-                    <CTableDataCell className='row-font'>{matchingGenJob.importername}</CTableDataCell>
-                    <CTableDataCell className='row-font'>{job.bltypenum}</CTableDataCell>
-                    <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>{job.blstatus}</CTableDataCell>
-                    <CTableDataCell className='row-font'>{job.docreceivedon}</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
-                    <CTableDataCell className='row-font'></CTableDataCell>
+              allimpjobs && allimpjobs
+                .slice()
+                .reverse()
+                .filter(job => {
+                  const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
+                  return (
+                    (!selectedMode || job.transportmode === selectedMode) &&
+                    (!importername || (matchingGenJob && matchingGenJob.importername && matchingGenJob.importername.toLowerCase().includes(importername.toLowerCase()))) &&
+                    (!selectedDropdown || (selectedDropdown === 'HBL/HAWB' && job.bltype === 'HBL/HAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase()))) ||
+                      (selectedDropdown === 'MBL/MAWB' && job.bltype === 'MBL/MAWB' && (!blTypeNum || job.bltypenum.toLowerCase().includes(blTypeNum.toLowerCase())))) ||
+                    (selectedDropdown === 'JobNumber' && (!blTypeNum || job.jobnumber.toLowerCase().includes(blTypeNum.toLowerCase())))
+                  );
+                })
+                .map((job, index) => {
+                  const matchingGenJob = allgenjobs.find(genJob => genJob.jobnumber === job.jobnumber);
+                  return (
+                    <CTableRow key={index}>
+                      <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
+                        <Link onClick={() => handleEdit(allimpjobs.length - 1 - index)} to={'/impcreatejob'}>
+                          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 50 50">
+                            <path d="M 43.125 2 C 41.878906 2 40.636719 2.488281 39.6875 3.4375 L 38.875 4.25 L 45.75 11.125 C 45.746094 11.128906 46.5625 10.3125 46.5625 10.3125 C 48.464844 8.410156 48.460938 5.335938 46.5625 3.4375 C 45.609375 2.488281 44.371094 2 43.125 2 Z M 37.34375 6.03125 C 37.117188 6.0625 36.90625 6.175781 36.75 6.34375 L 4.3125 38.8125 C 4.183594 38.929688 4.085938 39.082031 4.03125 39.25 L 2.03125 46.75 C 1.941406 47.09375 2.042969 47.457031 2.292969 47.707031 C 2.542969 47.957031 2.90625 48.058594 3.25 47.96875 L 10.75 45.96875 C 10.917969 45.914063 11.070313 45.816406 11.1875 45.6875 L 43.65625 13.25 C 44.054688 12.863281 44.058594 12.226563 43.671875 11.828125 C 43.285156 11.429688 42.648438 11.425781 42.25 11.8125 L 9.96875 44.09375 L 5.90625 40.03125 L 38.1875 7.75 C 38.488281 7.460938 38.578125 7.011719 38.410156 6.628906 C 38.242188 6.246094 37.855469 6.007813 37.4375 6.03125 C 37.40625 6.03125 37.375 6.03125 37.34375 6.03125 Z"></path>
+                          </svg>
+                        </Link>
+                      </th>
+                      <th scope="row" class="font-small text-gray-900 whitespace-nowrapark:text d-white">
+                        <Link onClick={(e) => handleDelete(e, allimpjobs.length - 1 - index)}>
+                          <img width="25" height="25" src="https://img.icons8.com/ios-filled/50/000000/cancel.png" alt="cancel" />
+                        </Link>
+                      </th>
 
-                  </CTableRow>
-                )
-              })}
+                      <CTableHeaderCell scope="row" className='row-font'>{moment(job.jobdate).format('YYYY-MM-DDTHH:mm')}</CTableHeaderCell>
+                      <CTableDataCell className='row-font'>{job.jobnumber}</CTableDataCell>
+                      <CTableDataCell className='row-font'>{matchingGenJob.importername}</CTableDataCell>
+                      <CTableDataCell className='row-font'>{job.bltypenum}</CTableDataCell>
+                      <CTableDataCell className='row-font'>RTTT5787088</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>{job.blstatus}</CTableDataCell>
+                      <CTableDataCell className='row-font'>{job.docreceivedon}</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>19-06-2023 16:37:00</CTableDataCell>
+                      <CTableDataCell className='row-font'>Completed</CTableDataCell>
+
+                    </CTableRow>
+                  )
+                })}
 
           </CTableBody>
         </CTable>
