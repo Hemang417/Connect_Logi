@@ -386,13 +386,19 @@ const setWorkflow = () => {
 
 
               </div>
+              <label for="Job Date" className='text-field-3'>Can Change Plan Date</label> </div>
+            <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' onChange={(e) => handleCheckboxChange('plandatechange', e.target.checked)} checked={workflowData.plandatechange} /></CTableDataCell>
 
-              <CModalTitle id="LiveDemoExampleLabel">
-                Planning
-              </CModalTitle>
+
+
+
+            {!workflowData.plandatechange && (
 
               <div>
-                <label for="Job Date" className='text-field-3'>Duration</label>
+                <CModalTitle id="LiveDemoExampleLabel">
+                  Planning
+                </CModalTitle>
+                <label htmlFor="Job Date" className='text-field-3'>Duration</label>
                 <CDropdown>
                   <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.duration ? workflowData.duration : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
@@ -401,12 +407,12 @@ const setWorkflow = () => {
                   </CDropdownMenu>
                 </CDropdown>
                 <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('days', e.target.value)} value={workflowData.days} />
-                <label for="Job Date" className='text-field-3'>Days</label>
+                <label htmlFor="Job Date" className='text-field-3'>Days</label>
                 <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('hours', e.target.value)} value={workflowData.hours} />
-                <label for="Job Date" className='text-field-3'>Hours</label>
+                <label htmlFor="Job Date" className='text-field-3'>Hours</label>
                 <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('minutes', e.target.value)} value={workflowData.minutes} />
-                <label for="Job Date" className='text-field-3'>Mins.</label>
-                <label for="Job Date" className='text-field-3'>of</label>
+                <label htmlFor="Job Date" className='text-field-3'>Mins.</label>
+                <label htmlFor="Job Date" className='text-field-3'>of</label>
 
                 <CDropdown>
                   <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.milestone ? workflowData.milestone : 'Select'}</CDropdownToggle>
@@ -419,11 +425,43 @@ const setWorkflow = () => {
                     ))}
                   </CDropdownMenu>
                 </CDropdown>
-
               </div>
-              <div>
-                <label for="Job Date" className='text-field-3'>Can Change Plan Date</label> </div>
-              <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4' onChange={(e) => handleCheckboxChange('plandatechange', e.target.checked)} checked={workflowData.plandatechange} /></CTableDataCell>
+            )}
+
+            {/* <div>
+              <label for="Job Date" className='text-field-3'>Duration</label>
+              <CDropdown>
+                <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.duration ? workflowData.duration : 'Select'}</CDropdownToggle>
+                <CDropdownMenu className="text-field-4">
+                  <CDropdownItem onClick={() => handleChange('duration', 'Before')}>Before</CDropdownItem>
+                  <CDropdownItem onClick={() => handleChange('duration', 'After')}>After</CDropdownItem>
+                </CDropdownMenu>
+              </CDropdown>
+              <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('days', e.target.value)} value={workflowData.days} />
+              <label for="Job Date" className='text-field-3'>Days</label>
+              <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('hours', e.target.value)} value={workflowData.hours} />
+              <label for="Job Date" className='text-field-3'>Hours</label>
+              <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('minutes', e.target.value)} value={workflowData.minutes} />
+              <label for="Job Date" className='text-field-3'>Mins.</label>
+              <label for="Job Date" className='text-field-3'>of</label>
+
+              <CDropdown>
+                <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.milestone ? workflowData.milestone : 'Select'}</CDropdownToggle>
+                <CDropdownMenu className="text-field-4">
+                  <CDropdownItem onClick={() => handleChange('milestone', 'Job Creation Date')}>Job Creation Date</CDropdownItem>
+                  {allmilestones && allmilestones.map((milestone, index) => (
+                    <React.Fragment key={index}>
+                      <CDropdownItem onClick={() => handleChange('milestone', milestone.milestonename)}>{milestone.milestonename}</CDropdownItem>
+                    </React.Fragment>
+                  ))}
+                </CDropdownMenu>
+              </CDropdown>
+
+            </div> */}
+
+
+            <div>
+
             </div>
           </CModalBody>
 

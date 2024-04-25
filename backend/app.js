@@ -9,7 +9,7 @@ import {
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
     fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
     getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, 
-    GetUnderprocess, putETA, fetchPlanDateETA
+    GetUnderprocess, putETA, fetchPlanDateETA, createdatemanually, getCompletedRowsofthetracking
 } from './api/import.js';
 import {storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, updatedOwnBranch} from './api/user.js'
 import {setMail, fetchMail} from './api/mail.js'
@@ -1178,6 +1178,24 @@ app.get('/readlobdataspecific', async (req, res) => {
     }
 })
 
+app.post('/sendmanualdate', async (req, res) => {
+    try {
+        const {orgname, orgcode, ownbranchname, lobname, workflowname, plandate, days, hours, minutes, username, jobnumber, ownbranchcode} = req.body;
+        const manualdatestored = await createdatemanually(orgname, orgcode, ownbranchname, lobname, workflowname, plandate, days, hours, minutes, username, jobnumber, ownbranchcode);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+app.get('/Getcompletedrowsofthatjobandbranchandlob', async (req, res) => {
+    try {
+        const {orgname, orgcode, lobname, ownbranchname, jobnumber} = req.query;
+        const allCompletedRowsofthatjobintracking = await getCompletedRowsofthetracking(orgname, orgcode, lobname, ownbranchname, jobnumber);
+        res.send(allCompletedRowsofthatjobintracking);
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

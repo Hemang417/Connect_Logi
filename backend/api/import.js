@@ -1129,3 +1129,47 @@ export const fetchPlanDateETA = async (orgname, orgcode, jobNumber, tatimpcolumn
         console.log(error);
     }
 }
+
+
+
+export const createdatemanually = async (orgname, orgcode, ownbranchname, lobname, workflowname, plandate, days, hours, minutes, username, jobnumber, ownbranchcode) => {
+    try {
+        // Calculate TAT (turnaround time) based on days, hours, and minutes
+        const tat = `${days} d ${hours} hr ${minutes} min`;
+
+        // Check if there is already a row with the same criteria in the database
+        const [rows] = await connection.execute(
+            `SELECT plandate, tatimpcolumn, plandate FROM trackingimport WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND tatimpcolumn = ?`, 
+            [orgname, orgcode, lobname, ownbranchname, jobnumber, workflowname]
+        );
+
+        if (rows.length > 0) {
+            // If a row exists, update the plandate
+            const [row] = await connection.execute(
+                `UPDATE trackingimport SET plandate = ? WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND tatimpcolumn = ?`, 
+                [plandate, orgname, orgcode, lobname, ownbranchname, jobnumber, workflowname]
+            );
+        } else {
+            // If no row exists, insert a new row with the provided data
+            const [row] = await connection.execute(
+                `INSERT INTO trackingimport (orgname, orgcode, ownbranchname, lobname, tatimpcolumn, plandate, jobnumber, jobdoneby, tat, ownbranchcode) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+                [orgname, orgcode, ownbranchname, lobname, workflowname, plandate, jobnumber, username, tat, ownbranchcode]
+            );
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+export const getCompletedRowsofthetracking = async (orgname, orgcode, lobname, ownbranchname, jobnumber) => {
+    try {
+        const [rows] = await connection.execute(`SELECT plandate, tatimpcolumn, plandate FROM trackingimport WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ?`, [orgname, orgcode, lobname, ownbranchname, jobnumber]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}

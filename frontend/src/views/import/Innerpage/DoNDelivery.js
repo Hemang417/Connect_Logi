@@ -297,22 +297,22 @@
 //                 }
 //             });
 
-            
+
 //             const updatedData = response.data.map(item => {
 //                 // Calculate plan date only if the workflow milestone is "job creation date"
 //                 if (item.workflowmilestone === "Job Creation Date") {
 //                     // Get job date from localStorage
 //                     const jobDate = new Date(localStorage.getItem('jobDate'));
-                 
+
 //                     // Convert days, hours, minutes to numbers
 //                     const { days, hours, minutes } = item;
 //                     const milestoneDays = parseInt(days);
 //                     const milestoneHours = parseInt(hours);
 //                     const milestoneMinutes = parseInt(minutes);
-                    
+
 //                     // Calculate plan date based on before or after
 //                     let planDate = new Date(jobDate);
-                    
+
 //                     if (item.duration === "After") {
 //                         planDate.setDate(planDate.getDate() + milestoneDays);
 //                         planDate.setHours(planDate.getHours() + milestoneHours);
@@ -323,10 +323,10 @@
 //                         planDate.setMinutes(planDate.getMinutes() - milestoneMinutes);
 //                     }
 
-                    
+
 //                     return { ...item, planDate };
 //                 }
-    
+
 //                 // For other items, return the original object
 //                 return item;
 //             });
@@ -344,7 +344,7 @@
 //         readallspecificlobdata();
 //     }, [])
 
- 
+
 
 
 //     return (
@@ -649,6 +649,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import {
     CButton,
     CTable,
@@ -662,6 +663,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const DoNDelivery = () => {
     const [allLobData, setAllLobData] = useState([]);
+    const [manualDate, setmanualDate] = useState('');
 
     const readAllSpecificLobData = async () => {
         try {
@@ -674,7 +676,77 @@ const DoNDelivery = () => {
                 }
             });
 
-            setAllLobData(response.data);
+
+            const completedrowsofthatjobandbranchandlob = await axios.get('http://localhost:5000/Getcompletedrowsofthatjobandbranchandlob', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    lobname: localStorage.getItem('modeoftransport'),
+                    ownbranchname: localStorage.getItem('branchnameofemp'),
+                    jobnumber: localStorage.getItem('jobNumber')
+                }
+            })
+
+            completedrowsofthatjobandbranchandlob.data.map((item) => {
+                const index = response.data.findIndex(row => row.workflowname === item.tatimpcolumn);
+                if (index > -1) {
+                    response.data[index] = { ...response.data[index], planDate: item.plandate };
+                }
+            })
+
+
+            const updatedData = response.data.map(item => {
+                // Calculate plan date only if the workflow milestone is "job creation date"
+                if (item.workflowmilestone === "Job Creation Date") {
+                    // Get job date from localStorage
+                    const jobDate = new Date(localStorage.getItem('jobDate'));
+
+                    // Convert days, hours, minutes to numbers
+                    const { days, hours, minutes } = item;
+                    const milestoneDays = parseInt(days);
+                    const milestoneHours = parseInt(hours);
+                    const milestoneMinutes = parseInt(minutes);
+
+                    // Calculate plan date based on before or after
+                    let planDate = new Date(jobDate);
+
+                    if (item.duration === "After") {
+                        planDate.setDate(planDate.getDate() + milestoneDays);
+                        planDate.setHours(planDate.getHours() + milestoneHours);
+                        planDate.setMinutes(planDate.getMinutes() + milestoneMinutes);
+                    } else if (item.duration === "Before") {
+                        planDate.setDate(planDate.getDate() - milestoneDays);
+                        planDate.setHours(planDate.getHours() - milestoneHours);
+                        planDate.setMinutes(planDate.getMinutes() - milestoneMinutes);
+                    }
+
+                    return { ...item, planDate };
+                }
+
+                // For other items, return the original object
+                return item;
+            });
+
+            setAllLobData(updatedData)
+            updatedData.forEach((item, index) => {
+                if (item.workflowmilestone && item.workflowmilestone !== 'Job Creation Date') {
+                    const dependencyRow = updatedData.find(row => row.workflowname === item.workflowmilestone);
+                    if (dependencyRow && dependencyRow.planDate) {
+                        const newPlanDate = calculatePlanDate(
+                            dependencyRow.planDate,
+                            item.days,
+                            item.hours,
+                            item.minutes,
+                            item.duration
+                        );
+                        updatedData[index] = { ...item, planDate: newPlanDate };
+                    }
+                }
+            });
+
+            // Update the state with the final updated data
+            setAllLobData(updatedData);
+
         } catch (error) {
             console.log(error);
         }
@@ -682,7 +754,9 @@ const DoNDelivery = () => {
 
     useEffect(() => {
         readAllSpecificLobData();
-    }, []);
+    }, [localStorage.getItem('jobDate')]);
+
+
 
     const calculatePlanDate = (referenceDate, days, hours, minutes, duration) => {
         const milestoneDays = parseInt(days);
@@ -704,32 +778,31 @@ const DoNDelivery = () => {
         return planDate;
     };
 
-    useEffect(() => {
-        if (allLobData.length > 0) {
-            setAllLobData(prevData => {
-                const firstRow = prevData[0];
-                const referenceDate = new Date(localStorage.getItem('jobDate'));
-                const updatedData = prevData.map((item, index) => {
-                    if (index === 0 && item.workflowmilestone === 'Job Creation Date') {
-                        return { ...item, planDate: referenceDate };
-                    } else if (index !== 0 && item.workflowmilestone !== 'Job Creation Date') {
-                        return {
-                            ...item,
-                            planDate: calculatePlanDate(
-                                referenceDate,
-                                item.days,
-                                item.hours,
-                                item.minutes,
-                                item.duration
-                            )
-                        };
-                    }
-                    return item;
-                });
-                return updatedData;
-            });
-        }
-    }, []); // Added allLobData as a dependency
+
+    const handleManualDateChange = async (index, newPlanDate) => {
+        const updatedData = [...allLobData];
+        updatedData[index].planDate = newPlanDate;
+        setAllLobData(updatedData);
+        setmanualDate(newPlanDate);
+
+        const response = await axios.post('http://localhost:5000/sendmanualdate', {
+            orgname: localStorage.getItem('orgname'),
+            orgcode: localStorage.getItem('orgcode'),
+            ownbranchname: localStorage.getItem('branchnameofemp'),
+            lobname: localStorage.getItem('workflowlobname'),
+            workflowname: updatedData[index].workflowname,
+            plandate: moment(newPlanDate).format('YYYY-MM-DDTHH:mm'),
+            days: updatedData[index].days,
+            hours: updatedData[index].hours,
+            minutes: updatedData[index].minutes,
+            username: localStorage.getItem('username'),
+            jobnumber: localStorage.getItem('jobNumber'),
+            ownbranchcode: localStorage.getItem('branchcodeofemp'),
+        })
+
+    };
+
+
 
     return (
         <div>
@@ -766,7 +839,11 @@ const DoNDelivery = () => {
                                         placeholder=""
                                         className="o2d-field-4"
                                         readOnly={item.plandatechange === 1 ? false : true}
-                                        value={item.planDate ? item.planDate.toISOString().slice(0, 16) : ''}
+                                        value={item.planDate ? moment(item.planDate).format('YYYY-MM-DDTHH:mm') : ''}
+                                        onChange={(e) => {
+                                            const newPlanDate = moment(e.target.value, 'YYYY-MM-DDTHH:mm').toDate();
+                                            handleManualDateChange(index, newPlanDate);
+                                        }}
                                     />
                                 </CTableDataCell>
                                 <CTableDataCell>
