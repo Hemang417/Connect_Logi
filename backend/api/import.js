@@ -1139,21 +1139,21 @@ export const createdatemanually = async (orgname, orgcode, ownbranchname, lobnam
 
         // Check if there is already a row with the same criteria in the database
         const [rows] = await connection.execute(
-            `SELECT plandate, tatimpcolumn, plandate FROM trackingimport WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND tatimpcolumn = ?`, 
+            `SELECT plandate, tatimpcolumn, plandate FROM trackingimport WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND tatimpcolumn = ?`,
             [orgname, orgcode, lobname, ownbranchname, jobnumber, workflowname]
         );
 
         if (rows.length > 0) {
             // If a row exists, update the plandate
             const [row] = await connection.execute(
-                `UPDATE trackingimport SET plandate = ? WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND tatimpcolumn = ?`, 
+                `UPDATE trackingimport SET plandate = ? WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND tatimpcolumn = ?`,
                 [plandate, orgname, orgcode, lobname, ownbranchname, jobnumber, workflowname]
             );
         } else {
             // If no row exists, insert a new row with the provided data
             const [row] = await connection.execute(
                 `INSERT INTO trackingimport (orgname, orgcode, ownbranchname, lobname, tatimpcolumn, plandate, jobnumber, jobdoneby, tat, ownbranchcode) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [orgname, orgcode, ownbranchname, lobname, workflowname, plandate, jobnumber, username, tat, ownbranchcode]
             );
         }
@@ -1167,9 +1167,55 @@ export const createdatemanually = async (orgname, orgcode, ownbranchname, lobnam
 
 export const getCompletedRowsofthetracking = async (orgname, orgcode, lobname, ownbranchname, jobnumber) => {
     try {
-        const [rows] = await connection.execute(`SELECT plandate, tatimpcolumn, plandate FROM trackingimport WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ?`, [orgname, orgcode, lobname, ownbranchname, jobnumber]);
+        const [rows] = await connection.execute(`SELECT * FROM trackingimport WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ?`, [orgname, orgcode, lobname, ownbranchname, jobnumber]);
         return rows;
     } catch (error) {
         console.log(error);
     }
 }
+
+
+export const insertedCompletedTrackingRows = async (
+    lobname, ownbranchname, importername,
+    orgname, orgcode, workflowname, status, planDate,
+    timedelay, days, hours, minutes, actualDate, jobnumber, jobdoneby, ownbranchcode
+) => {
+    try {
+
+        const [row] = await connection.execute(
+            `INSERT INTO trackingimport (orgname, orgcode, tatimpcolumn, plandate, actualdate, 
+                timedelay, status, jobnumber, jobdoneby, tat, lobname, ownbranchname, ownbranchcode, clientname)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                orgname,
+                orgcode,
+                workflowname,
+                planDate,
+                actualDate,
+                timedelay,
+                status,
+                jobnumber,
+                jobdoneby,
+                `${days}d ${hours}hr ${minutes}min`,
+                lobname,
+                ownbranchname,
+                ownbranchcode,
+                importername
+            ]
+        );
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+
+export const deleteCompletedRowofImport = async (lobname, ownbranchname, importername,
+    orgname, orgcode, workflowname, jobnumber, ownbranchcode) => {
+    try {
+        const [row] = await connection.execute('DELETE FROM trackingimport WHERE lobname = ? AND ownbranchname = ? AND clientname = ? AND orgname = ? AND orgcode = ? AND tatimpcolumn = ? AND jobnumber = ? AND ownbranchcode = ?', [lobname, ownbranchname, importername, orgname, orgcode, workflowname, jobnumber, ownbranchcode]);
+    } catch (error) {
+        console.log(error);
+    }
+}   

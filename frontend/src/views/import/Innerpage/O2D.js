@@ -750,7 +750,7 @@ const O2D = () => {
                     tatimpcolumn: newData[index].tatimpcolumn,
                     tat: newData[index].tat
                 });
-                console.log(responseofinsert);
+                
             } catch (error) {
                 console.error('Error:', error);
             }

@@ -8,18 +8,18 @@ import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
     fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
-    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess, 
-    GetUnderprocess, putETA, fetchPlanDateETA, createdatemanually, getCompletedRowsofthetracking
+    getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess,
+    GetUnderprocess, putETA, fetchPlanDateETA, createdatemanually, getCompletedRowsofthetracking, insertedCompletedTrackingRows, deleteCompletedRowofImport
 } from './api/import.js';
-import {storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, updatedOwnBranch} from './api/user.js'
-import {setMail, fetchMail} from './api/mail.js'
-import {getCompletedRows} from './api/userreport.js';
-import {switchBranchsogetBranch} from './api/dashboard.js';
-import { storethelob,getAlltheLOB, deleteLOB, updateLOB,fetchorgTAT } from './api/lineofbusiness.js';
-import {storeMilestone, getAllMilestones, deleteMilestone, updateMilestone} from './api/milestone.js';
+import { storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, updatedOwnBranch } from './api/user.js'
+import { setMail, fetchMail } from './api/mail.js'
+import { getCompletedRows } from './api/userreport.js';
+import { switchBranchsogetBranch } from './api/dashboard.js';
+import { storethelob, getAlltheLOB, deleteLOB, updateLOB, fetchorgTAT } from './api/lineofbusiness.js';
+import { storeMilestone, getAllMilestones, deleteMilestone, updateMilestone } from './api/milestone.js';
 import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow } from './api/workflow.js';
 
-import {getallthelobdataofbranchandlob} from './api/newimport.js'
+import { getallthelobdataofbranchandlob } from './api/newimport.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -723,7 +723,7 @@ app.get('/prefillGeneralJob', async (req, res) => {
 
 app.put('/updateGeneral', async (req, res) => {
     try {
-        const {orgname, orgcode, jobnumber, jobowner} = req.body;
+        const { orgname, orgcode, jobnumber, jobowner } = req.body;
         const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch } = req.body.formData;
 
         const updatedGeneral = await updateGeneral(importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, orgname, orgcode, jobnumber, jobowner);
@@ -734,8 +734,8 @@ app.put('/updateGeneral', async (req, res) => {
 
 app.put('/updateJob', async (req, res) => {
     try {
-        const {jobnumber} = req.body;
-        const {docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, benumber, shippinglinebond} = req.body.jobData;
+        const { jobnumber } = req.body;
+        const { docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, benumber, shippinglinebond } = req.body.jobData;
         const updatedJob = await updateCurrentJob(docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, blstatus, freedays, jobnumber, benumber, shippinglinebond)
     } catch (error) {
         console.log(error);
@@ -745,7 +745,7 @@ app.put('/updateJob', async (req, res) => {
 
 app.get('/getO2Dimport', async (req, res) => {
     try {
-        const {orgname, orgcode, jobNumber} = req.query;
+        const { orgname, orgcode, jobNumber } = req.query;
         const allo2drows = await getO2Ddatafromo2dimport(orgname, orgcode, jobNumber);
         res.send(allo2drows);
     } catch (error) {
@@ -756,7 +756,7 @@ app.get('/getO2Dimport', async (req, res) => {
 
 app.get('/getDoNDelivery', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allDD = await getDND(orgname, orgcode);
         res.send(allDD);
     } catch (error) {
@@ -766,7 +766,7 @@ app.get('/getDoNDelivery', async (req, res) => {
 
 app.post('/storeDND', async (req, res) => {
     try {
-        const {tatimpcolumn, days, hours, minutes, orgname, orgcode} = req.body;
+        const { tatimpcolumn, days, hours, minutes, orgname, orgcode } = req.body;
         const storedDND = await storeDNDintable(tatimpcolumn, days, hours, minutes, orgname, orgcode);
         res.status(200).json(storedDND);
     } catch (error) {
@@ -777,7 +777,7 @@ app.post('/storeDND', async (req, res) => {
 
 app.put('/updateDND', async (req, res) => {
     try {
-        const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
+        const { tatimpcolumn, days, hours, minutes, orgname, orgcode, id } = req.body;
         const updatedDND = await updateDND(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
         res.status(200).json(updateDND);
     } catch (error) {
@@ -787,7 +787,7 @@ app.put('/updateDND', async (req, res) => {
 
 app.delete('/deleteDND', async (req, res) => {
     try {
-        const {orgname, orgcode, deletionrowid} = req.body;
+        const { orgname, orgcode, deletionrowid } = req.body;
         const deletedDND = await deleteDND(orgname, orgcode, deletionrowid);
         res.status(200).json(deletedDND);
     } catch (error) {
@@ -805,7 +805,7 @@ app.delete('/deleteDND', async (req, res) => {
 
 app.get('/getDispatch', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allDispatch = await getDispatch(orgname, orgcode);
         res.send(allDispatch);
     } catch (error) {
@@ -815,7 +815,7 @@ app.get('/getDispatch', async (req, res) => {
 
 app.post('/storeDispatch', async (req, res) => {
     try {
-        const {tatimpcolumn, days, hours, minutes, orgname, orgcode} = req.body;
+        const { tatimpcolumn, days, hours, minutes, orgname, orgcode } = req.body;
         const storedDispatch = await storeDispatchintable(tatimpcolumn, days, hours, minutes, orgname, orgcode);
         res.status(200).json(storedDispatch);
     } catch (error) {
@@ -826,7 +826,7 @@ app.post('/storeDispatch', async (req, res) => {
 
 app.put('/updateDispatch', async (req, res) => {
     try {
-        const {tatimpcolumn, days, hours, minutes, orgname, orgcode, id} = req.body;
+        const { tatimpcolumn, days, hours, minutes, orgname, orgcode, id } = req.body;
         const updatedDispatch = await updateDispatch(tatimpcolumn, days, hours, minutes, orgname, orgcode, id);
         res.status(200).json(updatedDispatch);
     } catch (error) {
@@ -836,7 +836,7 @@ app.put('/updateDispatch', async (req, res) => {
 
 app.delete('/deleteDispatch', async (req, res) => {
     try {
-        const {orgname, orgcode, deletionrowid} = req.body;
+        const { orgname, orgcode, deletionrowid } = req.body;
         const deletedDispatch = await deleteDispatch(orgname, orgcode, deletionrowid);
         res.status(200).json(deletedDispatch);
     } catch (error) {
@@ -848,8 +848,8 @@ app.delete('/deleteDispatch', async (req, res) => {
 
 app.post('/insertUnderprocess', async (req, res) => {
     try {
-        const {username, orgname, orgcode, jobNumber, rowname, status, tat, planDate} = req.body;
-  
+        const { username, orgname, orgcode, jobNumber, rowname, status, tat, planDate } = req.body;
+
         const insertUnderprocess = await O2DinsertUnderprocess(username, orgname, orgcode, jobNumber, rowname, status, tat, planDate);
     } catch (error) {
         console.log(error);
@@ -859,7 +859,7 @@ app.post('/insertUnderprocess', async (req, res) => {
 
 app.get('/findunderprocess', async (req, res) => {
     try {
-        const {orgname, orgcode, status, jobNumber} = req.query;
+        const { orgname, orgcode, status, jobNumber } = req.query;
         const underprocessed = await GetUnderprocess(orgname, orgcode, status, jobNumber);
         res.send(underprocessed);
     } catch (error) {
@@ -870,16 +870,16 @@ app.get('/findunderprocess', async (req, res) => {
 
 app.post('/insertPlanDateETA', async (req, res) => {
     try {
-        const {orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn} = req.body;
+        const { orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn } = req.body;
         const storedETAdate = putETA(orgname, orgcode, jobNumber, jobdoneby, tatdayhrmin, planDate, tatimpcolumn);
     } catch (error) {
         console.log(error);
     }
 })
 
-app.get('/pullPlanDateETA', async(req, res) => {
+app.get('/pullPlanDateETA', async (req, res) => {
     try {
-        const {orgname, orgcode, jobNumber, tatimpcolumn} = req.query;
+        const { orgname, orgcode, jobNumber, tatimpcolumn } = req.query;
         const fetchedETA = await fetchPlanDateETA(orgname, orgcode, jobNumber, tatimpcolumn);
         res.send(fetchedETA);
     } catch (error) {
@@ -889,7 +889,7 @@ app.get('/pullPlanDateETA', async(req, res) => {
 
 app.post('/settimeandmail', async (req, res) => {
     try {
-        const {email, passcode, hours, minutes, orgname, orgcode} = req.body;
+        const { email, passcode, hours, minutes, orgname, orgcode } = req.body;
         const settedmail = await setMail(email, passcode, hours, minutes, orgname, orgcode);
     } catch (error) {
         console.log(error);
@@ -898,7 +898,7 @@ app.post('/settimeandmail', async (req, res) => {
 
 app.get('/gettimeandmail', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const fetchedMail = await fetchMail(orgname, orgcode);
         res.json(fetchedMail);
     } catch (error) {
@@ -908,7 +908,7 @@ app.get('/gettimeandmail', async (req, res) => {
 
 app.get('/getAllRowsofUsername', async (req, res) => {
     try {
-        const {username, fullname, branchname} = req.query;
+        const { username, fullname, branchname } = req.query;
         const alltherows = await getCompletedRows(username, fullname, branchname);
         res.send(alltherows);
     } catch (error) {
@@ -917,9 +917,9 @@ app.get('/getAllRowsofUsername', async (req, res) => {
 })
 
 
-app.post('/createownbranch', async(req, res) => {
+app.post('/createownbranch', async (req, res) => {
     try {
-        const {orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname} = req.body;
+        const { orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname } = req.body;
         const storedOwnBranch = await storeOwnBranch(orgcode, ownbranchname, address, gst, iec, headname, headnum, orgname);
         res.status(200).send(storedOwnBranch);
     } catch (error) {
@@ -929,7 +929,7 @@ app.post('/createownbranch', async(req, res) => {
 
 app.get('/fetchBranchesofOwn', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const sendOwnBranches = await getOwnBranches(orgname, orgcode);
         res.send(sendOwnBranches);
     } catch (error) {
@@ -939,7 +939,7 @@ app.get('/fetchBranchesofOwn', async (req, res) => {
 
 app.get('/fetchallownbranchname', async (req, res) => {
     try {
-        const {orgcode, orgname, username} = req.query;
+        const { orgcode, orgname, username } = req.query;
         const sendAllBranches = await fetchBranchskhudka(orgname, orgcode, username);
         res.send(sendAllBranches);
     } catch (error) {
@@ -949,7 +949,7 @@ app.get('/fetchallownbranchname', async (req, res) => {
 
 app.delete('/deleteOwnBranch', async (req, res) => {
     try {
-        const {id, orgname, orgcode} = req.query;
+        const { id, orgname, orgcode } = req.query;
         const deletedOwnBranch = await deletekhudkaBranch(id, orgname, orgcode);
         res.send(deletedOwnBranch);
     } catch (error) {
@@ -959,7 +959,7 @@ app.delete('/deleteOwnBranch', async (req, res) => {
 
 app.put('/updateOwnBranch', async (req, res) => {
     try {
-        const {id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode} = req.body;
+        const { id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode } = req.body;
         const updatedownbranch = await updatedOwnBranch(id, orgcode, orgname, ownbranchname, gstnum, iecnum, headname, headnum, address, branchcode);
         res.send(updatedownbranch);
     } catch (error) {
@@ -969,8 +969,8 @@ app.put('/updateOwnBranch', async (req, res) => {
 
 app.post('/insertBranchaccess', async (req, res) => {
     try {
-        const {orgcode, orgname, ownbranchname, branchcode} = req.body.branch;
-        const {username} = req.body;
+        const { orgcode, orgname, ownbranchname, branchcode } = req.body.branch;
+        const { username } = req.body;
         const storedBranchAccess = await storeBranchAccessforUser(orgcode, orgname, ownbranchname, branchcode, username);
     } catch (error) {
         console.log(error);
@@ -979,7 +979,7 @@ app.post('/insertBranchaccess', async (req, res) => {
 
 app.delete('/deleteBranchaccess', async (req, res) => {
     try {
-        const {branchcode} = req.body;
+        const { branchcode } = req.body;
         const deletedBranchAccess = await deletethatbranchaccess(branchcode);
     } catch (error) {
         console.log(error);
@@ -988,7 +988,7 @@ app.delete('/deleteBranchaccess', async (req, res) => {
 
 app.get('/fetchExistingBranches', async (req, res) => {
     try {
-        const {username, orgname, orgcode} = req.query;
+        const { username, orgname, orgcode } = req.query;
         const fetchexisting = await fetchExistingBranches(username, orgname, orgcode);
         res.send(fetchexisting);
     } catch (error) {
@@ -998,7 +998,7 @@ app.get('/fetchExistingBranches', async (req, res) => {
 
 app.get('/getAllBranches', async (req, res) => {
     try {
-        const {orgname, orgcode, username} = req.query;
+        const { orgname, orgcode, username } = req.query;
         const response = await switchBranchsogetBranch(orgname, orgcode, username);
         res.send(response);
     } catch (error) {
@@ -1006,9 +1006,9 @@ app.get('/getAllBranches', async (req, res) => {
     }
 })
 
-app.post('/storelob', async(req, res) => {
+app.post('/storelob', async (req, res) => {
     try {
-        const {lobname, transportmode, orgname, orgcode} = req.body;
+        const { lobname, transportmode, orgname, orgcode } = req.body;
         const lobstorehua = await storethelob(lobname, transportmode, orgname, orgcode);
         res.status(200).send(lobstorehua);
     } catch (error) {
@@ -1016,9 +1016,9 @@ app.post('/storelob', async(req, res) => {
     }
 })
 
-app.get('/getlob', async(req, res) => {
+app.get('/getlob', async (req, res) => {
     try {
-        const {orgcode, orgname} = req.query;
+        const { orgcode, orgname } = req.query;
         const allDataofLOB = await getAlltheLOB(orgcode, orgname);
         res.send(allDataofLOB);
     } catch (error) {
@@ -1028,7 +1028,7 @@ app.get('/getlob', async(req, res) => {
 
 app.delete('/deletelob', async (req, res) => {
     try {
-        const {id} = req.body;
+        const { id } = req.body;
         const deletedLOB = await deleteLOB(id);
         res.status(200).send(deletedLOB);
     } catch (error) {
@@ -1036,9 +1036,9 @@ app.delete('/deletelob', async (req, res) => {
     }
 })
 
-app.put('/updatelob', async(req, res) => {
+app.put('/updatelob', async (req, res) => {
     try {
-        const {id, lobname} = req.body;
+        const { id, lobname } = req.body;
         const updatedLOB = await updateLOB(id, lobname);
         res.status(200).send(updatedLOB);
     } catch (error) {
@@ -1048,7 +1048,7 @@ app.put('/updatelob', async(req, res) => {
 
 app.get('/getorgforTAT', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const data = await fetchorgTAT(orgname, orgcode);
         res.status(200).send(data)
     } catch (error) {
@@ -1058,7 +1058,7 @@ app.get('/getorgforTAT', async (req, res) => {
 
 app.post('/addmilestone', async (req, res) => {
     try {
-        const {orgname, orgcode, milestonename, lob, ownbranchname} = req.body;
+        const { orgname, orgcode, milestonename, lob, ownbranchname } = req.body;
         const addedMilestone = await storeMilestone(orgname, orgcode, milestonename, lob, ownbranchname);
         res.send(addedMilestone);
     } catch (error) {
@@ -1068,7 +1068,7 @@ app.post('/addmilestone', async (req, res) => {
 
 app.get('/getmilestones', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allmilestones = await getAllMilestones(orgname, orgcode);
         res.send(allmilestones);
     } catch (error) {
@@ -1078,7 +1078,7 @@ app.get('/getmilestones', async (req, res) => {
 
 app.delete('/deletemilestone', async (req, res) => {
     try {
-        const {id} = req.body;
+        const { id } = req.body;
         const deletedMilestone = await deleteMilestone(id);
         res.status(200).send(deletedMilestone);
     } catch (error) {
@@ -1088,7 +1088,7 @@ app.delete('/deletemilestone', async (req, res) => {
 
 app.put('/updatemilestone', async (req, res) => {
     try {
-        const {orgname, orgcode, milestonename, lob, ownbranchname, id} = req.body;
+        const { orgname, orgcode, milestonename, lob, ownbranchname, id } = req.body;
         const updatedData = await updateMilestone(orgname, orgcode, milestonename, lob, ownbranchname, id);
         res.status(200).send(updatedData);
     } catch (error) {
@@ -1098,8 +1098,8 @@ app.put('/updatemilestone', async (req, res) => {
 
 app.post('/createworkflow', async (req, res) => {
     try {
-        const {orgname, orgcode, branchName, lob, importername} = req.body;
-        const {workflowname, duration, days, hours, minutes, milestone, plandatechange} = req.body.workflowData;
+        const { orgname, orgcode, branchName, lob, importername } = req.body;
+        const { workflowname, duration, days, hours, minutes, milestone, plandatechange } = req.body.workflowData;
         const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange);
         res.status(200).send(storedWorkflow);
     } catch (error) {
@@ -1109,7 +1109,7 @@ app.post('/createworkflow', async (req, res) => {
 
 app.get('/readallworkflows', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allWorkflow = await readAllWorkflow(orgname, orgcode);
         res.send(allWorkflow);
     } catch (error) {
@@ -1120,7 +1120,7 @@ app.get('/readallworkflows', async (req, res) => {
 
 app.post('/createOverviewofWorkflow', async (req, res) => {
     try {
-        const {orgname, orgcode, client, lob, branch} = req.body;
+        const { orgname, orgcode, client, lob, branch } = req.body;
         const createdoverview = await createOverviewofWorkflow(orgname, orgcode, client, lob, branch);
         res.status(200).send(createdoverview);
     } catch (error) {
@@ -1130,7 +1130,7 @@ app.post('/createOverviewofWorkflow', async (req, res) => {
 
 app.delete('/deleteWorkflow', async (req, res) => {
     try {
-        const {orgname, orgcode, id} = req.body;
+        const { orgname, orgcode, id } = req.body;
         const deletedRow = await deletedWorkflowRow(orgname, orgcode, id);
         res.status(200).send(deletedRow);
     } catch (error) {
@@ -1140,7 +1140,7 @@ app.delete('/deleteWorkflow', async (req, res) => {
 
 app.get('/readsetworkflow', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, importername, lobname} = req.query;
+        const { orgname, orgcode, branchname, importername, lobname } = req.query;
         const gotallthesetworkflow = await getSetAllWorkflow(orgname, orgcode, branchname, importername, lobname);
         res.send(gotallthesetworkflow);
     } catch (error) {
@@ -1150,7 +1150,7 @@ app.get('/readsetworkflow', async (req, res) => {
 
 app.delete('/deletesetworkflow', async (req, res) => {
     try {
-        const {id, orgname, orgcode, importername, ownbranchname, lobname} = req.body;
+        const { id, orgname, orgcode, importername, ownbranchname, lobname } = req.body;
         const deletedSetWorkflow = await deletesetworkflow(id, orgname, orgcode, importername, ownbranchname, lobname);
         res.status(200).send(deletedSetWorkflow);
     } catch (error) {
@@ -1160,7 +1160,7 @@ app.delete('/deletesetworkflow', async (req, res) => {
 
 app.put('/updatesetworkflow', async (req, res) => {
     try {
-        const {id, workflowname, days, hours, minutes, milestone, plandatechange} = req.body;
+        const { id, workflowname, days, hours, minutes, milestone, plandatechange } = req.body;
         const updatedWorkflowHaiYe = await updatesetworkflow(id, workflowname, days, hours, minutes, milestone, plandatechange);
         res.status(200).send(updatedWorkflowHaiYe);
     } catch (error) {
@@ -1170,7 +1170,7 @@ app.put('/updatesetworkflow', async (req, res) => {
 
 app.get('/readlobdataspecific', async (req, res) => {
     try {
-        const {orgname, orgcode, lobname, ownbranchname} = req.query;
+        const { orgname, orgcode, lobname, ownbranchname } = req.query;
         const allThatLOBdata = await getallthelobdataofbranchandlob(orgname, orgcode, lobname, ownbranchname);
         res.send(allThatLOBdata);
     } catch (error) {
@@ -1180,7 +1180,7 @@ app.get('/readlobdataspecific', async (req, res) => {
 
 app.post('/sendmanualdate', async (req, res) => {
     try {
-        const {orgname, orgcode, ownbranchname, lobname, workflowname, plandate, days, hours, minutes, username, jobnumber, ownbranchcode} = req.body;
+        const { orgname, orgcode, ownbranchname, lobname, workflowname, plandate, days, hours, minutes, username, jobnumber, ownbranchcode } = req.body;
         const manualdatestored = await createdatemanually(orgname, orgcode, ownbranchname, lobname, workflowname, plandate, days, hours, minutes, username, jobnumber, ownbranchcode);
     } catch (error) {
         console.log(error);
@@ -1189,13 +1189,48 @@ app.post('/sendmanualdate', async (req, res) => {
 
 app.get('/Getcompletedrowsofthatjobandbranchandlob', async (req, res) => {
     try {
-        const {orgname, orgcode, lobname, ownbranchname, jobnumber} = req.query;
+        const { orgname, orgcode, lobname, ownbranchname, jobnumber } = req.query;
         const allCompletedRowsofthatjobintracking = await getCompletedRowsofthetracking(orgname, orgcode, lobname, ownbranchname, jobnumber);
         res.send(allCompletedRowsofthatjobintracking);
     } catch (error) {
         console.log(error);
     }
 });
+
+app.post('/insertCompletedRow', async (req, res) => {
+    try {
+       
+        const { lobname, ownbranchname, importername,
+            orgname, orgcode, workflowname, status, planDate,
+            timedelay, days, hours, minutes, actualdate } =
+            req.body.row;
+
+        const { jobnumber, jobdoneby, ownbranchcode } = req.body;
+        const insertedCompletedRow = await insertedCompletedTrackingRows(lobname, ownbranchname, importername,
+            orgname, orgcode, workflowname, status, planDate,
+            timedelay, days, hours, minutes, actualdate, jobnumber, jobdoneby, ownbranchcode)
+
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteCompletedRow', async (req, res) => {
+    
+    try {
+        const {jobnumber, ownbranchcode} = req.body;
+        const {lobname, ownbranchname, importername,
+            orgname, orgcode, workflowname} = req.body.row;
+            console.log(req.body.row);
+        const deletedRow = await deleteCompletedRowofImport(lobname, ownbranchname, importername,
+            orgname, orgcode, workflowname, jobnumber, ownbranchcode);
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

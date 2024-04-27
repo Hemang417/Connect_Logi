@@ -676,6 +676,9 @@ const DoNDelivery = () => {
                 }
             });
 
+            response.data.map((item) => {
+                item.status = 'Pending'
+            })
 
             const completedrowsofthatjobandbranchandlob = await axios.get('http://localhost:5000/Getcompletedrowsofthatjobandbranchandlob', {
                 params: {
@@ -687,12 +690,20 @@ const DoNDelivery = () => {
                 }
             })
 
-            completedrowsofthatjobandbranchandlob.data.map((item) => {
+            completedrowsofthatjobandbranchandlob.data.forEach((item) => {
                 const index = response.data.findIndex(row => row.workflowname === item.tatimpcolumn);
                 if (index > -1) {
-                    response.data[index] = { ...response.data[index], planDate: item.plandate };
+                    // Update status, planDate, actualdate, and timedelay for completed items
+                    response.data[index] = { ...response.data[index], planDate: item.plandate, actualdate: item.actualdate, status: 'Completed', timedelay: item.timedelay };
                 }
-            })
+            });
+            setAllLobData(completedrowsofthatjobandbranchandlob.data);
+            // completedrowsofthatjobandbranchandlob.data.map((item) => {
+            //     const index = response.data.findIndex(row => row.workflowname === item.tatimpcolumn);
+            //     if (index > -1) {
+            //         response.data[index] = { ...response.data[index], planDate: item.plandate, actualdate: item.actualdate, status: 'Completed', timedelay: item.timedelay};
+            //     }
+            // })
 
 
             const updatedData = response.data.map(item => {
@@ -754,7 +765,7 @@ const DoNDelivery = () => {
 
     useEffect(() => {
         readAllSpecificLobData();
-    }, [localStorage.getItem('jobDate')]);
+    }, [localStorage.getItem('jobDate'), localStorage.getItem('orgname'), localStorage.getItem('orgcode'), localStorage.getItem('modeoftransport'), localStorage.getItem('branchnameofemp'), localStorage.getItem('jobNumber')]);
 
 
 
@@ -804,6 +815,67 @@ const DoNDelivery = () => {
 
 
 
+    const handleCheckboxChange = async (index) => {
+        try {
+            const newData = [...allLobData];
+            const isChecked = newData[index].status === 'Completed';
+
+            if (isChecked) {
+                // If the checkbox was checked, remove the status, actual date, and time delay
+                newData[index].status = '';
+                newData[index].actualdate = '';
+                newData[index].timedelay = '';
+
+                // Update the state with the modified data
+                setAllLobData(newData);
+
+                // Send a request to update the backend
+                await axios.delete('http://localhost:5000/deleteCompletedRow', {
+                    data: {
+                        row: newData[index],
+                        jobnumber: localStorage.getItem('jobNumber'),
+                        jobdoneby: localStorage.getItem('username'),
+                        ownbranchcode: localStorage.getItem('branchcodeofemp')
+                    }
+                });
+            } else {
+                // If the checkbox was unchecked, set actual date and status to 'Completed'
+                newData[index].actualdate = moment().format('YYYY-MM-DDTHH:mm');
+                newData[index].status = 'Completed';
+
+                // Convert actualDate and planDate to Date objects
+                const actualDate = new Date(newData[index].actualdate);
+                const planDate = new Date(newData[index].planDate);
+
+                // Calculate the difference in milliseconds
+                const timeDifference = actualDate - planDate;
+
+                // Convert milliseconds to hours and minutes
+                const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+                // Store the time delay in the format HH:mm
+                newData[index].timedelay = `${hours} hr ${minutes} min`;
+
+                // Update the state with the modified data
+                setAllLobData(newData);
+
+                // Send a request to update the backend
+                await axios.post('http://localhost:5000/insertCompletedRow', {
+                    row: newData[index],
+                    jobnumber: localStorage.getItem('jobNumber'),
+                    jobdoneby: localStorage.getItem('username'),
+                    ownbranchcode: localStorage.getItem('branchcodeofemp')
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
+
+
     return (
         <div>
             <div className="left-div-table">
@@ -829,7 +901,7 @@ const DoNDelivery = () => {
                                         type="text"
                                         placeholder="00d:00h:00m"
                                         className="o2d-field-5"
-                                        value={`${item.days} days ${item.hours} hrs ${item.minutes} mins`}
+                                        defaultValue={`${item.days} days ${item.hours} hrs ${item.minutes} mins`}
                                         readOnly
                                     />
                                 </CTableDataCell>
@@ -844,15 +916,29 @@ const DoNDelivery = () => {
                                             const newPlanDate = moment(e.target.value, 'YYYY-MM-DDTHH:mm').toDate();
                                             handleManualDateChange(index, newPlanDate);
                                         }}
+                                    // readOnly={item.plandatechange === 1 ? false : true}
+                                    // value={item.planDate ? moment(item.planDate).format('YYYY-MM-DDTHH:mm') : ''}
+                                    // onChange={(e) => {
+                                    //     const newPlanDate = moment(e.target.value, 'YYYY-MM-DDTHH:mm').toDate();
+                                    //     handleManualDateChange(index, newPlanDate);
+                                    // }}
                                     />
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    <input type="datetime-local" placeholder="" className="o2d-field-4" />
+                                    <input type="datetime-local" placeholder="" className="o2d-field-4" value={item.actualdate ? moment(item.actualdate).format('YYYY-MM-DDTHH:mm') : ''} readOnly />
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    <input type="checkbox" placeholder="" className="o2d-field-4" />
+                                    <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4'
+                                        checked={item.status === 'Completed'}
+                                        onChange={() => handleCheckboxChange(index)}
+                                    /></CTableDataCell>
                                 </CTableDataCell>
-                                <CTableDataCell>Underprocess</CTableDataCell>
+                                <CTableDataCell>
+                                    <input type='text' placeholder='time delay' value={item.timedelay ? item.timedelay : ''} />
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                    {item.status}
+                                </CTableDataCell>
                                 <CTableDataCell>
                                     <input type="text" placeholder="remarks of the process" className="remarks-field" />
                                 </CTableDataCell>
