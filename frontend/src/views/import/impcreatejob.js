@@ -455,15 +455,15 @@ const impcreatejob = () => {
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
         </CNavItem>
-        <CNavItem>
+        {/* <CNavItem>
           <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
-        </CNavItem>
+        </CNavItem> */}
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Do & Delivery</CNavLink>
+          <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Tracking</CNavLink>
         </CNavItem>
-        <CNavItem>
+        {/* <CNavItem>
           <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
-        </CNavItem>
+        </CNavItem> */}
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
         </CNavItem>
@@ -488,9 +488,9 @@ const impcreatejob = () => {
 
 
       {isshown === "general" && <General />}
-      {isshown === "o2d" && <O2D />}
+      {/* {isshown === "o2d" && <O2D />} */}
       {isshown === "DoNDelivery" && <DoNDelivery />}
-      {isshown === "d2c" && <D2C />}
+      {/* {isshown === "d2c" && <D2C />} */}
       {isshown === "documentupload" && <DocumentUpload />}
       {isshown === "Collection" && <Collection />}
       {isshown === "Transactionhistory" && <Transactionhistory />}
