@@ -9,7 +9,8 @@ import {
     getClient, storeO2D, get02ddata, deleteO2D, updateO2D, fetchAlluseraccess, fetchJobData, storeinO2Dtable, deletetheO2DtoNull,
     fetchallimpjobs, storeRemark, deleteJob, fetchingGeneralofJob, updateGeneral, updateCurrentJob, getO2Ddatafromo2dimport,
     getDND, storeDNDintable, updateDND, deleteDND, storeDispatchintable, getDispatch, updateDispatch, deleteDispatch, O2DinsertUnderprocess,
-    GetUnderprocess, putETA, fetchPlanDateETA, createdatemanually, getCompletedRowsofthetracking, insertedCompletedTrackingRows, deleteCompletedRowofImport
+    GetUnderprocess, putETA, fetchPlanDateETA, createdatemanually, getCompletedRowsofthetracking, insertedCompletedTrackingRows, deleteCompletedRowofImport,
+    updateRemarks
 } from './api/import.js';
 import { storeOwnBranch, getOwnBranches, fetchBranchskhudka, deletekhudkaBranch, updatedOwnBranch } from './api/user.js'
 import { setMail, fetchMail } from './api/mail.js'
@@ -1230,6 +1231,30 @@ app.delete('/deleteCompletedRow', async (req, res) => {
         console.log(error);
     }
 })
+
+app.post('/updateRemarkinthatrow', async (req, res) => {
+    try {
+        const { orgname, orgcode, data } = req.body;
+
+        // Ensure data is an array and has items
+        if (!Array.isArray(data) || data.length === 0) {
+            return res.status(400).json({ error: 'Invalid data provided' });
+        }
+
+        // Update remarks for each item in data array
+        for (const item of data) {
+            const { id, lobname, importername, remarks, workflowname } = item;
+            await updateRemarks(id, lobname, importername, orgname, orgcode, remarks, workflowname);
+        }
+
+        // Respond with success message
+        res.status(200).json({ message: 'Remarks updated successfully' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 
 app.listen(PORT, () => {

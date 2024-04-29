@@ -677,7 +677,8 @@ const DoNDelivery = () => {
             });
 
             response.data.map((item) => {
-                item.status = 'Pending'
+                item.status = 'Pending',
+                item.remarks = ' '
             })
 
             const completedrowsofthatjobandbranchandlob = await axios.get('http://localhost:5000/Getcompletedrowsofthatjobandbranchandlob', {
@@ -874,6 +875,27 @@ const DoNDelivery = () => {
     }
 
 
+    const handleRemarkChange = (index, event) => {
+        const newData = [...allLobData];
+        newData[index].remarks = event.target.value;
+        setAllLobData(newData);
+    };
+
+    async function remarkstoreofimport(e){
+        e.preventDefault();
+        try {
+            const lobDataWithRemarks = allLobData.filter(item => item.remarks.trim() !== '');
+
+            const storedRemark = await axios.post('http://localhost:5000/updateRemarkinthatrow', {
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode'),
+                data: lobDataWithRemarks
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     return (
@@ -901,7 +923,7 @@ const DoNDelivery = () => {
                                         type="text"
                                         placeholder="00d:00h:00m"
                                         className="o2d-field-5"
-                                        defaultValue={`${item.days} days ${item.hours} hrs ${item.minutes} mins`}
+                                        value={item.days ? `${item.days} days ${item.hours} hrs ${item.minutes} mins` : `00 days: 00 hrs : 00 mins`}
                                         readOnly
                                     />
                                 </CTableDataCell>
@@ -911,17 +933,11 @@ const DoNDelivery = () => {
                                         placeholder=""
                                         className="o2d-field-4"
                                         readOnly={item.plandatechange === 1 ? false : true}
-                                        value={item.planDate ? moment(item.planDate).format('YYYY-MM-DDTHH:mm') : ''}
+                                        defaultValue={item.planDate ? moment(item.planDate).format('YYYY-MM-DDTHH:mm') : ''}
                                         onChange={(e) => {
                                             const newPlanDate = moment(e.target.value, 'YYYY-MM-DDTHH:mm').toDate();
                                             handleManualDateChange(index, newPlanDate);
                                         }}
-                                    // readOnly={item.plandatechange === 1 ? false : true}
-                                    // value={item.planDate ? moment(item.planDate).format('YYYY-MM-DDTHH:mm') : ''}
-                                    // onChange={(e) => {
-                                    //     const newPlanDate = moment(e.target.value, 'YYYY-MM-DDTHH:mm').toDate();
-                                    //     handleManualDateChange(index, newPlanDate);
-                                    // }}
                                     />
                                 </CTableDataCell>
                                 <CTableDataCell>
@@ -940,7 +956,7 @@ const DoNDelivery = () => {
                                     {item.status}
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    <input type="text" placeholder="remarks of the process" className="remarks-field" />
+                                    <input type="text" placeholder="remarks of the process" className="remarks-field" name='remarks' value={item.remarks} onChange={(e) => handleRemarkChange(index, e)}/>
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
@@ -948,8 +964,8 @@ const DoNDelivery = () => {
                 </CTable>
             </div>
             <div className="search-button">
-                <CButton color="primary" type="submit">
-                    Save & Close
+                <CButton color="primary" type="submit" onClick={remarkstoreofimport}>
+                    Save 
                 </CButton>
             </div>
         </div>

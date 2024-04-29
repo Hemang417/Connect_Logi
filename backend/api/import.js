@@ -1219,3 +1219,12 @@ export const deleteCompletedRowofImport = async (lobname, ownbranchname, importe
         console.log(error);
     }
 }   
+
+
+export const updateRemarks = async (id, lobname, importername, orgname, orgcode, remarks, workflowname) => {
+    try {
+        const [row] = await connection.execute(`UPDATE trackingimport SET remarks = ? WHERE lobname = ? AND orgname = ? AND orgcode = ? AND clientname = ? AND tatimpcolumn = ?`, [remarks, lobname, orgname, orgcode, importername, workflowname]);
+    } catch (error) {
+        console.log(error);
+    }
+}
