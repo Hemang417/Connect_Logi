@@ -814,7 +814,23 @@ const DoNDelivery = () => {
 
     };
 
-
+    const isEditable = (item) => {
+        try {
+            // Check if the localStorage username and assignedperson match
+            if(localStorage.getItem('username') === item.assignedperson){
+                // If they match, the row should be editable
+                return false;
+            } else {
+                // If they don't match, check if the localStorage username is 'admin'
+                return localStorage.getItem('username') !== 'admin';
+            }
+        } catch (error) {
+            console.log(error);
+            // Default to false if there's an error
+            return false;
+        }
+    }
+    
 
     const handleCheckboxChange = async (index) => {
         try {
@@ -947,6 +963,7 @@ const DoNDelivery = () => {
                                     <CTableDataCell><input type="checkbox" placeholder="" className='o2d-field-4'
                                         checked={item.status === 'Completed'}
                                         onChange={() => handleCheckboxChange(index)}
+                                        disabled={isEditable(item)}
                                     /></CTableDataCell>
                                 </CTableDataCell>
                                 <CTableDataCell>
@@ -955,6 +972,7 @@ const DoNDelivery = () => {
                                 <CTableDataCell>
                                     {item.status}
                                 </CTableDataCell>
+                                
                                 <CTableDataCell>
                                     <input type="text" placeholder="remarks of the process" className="remarks-field" name='remarks' value={item.remarks} onChange={(e) => handleRemarkChange(index, e)}/>
                                 </CTableDataCell>

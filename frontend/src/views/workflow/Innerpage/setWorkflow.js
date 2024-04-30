@@ -56,8 +56,10 @@ const setWorkflow = () => {
     minutes: '',
     milestone: '',
     plandatechange: '',
-
+    selectedEmployee: ''
   })
+
+  const [employeeData, setemployeeData] = useState([]);
 
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
 
@@ -89,6 +91,13 @@ const setWorkflow = () => {
       console.log(error);
     }
   }
+
+  const handleEmployeeSelect = (employee) => {
+    setworkflowData({
+      ...workflowData,
+      selectedEmployee: employee.username // Set the selected employee in workflowData
+    });
+  };
 
 
   const getAllLineofBusinesses = async () => {
@@ -146,6 +155,7 @@ const setWorkflow = () => {
       minutes: workflow.minutes,
       milestone: workflow.workflowmilestone,
       plandatechange: workflow.plandatechange,
+      selectedEmployee: workflow.assignedperson
     });
     setVisible(true); // Open the modal
   };
@@ -158,7 +168,7 @@ const setWorkflow = () => {
 
   const updateWorkflow = async () => {
     try {
-
+     
       // Send request to update workflow data
       const response = await axios.put('http://localhost:5000/updatesetworkflow', {
         id: selectedWorkflow.id,
@@ -193,6 +203,7 @@ const setWorkflow = () => {
       minutes: '',
       milestone: '',
       plandatechange: '',
+      selectedEmployee: ''
     });
     setSelectedWorkflow(null);
   };
@@ -254,9 +265,9 @@ const setWorkflow = () => {
   };
 
 
-  const handleorg = (selectedOrg) => {
-    setselectedOrg(selectedOrg)
-  }
+  // const handleorg = (selectedOrg) => {
+  //   setselectedOrg(selectedOrg)
+  // }
 
 
   async function readsetworkflow() {
@@ -277,6 +288,22 @@ const setWorkflow = () => {
   }
 
 
+  async function getAlltheemployeeswiththatbranchaccess() {
+    try {
+      const response = await axios.get('http://localhost:5000/getAlltheemployeeswiththatbranchaccess', {
+        params: {
+          orgname: localStorage.getItem('orgname'),
+          orgcode: localStorage.getItem('orgcode'),
+          branchname: localStorage.getItem('workflowbranchname')
+        }
+      })
+      setemployeeData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
 
   useEffect(() => {
     try {
@@ -284,6 +311,7 @@ const setWorkflow = () => {
       getAllLineofBusinesses();
       getAllOrgs();
       getMilestones();
+      getAlltheemployeeswiththatbranchaccess();
       // readAllWorkflows();
       readsetworkflow();
     } catch (error) {
@@ -463,6 +491,22 @@ const setWorkflow = () => {
             <div>
 
             </div>
+
+            <div>
+              <CModalTitle id="LiveDemoExampleLabel">
+                Access
+              </CModalTitle>
+              <CDropdown>
+                <CDropdownToggle className="dropdown-btn" color='secondary'>{workflowData.selectedEmployee ? workflowData.selectedEmployee : 'Select Employee'}</CDropdownToggle>
+                <CDropdownMenu className="text-field-4">
+                  {employeeData && employeeData.map((employee, index) => (
+                    <CDropdownItem key={index} onClick={() => handleEmployeeSelect(employee)}>{employee.username}</CDropdownItem>
+                  ))}
+                </CDropdownMenu>
+              </CDropdown>
+            </div>
+
+
           </CModalBody>
 
           <CModalFooter>
@@ -473,9 +517,6 @@ const setWorkflow = () => {
               {selectedWorkflow ? 'Update Workflow' : 'Create Workflow'}
             </CButton>
 
-            {/* <CButton color="primary" onClick={CreateWorkflow}>
-              Create Workflow
-            </CButton> */}
           </CModalFooter>
         </CModal>
 

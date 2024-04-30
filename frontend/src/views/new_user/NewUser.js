@@ -24,7 +24,7 @@ import toast from 'react-hot-toast'
 const NewUser = () => {
 
     const navigate = useNavigate();
-    const [allBranchesofourOwn, setallbranchesofourOwn] = useState([]);
+    // const [allBranchesofourOwn, setallbranchesofourOwn] = useState([]);
     const [regForm, setregForm] = useState({
         username: ' ',
         password: ' ',
@@ -32,8 +32,8 @@ const NewUser = () => {
         repeatPassword: ' ',
         fullname: ' ',
     });
-    
-    const [selectedBranch, setselectedBranch] = useState('');
+
+    const [selectedRole, setselectedRole] = useState('');
 
     function handleChange(e) {
         setregForm({
@@ -41,7 +41,6 @@ const NewUser = () => {
             [e.target.name]: e.target.value
         })
     }
-
 
 
     async function handleSubmit(e) {
@@ -56,7 +55,7 @@ const NewUser = () => {
                 orgcode: regForm.orgcode,
                 repeatPassword: regForm.repeatPassword,
                 fullname: regForm.fullname,
-               
+                role: selectedRole
             });
 
 
@@ -65,10 +64,10 @@ const NewUser = () => {
                 password: '',
                 orgcode: '',
                 repeatPassword: '',
-                fullname: ''
+                fullname: '',
             });
 
-
+            setselectedRole('');
 
             // localStorage.setItem('orgname', regForm.orgname);
             // localStorage.setItem('orgcode', response.data.register.orgcode);
@@ -85,31 +84,23 @@ const NewUser = () => {
     }
 
 
-    useEffect(() => {
-        const fetchBranchesofOwnOrg = async (req, res) => {
-            try {
-                const response = await axios.get('http://localhost:5000/fetchallownbranchname', {
-                    params: {
-                        orgcode: localStorage.getItem('orgcode'),
-                        orgname: localStorage.getItem('orgname')
-                    }
-                })
-                setallbranchesofourOwn(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchBranchesofOwnOrg();
-    }, [])
+    // useEffect(() => {
+    //     const fetchBranchesofOwnOrg = async (req, res) => {
+    //         try {
+    //             const response = await axios.get('http://localhost:5000/fetchallownbranchname', {
+    //                 params: {
+    //                     orgcode: localStorage.getItem('orgcode'),
+    //                     orgname: localStorage.getItem('orgname')
+    //                 }
+    //             })
+    //             setallbranchesofourOwn(response.data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     }
+    //     fetchBranchesofOwnOrg();
+    // }, [])
 
-async function handleSelect(branchname, branchcode){
-    setregForm({
-        ...regForm,
-        branchname: branchname,
-        branchcode: branchcode
-    })
-    setselectedBranch(branchname);
-}
 
     return (
         <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -121,7 +112,7 @@ async function handleSelect(branchname, branchcode){
                                 <CForm>
                                     <h1>New User</h1>
                                     <p className="text-medium-emphasis">Create your new user</p>
-                                   
+
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
@@ -134,7 +125,6 @@ async function handleSelect(branchname, branchcode){
                                         />
                                     </CInputGroup>
 
-
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>OC</CInputGroupText>
                                         <CFormInput placeholder="Organization Code" autoComplete="orgcode" name='orgcode' onChange={handleChange}
@@ -143,6 +133,21 @@ async function handleSelect(branchname, branchcode){
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>@</CInputGroupText>
                                         <CFormInput placeholder="Username" onChange={handleChange} name='username' />
+                                    </CInputGroup>
+                                    <CInputGroup className="mb-3">
+                                        <CInputGroupText>
+                                            <CIcon icon={cilBuilding} />
+                                        </CInputGroupText>
+                                        <CDropdown className="impgen-text-field-1">
+                                            <CDropdownToggle color="secondary">{selectedRole ? selectedRole : 'Role'}</CDropdownToggle>
+                                            <CDropdownMenu className="impgen-text-dropdown">
+
+                                                <CDropdownItem onClick={() => setselectedRole('admin')}>admin</CDropdownItem>
+                                                <CDropdownItem onClick={() => setselectedRole('manager')}>manager</CDropdownItem>
+                                                <CDropdownItem onClick={() => setselectedRole('executive')}>executive</CDropdownItem>
+
+                                            </CDropdownMenu>
+                                        </CDropdown>
                                     </CInputGroup>
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>

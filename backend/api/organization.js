@@ -139,7 +139,7 @@ export const OrgRender = async (orgname, orgcode) => {
 
 
 // ADD USER VIA ADMIN API
-export const insertEmployees = async (username, password, orgcode, orgname, fullname) => {
+export const insertEmployees = async (username, password, orgcode, orgname, fullname, role) => {
     try {
 
         // Check if the organization exists in the users table
@@ -152,11 +152,12 @@ export const insertEmployees = async (username, password, orgcode, orgname, full
             throw new Error('Organization does not exist');
         }
 
+        const usernameofuser = username + '@' + role;
         // Insert employee data into the employees table
         await connection.execute(`
-            INSERT INTO employees (username, password, orgcode, orgname, fullname) 
-            VALUES (?, ?, ?, ?, ?)
-        `, [username, password, orgcode, orgname, fullname]);
+            INSERT INTO employees (username, password, orgcode, orgname, fullname, role) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        `, [usernameofuser, password, orgcode, orgname, fullname, role]);
 
         return rows;
     } catch (error) {

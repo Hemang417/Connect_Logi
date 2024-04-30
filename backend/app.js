@@ -18,7 +18,7 @@ import { getCompletedRows } from './api/userreport.js';
 import { switchBranchsogetBranch } from './api/dashboard.js';
 import { storethelob, getAlltheLOB, deleteLOB, updateLOB, fetchorgTAT } from './api/lineofbusiness.js';
 import { storeMilestone, getAllMilestones, deleteMilestone, updateMilestone } from './api/milestone.js';
-import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow } from './api/workflow.js';
+import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow, gettheemployeesofBranch } from './api/workflow.js';
 
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 
@@ -93,7 +93,7 @@ app.get('/getOrg', async (req, res) => {
 
 app.post('/emp/store', async (req, res) => {
     try {
-        const { username, password, orgcode, repeatPassword, orgname, fullname } = req.body;
+        const { username, password, orgcode, repeatPassword, orgname, fullname, role } = req.body;
 
         if (!username || !password || !orgcode || !orgname || !fullname) {
             return res.status(400).json({ message: 'Invalid Credentials' });
@@ -101,7 +101,7 @@ app.post('/emp/store', async (req, res) => {
         if (password !== repeatPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
-        const allStorageofemp = await insertEmployees(username, password, orgcode, orgname, fullname);
+        const allStorageofemp = await insertEmployees(username, password, orgcode, orgname, fullname, role);
 
         res.status(200).json(allStorageofemp);
     } catch (error) {
@@ -1100,8 +1100,8 @@ app.put('/updatemilestone', async (req, res) => {
 app.post('/createworkflow', async (req, res) => {
     try {
         const { orgname, orgcode, branchName, lob, importername } = req.body;
-        const { workflowname, duration, days, hours, minutes, milestone, plandatechange } = req.body.workflowData;
-        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange);
+        const { workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee } = req.body.workflowData;
+        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee);
         res.status(200).send(storedWorkflow);
     } catch (error) {
         console.log(error);
@@ -1161,8 +1161,8 @@ app.delete('/deletesetworkflow', async (req, res) => {
 
 app.put('/updatesetworkflow', async (req, res) => {
     try {
-        const { id, workflowname, days, hours, minutes, milestone, plandatechange } = req.body;
-        const updatedWorkflowHaiYe = await updatesetworkflow(id, workflowname, days, hours, minutes, milestone, plandatechange);
+        const { id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee } = req.body;
+        const updatedWorkflowHaiYe = await updatesetworkflow(id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee);
         res.status(200).send(updatedWorkflowHaiYe);
     } catch (error) {
         console.log(error);
@@ -1255,6 +1255,16 @@ app.post('/updateRemarkinthatrow', async (req, res) => {
     }
 });
 
+
+app.get('/getAlltheemployeeswiththatbranchaccess', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname} = req.query;
+        const allusersofthatorg = await gettheemployeesofBranch(orgname, orgcode, branchname);
+        res.send(allusersofthatorg);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 app.listen(PORT, () => {
