@@ -695,7 +695,7 @@ const DoNDelivery = () => {
                 const index = response.data.findIndex(row => row.workflowname === item.tatimpcolumn);
                 if (index > -1) {
                     // Update status, planDate, actualdate, and timedelay for completed items
-                    response.data[index] = { ...response.data[index], planDate: item.plandate, actualdate: item.actualdate, status: 'Completed', timedelay: item.timedelay };
+                    response.data[index] = { ...response.data[index], planDate: item.plandate, actualdate: item.actualdate, status: 'Completed', timedelay: item.timedelay, remarks: item.remarks };
                 }
             });
             setAllLobData(completedrowsofthatjobandbranchandlob.data);

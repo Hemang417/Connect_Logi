@@ -93,15 +93,15 @@ app.get('/getOrg', async (req, res) => {
 
 app.post('/emp/store', async (req, res) => {
     try {
-        const { username, password, orgcode, branchname, repeatPassword, orgname, fullname, branchcode } = req.body;
+        const { username, password, orgcode, repeatPassword, orgname, fullname } = req.body;
 
-        if (!username || !password || !orgcode || !branchname || !orgname || !fullname) {
+        if (!username || !password || !orgcode || !orgname || !fullname) {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
         if (password !== repeatPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
-        const allStorageofemp = await insertEmployees(username, password, orgcode, branchname, orgname, fullname, branchcode);
+        const allStorageofemp = await insertEmployees(username, password, orgcode, orgname, fullname);
 
         res.status(200).json(allStorageofemp);
     } catch (error) {

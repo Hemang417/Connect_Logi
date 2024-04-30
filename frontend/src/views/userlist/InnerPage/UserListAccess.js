@@ -43,7 +43,7 @@ const UserListAccess = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [isshown, setIsShown] = useState("import");
+  const [isshown, setIsShown] = useState("branches");
   const [visible, setVisible] = useState(false);
 
 
@@ -71,7 +71,7 @@ const UserListAccess = () => {
 
 
       <CNav variant="tabs">
-        <CNavItem>
+        {/* <CNavItem>
           <CNavLink onClick={() => { setIsShown("import") }}>Import</CNavLink>
         </CNavItem>
         <CNavItem>
@@ -79,7 +79,7 @@ const UserListAccess = () => {
         </CNavItem>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("transport") }}>Transport</CNavLink>
-        </CNavItem>
+        </CNavItem> */}
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("branches") }}>Branches</CNavLink>
         </CNavItem>

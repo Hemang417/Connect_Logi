@@ -30,10 +30,9 @@ const NewUser = () => {
         password: ' ',
         orgcode: localStorage.getItem('orgcode'),
         repeatPassword: ' ',
-        branchname: ' ',
         fullname: ' ',
-        branchcode: ' '
     });
+    
     const [selectedBranch, setselectedBranch] = useState('');
 
     function handleChange(e) {
@@ -56,9 +55,8 @@ const NewUser = () => {
                 orgname: nameoforg,
                 orgcode: regForm.orgcode,
                 repeatPassword: regForm.repeatPassword,
-                branchname: regForm.branchname,
                 fullname: regForm.fullname,
-                branchcode: regForm.branchcode
+               
             });
 
 
@@ -67,7 +65,6 @@ const NewUser = () => {
                 password: '',
                 orgcode: '',
                 repeatPassword: '',
-                branchname: '',
                 fullname: ''
             });
 
@@ -124,14 +121,7 @@ async function handleSelect(branchname, branchcode){
                                 <CForm>
                                     <h1>New User</h1>
                                     <p className="text-medium-emphasis">Create your new user</p>
-                                    {/* <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilUser} />
-                    </CInputGroupText>
-                    <CFormInput placeholder="Organization Name" autoComplete="orgname" name='orgname' onChange={handleChange}/>
-                  </CInputGroup> */}
-
-
+                                   
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
@@ -179,7 +169,7 @@ async function handleSelect(branchname, branchcode){
                                         />
                                     </CInputGroup>
 
-                                    <CInputGroup className="mb-3">
+                                    {/* <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
                                         </CInputGroupText>
@@ -191,13 +181,8 @@ async function handleSelect(branchname, branchcode){
                                                 ))}
                                             </CDropdownMenu>
                                         </CDropdown>
-                                        {/* <CFormInput
-                                            type="text"
-                                            placeholder="Branch Name"
-                                            name='branchname'
-                                            onChange={handleChange}
-                                        /> */}
-                                    </CInputGroup>
+                                       
+                                    </CInputGroup> */}
 
                                     <div className="d-grid">
                                         <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
