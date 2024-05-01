@@ -19,7 +19,7 @@ import { switchBranchsogetBranch } from './api/dashboard.js';
 import { storethelob, getAlltheLOB, deleteLOB, updateLOB, fetchorgTAT } from './api/lineofbusiness.js';
 import { storeMilestone, getAllMilestones, deleteMilestone, updateMilestone } from './api/milestone.js';
 import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow, gettheemployeesofBranch } from './api/workflow.js';
-
+import {storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList} from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 
 const app = express();
@@ -1266,6 +1266,49 @@ app.get('/getAlltheemployeeswiththatbranchaccess', async (req, res) => {
     }
 })
 
+app.post('/storeApproverlist', async (req, res) => {
+    try {
+       const {approverName, orgname, orgcode} = req.body;
+       const {branchname, branchcode} = req.body.selectedBranch
+       const storedname = await storeApproverName(orgname, orgcode, approverName, branchname, branchcode);
+       res.status(200).send(storedname);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/fetchApproverlist', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allapproverlist = await getApproverlist(orgname, orgcode);
+        res.send(allapproverlist)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteApproverlist', async (req, res) => {
+    try {
+        const { orgname, orgcode, approverlistname, branchname, branchcode } = req.body;
+        const deletedRow = await deletedApproverlist(orgname, orgcode, approverlistname, branchname, branchcode);
+        res.send(deletedRow);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.put('/updateApproverlist', async (req, res) => {
+    try {
+        const { orgname, orgcode, approverName } = req.body;
+        const { branchname, branchcode } = req.body.selectedBranch;
+        await UpdatedApproverList(orgname, orgcode, approverName, branchname, branchcode);
+        res.status(200).send('Approver name updated successfully');
+    } catch (error) {
+        console.error('Error updating approver name:', error);
+        res.status(500).send('Failed to update approver name');
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

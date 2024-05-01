@@ -378,6 +378,12 @@ const _nav = [
         to: '/branchlist',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
       },
+      {
+        component: CNavItem,
+        name: 'Approvers',
+        to: '/approvername',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+      },
       
     ],
   },
