@@ -27,17 +27,23 @@ import {
 
 import axios from 'axios'
 import toast from 'react-hot-toast'
-
+import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 const Approvername = () => {
-
+    const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
     const [approverName, setApproverName] = useState('');
     const [allbranches, setallbranches] = useState([]);
     const [selectedBranch, setselectedBranch] = useState({});
     const [allapproverlist, setallapproverlist] = useState([]);
     const [editstate, seteditstate] = useState(false);
-
+    const location = useLocation();
+    if(location.pathname === '/approvername'){
+        localStorage.removeItem('approverlistname');
+        localStorage.removeItem('approverbranchname');
+        localStorage.removeItem('approverbranchcode');
+    }
     const handleModalClose = () => {
         setVisible(false);
         setApproverName('');
@@ -163,6 +169,14 @@ const Approvername = () => {
     }
 
 
+    async function handleMembers(item){
+        localStorage.setItem('approverlistname', item.approverlistname);
+        localStorage.setItem('approverbranchname', item.branchname);
+        localStorage.setItem('approverbranchcode', item.branchcode);
+        navigate('/memberapprover')
+    }
+
+
     return (
         <CRow>
             <CCol xs={12}>
@@ -180,6 +194,7 @@ const Approvername = () => {
                                     <CTableDataCell className='row-font'>{item.approverlistname}</CTableDataCell>
                                     <CTableDataCell className='row-font'>
                                         <CButton onClick={() => handleEdit(item)}>Edit</CButton>
+                                        <CButton onClick={() => handleMembers(item)}>Add Members</CButton>
                                         <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
                                     </CTableDataCell>
                                 </CTableRow>

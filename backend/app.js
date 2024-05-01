@@ -19,7 +19,11 @@ import { switchBranchsogetBranch } from './api/dashboard.js';
 import { storethelob, getAlltheLOB, deleteLOB, updateLOB, fetchorgTAT } from './api/lineofbusiness.js';
 import { storeMilestone, getAllMilestones, deleteMilestone, updateMilestone } from './api/milestone.js';
 import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkflowRow, getSetAllWorkflow, deletesetworkflow, updatesetworkflow, gettheemployeesofBranch } from './api/workflow.js';
-import {storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList} from './api/approver.js'
+import {
+    storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList,
+    Addnametoapproverlist, getnamesoftheapproverlist, deletenamefromapproverlist,
+    updateApproverName
+} from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 
 const app = express();
@@ -1200,7 +1204,7 @@ app.get('/Getcompletedrowsofthatjobandbranchandlob', async (req, res) => {
 
 app.post('/insertCompletedRow', async (req, res) => {
     try {
-       
+
         const { lobname, ownbranchname, importername,
             orgname, orgcode, workflowname, status, planDate,
             timedelay, days, hours, minutes, actualdate } =
@@ -1218,12 +1222,12 @@ app.post('/insertCompletedRow', async (req, res) => {
 })
 
 app.delete('/deleteCompletedRow', async (req, res) => {
-    
+
     try {
-        const {jobnumber, ownbranchcode} = req.body;
-        const {lobname, ownbranchname, importername,
-            orgname, orgcode, workflowname} = req.body.row;
-            console.log(req.body.row);
+        const { jobnumber, ownbranchcode } = req.body;
+        const { lobname, ownbranchname, importername,
+            orgname, orgcode, workflowname } = req.body.row;
+        console.log(req.body.row);
         const deletedRow = await deleteCompletedRowofImport(lobname, ownbranchname, importername,
             orgname, orgcode, workflowname, jobnumber, ownbranchcode);
 
@@ -1258,7 +1262,7 @@ app.post('/updateRemarkinthatrow', async (req, res) => {
 
 app.get('/getAlltheemployeeswiththatbranchaccess', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname} = req.query;
+        const { orgname, orgcode, branchname } = req.query;
         const allusersofthatorg = await gettheemployeesofBranch(orgname, orgcode, branchname);
         res.send(allusersofthatorg);
     } catch (error) {
@@ -1268,10 +1272,10 @@ app.get('/getAlltheemployeeswiththatbranchaccess', async (req, res) => {
 
 app.post('/storeApproverlist', async (req, res) => {
     try {
-       const {approverName, orgname, orgcode} = req.body;
-       const {branchname, branchcode} = req.body.selectedBranch
-       const storedname = await storeApproverName(orgname, orgcode, approverName, branchname, branchcode);
-       res.status(200).send(storedname);
+        const { approverName, orgname, orgcode } = req.body;
+        const { branchname, branchcode } = req.body.selectedBranch
+        const storedname = await storeApproverName(orgname, orgcode, approverName, branchname, branchcode);
+        res.status(200).send(storedname);
     } catch (error) {
         console.log(error);
     }
@@ -1279,7 +1283,7 @@ app.post('/storeApproverlist', async (req, res) => {
 
 app.get('/fetchApproverlist', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allapproverlist = await getApproverlist(orgname, orgcode);
         res.send(allapproverlist)
     } catch (error) {
@@ -1309,6 +1313,46 @@ app.put('/updateApproverlist', async (req, res) => {
         res.status(500).send('Failed to update approver name');
     }
 });
+
+app.post('/addApprover', async (req, res) => {
+    try {
+        const { orgname, orgcode, branchname, approverlistname, branchcode, employeeName } = req.body;
+        const nameadded = await Addnametoapproverlist(orgname, orgcode, branchname, approverlistname, branchcode, employeeName);
+        res.status(200).send(nameadded)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getallapprovernames', async (req, res) => {
+    try {
+        const { orgname, orgcode, branchname, branchcode, approverlistname } = req.query;
+        const allnames = await getnamesoftheapproverlist(orgname, orgcode, branchname, branchcode, approverlistname);
+        res.send(allnames)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteapprovername', async (req, res) => {
+    try {
+        const { orgname, orgcode, branchname, branchcode, approverlistname, employeename } = req.body;
+        const deletedname = await deletenamefromapproverlist(orgname, orgcode, branchname, branchcode, approverlistname, employeename);
+        res.send(deletedname)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updateapprovername', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, branchcode, approverlistname, employeename} = req.body;
+        const updatedname = await updateApproverName(orgname, orgcode, branchname, branchcode, approverlistname, employeename);
+        res.status(200).send(updatedname);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

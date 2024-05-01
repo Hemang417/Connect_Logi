@@ -3,6 +3,7 @@ import React from 'react';
 
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Memberapprover = React.lazy(() => import('./views/approver/Memberapprover'))
 const Approvername = React.lazy(() => import('./views/approver/Approvername'))
 const Import = React.lazy(() => import('./views/import/import'))
 const impcreatejob = React.lazy(() => import('./views/import/impcreatejob'))
@@ -134,7 +135,8 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  {path: '/approvername', name: 'Approvername', element: Approvername}
+  {path: '/approvername', name: 'Approvername', element: Approvername},
+  {path: '/memberapprover', name: 'Memberapprover', element: Memberapprover}
 ]
 
 export default routes
