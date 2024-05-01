@@ -814,22 +814,62 @@ const DoNDelivery = () => {
 
     };
 
+
+
+
+
+
     const isEditable = (item) => {
         try {
-            // Check if the localStorage username and assignedperson match
-            if(localStorage.getItem('username') === item.assignedperson){
-                // If they match, the row should be editable
+            if (localStorage.getItem('username') === 'admin') {
+                // If the current user is admin, return false (not editable)
                 return false;
             } else {
-                // If they don't match, check if the localStorage username is 'admin'
-                return localStorage.getItem('username') !== 'admin';
+                if(item.assignedperson.length === 1){
+                    if(item.assignedperson[0].username === localStorage.getItem('username')){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }else if(item.assignedperson.length > 1){
+                    const assignedPerson = item.assignedperson.find(person => person.username === localStorage.getItem('username'));
+                    if(assignedPerson){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
             }
         } catch (error) {
             console.log(error);
-            // Default to false if there's an error
+            // In case of any error, return false (not editable)
             return false;
         }
-    }
+    };
+    
+    
+    
+    
+
+
+
+    // const isEditable = (item) => {
+    //     try {
+            
+    //         // Check if the localStorage username and assignedperson match
+    //         if(localStorage.getItem('username') === item.assignedperson){
+    //             // If they match, the row should be editable
+    //             return false;
+    //         } else {
+    //             // If they don't match, check if the localStorage username is 'admin'
+    //             return localStorage.getItem('username') !== 'admin';
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         // Default to false if there's an error
+    //         return false;
+    //     }
+    // }
     
 
     const handleCheckboxChange = async (index) => {
@@ -914,6 +954,8 @@ const DoNDelivery = () => {
     }
 
 
+   
+
     return (
         <div>
             <div className="left-div-table">
@@ -934,6 +976,7 @@ const DoNDelivery = () => {
                         {allLobData.map((item, index) => (
                             <CTableRow key={index}>
                                 <CTableDataCell>{item.workflowname}</CTableDataCell>
+                       
                                 <CTableDataCell>
                                     <input
                                         type="text"

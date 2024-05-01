@@ -1101,7 +1101,7 @@ app.post('/createworkflow', async (req, res) => {
     try {
         const { orgname, orgcode, branchName, lob, importername } = req.body;
         const { workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee } = req.body.workflowData;
-        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee);
+        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, JSON.stringify(selectedEmployee));
         res.status(200).send(storedWorkflow);
     } catch (error) {
         console.log(error);

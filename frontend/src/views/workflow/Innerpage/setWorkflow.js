@@ -142,7 +142,7 @@ const setWorkflow = () => {
       minutes: workflow.minutes,
       milestone: workflow.workflowmilestone,
       plandatechange: workflow.plandatechange,
-      selectedEmployee: workflow.assignedperson ? JSON.parse(workflow.assignedperson) : [] // Split existing selected employees into an array
+      selectedEmployee: workflow.assignedperson // Split existing selected employees into an array
       // selectedEmployee: workflow.assignedperson
     });
     setVisible(true); // Open the modal
@@ -201,6 +201,7 @@ const setWorkflow = () => {
 
   const CreateWorkflow = async () => {
     try {
+
       const response = await axios.post('http://localhost:5000/createworkflow', {
         orgname: localStorage.getItem('orgname'),
         orgcode: localStorage.getItem('orgcode'),
@@ -296,9 +297,10 @@ const setWorkflow = () => {
 
   const handleEmployeeSelect = (employee, index) => {
     const updatedSelectedEmployees = [...workflowData.selectedEmployee]; // Get the current selected employees array
-    updatedSelectedEmployees[index] = employee.username; // Update the selected employee for the specified index
+    updatedSelectedEmployees[index] = { username: employee.username }; // Update the selected employee for the specified index
     setworkflowData({ ...workflowData, selectedEmployee: updatedSelectedEmployees }); // Update the workflowData state with the updated selected employees
   };
+
 
   // const handleEmployeeSelect = (employee, index) => {
   //   const updatedWorkflows = [...selectedWorkflows];
@@ -464,7 +466,29 @@ const setWorkflow = () => {
                 Access
               </CModalTitle>
 
+
               {workflowData.selectedEmployee && workflowData.selectedEmployee.map((selectedEmployee, index) => (
+                <div key={index}>
+                  <CDropdown>
+                    <CDropdownToggle color="secondary">{selectedEmployee.username || 'Select'}</CDropdownToggle>
+                    <CDropdownMenu>
+                      {employeeData && employeeData.map((employee, empIndex) => (
+                        <CDropdownItem key={empIndex} onClick={() => handleEmployeeSelect(employee, index)}>{employee.username}</CDropdownItem>
+                      ))}
+                    </CDropdownMenu>
+                  </CDropdown>
+                  <CButton onClick={() => handleDeleteDropdown(index)}>Delete</CButton>
+                </div>
+              ))}
+              <CButton onClick={handleAddDropdown}>Add Dropdown</CButton>
+
+
+
+
+
+
+
+              {/* {workflowData.selectedEmployee && workflowData.selectedEmployee.map((selectedEmployee, index) => (
                 <div key={index}>
                   <CDropdown>
                     <CDropdownToggle color="secondary">{selectedEmployee || 'Select'}</CDropdownToggle>
@@ -476,9 +500,9 @@ const setWorkflow = () => {
                   </CDropdown>
                   <CButton onClick={() => handleDeleteDropdown(index)}>Delete</CButton>
                 </div>
-              ))}
+              ))} */}
 
-              <CButton onClick={handleAddDropdown}>Add Dropdown</CButton>
+              {/* <CButton onClick={handleAddDropdown}>Add Dropdown</CButton> */}
 
 
             </div>
