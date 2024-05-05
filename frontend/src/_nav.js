@@ -384,6 +384,12 @@ const _nav = [
         to: '/approvername',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
       },
+      {
+        component: CNavItem,
+        name: 'User Role',
+        to: '/userroles',
+        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />
+      }
       
     ],
   },

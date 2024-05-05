@@ -25,6 +25,7 @@ import {
     updateApproverName
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
+import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1349,6 +1350,46 @@ app.put('/updateapprovername', async (req, res) => {
         const {orgname, orgcode, branchname, branchcode, approverlistname, employeename} = req.body;
         const updatedname = await updateApproverName(orgname, orgcode, branchname, branchcode, approverlistname, employeename);
         res.status(200).send(updatedname);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/storeuserrole', async (req, res) => {
+    try {
+        const {orgname, orgcode, userrole} = req.body;
+        const storedRole = await storingRole(orgname, orgcode, userrole);
+        res.send(storedRole);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getuserroles', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const rolesofuser = await getUserRoles(orgname, orgcode);
+        res.send(rolesofuser);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteduserrole', async (req, res) => {
+    try {
+        const {orgname, orgcode, userrole} = req.body;
+        const deletedrole = await DeleteUserRole(orgname, orgcode, userrole);
+        res.send(deletedrole);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updateuserrole', async (req, res) => {
+    try {
+        const {orgname, orgcode, userrole, id} = req.body;
+        const updatedUserRole = updateRoleofuser(orgname, orgcode, userrole, id);
+        res.status(200).send(updatedUserRole)
     } catch (error) {
         console.log(error);
     }

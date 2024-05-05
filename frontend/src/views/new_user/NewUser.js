@@ -42,6 +42,7 @@ const NewUser = () => {
         })
     }
 
+    console.log(selectedRole);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -83,23 +84,24 @@ const NewUser = () => {
         }
     }
 
+    const [storedRoles, setStoredRoles] = useState([]);
+    const GetallRoles = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/getuserroles', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                }
+            });
+            setStoredRoles(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-    // useEffect(() => {
-    //     const fetchBranchesofOwnOrg = async (req, res) => {
-    //         try {
-    //             const response = await axios.get('http://localhost:5000/fetchallownbranchname', {
-    //                 params: {
-    //                     orgcode: localStorage.getItem('orgcode'),
-    //                     orgname: localStorage.getItem('orgname')
-    //                 }
-    //             })
-    //             setallbranchesofourOwn(response.data);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    //     fetchBranchesofOwnOrg();
-    // }, [])
+    useEffect(() => {
+        GetallRoles();
+    }, [])
 
 
     return (
@@ -138,16 +140,18 @@ const NewUser = () => {
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
                                         </CInputGroupText>
-                                        <CDropdown className="impgen-text-field-1">
-                                            <CDropdownToggle color="secondary">{selectedRole ? selectedRole : 'Role'}</CDropdownToggle>
-                                            <CDropdownMenu className="impgen-text-dropdown">
 
-                                                <CDropdownItem onClick={() => setselectedRole('admin')}>admin</CDropdownItem>
-                                                <CDropdownItem onClick={() => setselectedRole('manager')}>manager</CDropdownItem>
-                                                <CDropdownItem onClick={() => setselectedRole('executive')}>executive</CDropdownItem>
-
-                                            </CDropdownMenu>
-                                        </CDropdown>
+                                                <CDropdown className="impgen-text-field-1">
+                                                    <CDropdownToggle color="secondary">{selectedRole ? selectedRole : 'Role'}</CDropdownToggle>
+                                                    <CDropdownMenu className="impgen-text-dropdown">
+                                                        {storedRoles.map((item, index) => (
+                                                            <CDropdownItem key={index} onClick={() => setselectedRole(item.rolename)}>
+                                                                {item.rolename}
+                                                            </CDropdownItem>
+                                                        ))}
+                                                    </CDropdownMenu>
+                                                </CDropdown>
+                                                
                                     </CInputGroup>
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
@@ -173,21 +177,6 @@ const NewUser = () => {
                                             onChange={handleChange}
                                         />
                                     </CInputGroup>
-
-                                    {/* <CInputGroup className="mb-3">
-                                        <CInputGroupText>
-                                            <CIcon icon={cilBuilding} />
-                                        </CInputGroupText>
-                                        <CDropdown className="impgen-text-field-1">
-                                            <CDropdownToggle color="secondary">{selectedBranch ? selectedBranch : 'Branch Names'}</CDropdownToggle>
-                                            <CDropdownMenu className="impgen-text-dropdown">
-                                                {allBranchesofourOwn && allBranchesofourOwn.map((branch, index) => (
-                                                    <CDropdownItem key={index} onClick={()=> handleSelect(branch.ownbranchname, branch.branchcode)}>{branch.ownbranchname}</CDropdownItem>
-                                                ))}
-                                            </CDropdownMenu>
-                                        </CDropdown>
-                                       
-                                    </CInputGroup> */}
 
                                     <div className="d-grid">
                                         <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
