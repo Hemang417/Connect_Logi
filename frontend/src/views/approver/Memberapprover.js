@@ -109,7 +109,8 @@ const Memberapprover = () => {
                 branchname: localStorage.getItem('approverbranchname'),
                 approverlistname: localStorage.getItem('approverlistname'),
                 branchcode: localStorage.getItem('approverbranchcode'),
-                employeeName: selectedEmployee
+                employeeName: selectedEmployee,
+                uniquevalue: localStorage.getItem('uniquevalue'),
             });
 
             if (response.status === 200) {

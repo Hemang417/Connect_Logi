@@ -240,7 +240,7 @@ const organization = () => {
     localStorage.removeItem('branchDataforprefill');
     localStorage.removeItem('alias');
     localStorage.removeItem('organizationbranches');
-    
+    localStorage.removeItem('uniquevalue')    
   }
 
   useEffect(() => {
@@ -277,6 +277,7 @@ const organization = () => {
       localStorage.setItem('firstorgofclient', JSON.stringify(org.branches[0]));
       localStorage.setItem('updateBtn', true);
       localStorage.setItem('isEditing', true);
+      localStorage.setItem('uniquevalue', 'OrgButton')
     } catch (error) {
       toast.error(error);
       console.log("Error: " + error);
@@ -293,7 +294,8 @@ const organization = () => {
     localStorage.removeItem('alias');
     localStorage.removeItem('branchname');
     localStorage.removeItem('selectedBranchName');
-    localStorage.removeItem('isEditing')
+    localStorage.removeItem('isEditing');
+    localStorage.setItem('uniquevalue', 'OrgButton')
   }
 
 

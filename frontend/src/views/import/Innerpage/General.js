@@ -763,7 +763,13 @@ const General = () => {
             
             const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp});
             toast.success('Successfully stored General Details');
-
+            const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
+                params: {
+                  orgname: localStorage.getItem('orgname'),
+                  orgcode: localStorage.getItem('orgcode'),
+                  unique: localStorage.getItem('uniquevalue')
+                }
+            })
         } catch (error) {
             toast.error('Error storing General Details.');
             console.log(error);
@@ -834,6 +840,13 @@ const General = () => {
                 jobowner: username,
                 jobnumber: jobkanum
             });
+            const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
+                params: {
+                  orgname: localStorage.getItem('orgname'),
+                  orgcode: localStorage.getItem('orgcode'),
+                  unique: localStorage.getItem('uniquevalue')
+                }
+              })
             toast.success('Successfully updated General Details');
         } catch (error) {
             toast.error('Error updating General Details.');
@@ -924,7 +937,6 @@ const General = () => {
                             <input type="text" name="iec" placeholder="IEC Code" className='impgen-text-field-1' value={formData.iec} readOnly />
                             <input type="text" name="portShipment" placeholder="Port of Shipment" className='impgen-text-field-1' value={formData.portShipment} onChange={(e) => setFormData({ ...formData, portShipment: e.target.value })} />
                             <input type="text" name="finalDestination" placeholder="Final Destination" className='impgen-text-field-1' value={formData.finalDestination} onChange={(e) => setFormData({ ...formData, finalDestination: e.target.value })} />
-
                             {localStorage.getItem('onEdit') === 'true' ?
                                 <CButton onClick={handleUpdate}>Update</CButton> :
                                 <CButton onClick={handleSubmit}>Submit</CButton>

@@ -331,7 +331,18 @@ const Createjob = () => {
         orgcode: codeoforg,
         orgname: nameoforg,
         branchname: generalData.branchName
+      });
+
+
+      const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
+        params: {
+          orgname: localStorage.getItem('orgname'),
+          orgcode: localStorage.getItem('orgcode'),
+          unique: localStorage.getItem('uniquevalue')
+        }
       })
+
+      // console.log(getApprovers.data);
 
       localStorage.removeItem('branchnames');
       navigate('/organization#/organization');
@@ -413,6 +424,15 @@ const Createjob = () => {
       // Send update request with the latest data
       const response = await axios.put('http://localhost:5000/updateData', dataToUpdate);
       toast.success('Updated data successfully')
+      
+      const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
+        params: {
+          orgname: localStorage.getItem('orgname'),
+          orgcode: localStorage.getItem('orgcode'),
+          unique: localStorage.getItem('uniquevalue')
+        }
+      })
+      console.log(getApprovers.data);
       // Redirect after successful update
       navigate('/organization#/organization');
     } catch (error) {

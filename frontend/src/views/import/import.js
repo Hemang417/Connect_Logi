@@ -46,7 +46,8 @@ const Import = () => {
     localStorage.removeItem('jobDate');
     localStorage.removeItem('onCreate');
     localStorage.removeItem('allbranchesofclient');
-    localStorage.removeItem('onEdit')
+    localStorage.removeItem('onEdit');
+    localStorage.removeItem('uniquevalue');
   }
 
 
@@ -113,6 +114,7 @@ const Import = () => {
     localStorage.setItem('jobDate', thatdata.jobdate);
     localStorage.setItem('onEdit', true);
     localStorage.setItem('modeoftransport', thatdata.transportmode + ' ' + 'Import');
+    localStorage.setItem('uniquevalue', 'JobsButton')
   }
 
 
@@ -122,7 +124,10 @@ const Import = () => {
       <CCardBody className='button-div'>
         <div className='createjob-button'>
           <Link to={'/impcreatejob'} target='_blank'>
-            <CButton color="primary" type="submit" onClick={() => localStorage.setItem('onCreate', true)}>
+            <CButton color="primary" type="submit" onClick={() => {
+              localStorage.setItem('onCreate', true);
+              localStorage.setItem('uniquevalue', 'JobsButton');
+            }}>
               +
             </CButton>
           </Link>

@@ -22,7 +22,7 @@ import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkfl
 import {
     storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList,
     Addnametoapproverlist, getnamesoftheapproverlist, deletenamefromapproverlist,
-    updateApproverName
+    updateApproverName, getApproverName
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js'
@@ -1273,9 +1273,9 @@ app.get('/getAlltheemployeeswiththatbranchaccess', async (req, res) => {
 
 app.post('/storeApproverlist', async (req, res) => {
     try {
-        const { approverName, orgname, orgcode } = req.body;
+        const { approverName, orgname, orgcode, uniquevalue } = req.body;
         const { branchname, branchcode } = req.body.selectedBranch
-        const storedname = await storeApproverName(orgname, orgcode, approverName, branchname, branchcode);
+        const storedname = await storeApproverName(orgname, orgcode, approverName, branchname, branchcode, uniquevalue);
         res.status(200).send(storedname);
     } catch (error) {
         console.log(error);
@@ -1305,9 +1305,9 @@ app.delete('/deleteApproverlist', async (req, res) => {
 
 app.put('/updateApproverlist', async (req, res) => {
     try {
-        const { orgname, orgcode, approverName } = req.body;
+        const { orgname, orgcode, approverName, uniquevalue } = req.body;
         const { branchname, branchcode } = req.body.selectedBranch;
-        await UpdatedApproverList(orgname, orgcode, approverName, branchname, branchcode);
+        await UpdatedApproverList(orgname, orgcode, approverName, branchname, branchcode, uniquevalue);
         res.status(200).send('Approver name updated successfully');
     } catch (error) {
         console.error('Error updating approver name:', error);
@@ -1317,8 +1317,8 @@ app.put('/updateApproverlist', async (req, res) => {
 
 app.post('/addApprover', async (req, res) => {
     try {
-        const { orgname, orgcode, branchname, approverlistname, branchcode, employeeName } = req.body;
-        const nameadded = await Addnametoapproverlist(orgname, orgcode, branchname, approverlistname, branchcode, employeeName);
+        const { orgname, orgcode, branchname, approverlistname, branchcode, employeeName, uniquevalue } = req.body;
+        const nameadded = await Addnametoapproverlist(orgname, orgcode, branchname, approverlistname, branchcode, employeeName, uniquevalue);
         res.status(200).send(nameadded)
     } catch (error) {
         console.log(error);
@@ -1394,6 +1394,17 @@ app.put('/updateuserrole', async (req, res) => {
         console.log(error);
     }
 })
+
+app.get('/getApprovernamesfororg', async (req, res) => {
+    try {
+        const { orgname, orgcode, unique } = req.query;
+        const response = await getApproverName(orgname, orgcode, unique);
+        res.send(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal server error');
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

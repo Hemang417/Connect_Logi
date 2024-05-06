@@ -141,7 +141,7 @@ const impcreatejob = () => {
       const branchnameoftheorg = localStorage.getItem('branchnameofemp');
       const branchcodeoftheorg = localStorage.getItem('branchcodeofemp');
       const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime, branchname: branchnameoftheorg, branchcode: branchcodeoftheorg });
-      
+
       if (response.status === 200) {
         toast.success('Job created successfully.');
         const idofcol = response.data[0].id;
@@ -189,7 +189,7 @@ const impcreatejob = () => {
 
 
   useEffect(() => {
-    if(localStorage.getItem('onEdit')==='true'){
+    if (localStorage.getItem('onEdit') === 'true') {
       fetchDataForO2D();
     }
   }, [])
@@ -238,9 +238,17 @@ const impcreatejob = () => {
       console.log(error);
     }
   }
-  
 
 
+  async function handlesave() {
+    const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
+      params: {
+        orgname: localStorage.getItem('orgname'),
+        orgcode: localStorage.getItem('orgcode'),
+        unique: localStorage.getItem('uniquevalue')
+      }
+    })
+  }
 
 
   // useEffect(() => {
@@ -408,9 +416,8 @@ const impcreatejob = () => {
                 <label for="Free Days" className='text-field-3'>Free Days</label>
                 <input type="text" placeholder="" className='text-field-4' name='freedays' onChange={handleChange} value={JobformData.freedays} />
               </div>
-              
+
               <div>
-                {/* <label for="Delivery Mode" className='text-field-3'></label> */}
                 <CDropdown>
                   <CDropdownToggle className="dropdown-btn" color='secondary'>{JobformData.blType ? JobformData.blType : 'Select'}</CDropdownToggle>
                   <CDropdownMenu className="text-field-4">
@@ -509,7 +516,7 @@ const impcreatejob = () => {
         </div> */}
 
         <div className='search-button'>
-          <CButton color="primary" type="submit">
+          <CButton color="primary" type="submit" onClick={handlesave}>
             Save & Close
           </CButton>
         </div>
