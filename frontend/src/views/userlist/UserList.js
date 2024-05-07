@@ -221,6 +221,14 @@ const UserList = () => {
 
   return (
     <div>
+    <div className='userlist-button'>
+          <Link to={'/UserListAccess'} target='_blank'>
+            <CButton color="primary" type="submit">
+              +
+            </CButton>
+          </Link>
+        </div>
+
       <CTable hover responsive striped className=''>
         <CTableHead>
           <CTableRow color='dark'>
