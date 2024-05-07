@@ -20,6 +20,7 @@ import { cilLockLocked, cilUser, cilBuilding } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import toast from 'react-hot-toast'
+import "../../css/styles.css"
 
 const NewUser = () => {
 
@@ -105,16 +106,23 @@ const NewUser = () => {
 
 
     return (
-        <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+        <div className="bg-light d-flex flex-row align-items-center">
             <CContainer>
                 <CRow className="justify-content-center">
-                    <CCol md={9} lg={7} xl={6}>
+                    <CCol md={100} lg={7} xl={6}>
                         <CCard className="mx-4">
                             <CCardBody className="p-4">
                                 <CForm>
                                     <h1>New User</h1>
                                     <p className="text-medium-emphasis">Create your new user</p>
 
+                                    <CInputGroup className="mb-3">
+                                        <CInputGroupText>OC</CInputGroupText>
+                                        <CFormInput placeholder="Organization Code" autoComplete="orgcode" name='orgcode' onChange={handleChange}
+                                            value={localStorage.getItem('orgcode')} />
+                                    </CInputGroup>
+
+                                    
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
@@ -127,21 +135,17 @@ const NewUser = () => {
                                         />
                                     </CInputGroup>
 
-                                    <CInputGroup className="mb-3">
-                                        <CInputGroupText>OC</CInputGroupText>
-                                        <CFormInput placeholder="Organization Code" autoComplete="orgcode" name='orgcode' onChange={handleChange}
-                                            value={localStorage.getItem('orgcode')} />
-                                    </CInputGroup>
+                                    
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>@</CInputGroupText>
                                         <CFormInput placeholder="Username" onChange={handleChange} name='username' />
                                     </CInputGroup>
                                     <CInputGroup className="mb-3">
-                                        <CInputGroupText>
+                                        {/* <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
-                                        </CInputGroupText>
+                                        </CInputGroupText> */}
 
-                                                <CDropdown className="impgen-text-field-1">
+                                                <CDropdown className="role-newuser">
                                                     <CDropdownToggle color="secondary">{selectedRole ? selectedRole : 'Role'}</CDropdownToggle>
                                                     <CDropdownMenu className="impgen-text-dropdown">
                                                         {storedRoles.map((item, index) => (

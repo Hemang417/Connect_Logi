@@ -38,6 +38,7 @@ import ImpAccess from './ImpAccess';
 import ExpAccess from './ExpAccess';
 import TranspAccess from './TranspAccess';
 import BranchAccess from './BranchAccess';
+import KYCAccess from './KYCAccess';
 
 const UserListAccess = () => {
   const [date, setDate] = useState(new Date());
@@ -83,12 +84,16 @@ const UserListAccess = () => {
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("branches") }}>Branches</CNavLink>
         </CNavItem>
+        <CNavItem>
+          <CNavLink onClick={() => { setIsShown("kyc") }}>KYC</CNavLink>
+        </CNavItem>
 
       </CNav>
       {isshown === "import" && <ImpAccess />}
       {isshown === "export" && <ExpAccess />}
       {isshown === "transport" && <TranspAccess />}
       {isshown === "branches" && <BranchAccess />}
+      {isshown === "kyc" && <KYCAccess />}
       {/* {isshown === "contactdetails" && <Contactdetails />} */}
       {/* <label>
       <input type="checkbox"
