@@ -334,13 +334,13 @@ const Createjob = () => {
       });
 
 
-      const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
-        params: {
-          orgname: localStorage.getItem('orgname'),
-          orgcode: localStorage.getItem('orgcode'),
-          unique: localStorage.getItem('uniquevalue')
-        }
-      })
+      // const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
+      //   params: {
+      //     orgname: localStorage.getItem('orgname'),
+      //     orgcode: localStorage.getItem('orgcode'),
+      //     unique: localStorage.getItem('uniquevalue')
+      //   }
+      // })
 
       // console.log(getApprovers.data);
 

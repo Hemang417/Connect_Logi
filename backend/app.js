@@ -22,7 +22,8 @@ import { storeWorkflow, readAllWorkflow, createOverviewofWorkflow, deletedWorkfl
 import {
     storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList,
     Addnametoapproverlist, getnamesoftheapproverlist, deletenamefromapproverlist,
-    updateApproverName, getApproverName
+    updateApproverName, getApproverName,
+    fetchLatestOrganizationfromtable,fetchApprovernameunique, updatedData, getApprovedRows
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js'
@@ -1405,6 +1406,58 @@ app.get('/getApprovernamesfororg', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
+
+app.get('/getlatestorg', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const fetchedlatestorg = await fetchLatestOrganizationfromtable(orgname, orgcode);
+        res.send(fetchedlatestorg)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getapproverthathaveuniquevalue', async (req, res) => {
+    try {
+        const {orgname, orgcode, uniquevalue} = req.query;
+        const fetchedapproverthaveuniquevalue = await fetchApprovernameunique(orgname, orgcode, uniquevalue);
+        res.send(fetchedapproverthaveuniquevalue);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/approveOrganization', async (req, res) => {
+    try {
+        const {orgId} = req.body;
+        const {country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgname, orgcode, clientname, branchname} = req.body.updatedFields;
+        const {username, status} = req.body.approval
+        const updatedRowinapproval = await updatedData(orgId, country, state, city, 
+        postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgname, orgcode, clientname, branchname, username, status);
+        res.send(updatedRowinapproval);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// app.post('/sendapprovedorginothertable', async (req, res) => {
+//     try {
+//         console.log(req.body);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
+
+
+app.get('/getapprovedorg', async (req,res) => {
+    try {
+        const {orgname, orgcode, length} = req.query;
+        const approvedRows = await getApprovedRows(orgname, orgcode, length);
+        res.send(approvedRows)
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

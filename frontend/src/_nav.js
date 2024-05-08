@@ -163,24 +163,12 @@ const _nav = [
     name: 'Organization',
     to: '/organization',
     icon: <CIcon icon={cilCursor} customClassName="nav-icon"/>,
-    
-    // items: [
-    //   {
-    //     component: CNavItem,
-    //     name: 'Buttons',
-    //     to: '/buttons/buttons',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Buttons groups',
-    //     to: '/buttons/button-groups',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Dropdowns',
-    //     to: '/buttons/dropdowns',
-    //   },
-    // ],
+  },
+  {
+    component: CNavItem,
+    name: 'ApproverLog',
+    to: '/approverlog',
+    icon: <CIcon icon={cilCursor} customClassName="nav-icon"/>,
   },
   {
     component: CNavItem,

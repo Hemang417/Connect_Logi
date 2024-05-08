@@ -17,9 +17,9 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 
         // Insert data into the organizations table
         const [rows] = await connection.execute(`
-            INSERT INTO crm_db.organizations (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname, username)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username]);
+            INSERT INTO crm_db.approvalorg (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname, username, uniquevalue)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username, "OrgButton"]);
         const insertedId = rows.insertId;
 
         // Get the auto-generated ID of the inserted row
@@ -189,7 +189,7 @@ export const updateRow = async (orgcode, orgname, clientname, alias, branchname,
     try {
 
         const [row] = await connection.execute(`
-            UPDATE organizations
+            UPDATE approvalorg
             SET 
                 address = ?,
                 country = ?,
@@ -372,7 +372,7 @@ export const deleteBranch = async (id, branchname, orgcode, orgname, clientname)
 
         // Delete branch from organizations table
         const [orgRow] = await connection.execute(`
-            DELETE FROM organizations 
+            DELETE FROM approvalorg 
             WHERE id = ? AND branchname = ? AND orgcode = ? AND orgname = ? AND clientname = ?
         `, [id, branchname, orgcode, orgname, clientname]);
 

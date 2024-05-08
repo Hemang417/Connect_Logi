@@ -4,6 +4,7 @@ import React from 'react';
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const UserRole = React.lazy(() => import('./views/roles/roles'))
+const ApproverLog = React.lazy(() => import('./views/approverlog/approverlog'))
 const Memberapprover = React.lazy(() => import('./views/approver/Memberapprover'))
 const Approvername = React.lazy(() => import('./views/approver/Approvername'))
 const Import = React.lazy(() => import('./views/import/import'))
@@ -138,7 +139,8 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   {path: '/approvername', name: 'Approvername', element: Approvername},
   {path: '/memberapprover', name: 'Memberapprover', element: Memberapprover},
-  {path: '/userroles', name: 'User Roles', element: UserRole}
+  {path: '/userroles', name: 'User Roles', element: UserRole},
+  {path: '/approverlog', name: 'Approver Log', element: ApproverLog}
 ]
 
 export default routes
