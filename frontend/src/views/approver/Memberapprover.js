@@ -31,6 +31,7 @@ const Memberapprover = () => {
     const [selectedEmployee, setSelectedEmployee] = useState('');
     const [allnames, setallnames] = useState([]);
     const [editstate, seteditstate] = useState(false);
+    const [selectedCount, setselectedCount] = useState('');
 
     const getallapprovernames = async () => {
         try {
@@ -64,9 +65,30 @@ const Memberapprover = () => {
         }
     };
 
+
+    async function getSelectedCount(){
+        try {
+            const response = await axios.get(`http://localhost:5000/getSelectedCount`, {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    branchname: localStorage.getItem('approverbranchname'),
+                    branchcode: localStorage.getItem('approverbranchcode'),
+                    approverlistname: localStorage.getItem('approverlistname')
+                }
+            })
+            setselectedCount(response.data[0].selectedcount);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
     useEffect(() => {
         getEmployeesOfBranch();
         getallapprovernames();
+        getSelectedCount();
     }, []);
 
     const handleModalClose = () => {
@@ -84,7 +106,8 @@ const Memberapprover = () => {
                 branchname: localStorage.getItem('approverbranchname'),
                 branchcode: localStorage.getItem('approverbranchcode'),
                 approverlistname: localStorage.getItem('approverlistname'),
-                employeename: selectedEmployee
+                employeename: selectedEmployee,
+                id: localStorage.getItem('approverid'),
             }).then((response) => {
                 if (response.status === 200) {
                     toast.success('Approver updated successfully');
@@ -111,6 +134,7 @@ const Memberapprover = () => {
                 branchcode: localStorage.getItem('approverbranchcode'),
                 employeeName: selectedEmployee,
                 uniquevalue: localStorage.getItem('uniquevalue'),
+                id: localStorage.getItem('approverid')
             });
 
             if (response.status === 200) {
@@ -136,7 +160,8 @@ const Memberapprover = () => {
                     branchname: localStorage.getItem('approverbranchname'),
                     branchcode: localStorage.getItem('approverbranchcode'),
                     approverlistname: localStorage.getItem('approverlistname'),
-                    employeename: item.employeename
+                    employeename: item.employeename,
+                    id: localStorage.getItem('approverid'),
                 }
             });
             await getallapprovernames();
@@ -152,12 +177,33 @@ const Memberapprover = () => {
         seteditstate(true);
     }
 
+    
+
+    async function storeSelectedCount(){
+        const response = await axios.put(`http://localhost:5000/updateSelectedCount`, {
+            orgname: localStorage.getItem('orgname'),
+            orgcode: localStorage.getItem('orgcode'),
+            branchname: localStorage.getItem('approverbranchname'),
+            branchcode: localStorage.getItem('approverbranchcode'),
+            approverlistname: localStorage.getItem('approverlistname'),
+            selectedCount: selectedCount
+        })
+    }
 
 
     return (
         <CRow>
             <CCol>
                 <CForm>
+                    <div>
+                        Total Approver: {allnames.length}
+                    </div>
+                    <div>
+                        Choose How Many Approvers: <input type="number" max={allnames.length} value={selectedCount} name='selectedCount' onChange={(e) => setselectedCount(e.target.value)}/>
+                    </div>
+                    <div>
+                        <CButton color="primary" onClick={storeSelectedCount}>Submit</CButton>
+                    </div>
                     <CTable hover responsive striped className="">
                         <CTableHead>
                             <CTableRow color="dark">

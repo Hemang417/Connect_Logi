@@ -23,7 +23,8 @@ import {
     storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList,
     Addnametoapproverlist, getnamesoftheapproverlist, deletenamefromapproverlist,
     updateApproverName, getApproverName,
-    fetchLatestOrganizationfromtable,fetchApprovernameunique, updatedData, getApprovedRows
+    fetchLatestOrganizationfromtable,fetchApprovernameunique, updatedData, getApprovedRows, deletedRowlist, 
+    fetchOrganizationforrender, SelectedCount, GetSelectedCount
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js'
@@ -1285,30 +1286,31 @@ app.post('/storeApproverlist', async (req, res) => {
 
 app.get('/fetchApproverlist', async (req, res) => {
     try {
-        const { orgname, orgcode } = req.query;
-        const allapproverlist = await getApproverlist(orgname, orgcode);
-        res.send(allapproverlist)
+        const { orgname, orgcode, branchname, branchcode } = req.query;
+        const allapproverlist = await getApproverlist(orgname, orgcode, branchname, branchcode);
+        res.send(allapproverlist);
     } catch (error) {
         console.log(error);
     }
 })
 
-app.delete('/deleteApproverlist', async (req, res) => {
-    try {
-        const { orgname, orgcode, approverlistname, branchname, branchcode } = req.body;
-        const deletedRow = await deletedApproverlist(orgname, orgcode, approverlistname, branchname, branchcode);
-        res.send(deletedRow);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Internal Server Error');
-    }
-});
+// app.delete('/deleteApproverlist', async (req, res) => {
+//     try {
+//         const { orgname, orgcode, approverlistname, branchname, branchcode } = req.body;
+//         const deletedRow = await deletedApproverlist(orgname, orgcode, approverlistname, branchname, branchcode);
+//         res.send(deletedRow);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
 
 app.put('/updateApproverlist', async (req, res) => {
     try {
-        const { orgname, orgcode, approverName, uniquevalue } = req.body;
+        const { orgname, orgcode, approverName, uniquevalue, id } = req.body;
         const { branchname, branchcode } = req.body.selectedBranch;
-        await UpdatedApproverList(orgname, orgcode, approverName, branchname, branchcode, uniquevalue);
+
+        await UpdatedApproverList(orgname, orgcode, approverName, branchname, branchcode, uniquevalue, id);
         res.status(200).send('Approver name updated successfully');
     } catch (error) {
         console.error('Error updating approver name:', error);
@@ -1318,9 +1320,9 @@ app.put('/updateApproverlist', async (req, res) => {
 
 app.post('/addApprover', async (req, res) => {
     try {
-        const { orgname, orgcode, branchname, approverlistname, branchcode, employeeName, uniquevalue } = req.body;
-        const nameadded = await Addnametoapproverlist(orgname, orgcode, branchname, approverlistname, branchcode, employeeName, uniquevalue);
-        res.status(200).send(nameadded)
+        const { orgname, orgcode, branchname, approverlistname, branchcode, employeeName, uniquevalue, id } = req.body;
+        const nameadded = await Addnametoapproverlist(orgname, orgcode, branchname, approverlistname, branchcode, employeeName, uniquevalue, id);
+        res.status(200).send(nameadded);
     } catch (error) {
         console.log(error);
     }
@@ -1338,8 +1340,8 @@ app.get('/getallapprovernames', async (req, res) => {
 
 app.delete('/deleteapprovername', async (req, res) => {
     try {
-        const { orgname, orgcode, branchname, branchcode, approverlistname, employeename } = req.body;
-        const deletedname = await deletenamefromapproverlist(orgname, orgcode, branchname, branchcode, approverlistname, employeename);
+        const { orgname, orgcode, branchname, branchcode, approverlistname, employeename, id } = req.body;
+        const deletedname = await deletenamefromapproverlist(orgname, orgcode, branchname, branchcode, approverlistname, employeename, id);
         res.send(deletedname)
     } catch (error) {
         console.log(error);
@@ -1348,8 +1350,8 @@ app.delete('/deleteapprovername', async (req, res) => {
 
 app.put('/updateapprovername', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, branchcode, approverlistname, employeename} = req.body;
-        const updatedname = await updateApproverName(orgname, orgcode, branchname, branchcode, approverlistname, employeename);
+        const {orgname, orgcode, branchname, branchcode, approverlistname, employeename, id} = req.body;
+        const updatedname = await updateApproverName(orgname, orgcode, branchname, branchcode, approverlistname, employeename, id);
         res.status(200).send(updatedname);
     } catch (error) {
         console.log(error);
@@ -1451,13 +1453,55 @@ app.put('/approveOrganization', async (req, res) => {
 
 app.get('/getapprovedorg', async (req,res) => {
     try {
-        const {orgname, orgcode, length} = req.query;
-        const approvedRows = await getApprovedRows(orgname, orgcode, length);
+        const {orgname, orgcode, uniquevalue} = req.query;
+        const approvedRows = await getApprovedRows(orgname, orgcode, uniquevalue);
         res.send(approvedRows)
     } catch (error) {
         console.log(error);
     }
 })
+
+app.delete('/deleteApproverlist', async (req, res) => {
+    try {
+        const {orgname, orgcode, uniquevalue, approverlistname, branchname, branchcode, id} = req.body.item;
+        const deletedRow = await deletedRowlist(orgname, orgcode, uniquevalue, approverlistname, branchname, branchcode, id);
+        res.status(200).send(deletedRow)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/getorg', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const fetchedorg = await fetchOrganizationforrender(orgname, orgcode);
+        res.send(fetchedorg);
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+app.put('/updateSelectedCount', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, branchcode, approverlistname, selectedCount} = req.body;
+        const selectedcountupdated = await SelectedCount(orgname, orgcode, branchname, branchcode, approverlistname, selectedCount)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getSelectedCount', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, branchcode, approverlistname} = req.query;
+        const getthecount = await GetSelectedCount(orgname, orgcode, branchname, branchcode, approverlistname);
+        res.send(getthecount);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

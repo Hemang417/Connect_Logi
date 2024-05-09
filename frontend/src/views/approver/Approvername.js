@@ -385,7 +385,8 @@ const Approvername = () => {
     const [selectedBranch, setSelectedBranch] = useState({});
     const [allApproverList, setAllApproverList] = useState([]);
     const [editState, setEditState] = useState(false);
-    const [uniqueValue, setUniqueValue] = useState({});
+    const [uniqueValue, setUniqueValue] = useState('');
+    const uniqueValuesArray = ['OrgButton', 'JobsButton', 'ImportBtn'];
 
     // Clear unnecessary items from local storage
     useEffect(() => {
@@ -394,6 +395,7 @@ const Approvername = () => {
             localStorage.removeItem('approverbranchname');
             localStorage.removeItem('approverbranchcode');
             localStorage.removeItem('uniquevalue');
+            localStorage.removeItem('approverid')
         }
     }, [location.pathname]);
 
@@ -418,6 +420,22 @@ const Approvername = () => {
         }
     };
 
+    const handleDelete = async (item) => {
+        try {
+            const deleted = await axios.delete('http://localhost:5000/deleteApproverlist', {
+                data: {
+                    item: item
+                }
+            })
+            if(deleted.status === 200){
+                getApproverList();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     // Fetch approver list
     const getApproverList = async () => {
         try {
@@ -425,6 +443,8 @@ const Approvername = () => {
                 params: {
                     orgname: localStorage.getItem('orgname'),
                     orgcode: localStorage.getItem('orgcode'),
+                    branchname: localStorage.getItem('branchnameofemp'),
+                    branchcode: localStorage.getItem('branchcodeofemp'),
                 }
             });
             setAllApproverList(response.data);
@@ -444,7 +464,7 @@ const Approvername = () => {
         setApproverName('');
         setSelectedBranch({});
         setEditState(false);
-        setUniqueValue({});
+        setUniqueValue('');
     };
 
     // Handle adding approver name
@@ -455,7 +475,7 @@ const Approvername = () => {
                 selectedBranch: selectedBranch,
                 orgname: localStorage.getItem('orgname'),
                 orgcode: localStorage.getItem('orgcode'),
-                uniquevalue: Object.keys(uniqueValue).filter(key => uniqueValue[key]) // Extract only selected values
+                uniquevalue: uniqueValue ? [uniqueValue] : [], // Extract only selected values
             });
             if (response.status === 200) {
                 toast.success('Approver name added successfully');
@@ -469,30 +489,28 @@ const Approvername = () => {
             toast.error('Failed to add approver name');
         }
     };
-
+    const [id, setid] = useState('');
     // Handle editing an approver
     const handleEdit = (item) => {
         setApproverName(item.approverlistname);
         setSelectedBranch({ branchname: item.branchname, branchcode: item.branchcode });
+        setid(item.id)
         setVisible(true);
         setEditState(true);
-        // Prefill uniqueValue object based on item's uniquevalue
-        const uniqueValueObj = {};
-        item.uniquevalue.forEach(value => {
-            uniqueValueObj[value] = true;
-        });
-        setUniqueValue(uniqueValueObj);
+        setUniqueValue(item.uniquevalue[0]);
     };
 
     // Handle updating an approver
     const handleUpdate = async () => {
         try {
+
             const response = await axios.put('http://localhost:5000/updateApproverlist', {
                 approverName: approverName,
                 selectedBranch: selectedBranch,
                 orgname: localStorage.getItem('orgname'),
                 orgcode: localStorage.getItem('orgcode'),
-                uniquevalue: Object.keys(uniqueValue).filter(key => uniqueValue[key]) // Extract only selected values
+                uniquevalue:  uniqueValue ? [uniqueValue] : [],
+                id: id // Extract only selected values
             });
             toast.success('Approver name updated successfully');
             handleModalClose();
@@ -510,6 +528,7 @@ const Approvername = () => {
         localStorage.setItem('approverbranchname', item.branchname);
         localStorage.setItem('approverbranchcode', item.branchcode);
         localStorage.setItem('uniquevalue', item.uniquevalue);
+        localStorage.setItem('approverid', item.id)
         navigate('/memberapprover')
     }
 
@@ -569,21 +588,14 @@ const Approvername = () => {
                         </div>
                         <div>
                             <label htmlFor="UniqueValues" className="text-field-3">Buttons</label>
-                            <div className="checkbox-container">
-                                {['OrgButton', 'JobsButton', 'ImportBtn'].map((option, index) => (
-                                    <div key={index} className="checkbox-item">
-                                        <input
-                                            type="checkbox"
-                                            id={option}
-                                            checked={uniqueValue[option] || false}
-                                            onChange={(e) => {
-                                                setUniqueValue(prevValue => ({ ...prevValue, [option]: e.target.checked }));
-                                            }}
-                                        />
-                                        <label htmlFor={option}>{option}</label>
-                                    </div>
-                                ))}
-                            </div>
+                            <CDropdown>
+                                <CDropdownToggle className="dropdown-btn" color="secondary">{uniqueValue ? uniqueValue : 'Select'}</CDropdownToggle>
+                                <CDropdownMenu className="text-field-4">
+                                    {uniqueValuesArray.map((option, index) => (
+                                        <CDropdownItem key={index} onClick={() => { setUniqueValue(option) }}>{option}</CDropdownItem>
+                                    ))}
+                                </CDropdownMenu>
+                            </CDropdown>
                         </div>
                     </CModalBody>
                     <CModalFooter>

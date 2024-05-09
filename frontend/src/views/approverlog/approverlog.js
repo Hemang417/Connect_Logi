@@ -216,7 +216,7 @@ const Approverlog = () => {
     const [latestOrg, setlatestOrg] = useState([]);
     const [approvalname, setapprovalname] = useState([]);
     const [selectedOrg, setSelectedOrg] = useState(null); // State to store selected organization
-
+    const [approvedOrgs, setapprovedOrgs] = useState([])
     const uniquevalue = "OrgButton";
 
 
@@ -252,32 +252,55 @@ const Approverlog = () => {
 
 
     async function checker() {
-        const response = await axios.get('http://localhost:5000/getapprovedorg', {
-            params: {
-                orgname: localStorage.getItem('orgname'),
-                orgcode: localStorage.getItem('orgcode'),
-                length: approvalname.length
-            },
-        })
+        try {
+            const response = await axios.get('http://localhost:5000/getapprovedorg', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                },
+            });
 
-        // const approvedOrgIds = response.data.map(org => org.id);
+            setapprovedOrgs(response.data);
 
-        // // Filter out the organizations from latestOrg that are approved
-        // const filteredOrgs = latestOrg.filter(org => !approvedOrgIds.includes(org.id));
-
-        // // Update the latestOrg state with the filtered organizations
-        // setlatestOrg(filteredOrgs);
-
+        } catch (error) {
+            console.error(error);
+        }
     }
 
+    // async function mismatch() {
+    //     const filteredOrgs = latestOrg.filter(org => {
+    //         // Check if the clientname of the current organization matches with any approved organization
+    //         return !approvedOrgs.some(approvedOrg => approvedOrg.clientname === org.clientname);
+    //     });
 
+    //     // Update the latestOrg state with the filtered organizations
+    //     setlatestOrg(filteredOrgs);
+    // }
+    const [allorg, setallorg] = useState([]);
+    async function getOrganizations() {
+        try {
+            const response = await axios.get(`http://localhost:5000/getorg`, {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode')
+                }
+            })
+            setallorg(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     useEffect(() => {
         Promise.all([fetchApproverThatHaveUniqueValue(), fetchlatestOrg()])
             .then(() => checker())
+            .then(() => getOrganizations())
             .catch((error) => console.error(error));
     }, []);
+
+
+
 
 
     const openModal = (org) => {
@@ -311,6 +334,21 @@ const Approverlog = () => {
         }
     }
 
+    const rejectOrg = async () => {
+        try {
+            await axios.put('http://localhost:5000/approveOrganization', {
+                orgId: selectedOrg.id,
+                updatedFields: selectedOrg,
+                approval: { username: localStorage.getItem('username'), status: 'Reject' }
+            });
+            toast.success('Organization approved successfully');
+            closeModal();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    console.log(allorg);
 
     return (
         <div>
@@ -323,14 +361,18 @@ const Approverlog = () => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {latestOrg.map((org, index) => (
-                        <CTableRow key={index}>
-                            <CTableDataCell>{org.clientname}</CTableDataCell>
-                            <CTableDataCell>
-                                <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
-                            </CTableDataCell>
-                        </CTableRow>
+                    {latestOrg && latestOrg.map((org, index) => (
+                        // Check if the organization is not present in the approvedOrgs array
+                        !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname) && (
+                            <CTableRow key={index}>
+                                <CTableDataCell>{org.clientname}</CTableDataCell>
+                                <CTableDataCell>
+                                    <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                </CTableDataCell>
+                            </CTableRow>
+                        )
                     ))}
+
                 </CTableBody>
             </CTable>
 
@@ -406,7 +448,7 @@ const Approverlog = () => {
                     <CButton color="primary" onClick={approveOrganization}>
                         Approve
                     </CButton>
-                    <CButton color="danger">
+                    <CButton color="danger" onClick={rejectOrg}>
                         Reject
                     </CButton>
                 </CModalFooter>
