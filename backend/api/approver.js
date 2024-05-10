@@ -180,18 +180,38 @@ export const getApprovedRows = async (orgname, orgcode, uniquevalue) => {
     try {
         const [rows] = await connection.execute(`SELECT * FROM approvalorg WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         const [lengthrows] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
-        const [mattrows] = await connection.execute(`SELECT selectedcount FROM approverlist WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode])
-        
+        const [mattrows] = await connection.execute(`SELECT * FROM approverlist WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode])
+
         const matchingRows = lengthrows.filter(row => row.uniquevalue.includes(uniquevalue));
-        
+        const matchingRows2 = mattrows.filter(row => row.uniquevalue[0] === uniquevalue);
+
+        // const approvedRows = rows.filter((row) => {
+        //     if (row.approval !== null && row.approval.length == matchingRows.length) {
+        //         const approvals = JSON.stringify(row.approval) // Assuming 'approval' column stores JSON string
+        //         const approvalrow = JSON.parse(approvals)
+        //         const isAllApproved = approvalrow.every((item) => item.status === 'Approve');
+        //         return isAllApproved;
+        //     }
+        // });
+
+
         const approvedRows = rows.filter((row) => {
-            if (row.approval !== null && row.approval.length == matchingRows.length) {
-                const approvals = JSON.stringify(row.approval) // Assuming 'approval' column stores JSON string
-                const approvalrow = JSON.parse(approvals)
-                const isAllApproved = approvalrow.every((item) => item.status === 'Approve');
-                return isAllApproved;
+            if (row.approval !== null) {
+                if (matchingRows2[0].selectedcount > 0 && row.approval.length == matchingRows2[0].selectedcount) {
+                    const approvals = JSON.stringify(row.approval) // Assuming 'approval' column stores JSON string
+                    const approvalrow = JSON.parse(approvals)
+                    const isAllApproved = approvalrow.every((item) => item.status === 'Approve');
+                    return isAllApproved;
+                }else if(row.approval.length == matchingRows.length){
+                    const approvals = JSON.stringify(row.approval) // Assuming 'approval' column stores JSON string
+                    const approvalrow = JSON.parse(approvals)
+                    const isAllApproved = approvalrow.every((item) => item.status === 'Approve');
+                    return isAllApproved;
+                }
             }
-        });
+        })
+
+     
 
 
         for (const row of approvedRows) {
@@ -240,8 +260,8 @@ export const fetchOrganizationforrender = async (orgname, orgcode) => {
 export const SelectedCount = async (orgname, orgcode, branchname, branchcode, approverlistname, selectedCount) => {
     try {
         const [row] = await connection.execute(`UPDATE approverlist SET selectedcount = ? 
-        WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ? AND approverlistname = ?`, 
-        [selectedCount, orgname, orgcode, branchname, branchcode, approverlistname]);
+        WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ? AND approverlistname = ?`,
+            [selectedCount, orgname, orgcode, branchname, branchcode, approverlistname]);
         return row;
     } catch (error) {
         console.log(error);
@@ -252,9 +272,9 @@ export const SelectedCount = async (orgname, orgcode, branchname, branchcode, ap
 export const GetSelectedCount = async (orgname, orgcode, branchname, branchcode, approverlistname) => {
     try {
         const [row] = await connection.execute(`SELECT selectedcount FROM approverlist 
-        WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ? AND approverlistname = ?`, 
-        [orgname, orgcode, branchname, branchcode, approverlistname]);
-        
+        WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ? AND approverlistname = ?`,
+            [orgname, orgcode, branchname, branchcode, approverlistname]);
+
         return row;
     } catch (error) {
         console.log(error);

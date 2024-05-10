@@ -257,6 +257,7 @@ const Approverlog = () => {
                 params: {
                     orgname: localStorage.getItem('orgname'),
                     orgcode: localStorage.getItem('orgcode'),
+                    uniquevalue: uniquevalue
                 },
             });
 
@@ -348,7 +349,7 @@ const Approverlog = () => {
         }
     }
 
-    console.log(allorg);
+   
 
     return (
         <div>
@@ -361,7 +362,7 @@ const Approverlog = () => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {latestOrg && latestOrg.map((org, index) => (
+                    {latestOrg && allorg && latestOrg.map((org, index) => (
                         // Check if the organization is not present in the approvedOrgs array
                         !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname) && (
                             <CTableRow key={index}>
