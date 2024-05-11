@@ -368,7 +368,8 @@ import {
     CDropdown,
     CDropdownItem,
     CDropdownMenu,
-    CDropdownToggle
+    CDropdownToggle,
+    CPopover,
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -552,9 +553,15 @@ const Approvername = () => {
                                 <CTableRow key={index}>
                                     <CTableDataCell className="row-font">{item.approverlistname}</CTableDataCell>
                                     <CTableDataCell className="row-font">
-                                        <CButton onClick={() => handleEdit(item)}>Edit</CButton>
-                                        <CButton onClick={() => handleMembers(item)}>Add Members</CButton>
-                                        <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
+                                        <CPopover content="Edit the approver list" trigger={['hover', 'focus']}>
+                                            <CButton onClick={() => handleEdit(item)}>Edit</CButton>
+                                        </CPopover>
+                                        <CPopover content="Add approvers to the approver list" trigger={['hover', 'focus']}>
+                                            <CButton onClick={() => handleMembers(item)}>Add Members</CButton>
+                                        </CPopover>
+                                        <CPopover content="Delete the approver list" trigger={['hover', 'focus']}>
+                                            <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
+                                        </CPopover>
                                     </CTableDataCell>
                                 </CTableRow>
                             ))}
@@ -601,10 +608,19 @@ const Approvername = () => {
                         </div>
                     </CModalBody>
                     <CModalFooter>
-                        <CButton color="secondary" onClick={handleModalClose}>Close</CButton>
+                        <CPopover content="Close the modal" trigger={['hover', 'focus']}>
+                            <CButton color="secondary" onClick={handleModalClose}>Close</CButton>
+                        </CPopover>
                         {editState ?
-                            <CButton color="primary" onClick={handleUpdate}>Update</CButton> :
-                            <CButton color="primary" onClick={handleAddApproverName}>Add</CButton>
+                            <CPopover content="Update the approver list" trigger={['hover', 'focus']}>
+                                <CButton color="primary" onClick={handleUpdate}>Update</CButton>
+                            </CPopover>
+                            :
+                            <CPopover content="Create a approver list" trigger={['hover', 'focus']}>
+                                <CButton color="primary" onClick={handleAddApproverName}>
+                                    Add
+                                </CButton>
+                            </CPopover>
                         }
                     </CModalFooter>
                 </CModal>

@@ -20,7 +20,8 @@ import {
     CDropdown,
     CDropdownItem,
     CDropdownMenu,
-    CDropdownToggle
+    CDropdownToggle,
+    CPopover
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -66,7 +67,7 @@ const Memberapprover = () => {
     };
 
 
-    async function getSelectedCount(){
+    async function getSelectedCount() {
         try {
             const response = await axios.get(`http://localhost:5000/getSelectedCount`, {
                 params: {
@@ -179,9 +180,9 @@ const Memberapprover = () => {
         seteditstate(true);
     }
 
-    
 
-    async function storeSelectedCount(){
+
+    async function storeSelectedCount() {
         const response = await axios.put(`http://localhost:5000/updateSelectedCount`, {
             orgname: localStorage.getItem('orgname'),
             orgcode: localStorage.getItem('orgcode'),
@@ -201,10 +202,12 @@ const Memberapprover = () => {
                         Total Approver: {allnames.length}
                     </div>
                     <div>
-                        Choose How Many Approvers: <input type="number" max={allnames.length} value={selectedCount} name='selectedCount' onChange={(e) => setselectedCount(e.target.value)}/>
+                        Choose How Many Approvers: <input type="number" max={allnames.length} value={selectedCount} name='selectedCount' onChange={(e) => setselectedCount(e.target.value)} />
                     </div>
                     <div>
-                        <CButton color="primary" onClick={storeSelectedCount}>Submit</CButton>
+                        <CPopover content="Select number of selected people to approve" trigger={['hover', 'focus']}>
+                            <CButton color="primary" onClick={storeSelectedCount}>Submit</CButton>
+                        </CPopover>
                     </div>
                     <CTable hover responsive striped className="">
                         <CTableHead>
@@ -219,8 +222,12 @@ const Memberapprover = () => {
                                 <CTableRow key={index}>
                                     <CTableDataCell className='row-font'>{item.employeename}</CTableDataCell>
                                     <CTableDataCell className='row-font'>
-                                        <CButton onClick={() => handleEdit(item)}>Edit</CButton>
-                                        <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
+                                        <CPopover content="Edit approver name" trigger={['hover', 'focus']}>
+                                            <CButton onClick={() => handleEdit(item)}>Edit</CButton>
+                                        </CPopover>
+                                        <CPopover content="Delete the approver name" trigger={['hover', 'focus']}>
+                                            <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
+                                        </CPopover>
                                     </CTableDataCell>
                                 </CTableRow>
                             ))}
@@ -232,9 +239,11 @@ const Memberapprover = () => {
                 <CRow>
                     <CCardBody className="button-div">
                         <div className="createjob-button">
-                            <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>
-                                +
-                            </CButton>
+                            <CPopover content="Create a member in approver list" trigger={['hover', 'focus']}>
+                                <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>
+                                    +
+                                </CButton>
+                            </CPopover>
                         </div>
                     </CCardBody>
                 </CRow>
@@ -262,18 +271,26 @@ const Memberapprover = () => {
                         </CDropdown>
                     </CModalBody>
                     <CModalFooter>
-                        <CButton color="secondary" onClick={handleModalClose}>
-                            Close
-                        </CButton>
+                        <CPopover content="Close Modal" trigger={['hover', 'focus']}>
+                            <CButton color="secondary" onClick={handleModalClose}>
+                                Close
+                            </CButton>
+                        </CPopover>
                         {
                             editstate ?
-                                <CButton color="primary" onClick={handleUpdate}>
-                                    Update
-                                </CButton>
+                                <CPopover content="Update approver details" trigger={['hover', 'focus']}>
+                                    <CButton color="primary" onClick={handleUpdate}>
+                                        Update
+                                    </CButton>
+                                </CPopover>
+
                                 :
-                                <CButton color="primary" onClick={handleAddApprover}>
-                                    Add
-                                </CButton>
+                                <CPopover content="Add approver details" trigger={['hover', 'focus']}>
+                                    <CButton color="primary" onClick={handleAddApprover}>
+                                        Add
+                                    </CButton>
+                                </CPopover>
+
                         }
                     </CModalFooter>
                 </CModal>

@@ -6,7 +6,7 @@ import {
     CTableHead,
     CTableHeaderCell,
     CTableRow,
-    CButton,
+    CButton, CPopover
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilBuilding, cilChartPie, cilArrowRight } from '@coreui/icons'
@@ -98,7 +98,9 @@ const User_Report = () => {
                                 {userAccessData.some(accessUser => accessUser.username === userData.username) ? 'Import' : 'Access'}
                             </CTableDataCell>
                             <CTableDataCell>
+                            <CPopover content="Get this users report" trigger={['hover', 'focus']}>
                                 <CButton onClick={() => handleNavigate(userData)}>Generate Report</CButton>
+                            </CPopover>
                             </CTableDataCell>
                         </CTableRow>
                     ))}

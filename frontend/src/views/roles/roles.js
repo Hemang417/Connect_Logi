@@ -17,7 +17,8 @@ import {
     CModalTitle,
     CModalBody,
     CModalFooter,
-    CForm
+    CForm,
+    CPopover
 } from '@coreui/react';
 
 import axios from 'axios';
@@ -167,8 +168,12 @@ const UserRoles = () => {
                                 <CTableRow key={index}>
                                     <CTableDataCell className='row-font'>{item.rolename}</CTableDataCell>
                                     <CTableDataCell className='row-font'>
-                                        <CButton onClick={() => handleEdit(item)}>Edit</CButton>
-                                        <CButton onClick={() => handleDelete(item)}>Delete</CButton>
+                                        <CPopover content="Edit the role" trigger={['hover', 'focus']}>
+                                            <CButton onClick={() => handleEdit(item)}>Edit</CButton>
+                                        </CPopover>
+                                        <CPopover content="Delete the role" trigger={['hover', 'focus']}>
+                                            <CButton onClick={() => handleDelete(item)}>Delete</CButton>
+                                        </CPopover>
                                     </CTableDataCell>
                                 </CTableRow>
                             ))}
@@ -179,9 +184,11 @@ const UserRoles = () => {
                 <CRow>
                     <CCardBody className="button-div">
                         <div className="createjob-button">
-                            <CButton color="primary" onClick={() => setVisible(!visible)}>
-                                +
-                            </CButton>
+                            <CPopover content="Create a role" trigger={['hover', 'focus']}>
+                                <CButton color="primary" onClick={() => setVisible(!visible)}>
+                                    +
+                                </CButton>
+                            </CPopover>
                         </div>
                     </CCardBody>
                 </CRow>
@@ -204,18 +211,25 @@ const UserRoles = () => {
                         />
                     </CModalBody>
                     <CModalFooter>
-                        <CButton color="secondary" onClick={handleModalClose}>
-                            Close
-                        </CButton>
+                        <CPopover content="Close the modal" trigger={['hover', 'focus']}>
+                            <CButton color="secondary" onClick={handleModalClose}>
+                                Close
+                            </CButton>
+                        </CPopover>
+
                         {
                             editRoleId ?
-                                <CButton color="primary" onClick={handleUpdate}>
-                                    Update
-                                </CButton>
+                                <CPopover content="Update the Role" trigger={['hover', 'focus']}>
+                                    <CButton color="primary" onClick={handleUpdate}>
+                                        Update
+                                    </CButton>
+                                </CPopover>
                                 :
-                                <CButton color="primary" onClick={handleAddUserRole}>
-                                    Add
-                                </CButton>
+                                <CPopover content="Add the user role" trigger={['hover', 'focus']}>
+                                    <CButton color="primary" onClick={handleAddUserRole}>
+                                        Add
+                                    </CButton>
+                                </CPopover>
                         }
                     </CModalFooter>
                 </CModal>

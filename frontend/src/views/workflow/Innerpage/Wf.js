@@ -27,7 +27,8 @@ import {
     CButton,
     CNav,
     CNavItem,
-    CNavLink
+    CNavLink,
+    CPopover
 } from '@coreui/react'
 import '../../../css/styles.css';
 import DatePicker from 'react-datepicker';
@@ -219,7 +220,7 @@ const Wf = () => {
                             <label htmlFor="Locations" className='text-field-3'>Locations</label>
                             <CDropdown>
                                 <CDropdownToggle className="dropdown-btn" color='secondary'>All</CDropdownToggle>
-                                
+
                                 <CDropdownMenu className="text-field-4">
                                     {allbranches && allbranches.map((item, index) => (
                                         <CDropdownItem key={index} onClick={() => setselectedBranch(item.ownbranchname)}>
@@ -282,8 +283,12 @@ const Wf = () => {
                                         <CTableDataCell>{workflow.importername}</CTableDataCell>
                                         <CTableDataCell>{workflow.lobname}</CTableDataCell>
                                         <CTableDataCell>
-                                            <Link to={'/setWorkflow'} target='_blank' onClick={() => handleEdit(workflow)}>Edit</Link>
-                                            <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
+                                            <CPopover content="Update Workflow" trigger={['hover', 'focus']}>
+                                                <Link to={'/setWorkflow'} target='_blank' onClick={() => handleEdit(workflow)}>Edit</Link>
+                                            </CPopover>
+                                            <CPopover content="Delete Workflow" trigger={['hover', 'focus']}>
+                                                <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
+                                            </CPopover>
                                         </CTableDataCell>
                                     </CTableRow>
                                 )
@@ -321,9 +326,11 @@ const Wf = () => {
             <CRow>
                 <CCardBody className='button-div'>
                     <div className='createjob-button'>
-                        <CButton color="primary" type="submit" onClick={() => { setvisible(!visible) }}>
-                            +
-                        </CButton>
+                        <CPopover content="Add Workflow" trigger={['hover', 'focus']}>
+                            <CButton color="primary" type="submit" onClick={() => { setvisible(!visible) }}>
+                                +
+                            </CButton>
+                        </CPopover>
                     </div>
                 </CCardBody>
             </CRow>
@@ -379,12 +386,16 @@ const Wf = () => {
                     </div>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="secondary" onClick={handleModalClose}>
-                        Close
-                    </CButton>
-                    <CButton color="primary" onClick={handleAdd}>
-                        Add
-                    </CButton>
+                    <CPopover content="Update Workflow" trigger={['hover', 'focus']}>
+                        <CButton color="secondary" onClick={handleModalClose}>
+                            Close
+                        </CButton>
+                    </CPopover>
+                    <CPopover content="Create Workflow" trigger={['hover', 'focus']}>
+                        <CButton color="primary" onClick={handleAdd}>
+                            Add
+                        </CButton>
+                    </CPopover>
                 </CModalFooter>
             </CModal>
 

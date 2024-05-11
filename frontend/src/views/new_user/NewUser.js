@@ -13,7 +13,8 @@ import {
     CDropdown,
     CDropdownToggle,
     CDropdownMenu,
-    CDropdownItem
+    CDropdownItem,
+    CPopover
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilBuilding } from '@coreui/icons'
@@ -183,7 +184,9 @@ const NewUser = () => {
                                     </CInputGroup>
 
                                     <div className="d-grid">
+                                    <CPopover content="Create new user" trigger={['hover', 'focus']}>
                                         <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
+                                    </CPopover>
                                     </div>
                                 </CForm>
                             </CCardBody>

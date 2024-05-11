@@ -22,7 +22,7 @@ import {
   CModal,
   CButton,
   CModalHeader,
-  CModalBody, CModalFooter, CModalTitle
+  CModalBody, CModalFooter, CModalTitle, CPopover
 } from '@coreui/react'
 // import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
@@ -379,8 +379,12 @@ const setWorkflow = () => {
                 <CTableDataCell>{workflow.days ? `${workflow.days + ' days ' + workflow.hours + ' hours ' + workflow.minutes + ' mins '}` : 'NA'}</CTableDataCell>
                 <CTableDataCell>{workflow.assignedPerson ? workflow.assignedPerson : 'NA'}</CTableDataCell>
                 <CTableDataCell>
-                  <CButton onClick={() => openEditModal(workflow)}>Edit</CButton>
-                  <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
+                  <CPopover content="Edit workflow" trigger={['hover', 'focus']}>
+                    <CButton onClick={() => openEditModal(workflow)}>Edit</CButton>
+                  </CPopover>
+                  <CPopover content="Delete workflow" trigger={['hover', 'focus']}>
+                    <CButton onClick={() => handleDelete(workflow)}>Delete</CButton>
+                  </CPopover>
                 </CTableDataCell>
               </CTableRow>
             )
@@ -390,9 +394,11 @@ const setWorkflow = () => {
 
         <CTableBody>
           <CTableRow> <div className='search-button'>
-            <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); }}>
-              +
-            </CButton>
+            <CPopover content="Add workflow" trigger={['hover', 'focus']}>
+              <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); }}>
+                +
+              </CButton>
+            </CPopover>
           </div></CTableRow>
         </CTableBody>
 
@@ -484,7 +490,9 @@ const setWorkflow = () => {
                   <CButton onClick={() => handleDeleteDropdown(index)}>Delete</CButton>
                 </div>
               ))}
-              <CButton onClick={handleAddDropdown}>Add Dropdown</CButton>
+              <CPopover content="Add Access" trigger={['hover', 'focus']}>
+                <CButton onClick={handleAddDropdown}>Add Dropdown</CButton>
+              </CPopover>
 
 
 
@@ -515,9 +523,12 @@ const setWorkflow = () => {
           </CModalBody>
 
           <CModalFooter>
-            <CButton color="secondary" onClick={handleModalClose}>
-              Close
-            </CButton>
+            <CPopover content="Close Modal" trigger={['hover', 'focus']}>
+              <CButton color="secondary" onClick={handleModalClose}>
+                Close
+              </CButton>
+            </CPopover>
+
             <CButton color="primary" onClick={selectedWorkflow ? updateWorkflow : CreateWorkflow}>
               {selectedWorkflow ? 'Update Workflow' : 'Create Workflow'}
             </CButton>

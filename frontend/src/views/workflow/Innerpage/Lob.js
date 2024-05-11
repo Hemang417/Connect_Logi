@@ -16,7 +16,8 @@ import {
     CDropdownMenu,
     CDropdownItem,
     CDropdownToggle,
-    CDropdown
+    CDropdown,
+    CPopover
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -59,7 +60,7 @@ const Lob = () => {
         setVisible(true);
 
     };
-    
+
 
     const handleDelete = async (index) => {
         try {
@@ -97,7 +98,7 @@ const Lob = () => {
                 setVisible(false);
                 toast.success('Line of business updated successfully');
             }
-          
+
         } catch (error) {
             console.log(error);
             toast.error('An error occurred while updating Line of Business');
@@ -147,9 +148,12 @@ const Lob = () => {
                             lobdata.map((row, index) => (
                                 <CTableRow key={index}>
                                     <CTableDataCell>{row.lobname}</CTableDataCell>
-                                
-                                    <CButton onClick={() => handleEdit(index)}>Edit</CButton>
-                                    <CButton onClick={() => handleDelete(index)}>Delete</CButton>
+                                    <CPopover content="Edit Line of Business" trigger={['hover', 'focus']}>
+                                        <CButton onClick={() => handleEdit(index)}>Edit</CButton>
+                                    </CPopover>
+                                    <CPopover content="Delete Line of Business" trigger={['hover', 'focus']}>
+                                        <CButton onClick={() => handleDelete(index)}>Delete</CButton>
+                                    </CPopover>
                                 </CTableRow>
                             ))
                         ) : (
@@ -198,10 +202,10 @@ const Lob = () => {
                     <CModalFooter>
                         <CButton color="secondary" onClick={() => {
                             setVisible(false);
-                            
+
                             setLob({
                                 lobname: '',
-                                transportmode: '' 
+                                transportmode: ''
                             });
                         }}>
                             Close
@@ -216,7 +220,9 @@ const Lob = () => {
             <div>
                 <CCardBody className='button-div'>
                     <div className='createjob-button'>
-                        <CButton color="primary" type="submit" onClick={() => setVisible(true)}>+</CButton>
+                        <CPopover content="Create new line of business" trigger={['hover', 'focus']}>
+                            <CButton color="primary" type="submit" onClick={() => setVisible(true)}>+</CButton>
+                        </CPopover>
                     </div>
                 </CCardBody>
             </div>

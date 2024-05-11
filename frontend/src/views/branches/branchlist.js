@@ -144,7 +144,8 @@ import {
     CModalHeader,
     CModalTitle,
     CModalBody,
-    CModalFooter
+    CModalFooter,
+    CPopover
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -231,10 +232,14 @@ const BranchList = () => {
                     {ownBranch.map((item, index) => (
                         <CTableRow key={index}>
                             <CTableHeaderCell scope="row">
-                                <Link onClick={() => handleEdit(item)}>Edit</Link>
+                                <CPopover content="Edit branch" trigger={['hover', 'focus']}>
+                                    <Link onClick={() => handleEdit(item)}>Edit</Link>
+                                </CPopover>
                             </CTableHeaderCell>
                             <CTableHeaderCell>
-                                <Link onClick={() => handleDelete(item)}>Delete</Link>
+                                <CPopover content="Delete Branch" trigger={['hover', 'focus']}>
+                                    <Link onClick={() => handleDelete(item)}>Delete</Link>
+                                </CPopover>
                             </CTableHeaderCell>
                             <CTableDataCell>{item.branchcode}</CTableDataCell>
                             <CTableDataCell>{item.ownbranchname}</CTableDataCell>
@@ -308,8 +313,12 @@ const BranchList = () => {
                     </div>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="primary" onClick={handleUpdate}>Update</CButton>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>Cancel</CButton>
+                    <CPopover content="Update branch details" trigger={['hover', 'focus']}>
+                        <CButton color="primary" onClick={handleUpdate}>Update</CButton>
+                    </CPopover>
+                    <CPopover content="Close the modal" trigger={['hover', 'focus']}>
+                        <CButton color="secondary" onClick={() => setVisible(false)}>Cancel</CButton>
+                    </CPopover>
                 </CModalFooter>
             </CModal>
         </div>

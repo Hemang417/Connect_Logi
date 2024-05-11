@@ -5,7 +5,7 @@ import {
   CTableBody,
   CTableDataCell,
   CTableHead,
-  CTableRow
+  CTableRow, CPopover
 } from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -122,10 +122,10 @@ const ImpAccess = () => {
   //   }, [allAccessData]);
 
 
-async function redirect(){
-  navigate('/userlist');
-  toast.success(`Access is given`)
-}
+  async function redirect() {
+    navigate('/userlist');
+    toast.success(`Access is given`)
+  }
 
 
 
@@ -153,9 +153,11 @@ async function redirect(){
           ))}
         </CTableBody>
       </CTable>
-      <CButton color="primary" onClick={redirect}>
-        Apply Access
-      </CButton>
+      <CPopover content="Apply Access to this user" trigger={['hover', 'focus']}>
+        <CButton color="primary" onClick={redirect}>
+          Apply Access
+        </CButton>
+      </CPopover>
     </div>
   );
 };

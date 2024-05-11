@@ -143,7 +143,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CButton,
+  CButton, CPopover
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -221,13 +221,6 @@ const UserList = () => {
 
   return (
     <div>
-    <div className='userlist-button'>
-          <Link to={'/UserListAccess'} target='_blank'>
-            <CButton color="primary" type="submit">
-              +
-            </CButton>
-          </Link>
-        </div>
 
       <CTable hover responsive striped className=''>
         <CTableHead>
@@ -242,7 +235,9 @@ const UserList = () => {
           {allData.map((userData, index) => (
             <CTableRow key={index}>
               <CTableHeaderCell scope="row">
+              <CPopover content="Edit access for this user" trigger={['hover', 'focus']}>
                 <Link onClick={() => handleAccess(index)}>Edit</Link>
+              </CPopover>
               </CTableHeaderCell>
               <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
               <CTableDataCell>

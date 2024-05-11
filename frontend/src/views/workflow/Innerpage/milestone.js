@@ -16,7 +16,8 @@ import {
     CDropdownMenu,
     CDropdownItem,
     CDropdownToggle,
-    CDropdown
+    CDropdown,
+    CPopover
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -95,7 +96,7 @@ const MileStone = () => {
                     ownbranchname: milestonedata.ownbranchname,
                     id: selectedMilestone.id
                 });
-    
+
                 if (response.status === 200) {
                     // Update state with edited milestone data
                     const updatedMilestones = allmilestones.map(milestone => {
@@ -110,10 +111,10 @@ const MileStone = () => {
                         return milestone;
                     });
                     setallmilestones(updatedMilestones);
-    
+
                     // Close modal
                     setVisible(false);
-    
+
                     // Clear form data and selected milestone
                     setmilestonedata({ milestonename: '', lob: '', ownbranchname: '' });
                     setSelectedMilestone(null);
@@ -127,14 +128,14 @@ const MileStone = () => {
                     lob: milestonedata.lob,
                     ownbranchname: milestonedata.ownbranchname
                 });
-    
+
                 if (response.status === 200) {
                     // Fetch updated milestones
                     getMilestones();
-    
+
                     // Close modal
                     setVisible(false);
-    
+
                     // Clear form data and selected milestone
                     setmilestonedata({ milestonename: '', lob: '', ownbranchname: '' });
                     setSelectedMilestone(null);
@@ -144,7 +145,7 @@ const MileStone = () => {
             console.log(error);
         }
     };
-    
+
     const handleDelete = async (index) => {
         try {
             const data = allmilestones[index];
@@ -194,8 +195,12 @@ const MileStone = () => {
                                 <CTableDataCell>{milestone.milestonename}</CTableDataCell>
                                 <CTableDataCell>{milestone.lobname}</CTableDataCell>
                                 <CTableDataCell>{milestone.ownbranchname}</CTableDataCell>
-                                <CButton onClick={() => handleEdit(index)}>Edit</CButton>
-                                <CButton onClick={() => handleDelete(index)}>Delete</CButton>
+                                <CPopover content="Edit Milestone " trigger={['hover', 'focus']}>
+                                    <CButton onClick={() => handleEdit(index)}>Edit</CButton>
+                                </CPopover>
+                                <CPopover content="Delete Milestone" trigger={['hover', 'focus']}>
+                                    <CButton onClick={() => handleDelete(index)}>Delete</CButton>
+                                </CPopover>
                             </CTableRow>
                         ))}
                     </CTableBody>
@@ -205,7 +210,9 @@ const MileStone = () => {
             <div>
                 <CCardBody className='button-div'>
                     <div className='createjob-button'>
-                        <CButton color="primary" type="submit" onClick={() => setVisible(true)}>+</CButton>
+                        <CPopover content="Create new milestone" trigger={['hover', 'focus']}>
+                            <CButton color="primary" type="submit" onClick={() => setVisible(true)}>+</CButton>
+                        </CPopover>
                     </div>
                 </CCardBody>
             </div>
@@ -266,21 +273,27 @@ const MileStone = () => {
                 </CModalBody>
 
                 <CModalFooter>
-                    <CButton color="secondary" onClick={() => {
-                        setVisible(false);
-                        setmilestonedata({ milestonename: '', lob: '', ownbranchname: '' }); // Empty form data
-                        setSelectedMilestone(null); // Clear selected milestone
-                    }}>
-                        Close
-                    </CButton>
+                    <CPopover content="Close Modal" trigger={['hover', 'focus']}>
+                        <CButton color="secondary" onClick={() => {
+                            setVisible(false);
+                            setmilestonedata({ milestonename: '', lob: '', ownbranchname: '' }); // Empty form data
+                            setSelectedMilestone(null); // Clear selected milestone
+                        }}>
+                            Close
+                        </CButton>
+                    </CPopover>
                     {selectedMilestone ? (
-                        <CButton color="primary" onClick={handleSubmit}>
-                            Update MileStone
-                        </CButton>
+                        <CPopover content="Update milestone" trigger={['hover', 'focus']}>
+                            <CButton color="primary" onClick={handleSubmit}>
+                                Update MileStone
+                            </CButton>
+                        </CPopover>
                     ) : (
-                        <CButton color="primary" onClick={handleSubmit}>
-                            Create MileStone
-                        </CButton>
+                        <CPopover content="Create new milestone" trigger={['hover', 'focus']}>
+                            <CButton color="primary" onClick={handleSubmit}>
+                                Create MileStone
+                            </CButton>
+                        </CPopover>
                     )}
                 </CModalFooter>
             </CModal>

@@ -10,6 +10,7 @@ import {
     CInputGroup,
     CInputGroupText,
     CRow,
+    CPopover
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilBuilding } from '@coreui/icons'
@@ -108,7 +109,9 @@ const branches = () => {
                                         <CFormInput placeholder="Branch Head Mobile No." onChange={handleChange} name='headnum' />
                                     </CInputGroup>
                                     <div className="d-grid">
+                                    <CPopover content="Create new branch" trigger={['hover', 'focus']}>
                                         <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
+                                    </CPopover>
                                     </div>
                                 </CForm>
                             </CCardBody>
