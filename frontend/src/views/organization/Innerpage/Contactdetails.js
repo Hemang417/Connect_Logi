@@ -29,7 +29,7 @@ import {
     CModalFooter,
     CNavItem,
     CNav,
-    CNavLink
+    CNavLink, CPopover
 } from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 import '../../../css/styles.css';
@@ -71,13 +71,12 @@ const Contactdetails = () => {
                 var clientname = localStorage.getItem('organizationclientname');
                 var branchname = idofthatbranch.branchname;
                 var id = idofthatbranch.id;
-            } else if(localStorage.getItem('isEditing')==='true'){
+            } else if (localStorage.getItem('isEditing') === 'true') {
                 var clientname = localStorage.getItem('organizationclientname');
                 var branchname = localStorage.getItem('branchnames');
             }
-            
-            else 
-            {
+
+            else {
                 var clientname = localStorage.getItem('clientname');
                 var branchname = localStorage.getItem('branchnames');
             }
@@ -125,7 +124,7 @@ const Contactdetails = () => {
                 clientname = localStorage.getItem('organizationclientname');
                 branchname = idOfThatBranch.branchname;
                 id = idOfThatBranch.id;
-            } else if(localStorage.getItem('isEditing')==='true'){
+            } else if (localStorage.getItem('isEditing') === 'true') {
                 clientname = localStorage.getItem('organizationclientname');
                 branchname = localStorage.getItem('branchnames');
             }
@@ -145,7 +144,7 @@ const Contactdetails = () => {
                     }
                 });
                 setAllContacts(response.data);
-            } else if(localStorage.getItem('isEditing')==='true'){
+            } else if (localStorage.getItem('isEditing') === 'true') {
                 const response = await axios.get('http://localhost:5000/getAllContactsofNew', {
                     params: {
                         branchname: branchname,
@@ -155,9 +154,9 @@ const Contactdetails = () => {
                     }
                 });
                 setAllContacts(response.data);
-            }   
-            
-            
+            }
+
+
             else {
                 const response = await axios.get('http://localhost:5000/getAllContactsofNew', {
                     params: {
@@ -265,11 +264,11 @@ const Contactdetails = () => {
                 clientname = localStorage.getItem('organizationclientname');
                 branchname = idOfThatBranch.branchname;
                 id = idOfThatBranch.id;
-            } else if(localStorage.getItem('isEditing')==='true'){
+            } else if (localStorage.getItem('isEditing') === 'true') {
                 clientname = localStorage.getItem('organizationclientname');
                 branchname = localStorage.getItem('branchnames');
             }
-            
+
             else {
                 clientname = localStorage.getItem('clientname');
                 branchname = localStorage.getItem('branchnames');
@@ -277,21 +276,21 @@ const Contactdetails = () => {
 
             if (localStorage.getItem('isEditing') === 'true' && localStorage.getItem('firstorgofclient')) {
                 const response = await axios.put('http://localhost:5000/updateContact', {
-                   
-                        contactName: contact.contactName,
-                        designation: contact.designation,
-                        department: contact.department,
-                        mobile: contact.mobile,
-                        email: contact.email,
-                        branchname: branchname,
-                        clientname: clientname,
-                        id: id,
-                        orgname: localStorage.getItem('orgname'),
-                        orgcode: localStorage.getItem('orgcode'),
-                   
+
+                    contactName: contact.contactName,
+                    designation: contact.designation,
+                    department: contact.department,
+                    mobile: contact.mobile,
+                    email: contact.email,
+                    branchname: branchname,
+                    clientname: clientname,
+                    id: id,
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+
                 });
-                
-            } else if(localStorage.getItem('isEditing')==='true'){
+
+            } else if (localStorage.getItem('isEditing') === 'true') {
                 const response = await axios.put('http://localhost:5000/updateContactduringNew', {
                     contactName: contact.contactName,
                     designation: contact.designation,
@@ -304,7 +303,7 @@ const Contactdetails = () => {
                     clientname: clientname
                 });
             }
-            
+
             else {
                 const response = await axios.put('http://localhost:5000/updateContactduringNew', {
                     contactName: contact.contactName,
@@ -317,7 +316,7 @@ const Contactdetails = () => {
                     orgcode: localStorage.getItem('orgcode'),
                     clientname: clientname
                 });
-                
+
             }
 
             // Fetch updated contacts after editing
@@ -400,9 +399,11 @@ const Contactdetails = () => {
 
 
                     <div className='search-button'>
-                        <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); seteditVisible(false) }}>
-                            +
-                        </CButton>
+                        <CPopover content="Add Contact Details" trigger={['hover', 'focus']}>
+                            <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); seteditVisible(false) }}>
+                                +
+                            </CButton>
+                        </CPopover>
                     </div>
                 </CTable>
             </div>
@@ -425,15 +426,22 @@ const Contactdetails = () => {
                     </div>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>
-                        Close
-                    </CButton>
+                    <CPopover content="Close Contact Modal" trigger={['hover', 'focus']}>
+                        <CButton color="secondary" onClick={() => setVisible(false)}>
+                            Close
+                        </CButton>
+                    </CPopover>
                     {
                         // If the modal is opened for editing, show the update button
                         // Otherwise, show the add new button
                         editVisible ?
-                            <CButton color="primary" onClick={handleUpdate}>Update</CButton> :
-                            <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
+                            <CPopover content="Update contect data" trigger={['hover', 'focus']}>
+                                <CButton color="primary" onClick={handleUpdate}>Update</CButton>
+                            </CPopover>
+                            :
+                            <CPopover content="Add new Contact" trigger={['hover', 'focus']}>
+                                <CButton color="primary" onClick={handleSubmit}>Add New</CButton>
+                            </CPopover>
 
                     }
                     {/* <CButton color="primary" onClick={handleSubmit}>Add New</CButton> */}

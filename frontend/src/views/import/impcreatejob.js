@@ -22,7 +22,8 @@ import {
   CButton,
   CNavItem,
   CNav,
-  CNavLink
+  CNavLink,
+  CPopover
 } from '@coreui/react'
 import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
@@ -443,13 +444,17 @@ const impcreatejob = () => {
 
 
                 {localStorage.getItem('onEdit') === 'true' ?
-                  <CButton color="primary" type="submit" onClick={updateJob}>
-                    Update Job
-                  </CButton>
+                  <CPopover content="Update Job Details" trigger={['hover', 'focus']}>
+                    <CButton color="primary" type="submit" onClick={updateJob}>
+                      Update Job
+                    </CButton>
+                  </CPopover>
                   :
-                  <CButton color="primary" type="submit" onClick={storeJob}>
-                    Create Job
-                  </CButton>
+                  <CPopover content="Create New Job" trigger={['hover', 'focus']}>
+                    <CButton color="primary" type="submit" onClick={storeJob}>
+                      Create Job
+                    </CButton>
+                  </CPopover>
                 }
 
 
@@ -518,9 +523,11 @@ const impcreatejob = () => {
         </div> */}
 
         <div className='search-button'>
-          <CButton color="primary" type="submit" onClick={handlesave}>
-            Save & Close
-          </CButton>
+          <CPopover content="Save New Job" trigger={['hover', 'focus']}>
+            <CButton color="primary" type="submit" onClick={handlesave}>
+              Save & Close
+            </CButton>
+          </CPopover>
         </div>
         {/* 
         <div className='search-button'>
@@ -530,9 +537,11 @@ const impcreatejob = () => {
         </div> */}
 
         <div className='search-button'>
-          <CButton color="primary" type="submit">
-            Close
-          </CButton>
+          <CPopover content="Close Tab" trigger={['hover', 'focus']}>
+            <CButton color="primary" type="submit">
+              Close
+            </CButton>
+          </CPopover>
         </div>
       </div>
 

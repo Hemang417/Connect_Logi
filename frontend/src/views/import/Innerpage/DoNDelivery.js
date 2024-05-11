@@ -657,7 +657,8 @@ import {
     CTableDataCell,
     CTableHead,
     CTableHeaderCell,
-    CTableRow
+    CTableRow,
+    CPopover
 } from '@coreui/react';
 import 'react-datepicker/dist/react-datepicker.css';
 import toast from 'react-hot-toast';
@@ -679,7 +680,7 @@ const DoNDelivery = () => {
 
             response.data.map((item) => {
                 item.status = 'Pending',
-                item.remarks = ' '
+                    item.remarks = ' '
             })
 
             const completedrowsofthatjobandbranchandlob = await axios.get('http://localhost:5000/Getcompletedrowsofthatjobandbranchandlob', {
@@ -826,17 +827,17 @@ const DoNDelivery = () => {
                 // If the current user is admin, return false (not editable)
                 return false;
             } else {
-                if(item.assignedperson.length === 1){
-                    if(item.assignedperson[0].username === localStorage.getItem('username')){
+                if (item.assignedperson.length === 1) {
+                    if (item.assignedperson[0].username === localStorage.getItem('username')) {
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
-                }else if(item.assignedperson.length > 1){
+                } else if (item.assignedperson.length > 1) {
                     const assignedPerson = item.assignedperson.find(person => person.username === localStorage.getItem('username'));
-                    if(assignedPerson){
+                    if (assignedPerson) {
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
                 }
@@ -847,16 +848,16 @@ const DoNDelivery = () => {
             return false;
         }
     };
-    
-    
-    
-    
+
+
+
+
 
 
 
     // const isEditable = (item) => {
     //     try {
-            
+
     //         // Check if the localStorage username and assignedperson match
     //         if(localStorage.getItem('username') === item.assignedperson){
     //             // If they match, the row should be editable
@@ -871,7 +872,7 @@ const DoNDelivery = () => {
     //         return false;
     //     }
     // }
-    
+
 
     const handleCheckboxChange = async (index) => {
         try {
@@ -938,7 +939,7 @@ const DoNDelivery = () => {
         setAllLobData(newData);
     };
 
-    async function remarkstoreofimport(e){
+    async function remarkstoreofimport(e) {
         e.preventDefault();
         try {
             const lobDataWithRemarks = allLobData.filter(item => item.remarks.trim() !== '');
@@ -955,7 +956,7 @@ const DoNDelivery = () => {
     }
 
 
-   
+
 
     return (
         <div>
@@ -977,7 +978,7 @@ const DoNDelivery = () => {
                         {allLobData.map((item, index) => (
                             <CTableRow key={index}>
                                 <CTableDataCell>{item.workflowname}</CTableDataCell>
-                       
+
                                 <CTableDataCell>
                                     <input
                                         type="text"
@@ -1016,9 +1017,9 @@ const DoNDelivery = () => {
                                 <CTableDataCell>
                                     {item.status}
                                 </CTableDataCell>
-                                
+
                                 <CTableDataCell>
-                                    <input type="text" placeholder="remarks of the process" className="remarks-field" name='remarks' value={item.remarks} onChange={(e) => handleRemarkChange(index, e)}/>
+                                    <input type="text" placeholder="remarks of the process" className="remarks-field" name='remarks' value={item.remarks} onChange={(e) => handleRemarkChange(index, e)} />
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
@@ -1026,9 +1027,11 @@ const DoNDelivery = () => {
                 </CTable>
             </div>
             <div className="search-button">
-                <CButton color="primary" type="submit" onClick={remarkstoreofimport}>
-                    Save 
-                </CButton>
+                <CPopover content="Save Remarks" trigger={['hover', 'focus']}>
+                    <CButton color="primary" type="submit" onClick={remarkstoreofimport}>
+                        Save
+                    </CButton>
+                </CPopover>
             </div>
         </div>
     );

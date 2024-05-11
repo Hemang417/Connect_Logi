@@ -145,7 +145,8 @@ import {
   CButton,
   CNavItem,
   CNav,
-  CNavLink
+  CNavLink,
+  CPopover
 } from '@coreui/react'
 import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
@@ -423,7 +424,7 @@ const Createjob = () => {
       // Send update request with the latest data
       const response = await axios.put('http://localhost:5000/updateData', dataToUpdate);
       toast.success('Updated data successfully')
-      
+
       const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
         params: {
           orgname: localStorage.getItem('orgname'),
@@ -579,15 +580,19 @@ const Createjob = () => {
 
         {localStorage.getItem('updateBtn') === 'true' ? (
           <div className='search-button'>
-            <CButton color="primary" type="submit" onClick={updateData}>
-              Update
-            </CButton>
+            <CPopover content="Update Organization data" trigger={['hover', 'focus']}>
+              <CButton color="primary" type="submit" onClick={updateData}>
+                Update
+              </CButton>
+            </CPopover>
           </div>
         ) : (
           <div className='search-button'>
-            <CButton color="primary" type="submit" onClick={handleSubmit}>
-              Save & Close
-            </CButton>
+            <CPopover content="Save Organization data" trigger={['hover', 'focus']}>
+              <CButton color="primary" type="submit" onClick={handleSubmit}>
+                Save & Close
+              </CButton>
+            </CPopover>
           </div>
         )}
 
@@ -602,9 +607,11 @@ const Createjob = () => {
 
 
         <div className='search-button'>
-          <CButton color="primary" type="submit" onClick={redirectToOrg}>
-            Close
-          </CButton>
+          <CPopover content="Close Organization data" trigger={['hover', 'focus']}>
+            <CButton color="primary" type="submit" onClick={redirectToOrg}>
+              Close
+            </CButton>
+          </CPopover>
         </div>
       </div>
     </div>

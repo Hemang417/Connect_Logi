@@ -208,7 +208,8 @@ import {
   CFormInput,
   CFormLabel,
   CForm,
-  CButton
+  CButton,
+  CPopover
 } from '@coreui/react'
 import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
@@ -216,7 +217,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-import {useLocation} from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const organization = () => {
@@ -229,8 +230,8 @@ const organization = () => {
 
   const location = useLocation();
   const [searchValue, setSearchValue] = useState('');
-  
-  if(location.pathname=='/organization'){
+
+  if (location.pathname == '/organization') {
     localStorage.removeItem('updateBtn');
     localStorage.removeItem('clientname');
     localStorage.removeItem('branchnames');
@@ -240,22 +241,22 @@ const organization = () => {
     localStorage.removeItem('branchDataforprefill');
     localStorage.removeItem('alias');
     localStorage.removeItem('organizationbranches');
-    localStorage.removeItem('uniquevalue')    
+    localStorage.removeItem('uniquevalue')
   }
 
   useEffect(() => {
-   const renderOverview = async () => {
+    const renderOverview = async () => {
       try {
         const nameoforg = localStorage.getItem('orgname');
         const codeoforg = localStorage.getItem('orgcode');
-      
+
         const response = await axios.get('http://localhost:5000/getOrg', {
           params: {
             orgname: nameoforg,
             orgcode: codeoforg
           }
         });
-       
+
         setOrganization(response.data);
       } catch (error) {
         console.log("Error: " + error);
@@ -270,7 +271,7 @@ const organization = () => {
 
 
   const prefillData = (org) => {
-    try {  
+    try {
       localStorage.setItem('alias', org.alias);
       localStorage.setItem('organizationbranches', JSON.stringify(org.branches));
       localStorage.setItem('organizationclientname', org.clientname);
@@ -283,7 +284,7 @@ const organization = () => {
       console.log("Error: " + error);
     }
   };
-  
+
 
 
 
@@ -313,13 +314,13 @@ const organization = () => {
         const searchTerm = searchValue.toLowerCase();
         return clientname.includes(searchTerm) || alias.includes(searchTerm);
       });
-      
+
       setOrganization(filteredOrg);
     } else {
       // If no search value, display all organizations again
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
-  
+
       try {
         const response = await axios.get('http://localhost:5000/getOrg', {
           params: {
@@ -333,7 +334,7 @@ const organization = () => {
       }
     }
   };
-  
+
 
 
 
@@ -345,9 +346,11 @@ const organization = () => {
       <CCardBody className='button-div'>
         <div className='createjob-button'>
           <Link to={'/Createjob'}>
-            <CButton color="primary" type="submit" onClick={removeLocal}>
-              +
-            </CButton>
+            <CPopover content="Add new Organization" trigger={['hover', 'focus']}>
+              <CButton color="primary" type="submit" onClick={removeLocal}>
+                +
+              </CButton>
+            </CPopover>
           </Link>
         </div>
         <div className='createjob-button'>
@@ -410,7 +413,7 @@ const organization = () => {
 
 
             <input
-              type='text' placeholder="Search Client" className="text-field" 
+              type='text' placeholder="Search Client" className="text-field"
               onChange={(e) => setSearchValue(e.target.value)}
             />
 
@@ -422,7 +425,7 @@ const organization = () => {
             <CButton color="primary" type="submit" onClick={handleSearch}>
               Search
             </CButton>
-            
+
           </div>
 
         </CCard>
@@ -445,9 +448,11 @@ const organization = () => {
               organization.map((org, index) => (
                 <CTableRow key={index}>
                   <th scope="row" className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <Link to={"/Createjob"} onClick={() => prefillData(org)}>
-                      Edit
-                    </Link>
+                    <CPopover content="Edit Organization Data" trigger={['hover', 'focus']}>
+                      <Link to={"/Createjob"} onClick={() => prefillData(org)}>
+                        Edit
+                      </Link>
+                    </CPopover>
                   </th>
                   <CTableHeaderCell scope="row">{org.clientname}</CTableHeaderCell>
                   <CTableDataCell>{org.alias}</CTableDataCell>

@@ -206,7 +206,8 @@ import {
     CModalBody,
     CModalFooter,
     CModalHeader,
-    CModalTitle
+    CModalTitle,
+    CPopover
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -350,7 +351,7 @@ const Approverlog = () => {
         }
     }
 
-   
+
 
     return (
         <div>
@@ -369,7 +370,9 @@ const Approverlog = () => {
                             <CTableRow key={index}>
                                 <CTableDataCell>{org.clientname}</CTableDataCell>
                                 <CTableDataCell>
-                                    <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                    <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
+                                        <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                    </CPopover>
                                 </CTableDataCell>
                             </CTableRow>
                         )
@@ -444,15 +447,21 @@ const Approverlog = () => {
                 </CModalBody>
 
                 <CModalFooter>
-                    <CButton color="secondary" onClick={closeModal}>
-                        Close
-                    </CButton>
-                    <CButton color="primary" onClick={approveOrganization}>
-                        Approve
-                    </CButton>
-                    <CButton color="danger" onClick={rejectOrg}>
-                        Reject
-                    </CButton>
+                    <CPopover content="Close Modal" trigger={['hover', 'focus']}>
+                        <CButton color="secondary" onClick={closeModal}>
+                            Close
+                        </CButton>
+                    </CPopover>
+                    <CPopover content="Approve Organization" trigger={['hover', 'focus']}>
+                        <CButton color="primary" onClick={approveOrganization}>
+                            Approve
+                        </CButton>
+                    </CPopover>
+                    <CPopover content="Reject Organization" trigger={['hover', 'focus']}>
+                        <CButton color="danger" onClick={rejectOrg}>
+                            Reject
+                        </CButton>
+                    </CPopover>
                 </CModalFooter>
             </CModal>
         </div>
