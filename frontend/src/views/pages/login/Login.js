@@ -214,6 +214,7 @@ import {
   CDropdownToggle,
   CDropdownMenu,
   CDropdownItem,
+  CPopover
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
@@ -239,7 +240,7 @@ const Login = () => {
     });
   }
 
-  async function handleSubmit(e) { 
+  async function handleSubmit(e) {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/auth/login', {
@@ -297,7 +298,7 @@ const Login = () => {
     navigate('/dashboard');
   }
 
- 
+
 
 
   return (
@@ -351,11 +352,11 @@ const Login = () => {
                     )}
                     <CRow>
                       <CCol xs={6}>
-                        
-                        <CButton color="primary" className="px-4" type='submit'>
-                          Login
-                        </CButton>
-
+                        <CPopover content="Log In" trigger={['hover', 'focus']}>
+                          <CButton color="primary" className="px-4" type='submit'>
+                            Login
+                          </CButton>
+                        </CPopover>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="px-0">
