@@ -26,7 +26,7 @@ import '../../css/styles.css'
 import avatar8 from './../../assets/images/avatars/8.jpg'
 
 const AppHeaderDropdown = () => {
-
+ 
   const [allBranches, setallBranches] = useState([]);
   const FetchAllBranches = async () => {
     try {
