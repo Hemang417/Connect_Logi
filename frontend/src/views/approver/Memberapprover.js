@@ -164,9 +164,11 @@ const Memberapprover = () => {
                     id: localStorage.getItem('approverid'),
                 }
             });
+            toast.success(`Approver deleted successfully`)
             await getallapprovernames();
         } catch (error) {
             console.log(error);
+            toast.error(`Error in approver deletion`)
         }
     }
 

@@ -155,10 +155,12 @@ const Wf = () => {
             });
             if (response.status === 200) {
                 readAllWorkflows();
+                toast.success(`Workflow deleted successfully`);
             }
 
         } catch (error) {
             console.log(error);
+            toast.error('Workflow issue try again')
         }
     }
 
@@ -178,8 +180,10 @@ const Wf = () => {
             setselectedLOB('')
             setselectedOrg('')
             readAllWorkflows();
+            toast.success('Workflow added successfully');
         } catch (error) {
             console.log(error);
+            toast.error('Workflow issue');
         }
     }
 

@@ -159,6 +159,7 @@ const MileStone = () => {
             }
         } catch (error) {
             console.log(error);
+            toast.error('Error deleting milestone');
         }
     };
 

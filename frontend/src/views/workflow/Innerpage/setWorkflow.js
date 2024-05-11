@@ -167,9 +167,10 @@ const setWorkflow = () => {
       readsetworkflow();
       setVisible(false);
 
-
+      toast.success(`Workflow updated successfully`)
     } catch (error) {
       console.log(error);
+      toast.error('Error updating workflow')
     }
   };
 
@@ -216,6 +217,7 @@ const setWorkflow = () => {
 
     } catch (error) {
       console.log(error);
+      toast.error(' Error creating workflow')
     }
   }
 
@@ -239,6 +241,7 @@ const setWorkflow = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error('Error deleting workflow');
     }
   };
 

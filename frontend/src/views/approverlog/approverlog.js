@@ -342,10 +342,11 @@ const Approverlog = () => {
                 updatedFields: selectedOrg,
                 approval: { username: localStorage.getItem('username'), status: 'Reject' }
             });
-            toast.success('Organization approved successfully');
+            toast.success('Organization rejected successfully');
             closeModal();
         } catch (error) {
             console.log(error);
+            toast.error('Failed to Reject organization');
         }
     }
 

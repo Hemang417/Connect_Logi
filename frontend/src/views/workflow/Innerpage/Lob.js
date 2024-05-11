@@ -72,6 +72,7 @@ const Lob = () => {
 
             if (deletedRow.status === 200) {
                 fetchLOBdata();
+                toast.success(`Line of business deleted successfully`)
             }
         } catch (error) {
             console.log(error);
@@ -94,10 +95,12 @@ const Lob = () => {
                     transportmode: ''
                 });
                 setVisible(false);
+                toast.success('Line of business updated successfully');
             }
           
         } catch (error) {
             console.log(error);
+            toast.error('An error occurred while updating Line of Business');
         }
     };
 
@@ -125,6 +128,7 @@ const Lob = () => {
 
         } catch (error) {
             console.log(error);
+            toast.error(error);
         }
     };
 

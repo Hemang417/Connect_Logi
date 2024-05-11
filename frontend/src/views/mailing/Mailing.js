@@ -70,8 +70,10 @@ const Mailing = () => {
                 orgname: localStorage.getItem('orgname'),
                 orgcode: localStorage.getItem('orgcode')
             })
+            toast.success(`Mail Timing is set as per your desired time`)
         } catch (error) {
             console.log(error);
+            toast.error('Error setting time and email')
         }
     }
 

@@ -9,6 +9,7 @@ import {
 } from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ImpAccess = () => {
   const [allAccessData, setAllAccessData] = useState([]);
@@ -122,7 +123,8 @@ const ImpAccess = () => {
 
 
 async function redirect(){
-  navigate('/userlist')
+  navigate('/userlist');
+  toast.success(`Access is given`)
 }
 
 

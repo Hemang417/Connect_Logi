@@ -342,7 +342,6 @@ const Createjob = () => {
       //   }
       // })
 
-      // console.log(getApprovers.data);
 
       localStorage.removeItem('branchnames');
       navigate('/organization#/organization');

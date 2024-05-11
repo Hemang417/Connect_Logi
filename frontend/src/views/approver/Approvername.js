@@ -65,7 +65,7 @@
 //                 orgcode: localStorage.getItem('orgcode'),
 //                 uniquevalue: uniquevalue.map(item => item.uniquevalue) // Extract only uniquevalue
 //             });
-    
+
 //             // Handle success response
 //             if (response.status === 200) {
 //                 toast.success('Approver name added successfully');
@@ -160,7 +160,7 @@
 //                 orgcode: localStorage.getItem('orgcode'),
 //                 uniquevalue: uniquevalue.map(item => item.uniquevalue) // Extract only uniquevalue
 //             });
-    
+
 //             toast.success('Approver name updated successfully');
 //             handleModalClose();
 //             getApproverlist();
@@ -377,7 +377,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const Approvername = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     // Initialize state variables
     const [visible, setVisible] = useState(false);
     const [approverName, setApproverName] = useState('');
@@ -427,7 +427,7 @@ const Approvername = () => {
                     item: item
                 }
             })
-            if(deleted.status === 200){
+            if (deleted.status === 200) {
                 getApproverList();
             }
         } catch (error) {
@@ -489,6 +489,8 @@ const Approvername = () => {
             toast.error('Failed to add approver name');
         }
     };
+
+
     const [id, setid] = useState('');
     // Handle editing an approver
     const handleEdit = (item) => {
@@ -509,7 +511,7 @@ const Approvername = () => {
                 selectedBranch: selectedBranch,
                 orgname: localStorage.getItem('orgname'),
                 orgcode: localStorage.getItem('orgcode'),
-                uniquevalue:  uniqueValue ? [uniqueValue] : [],
+                uniquevalue: uniqueValue ? [uniqueValue] : [],
                 id: id // Extract only selected values
             });
             toast.success('Approver name updated successfully');
@@ -523,7 +525,7 @@ const Approvername = () => {
     };
 
 
-        async function handleMembers(item) {
+    async function handleMembers(item) {
         localStorage.setItem('approverlistname', item.approverlistname);
         localStorage.setItem('approverbranchname', item.branchname);
         localStorage.setItem('approverbranchcode', item.branchcode);

@@ -660,6 +660,7 @@ import {
     CTableRow
 } from '@coreui/react';
 import 'react-datepicker/dist/react-datepicker.css';
+import toast from 'react-hot-toast';
 
 const DoNDelivery = () => {
     const [allLobData, setAllLobData] = useState([]);
@@ -947,7 +948,7 @@ const DoNDelivery = () => {
                 orgcode: localStorage.getItem('orgcode'),
                 data: lobDataWithRemarks
             })
-            
+            toast.success('Remarks stored successfully');
         } catch (error) {
             console.log(error);
         }

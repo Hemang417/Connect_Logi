@@ -152,6 +152,7 @@ const impcreatejob = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error('Job creation failed')
     }
   }
 
@@ -236,6 +237,7 @@ const impcreatejob = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error);
     }
   }
 
