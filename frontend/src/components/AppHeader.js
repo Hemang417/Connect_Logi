@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, parsePath } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -18,9 +18,12 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CRow, CForm, CTable, CTableBody, CTableHead, CTableRow,
+  CButton
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell,
+import {
+  cilBell,
   cilCreditCard,
   cilCommentSquare,
   cilEnvelopeOpen,
@@ -28,17 +31,19 @@ import { cilBell,
   cilLockLocked,
   cilSettings,
   cilTask,
-  cilUser, cilList, cilMenu } from '@coreui/icons'
-
+  cilUser, cilList, cilMenu
+} from '@coreui/icons'
+import axios from 'axios'
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown, BellHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
-import "../../src/css/styles.css"
+import "../../src/css/styles.css";
+import moment from 'moment'
 
 const AppHeader = () => {
 
   const [currentBranch, setCurrentBranch] = useState('');
-
+  const [allnotifications, setallnotifications] = useState([]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -53,6 +58,41 @@ const AppHeader = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+
+  useEffect(() => {
+    const fetchNotifications = async (req, res) => {
+      try {
+        const response = await axios.get('http://localhost:5000/fetchnotifications', {
+          params: {
+            orgname: localStorage.getItem('orgname'),
+            orgcode: localStorage.getItem('orgcode'),
+          }
+        });
+
+        setallnotifications(response.data.notifications);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchNotifications();
+  }, [currentBranch])
+
+
+  async function userhasread(item) {
+    try {
+      const currentDate = new Date().getTime();
+      const formatattedDate = moment(currentDate).format('YYYY-MM-DD HH'); // No need to format
+      const response = await axios.put(`http://localhost:5000/userhasread`, {
+        theitemread: item,
+        currentDate: formatattedDate // Pass Unix timestamp directly
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -83,96 +123,45 @@ const AppHeader = () => {
           <CNavItem>
             <CNavLink style={{ fontWeight: 700, color: 'blue' }}>Current Branch: {currentBranch}</CNavLink>
           </CNavItem>
-          {/* BELL NOTIFICATION */}
-          {/* <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-              <BellHeaderDropdown />
-            </CNavLink>
-          </CNavItem> */}
+
+
+
           <CDropdown variant="nav-item">
             <CDropdownToggle placement="bottom-end" className="py-2" caret={false}>
               <CIcon icon={cilBell} size="lg" />
             </CDropdownToggle>
             <CDropdownMenu className="pt-4 dropdown-menu-notifications" placement="bottom-end">
 
-              {/* <CDropdownHeader className="bg-light fw-semibold py-2">Branches</CDropdownHeader> */}
+              <CForm>
 
-              {/* {allBranches && allBranches.map((item, index) => {
-                // Check if the current item's ownbranchname matches the branchname stored in localStorage
-                const isSelectedBranch = localStorage.getItem('branchnameofemp') === item.ownbranchname;
+                <CTable hover responsive striped>
 
-                // Define a CSS class based on the condition
-                const className = isSelectedBranch ? 'selected-branch' : 'allbranches';
+                  <CTableBody className='notifrow'>
 
-                return (
-                  <CDropdownItem key={index} className={className} onClick={() => handleBranchSelection(item)}>
-                    {item.ownbranchname}
-                  </CDropdownItem>
-                );
-              })} */}
+                    <CRow>
+                      {allnotifications &&
+                        allnotifications.map((item, index) => (
+                          item.reading !== 1 && ( // Check if reading is not 1
+                            <CDropdownItem key={index} className="notif">
+                              {`${item.clientname} is waiting for your approval`}
+                              <CButton onClick={() => userhasread(item)}>read</CButton>
+                            </CDropdownItem>
+                          )
+                        ))}
+                    </CRow>
+
+                  </CTableBody>
+
+                </CTable>
+              </CForm>
 
 
-              {/* <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
-              <CDropdownItem href="#">
-                <CIcon icon={cilBell} className="me-2" />
-                Updates
-                <CBadge color="info" className="ms-2">
-                  42
-                </CBadge>
-              </CDropdownItem>
-              <CDropdownItem href="#">
-                <CIcon icon={cilEnvelopeOpen} className="me-2" />
-                Messages
-                <CBadge color="success" className="ms-2">
-                  42
-                </CBadge>
-              </CDropdownItem>
-              <CDropdownItem href="#">
-                <CIcon icon={cilTask} className="me-2" />
-                Tasks
-                <CBadge color="danger" className="ms-2">
-                  42
-                </CBadge>
-              </CDropdownItem>
-              <CDropdownItem href="#">
-                <CIcon icon={cilCommentSquare} className="me-2" />
-                Comments
-                <CBadge color="warning" className="ms-2">
-                  42
-                </CBadge>
-              </CDropdownItem>
-              <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
-              <CDropdownItem href="#">
-                <CIcon icon={cilUser} className="me-2" />
-                Profile
-              </CDropdownItem>
-              <CDropdownItem href="#">
-                <CIcon icon={cilSettings} className="me-2" />
-                Settings
-              </CDropdownItem>
-              <CDropdownItem href="#">
-                <CIcon icon={cilCreditCard} className="me-2" />
-                Payments
-                <CBadge color="secondary" className="ms-2">
-                  42
-                </CBadge>
-              </CDropdownItem>
-              <CDropdownItem href="#">
-                <CIcon icon={cilFile} className="me-2" />
-                Projects
-                <CBadge color="primary" className="ms-2">
-                  42
-                </CBadge>
-              </CDropdownItem>
-              <CDropdownDivider />
-              <CDropdownItem href="#">
-                <CIcon icon={cilLockLocked} className="me-2" />
-                Lock Account
-              </CDropdownItem> */}
             </CDropdownMenu>
           </CDropdown>
-          {/* BELL NOTIFICATION END */}
+
+
+
+
 
           <CNavItem>
             <CNavLink href="#">

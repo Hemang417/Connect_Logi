@@ -299,7 +299,7 @@ const Approverlog = () => {
             .then(() => checker())
             .then(() => getOrganizations())
             .catch((error) => console.error(error));
-    }, []);
+    }, [approvedOrgs]);
 
 
 
@@ -364,21 +364,25 @@ const Approverlog = () => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {latestOrg && allorg && latestOrg.map((org, index) => (
-                        // Check if the organization is not present in the approvedOrgs array
-                        !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname) && (
-                            <CTableRow key={index}>
-                                <CTableDataCell>{org.clientname}</CTableDataCell>
-                                <CTableDataCell>
-                                    <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
-                                        <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
-                                    </CPopover>
-                                </CTableDataCell>
-                            </CTableRow>
-                        )
-                    ))}
-
+                    {latestOrg && latestOrg.map((org, index) => {
+                        // Check if allorg is null or if the organization is not present in the allorg array
+                        if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
+                            return (
+                                <CTableRow key={index}>
+                                    <CTableDataCell>{org.clientname}</CTableDataCell>
+                                    <CTableDataCell>
+                                        <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
+                                            <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                        </CPopover>
+                                    </CTableDataCell>
+                                </CTableRow>
+                            );
+                        } else {
+                            return null; // Skip rendering the row if the organization is present in allorg
+                        }
+                    })}
                 </CTableBody>
+
             </CTable>
 
             <CModal

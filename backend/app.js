@@ -27,7 +27,8 @@ import {
     fetchOrganizationforrender, SelectedCount, GetSelectedCount
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
-import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js'
+import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js';
+import {fetchNotifications, updatethereadingrowwithtimeandvalue} from './api/notifications.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1497,6 +1498,28 @@ app.get('/getSelectedCount', async (req, res) => {
         const {orgname, orgcode, branchname, branchcode, approverlistname} = req.query;
         const getthecount = await GetSelectedCount(orgname, orgcode, branchname, branchcode, approverlistname);
         res.send(getthecount);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/fetchnotifications', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const fetchednotifications = await fetchNotifications(orgname, orgcode);
+        res.send(fetchednotifications);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.put('/userhasread', async (req, res) => {
+    try {
+        const { orgname, orgcode, address, clientname, country, state, city, postalcode, alias, pan, gst, iec, branchname, creditdays, username, id, reading, timeofreading } = req.body.theitemread;
+        const { currentDate } = req.body;
+        const updatedReadRow = await updatethereadingrowwithtimeandvalue(orgname, orgcode, address, clientname, country, state, city, postalcode, alias, pan, gst, iec, branchname, creditdays, username, id, currentDate, reading, timeofreading);
+        res.send(updatedReadRow); // Make sure updatedReadRow contains the updated row
     } catch (error) {
         console.log(error);
     }

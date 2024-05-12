@@ -363,5 +363,11 @@
 
 .dropdown-menu-notifications{
     width: 500px;
+    
 }
-
+.notifrow{
+    overflow-x: hidden;
+}
+.notif{
+    margin-left: 20px;
+}
