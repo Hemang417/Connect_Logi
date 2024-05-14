@@ -363,11 +363,19 @@
 
 .dropdown-menu-notifications{
     width: 500px;
-    
 }
 .notifrow{
     overflow-x: hidden;
+    cursor: default;
 }
 .notif{
     margin-left: 20px;
+    text-decoration: none;
+}
+
+
+.readallbtn{
+    width: 100px;
+    margin-left: 30px;
+    background-color: blueviolet;
 }

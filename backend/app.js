@@ -28,7 +28,7 @@ import {
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js';
-import {fetchNotifications, updatethereadingrowwithtimeandvalue} from './api/notifications.js'
+import {fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotifications} from './api/notifications.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1517,9 +1517,20 @@ app.get('/fetchnotifications', async (req, res) => {
 app.put('/userhasread', async (req, res) => {
     try {
         const { orgname, orgcode, address, clientname, country, state, city, postalcode, alias, pan, gst, iec, branchname, creditdays, username, id, reading, timeofreading } = req.body.theitemread;
-        const { currentDate } = req.body;
-        const updatedReadRow = await updatethereadingrowwithtimeandvalue(orgname, orgcode, address, clientname, country, state, city, postalcode, alias, pan, gst, iec, branchname, creditdays, username, id, currentDate, reading, timeofreading);
+        const { currentDate, employeename } = req.body;
+        const updatedReadRow = await updatethereadingrowwithtimeandvalue(orgname, orgcode, address, clientname, country, state, city, postalcode, alias, pan, gst, iec, branchname, creditdays, username, id, currentDate, reading, timeofreading, employeename);
         res.send(updatedReadRow); // Make sure updatedReadRow contains the updated row
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.put('/makereadall', async (req, res) => {
+    try {
+        const {currentDate, notifications} = req.body;
+        const everythingread = await readallnotifications(currentDate, notifications);
+        res.status(200).send(everythingread);
     } catch (error) {
         console.log(error);
     }

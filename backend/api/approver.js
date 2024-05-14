@@ -169,6 +169,26 @@ export const updatedData = async (orgId, country, state, city, postalcode, phone
             WHERE orgname = ? AND orgcode = ? AND id = ? AND clientname = ?`,
             [country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, username, status, orgname, orgcode, orgId, clientname]
         );
+
+        const [tobeupdatedRow] = await connection.execute(`
+    SELECT * FROM notifications 
+    WHERE orgname = ? AND orgcode = ? AND clientname = ?`,
+            [orgname, orgcode, clientname]
+        );
+
+        const { reading } = tobeupdatedRow[0];
+     
+        const updatedApproval = reading.map(item => {
+            if (item.employeename === username) {
+                // Update read and approved attributes
+                return { ...item, read: 1, approved: 1 };
+            } else {
+                // Return unchanged item
+                return item;
+            }
+        });
+        await connection.execute(`UPDATE notifications SET reading = ? WHERE orgname = ? AND orgcode = ? AND clientname = ?`, [JSON.stringify(updatedApproval), orgname, orgcode, clientname]);
+
     } catch (error) {
         console.log(error);
     }
@@ -202,7 +222,7 @@ export const getApprovedRows = async (orgname, orgcode, uniquevalue) => {
                     const approvalrow = JSON.parse(approvals)
                     const isAllApproved = approvalrow.every((item) => item.status === 'Approve');
                     return isAllApproved;
-                }else if(row.approval.length == matchingRows.length){
+                } else if (row.approval.length == matchingRows.length) {
                     const approvals = JSON.stringify(row.approval) // Assuming 'approval' column stores JSON string
                     const approvalrow = JSON.parse(approvals)
                     const isAllApproved = approvalrow.every((item) => item.status === 'Approve');
@@ -211,7 +231,7 @@ export const getApprovedRows = async (orgname, orgcode, uniquevalue) => {
             }
         })
 
-     
+
 
 
         for (const row of approvedRows) {

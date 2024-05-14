@@ -219,7 +219,12 @@ const Approverlog = () => {
     const [selectedOrg, setSelectedOrg] = useState(null); // State to store selected organization
     const [approvedOrgs, setapprovedOrgs] = useState([])
     const uniquevalue = "OrgButton";
+    const location = useLocation();
+    const { state } = location;
 
+    useEffect(() => {
+        setSelectedOrg(state);
+    }, []);
 
     const fetchlatestOrg = async () => {
         try {
@@ -445,6 +450,10 @@ const Approverlog = () => {
                             <div>
                                 <label>Branchname:</label>
                                 <input type="text" value={selectedOrg.branchname} onChange={(e) => handleInputChange(e, 'branchname')} />
+                            </div>
+                            <div>
+                                <label>Clientname</label>
+                                <input type="text" value={selectedOrg.clientname} onChange={(e) => handleInputChange(e, 'clientname')} />
                             </div>
                         </>
                     )}
