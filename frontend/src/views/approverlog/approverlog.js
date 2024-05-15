@@ -274,15 +274,7 @@ const Approverlog = () => {
         }
     }
 
-    // async function mismatch() {
-    //     const filteredOrgs = latestOrg.filter(org => {
-    //         // Check if the clientname of the current organization matches with any approved organization
-    //         return !approvedOrgs.some(approvedOrg => approvedOrg.clientname === org.clientname);
-    //     });
 
-    //     // Update the latestOrg state with the filtered organizations
-    //     setlatestOrg(filteredOrgs);
-    // }
     const [allorg, setallorg] = useState([]);
     async function getOrganizations() {
         try {
@@ -299,12 +291,13 @@ const Approverlog = () => {
     }
 
 
+
     useEffect(() => {
         Promise.all([fetchApproverThatHaveUniqueValue(), fetchlatestOrg()])
             .then(() => checker())
             .then(() => getOrganizations())
             .catch((error) => console.error(error));
-    }, [approvedOrgs]);
+    }, []);
 
 
 
@@ -328,13 +321,18 @@ const Approverlog = () => {
 
     const approveOrganization = async () => {
         try {
-            await axios.put('http://localhost:5000/approveOrganization', {
+            const response = await axios.put('http://localhost:5000/approveOrganization', {
                 orgId: selectedOrg.id,
                 updatedFields: selectedOrg,
                 approval: { username: localStorage.getItem('username'), status: 'Approve' }
             });
+
             toast.success('Organization approved successfully');
             closeModal();
+            checker();
+            const updatedLatestOrg = latestOrg.filter(org => org.clientname !== selectedOrg.clientname);
+            setlatestOrg(updatedLatestOrg);
+
         } catch (error) {
             console.log(error);
             toast.error('Failed to approve organization');
@@ -343,13 +341,14 @@ const Approverlog = () => {
 
     const rejectOrg = async () => {
         try {
-            await axios.put('http://localhost:5000/approveOrganization', {
+            const response = await axios.put('http://localhost:5000/approveOrganization', {
                 orgId: selectedOrg.id,
                 updatedFields: selectedOrg,
                 approval: { username: localStorage.getItem('username'), status: 'Reject' }
             });
             toast.success('Organization rejected successfully');
             closeModal();
+            checker();
         } catch (error) {
             console.log(error);
             toast.error('Failed to Reject organization');
@@ -369,7 +368,35 @@ const Approverlog = () => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
+
                     {latestOrg && latestOrg.map((org, index) => {
+                        // Check if allorg is null or if the organization is not present in the allorg array
+                        if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
+                            // Check if the org has the approval array and if it contains the current user's username
+                            if (!org.approval || !org.approval.some(approval => approval.username === localStorage.getItem('username'))) {
+                                return (
+                                    <CTableRow key={index}>
+                                        <CTableDataCell>{org.clientname}</CTableDataCell>
+                                        <CTableDataCell>
+                                            <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
+                                                <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                            </CPopover>
+                                        </CTableDataCell>
+                                    </CTableRow>
+                                );
+                            } else {
+                                return null; // Skip rendering the row if the organization is present in allorg or if it has the current user's approval
+                            }
+                        } else {
+                            return null; // Skip rendering the row if the organization is present in allorg
+                        }
+                    })}
+
+
+
+
+
+                    {/* {latestOrg && latestOrg.map((org, index) => {
                         // Check if allorg is null or if the organization is not present in the allorg array
                         if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
                             return (
@@ -385,7 +412,9 @@ const Approverlog = () => {
                         } else {
                             return null; // Skip rendering the row if the organization is present in allorg
                         }
-                    })}
+                    })} */}
+
+
                 </CTableBody>
 
             </CTable>

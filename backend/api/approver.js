@@ -188,7 +188,7 @@ export const updatedData = async (orgId, country, state, city, postalcode, phone
             }
         });
         await connection.execute(`UPDATE notifications SET reading = ? WHERE orgname = ? AND orgcode = ? AND clientname = ?`, [JSON.stringify(updatedApproval), orgname, orgcode, clientname]);
-
+        return row;
     } catch (error) {
         console.log(error);
     }
