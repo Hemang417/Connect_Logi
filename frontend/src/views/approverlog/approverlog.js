@@ -207,7 +207,8 @@ import {
     CModalFooter,
     CModalHeader,
     CModalTitle,
-    CPopover
+    CPopover,
+    CBadge
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -356,20 +357,61 @@ const Approverlog = () => {
     }
 
 
-
     return (
         <div>
             <h1>Approver Log of Organization</h1>
             <CTable striped hover responsive>
                 <CTableHead>
                     <CTableRow>
-                        <CTableHeaderCell>Client Name</CTableHeaderCell>
+                        <CTableHeaderCell>Task Name</CTableHeaderCell>
                         <CTableHeaderCell>Actions</CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
 
-                    {latestOrg && latestOrg.map((org, index) => {
+
+                    {localStorage.getItem('username') !== 'admin' ? (
+                        latestOrg && latestOrg.map((org, index) => {
+                            // Check if allorg is null or if the organization is not present in the allorg array
+                            if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
+                                // Check if the org has the approval array and if it contains the current user's username
+                                if (!org.approval || !org.approval.some(approval => approval.username === localStorage.getItem('username'))) {
+                                    return (
+                                        <CTableRow key={index}>
+                                            <CTableDataCell>{org.clientname}</CTableDataCell>
+                                            <CTableDataCell>
+                                                <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
+                                                    <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                                </CPopover>
+                                            </CTableDataCell>
+                                        </CTableRow>
+                                    );
+                                } else {
+                                    return null; // Skip rendering the row if the organization is present in allorg or if it has the current user's approval
+                                }
+                            } else {
+                                return null; // Skip rendering the row if the organization is present in allorg
+                            }
+                        })
+                    ) : (
+                        latestOrg && latestOrg.map((org, index) => (
+                            <CTableRow key={index}>
+                                <CTableDataCell>{org.clientname}</CTableDataCell>
+                                <CTableDataCell>Pending</CTableDataCell>
+                            </CTableRow>
+                        ))
+                    )}
+
+
+
+
+
+
+
+
+
+
+                    {/* {latestOrg && latestOrg.map((org, index) => {
                         // Check if allorg is null or if the organization is not present in the allorg array
                         if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
                             // Check if the org has the approval array and if it contains the current user's username
@@ -390,7 +432,7 @@ const Approverlog = () => {
                         } else {
                             return null; // Skip rendering the row if the organization is present in allorg
                         }
-                    })}
+                    })} */}
 
 
 

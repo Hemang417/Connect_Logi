@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   cilBell,
@@ -17,213 +17,38 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 import { Mailing } from './views/mailing'
 
-// const [readOnly, setReadOnly] = useState(false);
-const isAdmin = localStorage.getItem('username')==='admin';
-// const isNotAdmin = localStorage.getItem('username')!=='admin';
-// if(isAdmin) setReadOnly(readOnly);
-// const [visible, setVisible] = useState(false);
-
-// const navItemComponent = isAdmin ? CNavItem : CNavItem;
-
-//   useEffect(() => {
-//     if (isAdmin) setVisible(!visible);
-//   }, [isAdmin]);
-
-// function handleAdmin(){
-//   const [readOnly, setReadOnly] = useState(false);
-
-//   useEffect(() => {
-//     if (isAdmin) {
-//       setReadOnly(false);
-//     }
-//   }, [isAdmin]); 
-// }
+const isAdmin = localStorage.getItem('username') === 'admin';
+// let count = localStorage.getItem('countofremainingrows')
 
 const _nav = [
 
-  // useEffect will trigger whenever isAdmin changes
-
-  // {
-  //   component: CNavItem,
-  //   name: 'Dashboard',
-  //   to: '/dashboard',
-  //   icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-  //   badge: {
-  //     color: 'info',
-  //     text: 'NEW',
-  //   },
-  // },
-  // {
-  //   component: CNavTitle,
-  //   name: 'Theme',
-  // },
-  // {
-  //   component: CNavItem,
-  //   name: 'Colors',
-  //   to: '/theme/colors',
-  //   icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-  // },
-  // {
-  //   component: CNavItem,
-  //   name: 'Typography',
-  //   to: '/theme/typography',
-  //   icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
-  // },
-  // {
-  //   component: CNavTitle,
-  //   name: 'Components',
-  // },
   {
     component: CNavItem,
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
- 
-    // items: [
-    //   {
-    //     component: CNavItem,
-    //     name: 'Home',
-    //     to: '/dashboard'
-    //     // to: '/base/accordion',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Import',
-    //     to: '/import'
-    //     // to: '/base/breadcrumbs',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Export',
-    //     to: '/dashboard'
-    //     // to: '/base/cards',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Transport',
-    //     to: '/dashboard'
-    //     // to: '/base/carousels',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Frieght Forwarding',
-    //     to: '/dashboard'
-    //     // to: '/base/collapses',
-    //   },
-    //   {
-    //     component: CNavItem,
-    //     name: 'Accounts',
-    //     to: '/dashboard'
-    //     // to: '/base/list-groups',
-    //   },
-      // {
-      //   component: CNavItem,
-      //   name: 'Navs & Tabs',
-      //   to: '/base/navs',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Pagination',
-      //   to: '/base/paginations',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Placeholders',
-      //   to: '/base/placeholders',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Popovers',
-      //   to: '/base/popovers',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Progress',
-      //   to: '/base/progress',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Spinners',
-      //   to: '/base/spinners',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Tables',
-      //   to: '/base/tables',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Tooltips',
-      //   to: '/base/tooltips',
-      // },
-    // ],
   },
   {
     component: CNavItem,
     name: 'Organization',
     to: '/organization',
-    icon: <CIcon icon={cilCursor} customClassName="nav-icon"/>,
+    icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'ApproverLog',
     to: '/approverlog',
-    icon: <CIcon icon={cilCursor} customClassName="nav-icon"/>,
+    icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      text: localStorage.getItem('countofremainingrows'),
+    },
   },
   {
     component: CNavItem,
     name: 'Import',
     to: '/import',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
-  
-    // items: [
-      // {
-      //   component: CNavItem,
-      //   name: 'Dashboard',
-      //   to: '/dashboard'
-      //   // to: '/forms/form-control',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Job Creation & Process',
-      //   to: '/import',
-      // },
-      // {
-      //     component: CNavItem,
-      //     name: 'Tables',
-      //     to: '/base/tables',
-      //   },
-      // {
-      //   component: CNavItem,
-      //   name: 'Checks & Radios',
-      //   to: '/forms/checks-radios',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Range',
-      //   to: '/forms/range',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Input Group',
-      //   to: '/forms/input-group',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Floating Labels',
-      //   to: '/forms/floating-labels',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Layout',
-      //   to: '/forms/layout',
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: 'Validation',
-      //   to: '/forms/validation',
-      // },
-    // ],
   },
   {
     component: CNavGroup,
@@ -231,32 +56,21 @@ const _nav = [
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
 
     items: [
-      // {
-      //   component: CNavItem,
-      //   name: 'Dashboard',
-      //   to: '/dashboard'
-      //   to: '/forms/form-control',
-      // },
       {
         component: CNavItem,
         name: 'Job Creation & Process',
         to: '/forms/select',
       },
-     
+
       {
         component: CNavItem,
         name: 'Input Group',
         to: '/forms/input-group',
       },
-      
+
     ],
   },
-  // {
-  //   component: CNavItem,
-  //   name: 'Charts',
-  //   to: '/charts',
-  //   icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-  // },
+
   {
     component: CNavGroup,
     name: 'Icons',
@@ -378,31 +192,10 @@ const _nav = [
         to: '/userroles',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />
       }
-      
+
     ],
   },
 
-
-
-
-  // {
-  //   component: CNavItem,
-  //   name: 'New User',
-  //   to: '/new_user',
-  //   icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-  // },
-  // {
-  //   component: CNavItem,
-  //   name: 'User List',
-  //   to: '/userlist',
-  //   icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-  // },
-  // {
-  //   component: CNavItem,
-  //   name: 'TAT',
-  //   to: '/tat',
-  //   icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-  // },
 
 
   {
@@ -461,7 +254,24 @@ const _nav = [
 
 const visibleNav = isAdmin
   ? _nav // If isAdmin is true, show all items
-  : _nav.filter(item => item.name !== 'Admin' ); // Exclude "New User" and "User List" if isAdmin is false
+  : _nav.filter(item => item.name !== 'Admin'); // Exclude "New User" and "User List" if isAdmin is false
 
 
-export default visibleNav;
+// export default visibleNav;
+export default visibleNav
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
