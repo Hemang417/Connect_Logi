@@ -169,11 +169,13 @@ const AppHeader = () => {
               <CIcon icon={cilBell} size="lg" onClick={() => fetchNotifications()} />
 
             </CDropdownToggle>
+
             <CDropdownMenu className="pt-4 dropdown-menu-notifications" placement="bottom-end">
+            <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Organizations Approval List</CDropdownHeader>
 
               <CForm>
 
-                <CTable hover responsive striped>
+                <CTable hover responsive striped className='notiftable'>
 
                   <CTableBody className='notifrow'>
 
@@ -187,9 +189,11 @@ const AppHeader = () => {
                         // Render the notification only if conditions are met
                         if (isApprover && isUnread) {
                           return (
-                            <CDropdownItem key={index} className="notif" onClick={() => navigateToApproverLog(item)}>
-                              {`${item.clientname} is waiting for your approval`}
-                              <CButton onClick={() => userhasread(item)}>read</CButton>
+                            <CDropdownItem key={index} onClick={() => navigateToApproverLog(item)}>
+                              <p className="notif" >{`Organization: ${item.clientname} is waiting for your approval`}</p>
+                              <CButton className='button-mark-as-read' onClick={() => userhasread(item)}>
+                                <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
+                              </CButton>
                             </CDropdownItem>
                           );
                         }
@@ -203,6 +207,7 @@ const AppHeader = () => {
 
                 </CTable>
               </CForm>
+              <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Reminders</CDropdownHeader>
 
 
             </CDropdownMenu>

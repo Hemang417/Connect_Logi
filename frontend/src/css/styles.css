@@ -362,15 +362,59 @@
 
 
 .dropdown-menu-notifications{
-    width: 500px;
+    width: 450px;
+}
+.table-responsive {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.notif-header1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .notifrow{
     overflow-x: hidden;
     cursor: default;
+    /* display: flex; */
+    /* justify-content: center;
+    align-items: center; */
 }
 .notif{
-    margin-left: 20px;
+    position: relative;
+    width: fit-content;
+    /* height: fit-content; */
+    margin-left: 35px;
+    margin-right: 0px;
     text-decoration: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.button-mark-as-read{
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    font-size: small;
+    margin-left: 390px;
+    margin-top: -30px;
+    background-color: transparent;
+    /* background-image: url(../assets/images/double-tick-indicator.png);
+    background-repeat: no-repeat;
+    background-size: 10%; */
+    /* background-color:none; */
+    /* padding: 15px; */
+    border-radius: 50%;
+    color: black;
+    border: 1px solid black;
+}
+.button-mark-as-read .icon-envelope-open{
+    width: 25px;
+    height: 25px;
+    margin-left: -6px;
+    /* margin-top: -100px; */
+    /* margin-top: -100px; */
+
 }
 
 
