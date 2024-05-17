@@ -303,8 +303,6 @@ const Approverlog = () => {
 
 
 
-
-
     const openModal = (org) => {
         setSelectedOrg(org);
     }
@@ -332,9 +330,18 @@ const Approverlog = () => {
             toast.success('Organization approved successfully');
             closeModal();
             checker();
+            // const updatedLatestOrg = latestOrg.filter(org => {
+            //     // Check if the organization has any approval with status 'Reject'
+            //     const hasRejected = org.approval.some(approval => approval.status === 'Reject');
+            //     // Check if the organization's clientname is not equal to the selectedOrg's clientname
+            //     const isNotSelectedOrg = org.clientname !== selectedOrg.clientname;
+            //     // Include the organization in the filtered array if it hasn't been rejected and is not the selectedOrg
+            //     return !hasRejected && isNotSelectedOrg;
+            // });
+            // setlatestOrg(updatedLatestOrg);
             const updatedLatestOrg = latestOrg.filter(org => org.clientname !== selectedOrg.clientname);
             setlatestOrg(updatedLatestOrg);
-            navigate(location.pathname, {replace: true})
+            navigate(location.pathname, { replace: true })
         } catch (error) {
             console.log(error);
             toast.error('Failed to approve organization');
@@ -351,14 +358,16 @@ const Approverlog = () => {
             toast.success('Organization rejected successfully');
             closeModal();
             checker();
+
             const updatedLatestOrg = latestOrg.filter(org => org.clientname !== selectedOrg.clientname);
             setlatestOrg(updatedLatestOrg);
-            navigate(location.pathname, {replace: true})
+            navigate(location.pathname, { replace: true })
         } catch (error) {
             console.log(error);
             toast.error('Failed to Reject organization');
         }
     }
+
 
 
     return (
@@ -380,16 +389,21 @@ const Approverlog = () => {
                             if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
                                 // Check if the org has the approval array and if it contains the current user's username
                                 if (!org.approval || !org.approval.some(approval => approval.username === localStorage.getItem('username'))) {
-                                    return (
-                                        <CTableRow key={index}>
-                                            <CTableDataCell>{org.clientname}</CTableDataCell>
-                                            <CTableDataCell>
-                                                <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
-                                                    <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
-                                                </CPopover>
-                                            </CTableDataCell>
-                                        </CTableRow>
-                                    );
+
+                                    const hasRejected = org.approval && org.approval.some(approval => approval.status === 'Reject');
+                                    if (!hasRejected) {
+                                        return (
+                                            <CTableRow key={index}>
+                                                <CTableDataCell>{org.clientname}</CTableDataCell>
+                                                <CTableDataCell>
+                                                    <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
+                                                        <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                                    </CPopover>
+                                                </CTableDataCell>
+                                            </CTableRow>
+                                        );
+                                    }
+
                                 } else {
                                     return null; // Skip rendering the row if the organization is present in allorg or if it has the current user's approval
                                 }

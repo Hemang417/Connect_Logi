@@ -1,5 +1,5 @@
 import { connectMySQL } from "../config/sqlconfig.js";
-import {broadcast} from '../websocketServer.js'
+import { broadcast } from '../websocketServer.js'
 const connection = await connectMySQL();
 
 export const storeApproverName = async (orgname, orgcode, approverName, branchname, branchcode, uniquevalue) => {
@@ -177,11 +177,16 @@ export const updatedData = async (orgId, country, state, city, postalcode, phone
         );
 
         const { reading } = tobeupdatedRow[0];
-
+    
         const updatedApproval = reading.map(item => {
             if (item.employeename === username) {
-                // Update read and approved attributes
-                return { ...item, read: 1, approved: 1 };
+                if (status === 'Approve') {
+                    // Update read and approved attributes
+                    return { ...item, read: 1, approved: 1 };
+                }else if(status === 'Reject'){
+                    return { ...item, read: 1, approved: -1 };
+                }
+
             } else {
                 // Return unchanged item
                 return item;
@@ -240,7 +245,7 @@ export const getApprovedRows = async (orgname, orgcode, uniquevalue) => {
                 // Insert the row into the organizations table
                 await connection.execute(`INSERT INTO organizations (alias, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgcode, orgname, clientname, branchname, username, uniquevalue) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`, [row.alias, row.country, row.state, row.city, row.postalcode, row.phone, row.email, row.PAN, row.GST, row.IEC, row.creditdays, row.address, row.orgcode, row.orgname, row.clientname, row.branchname, row.username, row.uniquevalue]);
-                
+
                 const [employees] = await connection.execute(`SELECT * FROM employees WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
 
                 employees.forEach(employee => {
