@@ -222,6 +222,7 @@ const Approverlog = () => {
     const uniquevalue = "OrgButton";
     const location = useLocation();
     const { state } = location;
+    const navigate = useNavigate();
 
     useEffect(() => {
         setSelectedOrg(state);
@@ -333,7 +334,7 @@ const Approverlog = () => {
             checker();
             const updatedLatestOrg = latestOrg.filter(org => org.clientname !== selectedOrg.clientname);
             setlatestOrg(updatedLatestOrg);
-
+            navigate(location.pathname, {replace: true})
         } catch (error) {
             console.log(error);
             toast.error('Failed to approve organization');
@@ -350,6 +351,9 @@ const Approverlog = () => {
             toast.success('Organization rejected successfully');
             closeModal();
             checker();
+            const updatedLatestOrg = latestOrg.filter(org => org.clientname !== selectedOrg.clientname);
+            setlatestOrg(updatedLatestOrg);
+            navigate(location.pathname, {replace: true})
         } catch (error) {
             console.log(error);
             toast.error('Failed to Reject organization');
@@ -404,13 +408,6 @@ const Approverlog = () => {
 
 
 
-
-
-
-
-
-
-
                     {/* {latestOrg && latestOrg.map((org, index) => {
                         // Check if allorg is null or if the organization is not present in the allorg array
                         if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
@@ -433,8 +430,6 @@ const Approverlog = () => {
                             return null; // Skip rendering the row if the organization is present in allorg
                         }
                     })} */}
-
-
 
 
 

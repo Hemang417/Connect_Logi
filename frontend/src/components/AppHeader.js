@@ -42,10 +42,34 @@ import "../../src/css/styles.css";
 import moment from 'moment'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+
 const AppHeader = () => {
 
   const [currentBranch, setCurrentBranch] = useState('');
   const [allnotifications, setallnotifications] = useState([]);
+
+
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8081');
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ type: 'register', username: localStorage.getItem('username') }));
+    };
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'new_org') {
+        toast.success(data.message);
+        fetchNotifications();
+      }
+    };
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+
+
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -171,7 +195,7 @@ const AppHeader = () => {
             </CDropdownToggle>
 
             <CDropdownMenu className="pt-4 dropdown-menu-notifications" placement="bottom-end">
-            <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Organizations Approval List</CDropdownHeader>
+              <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Organizations Approval List</CDropdownHeader>
 
               <CForm>
 

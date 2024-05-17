@@ -1,5 +1,5 @@
 import { connectMySQL } from "../config/sqlconfig.js";
-
+import {broadcast} from '../websocketServer.js'
 const connection = await connectMySQL();
 
 export const storeApproverName = async (orgname, orgcode, approverName, branchname, branchcode, uniquevalue) => {
@@ -112,7 +112,7 @@ export const getApproverName = async (orgname, orgcode, unique) => {
 
         // Check if any row's uniquevalue matches the provided unique value
         const matchingRows = rows.filter(row => row.uniquevalue.includes(unique));
-        console.log(matchingRows);
+
         // Return the filtered rows
         return matchingRows;
     } catch (error) {
@@ -177,7 +177,7 @@ export const updatedData = async (orgId, country, state, city, postalcode, phone
         );
 
         const { reading } = tobeupdatedRow[0];
-     
+
         const updatedApproval = reading.map(item => {
             if (item.employeename === username) {
                 // Update read and approved attributes
@@ -240,9 +240,20 @@ export const getApprovedRows = async (orgname, orgcode, uniquevalue) => {
                 // Insert the row into the organizations table
                 await connection.execute(`INSERT INTO organizations (alias, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgcode, orgname, clientname, branchname, username, uniquevalue) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`, [row.alias, row.country, row.state, row.city, row.postalcode, row.phone, row.email, row.PAN, row.GST, row.IEC, row.creditdays, row.address, row.orgcode, row.orgname, row.clientname, row.branchname, row.username, row.uniquevalue]);
-                console.log('Inserted row:', row);
+                
+                const [employees] = await connection.execute(`SELECT * FROM employees WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+
+                employees.forEach(employee => {
+                    broadcast({
+                        username: employee.username,
+                        type: 'new_org',
+                        message: `A new organization ${row.clientname} has been added.`
+                    });
+                });
+
             }
         }
+
 
         return approvedRows;
 
