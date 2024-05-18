@@ -540,6 +540,13 @@ const Approvername = () => {
     return (
         <CRow>
             <CCol xs={12}>
+                <CRow>
+                    <CCardBody className="button-div">
+                        <div className="createjob-button">
+                            <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>+</CButton>
+                        </div>
+                    </CCardBody>
+                </CRow>
                 <CForm>
                     <CTable hover responsive striped className="">
                         <CTableHead>
@@ -569,13 +576,7 @@ const Approvername = () => {
                     </CTable>
                 </CForm>
 
-                <CRow>
-                    <CCardBody className="button-div">
-                        <div className="createjob-button">
-                            <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>+</CButton>
-                        </div>
-                    </CCardBody>
-                </CRow>
+
 
                 <CModal visible={visible} onClose={handleModalClose} aria-labelledby="LiveDemoExampleLabel">
                     <CModalHeader onClose={() => setVisible(false)}>

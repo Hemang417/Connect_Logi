@@ -132,30 +132,36 @@ const _nav = [
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
 
     items: [
+
       {
-        component: CNavItem,
-        name: 'New User',
-        to: '/new_user',
+        component: CNavGroup,
+        name: 'User Management',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+        items: [
+          {
+            component: CNavItem,
+            name: 'User Report',
+            to: '/user_report',
+            // icon: <CIcon icon={cilCalculator} customClassName="nav-icon" style={{color: 'black'}}/>,
+            style: { backgroundColor: 'white', color: 'black' },
+          },
+          {
+            component: CNavItem,
+            name: 'User List',
+            to: '/userlist',
+            // icon: <CIcon icon={cilCalculator} customClassName="nav-icon" style={{color: 'black'}}/>,
+            style: { backgroundColor: 'white', color: 'black' },
+          },
+          {
+            component: CNavItem,
+            name: 'User Role',
+            to: '/userroles',
+            // icon: <CIcon icon={cilCalculator} customClassName="nav-icon" style={{color: 'black'}}/>,
+            style: { backgroundColor: 'white', color: 'black' },
+          }
+        ],
       },
-      {
-        component: CNavItem,
-        name: 'User Report',
-        to: '/user_report',
-        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'User List',
-        to: '/userlist',
-        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'TAT',
-        to: '/tat',
-        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-      },
+
       {
         component: CNavItem,
         name: 'Workflow',
@@ -168,12 +174,7 @@ const _nav = [
         to: '/mailing',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
       },
-      {
-        component: CNavItem,
-        name: 'Create Branch',
-        to: '/branches',
-        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-      },
+      
       {
         component: CNavItem,
         name: 'Branch List',
@@ -186,12 +187,7 @@ const _nav = [
         to: '/approvername',
         icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
       },
-      {
-        component: CNavItem,
-        name: 'User Role',
-        to: '/userroles',
-        icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />
-      }
+
 
     ],
   },

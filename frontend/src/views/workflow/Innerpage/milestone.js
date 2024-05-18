@@ -178,7 +178,15 @@ const MileStone = () => {
 
     return (
         <div>
-
+            <div>
+                <CCardBody className='button-div'>
+                    <div className='createjob-button'>
+                        <CPopover content="Create new milestone" trigger={['hover', 'focus']}>
+                            <CButton color="primary" type="submit" onClick={() => setVisible(true)} style={{marginTop: 20}}>+</CButton>
+                        </CPopover>
+                    </div>
+                </CCardBody>
+            </div>
             <div>
                 <CTable hover responsive striped>
                     <CTableHead>
@@ -207,15 +215,7 @@ const MileStone = () => {
                 </CTable>
             </div>
 
-            <div>
-                <CCardBody className='button-div'>
-                    <div className='createjob-button'>
-                        <CPopover content="Create new milestone" trigger={['hover', 'focus']}>
-                            <CButton color="primary" type="submit" onClick={() => setVisible(true)}>+</CButton>
-                        </CPopover>
-                    </div>
-                </CCardBody>
-            </div>
+
 
             <CModal
                 visible={visible}

@@ -212,9 +212,12 @@ const Wf = () => {
 
 
     return (
+
         <CCol xs={12}>
+            
             <CCard className="mb-2 container-div">
                 <CCardBody>
+
                     <div className='grid-container-import'>
                         <div>
                             <label htmlFor="Locations" className='text-field-3'>Locations</label>
@@ -255,7 +258,18 @@ const Wf = () => {
                     </div>
                 </CCardBody>
             </CCard>
-
+            
+            <CRow>
+                <CCardBody className='button-div'>
+                    <div className='createjob-button'>
+                        <CPopover content="Add Workflow" trigger={['hover', 'focus']}>
+                            <CButton color="primary" type="submit" onClick={() => { setvisible(!visible) }} style={{marginTop: 20}}>
+                                +
+                            </CButton>
+                        </CPopover>
+                    </div>
+                </CCardBody>
+            </CRow>
 
             <CForm>
                 <CTable hover responsive striped className=''>
@@ -323,7 +337,7 @@ const Wf = () => {
             </CForm>
             <CTableBody>
             </CTableBody>
-            <CRow>
+            {/* <CRow>
                 <CCardBody className='button-div'>
                     <div className='createjob-button'>
                         <CPopover content="Add Workflow" trigger={['hover', 'focus']}>
@@ -333,7 +347,7 @@ const Wf = () => {
                         </CPopover>
                     </div>
                 </CCardBody>
-            </CRow>
+            </CRow> */}
 
 
             <CModal

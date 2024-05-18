@@ -55,7 +55,7 @@ const branches = () => {
                 headnum: branchCreate.headnum,
                 orgname: nameoforg
             })
-            navigate('/dashboard')
+            navigate('/branchlist')
         } catch (error) {
             toast.error('Error creating new user')
             console.log("Error: " + error);

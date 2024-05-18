@@ -154,6 +154,19 @@ const UserRoles = () => {
 
     return (
         <CRow>
+
+            <CRow>
+                <CCardBody className="button-div">
+                    <div className="createjob-button">
+                        <CPopover content="Create a role" trigger={['hover', 'focus']}>
+                            <CButton color="primary" onClick={() => setVisible(!visible)}>
+                                +
+                            </CButton>
+                        </CPopover>
+                    </div>
+                </CCardBody>
+            </CRow>
+
             <CCol xs={12}>
                 <CForm>
                     <CTable hover responsive striped>
@@ -180,18 +193,6 @@ const UserRoles = () => {
                         </CTableBody>
                     </CTable>
                 </CForm>
-
-                <CRow>
-                    <CCardBody className="button-div">
-                        <div className="createjob-button">
-                            <CPopover content="Create a role" trigger={['hover', 'focus']}>
-                                <CButton color="primary" onClick={() => setVisible(!visible)}>
-                                    +
-                                </CButton>
-                            </CPopover>
-                        </div>
-                    </CCardBody>
-                </CRow>
 
                 <CModal
                     visible={visible}

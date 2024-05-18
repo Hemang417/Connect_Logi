@@ -44,7 +44,7 @@ const NewUser = () => {
         })
     }
 
-    console.log(selectedRole);
+
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -62,24 +62,33 @@ const NewUser = () => {
             });
 
 
-            setregForm({
-                username: '',
-                password: '',
-                orgcode: '',
-                repeatPassword: '',
-                fullname: '',
-            });
+            // setregForm({
+            //     username: '',
+            //     password: '',
+            //     orgcode: '',
+            //     repeatPassword: '',
+            //     fullname: '',
+            // });
 
-            setselectedRole('');
+            // setselectedRole('');
 
             // localStorage.setItem('orgname', regForm.orgname);
             // localStorage.setItem('orgcode', response.data.register.orgcode);
             if (response.statusCode === 200) {
+                setregForm({
+                    username: '',
+                    password: '',
+                    orgcode: '',
+                    repeatPassword: '',
+                    fullname: '',
+                });
+
+                setselectedRole('');
                 toast.success('New user added successfully');
-                navigate('/dashboard');
+                navigate('/userlist');
             }
 
-            navigate('/dashboard');
+            navigate('/userlist');
         } catch (error) {
             toast.error('Error creating new user')
             console.log("Error: " + error);
@@ -123,7 +132,7 @@ const NewUser = () => {
                                             value={localStorage.getItem('orgcode')} />
                                     </CInputGroup>
 
-                                    
+
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
                                             <CIcon icon={cilBuilding} />
@@ -136,7 +145,7 @@ const NewUser = () => {
                                         />
                                     </CInputGroup>
 
-                                    
+
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>@</CInputGroupText>
                                         <CFormInput placeholder="Username" onChange={handleChange} name='username' />
@@ -146,17 +155,17 @@ const NewUser = () => {
                                             <CIcon icon={cilBuilding} />
                                         </CInputGroupText> */}
 
-                                                <CDropdown className="role-newuser">
-                                                    <CDropdownToggle color="secondary">{selectedRole ? selectedRole : 'Role'}</CDropdownToggle>
-                                                    <CDropdownMenu className="impgen-text-dropdown">
-                                                        {storedRoles.map((item, index) => (
-                                                            <CDropdownItem key={index} onClick={() => setselectedRole(item.rolename)}>
-                                                                {item.rolename}
-                                                            </CDropdownItem>
-                                                        ))}
-                                                    </CDropdownMenu>
-                                                </CDropdown>
-                                                
+                                        <CDropdown className="role-newuser">
+                                            <CDropdownToggle color="secondary">{selectedRole ? selectedRole : 'Role'}</CDropdownToggle>
+                                            <CDropdownMenu className="impgen-text-dropdown">
+                                                {storedRoles.map((item, index) => (
+                                                    <CDropdownItem key={index} onClick={() => setselectedRole(item.rolename)}>
+                                                        {item.rolename}
+                                                    </CDropdownItem>
+                                                ))}
+                                            </CDropdownMenu>
+                                        </CDropdown>
+
                                     </CInputGroup>
                                     <CInputGroup className="mb-3">
                                         <CInputGroupText>
@@ -184,9 +193,9 @@ const NewUser = () => {
                                     </CInputGroup>
 
                                     <div className="d-grid">
-                                    <CPopover content="Create new user" trigger={['hover', 'focus']}>
-                                        <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
-                                    </CPopover>
+                                        <CPopover content="Create new user" trigger={['hover', 'focus']}>
+                                            <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
+                                        </CPopover>
                                     </div>
                                 </CForm>
                             </CCardBody>

@@ -333,6 +333,7 @@ const setWorkflow = () => {
 
   return (
     <CCol xs={12}>
+
       <CCard className="mb-2 container-div">
         <CCardBody>
           <div className='grid-container-import'>
@@ -361,6 +362,19 @@ const setWorkflow = () => {
         </CCardBody>
 
       </CCard>
+
+      <CTableBody>
+        <CTableRow> <div className='search-button'>
+          <CPopover content="Add workflow" trigger={['hover', 'focus']}>
+            <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); }}
+            style={{marginBottom: 20}}>
+              +
+            </CButton>
+          </CPopover>
+        </div></CTableRow>
+      </CTableBody>
+
+
       <CTable hover responsive striped className=''>
         <CTableHead>
           <CTableRow color='dark' >
@@ -389,17 +403,6 @@ const setWorkflow = () => {
               </CTableRow>
             )
           })}
-        </CTableBody>
-
-
-        <CTableBody>
-          <CTableRow> <div className='search-button'>
-            <CPopover content="Add workflow" trigger={['hover', 'focus']}>
-              <CButton color="success" type="submit" className='contact-add-button' onClick={() => { setVisible(!visible); }}>
-                +
-              </CButton>
-            </CPopover>
-          </div></CTableRow>
         </CTableBody>
 
 

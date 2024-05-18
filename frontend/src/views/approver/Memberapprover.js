@@ -197,6 +197,19 @@ const Memberapprover = () => {
     return (
         <CRow>
             <CCol>
+
+                <CRow>
+                    <CCardBody className="button-div">
+                        <div className="createjob-button">
+                            <CPopover content="Create a member in approver list" trigger={['hover', 'focus']}>
+                                <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>
+                                    +
+                                </CButton>
+                            </CPopover>
+                        </div>
+                    </CCardBody>
+                </CRow>
+
                 <CForm>
                     <div>
                         Total Approver: {allnames.length}
@@ -236,17 +249,7 @@ const Memberapprover = () => {
                     </CTable>
                 </CForm>
 
-                <CRow>
-                    <CCardBody className="button-div">
-                        <div className="createjob-button">
-                            <CPopover content="Create a member in approver list" trigger={['hover', 'focus']}>
-                                <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>
-                                    +
-                                </CButton>
-                            </CPopover>
-                        </div>
-                    </CCardBody>
-                </CRow>
+
 
                 <CModal visible={visible} onClose={handleModalClose} aria-labelledby="LiveDemoExampleLabel">
                     <CModalHeader onClose={() => setVisible(false)}>

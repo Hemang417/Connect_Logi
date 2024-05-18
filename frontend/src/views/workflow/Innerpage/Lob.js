@@ -136,6 +136,15 @@ const Lob = () => {
     return (
         <div>
             <div>
+                <CCardBody className='button-div'>
+                    <div className='createjob-button'>
+                        <CPopover content="Create new line of business" trigger={['hover', 'focus']}>
+                            <CButton color="primary" type="submit" onClick={() => setVisible(true)} style={{marginTop: 20}}>+</CButton>
+                        </CPopover>
+                    </div>
+                </CCardBody>
+            </div>
+            <div>
                 <CTable hover responsive striped>
                     <CTableHead>
                         <CTableRow color='dark'>
@@ -163,6 +172,7 @@ const Lob = () => {
                         )}
                     </CTableBody>
                 </CTable>
+
 
 
                 <CModal
@@ -217,15 +227,6 @@ const Lob = () => {
                 </CModal>
             </div>
 
-            <div>
-                <CCardBody className='button-div'>
-                    <div className='createjob-button'>
-                        <CPopover content="Create new line of business" trigger={['hover', 'focus']}>
-                            <CButton color="primary" type="submit" onClick={() => setVisible(true)}>+</CButton>
-                        </CPopover>
-                    </div>
-                </CCardBody>
-            </div>
         </div>
     );
 };

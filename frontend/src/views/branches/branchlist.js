@@ -145,7 +145,8 @@ import {
     CModalTitle,
     CModalBody,
     CModalFooter,
-    CPopover
+    CPopover,
+    CRow, CCardBody
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -214,8 +215,31 @@ const BranchList = () => {
     }
 
 
+    function gotobranches(){
+        try {
+            navigate('/branches');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
         <div>
+
+            <CRow>
+                <CCardBody className="button-div">
+                    <div className="createjob-button">
+                        <CPopover content="Create a role" trigger={['hover', 'focus']}>
+                            <CButton color="primary" onClick={gotobranches}>
+                                +
+                            </CButton>
+                        </CPopover>
+                    </div>
+                </CCardBody>
+            </CRow>
+
+
             <CTable hover responsive striped className=''>
                 <CTableHead>
                     <CTableRow color='dark'>

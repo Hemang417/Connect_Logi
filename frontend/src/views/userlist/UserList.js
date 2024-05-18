@@ -143,19 +143,19 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CButton, CPopover
+  CButton, CPopover, CRow, CCardBody
 } from '@coreui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/styles.css';
-import {useLocation} from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 const UserList = () => {
   const [allData, setAllData] = useState([]);
   const navigate = useNavigate();
   const [userAccessData, setuserAccessData] = useState([])
   const location = useLocation();
-  if(location.pathname === '/userlist'){
+  if (location.pathname === '/userlist') {
     localStorage.removeItem('empnameforaccess');
     localStorage.removeItem('accessedRows')
   }
@@ -216,11 +216,31 @@ const UserList = () => {
   //     }
   // }
 
-
+function gotonewuser(){
+  try{
+    navigate('/new_user');
+  }catch{
+    
+  }
+}
 
 
   return (
     <div>
+
+      <CRow>
+        <CCardBody className="button-div">
+          <div className="createjob-button">
+            <CPopover content="Create a role" trigger={['hover', 'focus']}>
+              <CButton color="primary" onClick={gotonewuser}>
+                +
+              </CButton>
+            </CPopover>
+          </div>
+        </CCardBody>
+      </CRow>
+
+
 
       <CTable hover responsive striped className=''>
         <CTableHead>
@@ -228,16 +248,16 @@ const UserList = () => {
             <CTableHeaderCell scope="col"></CTableHeaderCell>
             <CTableHeaderCell scope="col">Username</CTableHeaderCell>
             <CTableHeaderCell scope="col">Access</CTableHeaderCell>
-          
           </CTableRow>
         </CTableHead>
+
         <CTableBody>
           {allData.map((userData, index) => (
             <CTableRow key={index}>
               <CTableHeaderCell scope="row">
-              <CPopover content="Edit access for this user" trigger={['hover', 'focus']}>
-                <Link onClick={() => handleAccess(index)}>Edit</Link>
-              </CPopover>
+                <CPopover content="Edit access for this user" trigger={['hover', 'focus']}>
+                  <Link onClick={() => handleAccess(index)}>Edit</Link>
+                </CPopover>
               </CTableHeaderCell>
               <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
               <CTableDataCell>
