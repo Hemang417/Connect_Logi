@@ -369,6 +369,10 @@ const Approverlog = () => {
     }
 
 
+    useEffect(() => {
+        navigate('/approverlog', { state: null })
+    }, [])
+
 
     return (
         <div>

@@ -18,7 +18,7 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import { Mailing } from './views/mailing'
 
 const isAdmin = localStorage.getItem('username') === 'admin';
-// let count = localStorage.getItem('countofremainingrows')
+
 
 const _nav = [
 

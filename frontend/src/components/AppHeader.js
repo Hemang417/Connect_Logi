@@ -164,7 +164,7 @@ const AppHeader = () => {
   };
 
   useEffect(() => {
-   const countcount = allnotifications.filter(item =>
+    const countcount = allnotifications.filter(item =>
       item.reading.some(entry =>
         entry.employeename === localStorage.getItem('username') &&
         entry.read === 0 &&
@@ -176,7 +176,7 @@ const AppHeader = () => {
 
     localStorage.setItem('countofremainingrows', countcount);
 
-  }, [])
+  }, [currentBranch])
 
 
 
@@ -223,9 +223,6 @@ const AppHeader = () => {
                     ) &&
                     !item.reading.some(subEntry => subEntry.approved === -1)
                   ).length
-
-
-
                 }
 
               </CBadge>
