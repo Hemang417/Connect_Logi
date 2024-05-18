@@ -76,8 +76,8 @@ app.post('/auth/signup', async (req, res) => {
 
 app.post('/org/store', async (req, res) => {
     try {
-        const { clientname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username } = req.body;
-        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, branchName, username);
+        const { clientname, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username, createdon } = req.body;
+        const allstoredinDB = await OrgDataStorage(clientname, orgname, orgcode, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, branchName, username, createdon);
         res.status(200).json(allstoredinDB);
     } catch (error) {
         console.log('Error during Login:', error);

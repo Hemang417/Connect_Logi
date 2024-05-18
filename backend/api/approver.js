@@ -243,8 +243,8 @@ export const getApprovedRows = async (orgname, orgcode, uniquevalue) => {
             const [existingRow] = await connection.execute(`SELECT * FROM organizations WHERE orgname = ? AND orgcode = ? AND clientname = ?`, [orgname, orgcode, row.clientname]);
             if (existingRow.length === 0) {
                 // Insert the row into the organizations table
-                await connection.execute(`INSERT INTO organizations (alias, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgcode, orgname, clientname, branchname, username, uniquevalue) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`, [row.alias, row.country, row.state, row.city, row.postalcode, row.phone, row.email, row.PAN, row.GST, row.IEC, row.creditdays, row.address, row.orgcode, row.orgname, row.clientname, row.branchname, row.username, row.uniquevalue]);
+                await connection.execute(`INSERT INTO organizations (alias, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgcode, orgname, clientname, branchname, username, uniquevalue, createdon) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)`, [row.alias, row.country, row.state, row.city, row.postalcode, row.phone, row.email, row.PAN, row.GST, row.IEC, row.creditdays, row.address, row.orgcode, row.orgname, row.clientname, row.branchname, row.username, row.uniquevalue, row.createdon]);
 
                 const [employees] = await connection.execute(`SELECT * FROM employees WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
 

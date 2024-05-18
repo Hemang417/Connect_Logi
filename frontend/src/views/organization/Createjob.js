@@ -155,7 +155,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { General, Registration, Accounts, Contactdetails } from './Innerpage';
-import toast from 'react-hot-toast'
+import toast from 'react-hot-toast';
+import moment from 'moment';
 
 const Createjob = () => {
   const [date, setDate] = useState(new Date());
@@ -294,7 +295,8 @@ const Createjob = () => {
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const employeename = localStorage.getItem('username');
-
+      const currentDate = new Date().getTime();
+      const formattedDate = moment(currentDate).format('YYYY-MM-DD');
       const response = await axios.post('http://localhost:5000/org/store', {
         branchName: generalData.branchName,
         clientname: generalData.clientname,
@@ -311,7 +313,8 @@ const Createjob = () => {
         creditdays: accountData.creditdays,
         orgname: nameoforg,
         orgcode: codeoforg,
-        username: employeename
+        username: employeename,
+        createdon: formattedDate
       })
       localStorage.removeItem('isEditing');
       toast.success('Stored client successfully');

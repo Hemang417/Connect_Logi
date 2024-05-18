@@ -374,13 +374,24 @@ const Approverlog = () => {
     }, [])
 
 
+    function reverse(dateString) {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-indexed
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
+
     return (
         <div>
             <h1>Approver Log of Organization</h1>
             <CTable striped hover responsive>
                 <CTableHead>
                     <CTableRow>
+                        <CTableHeaderCell>Date</CTableHeaderCell>
                         <CTableHeaderCell>Task Name</CTableHeaderCell>
+                        <CTableHeaderCell>Created By</CTableHeaderCell>
                         <CTableHeaderCell>Actions</CTableHeaderCell>
                     </CTableRow>
                 </CTableHead>
@@ -398,7 +409,9 @@ const Approverlog = () => {
                                     if (!hasRejected) {
                                         return (
                                             <CTableRow key={index}>
+                                                <CTableDataCell>{reverse(org.createdon)}</CTableDataCell>
                                                 <CTableDataCell>{org.clientname}</CTableDataCell>
+                                                <CTableDataCell>{org.username}</CTableDataCell>
                                                 <CTableDataCell>
                                                     <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
                                                         <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
@@ -416,12 +429,28 @@ const Approverlog = () => {
                             }
                         })
                     ) : (
-                        latestOrg && latestOrg.map((org, index) => (
-                            <CTableRow key={index}>
-                                <CTableDataCell>{org.clientname}</CTableDataCell>
-                                <CTableDataCell>Pending</CTableDataCell>
-                            </CTableRow>
-                        ))
+                        latestOrg && latestOrg.map((org, index) => {
+                            // Check if org.clientname is present in allorg
+                            const isPresent = allorg?.some(row => row.clientname === org.clientname);
+                            const status = isPresent ? 'Completed' : 'Pending';
+
+                            return (
+                                <CTableRow key={index}>
+                                    <CTableDataCell>{reverse(org.createdon)}</CTableDataCell>
+                                    <CTableDataCell>{org.clientname}</CTableDataCell>
+                                    <CTableDataCell>{org.username}</CTableDataCell>
+                                    <CTableDataCell>{status}</CTableDataCell>
+                                </CTableRow>
+                            );
+                        })
+                        // latestOrg && latestOrg.map((org, index) => (
+                        //     <CTableRow key={index}>
+                        //         <CTableDataCell>{reverse(org.createdon)}</CTableDataCell>
+                        //         <CTableDataCell>{org.clientname}</CTableDataCell>
+                        //         <CTableDataCell>{org.username}</CTableDataCell>
+                        //         <CTableDataCell>Pending</CTableDataCell>
+                        //     </CTableRow>
+                        // ))
                     )}
 
 
@@ -538,6 +567,10 @@ const Approverlog = () => {
                             <div>
                                 <label>Clientname</label>
                                 <input type="text" value={selectedOrg.clientname} onChange={(e) => handleInputChange(e, 'clientname')} />
+                            </div>
+                            <div>
+                                <label>Username</label>
+                                <input type="text" value={selectedOrg.username} onChange={(e) => handleInputChange(e, 'username')} />
                             </div>
                         </>
                     )}

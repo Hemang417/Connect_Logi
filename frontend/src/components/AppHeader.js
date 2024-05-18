@@ -163,19 +163,35 @@ const AppHeader = () => {
     navigate('/approverlog', { state: item })
   };
 
+  // useEffect(() => {
+  //   let countcount = allnotifications.filter(item =>
+  //     item.reading.some(entry =>
+  //       entry.employeename === localStorage.getItem('username') &&
+  //       entry.read === 0 &&
+  //       !allorg.find(row => row.clientname === item.clientname) &&
+  //       !item.reading.some(subEntry => subEntry.status === 'Reject')
+  //     ) &&
+  //     !item.reading.some(subEntry => subEntry.approved === -1)
+  //   ).length
+  //   localStorage.setItem('countofremainingrows', countcount)
+  // }, [allnotifications])
+
+
   useEffect(() => {
-     let countcount = allnotifications.filter(item =>
+    let countcount = allnotifications && allnotifications.filter(item =>
       item.reading.some(entry =>
         entry.employeename === localStorage.getItem('username') &&
         entry.read === 0 &&
-        !allorg.find(row => row.clientname === item.clientname) &&
+        !allorg?.find(row => row.clientname === item.clientname) &&
         !item.reading.some(subEntry => subEntry.status === 'Reject')
       ) &&
       !item.reading.some(subEntry => subEntry.approved === -1)
     ).length
     localStorage.setItem('countofremainingrows', countcount)
   }, [allnotifications])
- 
+
+
+
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -210,12 +226,13 @@ const AppHeader = () => {
           <CDropdown variant="nav-item">
             <CDropdownToggle placement="bottom-end" className="py-2" caret={false}>
               <CBadge color="danger" position="top-end" shape="rounded-pill">
+
                 {
-                  allnotifications.filter(item =>
+                  allnotifications && allnotifications.filter(item =>
                     item.reading.some(entry =>
                       entry.employeename === localStorage.getItem('username') &&
                       entry.read === 0 &&
-                      !allorg.find(row => row.clientname === item.clientname) &&
+                      !allorg?.find(row => row.clientname === item.clientname) &&
                       !item.reading.some(subEntry => subEntry.status === 'Reject')
                     ) &&
                     !item.reading.some(subEntry => subEntry.approved === -1)
@@ -238,6 +255,37 @@ const AppHeader = () => {
                   <CTableBody className='notifrow'>
 
                     <CRow>
+                     
+                    {allnotifications && allnotifications.map((item, index) => {
+                        // Check if localStorage username matches any name in approvername array
+                        const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
+                        // Check if read and approved attributes are 0 for the localStorage username in reading array
+                        const isUnread = item.reading.some(entry => entry.employeename === localStorage.getItem('username') && entry.read === 0);
+                        // Render the notification only if conditions are met
+                        const isAlreadyApproved = allorg?.find(row => row.clientname === item.clientname);
+                        // don't render the notification if one is rejected
+                        const isRejected = item.reading.some(entry => entry.approved === -1);
+                        if (isApprover && isUnread && !isAlreadyApproved && !isRejected) {
+                          return (
+                            <CDropdownItem key={index} onClick={() => navigateToApproverLog(item)}>
+                              <p className="notif" >{`Organization: ${item.clientname} is waiting for your approval`}</p>
+                              <CButton className='button-mark-as-read' onClick={() => userhasread(item)}>
+                                <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
+                              </CButton>
+                            </CDropdownItem>
+                          );
+                        }
+                        return null; // Otherwise, return null to skip rendering
+                      })
+                      }
+
+
+                    </CRow>
+
+
+
+
+                    {/* <CRow>
 
                       {allnotifications && allnotifications.map((item, index) => {
                         // Check if localStorage username matches any name in approvername array
@@ -262,7 +310,7 @@ const AppHeader = () => {
                       })
                       }
 
-                    </CRow>
+                    </CRow> */}
 
                   </CTableBody>
 
