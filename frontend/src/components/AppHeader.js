@@ -47,6 +47,8 @@ const AppHeader = () => {
 
   const [currentBranch, setCurrentBranch] = useState('');
   const [allnotifications, setallnotifications] = useState([]);
+  const dispatch = useDispatch()
+  const sidebarShow = useSelector((state) => state.sidebarShow)
 
   const [allorg, setallorg] = useState([]);
   async function getOrganizations() {
@@ -82,6 +84,26 @@ const AppHeader = () => {
   }, []);
 
 
+  const [approvers, setapprovers] = useState([])
+
+
+  // useEffect(() => {
+  //   const getapproved = async () => {
+  //     try {
+  //       const approverdata = await axios.get(`http://localhost:5000/getnamesofapproversinorg`, {
+  //         params: {
+  //           orgcode: loginData.orgcode
+  //         }
+  //       })
+  //       setapprovers(approverdata.data)
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   getapproved();
+  // }, [])
+
+  // console.log(approvers);
 
 
 
@@ -181,7 +203,6 @@ const AppHeader = () => {
     let countcount = allnotifications && allnotifications.filter(item =>
       item.reading.some(entry =>
         entry.employeename === localStorage.getItem('username') &&
-        entry.read === 0 &&
         !allorg?.find(row => row.clientname === item.clientname) &&
         !item.reading.some(subEntry => subEntry.status === 'Reject')
       ) &&
@@ -212,10 +233,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
+            <p>`Welcome` + {localStorage.getItem('username')}</p>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
@@ -225,7 +243,7 @@ const AppHeader = () => {
 
           <CDropdown variant="nav-item">
             <CDropdownToggle placement="bottom-end" className="py-2" caret={false}>
-              <CBadge color="danger" position="top-end" shape="rounded-pill">
+              {/* <CBadge color="danger" position="top-end" shape="rounded-pill">
 
                 {
                   allnotifications && allnotifications.filter(item =>
@@ -239,14 +257,14 @@ const AppHeader = () => {
                   ).length
                 }
 
-              </CBadge>
+              </CBadge> */}
 
               <CIcon icon={cilBell} size="lg" onClick={() => fetchNotifications()} />
 
             </CDropdownToggle>
 
             <CDropdownMenu className="pt-4 dropdown-menu-notifications" placement="bottom-end">
-              <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Organizations Approval List</CDropdownHeader>
+              {/* <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Organizations Approval List</CDropdownHeader> */}
 
               <CForm>
 
@@ -254,9 +272,9 @@ const AppHeader = () => {
 
                   <CTableBody className='notifrow'>
 
-                    <CRow>
-                     
-                    {allnotifications && allnotifications.map((item, index) => {
+                    {/* <CRow>
+
+                      {allnotifications && allnotifications.map((item, index) => {
                         // Check if localStorage username matches any name in approvername array
                         const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
                         // Check if read and approved attributes are 0 for the localStorage username in reading array
@@ -280,36 +298,6 @@ const AppHeader = () => {
                       }
 
 
-                    </CRow>
-
-
-
-
-                    {/* <CRow>
-
-                      {allnotifications && allnotifications.map((item, index) => {
-                        // Check if localStorage username matches any name in approvername array
-                        const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
-                        // Check if read and approved attributes are 0 for the localStorage username in reading array
-                        const isUnread = item.reading.some(entry => entry.employeename === localStorage.getItem('username') && entry.read === 0);
-                        // Render the notification only if conditions are met
-                        const isAlreadyApproved = allorg.find(row => row.clientname === item.clientname);
-                        // don't render the notification if one is rejected
-                        const isRejected = item.reading.some(entry => entry.approved === -1);
-                        if (isApprover && isUnread && !isAlreadyApproved && !isRejected) {
-                          return (
-                            <CDropdownItem key={index} onClick={() => navigateToApproverLog(item)}>
-                              <p className="notif" >{`Organization: ${item.clientname} is waiting for your approval`}</p>
-                              <CButton className='button-mark-as-read' onClick={() => userhasread(item)}>
-                                <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
-                              </CButton>
-                            </CDropdownItem>
-                          );
-                        }
-                        return null; // Otherwise, return null to skip rendering
-                      })
-                      }
-
                     </CRow> */}
 
                   </CTableBody>
@@ -328,7 +316,22 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
+            <CBadge color="danger" position="top" shape="rounded-pill" className='notificationcount'>
+
+              {
+                allnotifications && allnotifications.filter(item =>
+                  item.reading.some(entry =>
+                    entry.employeename === localStorage.getItem('username') &&
+                    entry.read === 0 &&
+                    !allorg?.find(row => row.clientname === item.clientname) &&
+                    !item.reading.some(subEntry => subEntry.status === 'Reject')
+                  ) &&
+                  !item.reading.some(subEntry => subEntry.approved === -1)
+                ).length
+              }
+
+            </CBadge>
+            <CNavLink href="#/notifyrender">
               <CIcon icon={cilEnvelopeOpen} size="lg" />
             </CNavLink>
           </CNavItem>

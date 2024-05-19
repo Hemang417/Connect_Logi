@@ -389,15 +389,16 @@
     text-decoration: none;
     margin-top: 0px;
     margin-bottom: 0px;
+    cursor: pointer;
 }
 
 .button-mark-as-read{
-    position: absolute;
+
     width: 35px;
     height: 35px;
     font-size: small;
-    margin-left: 390px;
-    margin-top: -30px;
+    margin-left: 10px;
+    
     background-color: transparent;
     /* background-image: url(../assets/images/double-tick-indicator.png);
     background-repeat: no-repeat;
@@ -411,7 +412,8 @@
 .button-mark-as-read .icon-envelope-open{
     width: 25px;
     height: 25px;
-    margin-left: -6px;
+    margin-left: -5px;
+    margin-top: -2px;
     /* margin-top: -100px; */
     /* margin-top: -100px; */
 
@@ -422,4 +424,18 @@
     width: 100px;
     margin-left: 30px;
     background-color: blueviolet;
+}
+
+
+.notificationcount{
+    margin-top: 20px;
+    margin-left: 30px;
+}
+
+
+.read-row{
+    background-color: aqua;
+}
+.unread-row{
+    background-color: brown;
 }

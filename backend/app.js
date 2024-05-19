@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { getTheUser, insertUser } from './api/user.js';
+import { getTheUser, insertUser, getApproverNameinOrg } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess, storeBranchAccessforUser, deletethatbranchaccess, fetchExistingBranches } from './api/userlist.js';
 import {
@@ -1531,6 +1531,17 @@ app.put('/makereadall', async (req, res) => {
         const {currentDate, notifications} = req.body;
         const everythingread = await readallnotifications(currentDate, notifications);
         res.status(200).send(everythingread);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/getnamesofapproversinorg', async (req, res) => {
+    try {
+        const {orgcode} = req.query;
+        const appdata =  await getApproverNameinOrg(orgcode);
+        res.send(appdata);
     } catch (error) {
         console.log(error);
     }

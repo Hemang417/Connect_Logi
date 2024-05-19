@@ -24,6 +24,11 @@ export const getTheUser = async (username, password, orgcode) => {
             }
             return rows[0];
         }
+
+
+        
+
+
     } catch (error) {
         console.error('Error fetching user:', error.message);
         throw error;
@@ -118,5 +123,19 @@ export const updatedOwnBranch = async (id, orgcode, orgname, ownbranchname, gstn
     } catch (error) {
         console.log(error);
         throw error; // Rethrow the error so it can be handled by the caller
+    }
+}
+
+
+
+export const getApproverNameinOrg = async (orgcode) => {
+    try {
+        const [approverdata] = await connection.execute(`SELECT * FROM approvername WHERE orgcode = ?`, []);
+        const data = approverdata.filter(item => {
+            return item.uniquevalue[0] === 'OrgButton'
+        })
+        return data;
+    } catch (error) {
+        console.log(error);
     }
 }

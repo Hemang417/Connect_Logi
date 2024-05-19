@@ -99,6 +99,48 @@ const Memberapprover = () => {
     };
 
 
+
+
+
+    const addToLocalStorage = (employeeName) => {
+        // Retrieve existing data from local storage
+        const existingData = JSON.parse(localStorage.getItem('approverData')) || [];
+        // Add new employee name to the existing data
+        const updatedData = [...existingData, { uniqueValue: localStorage.getItem('uniquevalue'), employeeName }];
+        // Update local storage
+        localStorage.setItem('approverData', JSON.stringify(updatedData));
+    };
+    
+    const updateLocalStorage = (employeeName) => {
+        // Retrieve existing data from local storage
+        const existingData = JSON.parse(localStorage.getItem('approverData')) || [];
+        // Update employee name in the existing data
+        const updatedData = existingData.map(item => {
+            if (item.uniqueValue === localStorage.getItem('uniquevalue')) {
+                return { ...item, employeeName };
+            }
+            return item;
+        });
+        // Update local storage
+        localStorage.setItem('approverData', JSON.stringify(updatedData));
+    };
+    
+    const removeFromLocalStorage = (employeeName) => {
+        // Retrieve existing data from local storage
+        const existingData = JSON.parse(localStorage.getItem('approverData')) || [];
+        // Remove the employee name from the existing data
+        const updatedData = existingData.filter(item => item.employeeName !== employeeName);
+        // Update local storage
+        localStorage.setItem('approverData', JSON.stringify(updatedData));
+    };
+
+
+
+
+
+
+
+
     const handleUpdate = () => {
         try {
             axios.put('http://localhost:5000/updateapprovername', {
@@ -114,6 +156,7 @@ const Memberapprover = () => {
                     toast.success('Approver updated successfully');
                     handleModalClose();
                     getallapprovernames();
+                    updateLocalStorage(selectedEmployee);
                 } else {
                     toast.error('Failed to update approver');
                 }
@@ -137,7 +180,7 @@ const Memberapprover = () => {
                 uniquevalue: localStorage.getItem('uniquevalue'),
                 id: localStorage.getItem('approverid')
             });
-
+        
             if (response.status === 200) {
                 toast.success('Approver added successfully');
                 handleModalClose();
@@ -167,6 +210,7 @@ const Memberapprover = () => {
             });
             toast.success(`Approver deleted successfully`)
             await getallapprovernames();
+      
         } catch (error) {
             console.log(error);
             toast.error(`Error in approver deletion`)
@@ -235,9 +279,9 @@ const Memberapprover = () => {
                                 <CTableRow key={index}>
                                     <CTableDataCell className='row-font'>{item.employeename}</CTableDataCell>
                                     <CTableDataCell className='row-font'>
-                                        <CPopover content="Edit approver name" trigger={['hover', 'focus']}>
+                                        {/* <CPopover content="Edit approver name" trigger={['hover', 'focus']}>
                                             <CButton onClick={() => handleEdit(item)}>Edit</CButton>
-                                        </CPopover>
+                                        </CPopover> */}
                                         <CPopover content="Delete the approver name" trigger={['hover', 'focus']}>
                                             <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
                                         </CPopover>
