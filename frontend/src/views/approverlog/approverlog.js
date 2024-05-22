@@ -383,6 +383,9 @@ const Approverlog = () => {
     }
 
 
+
+
+
     return (
         <div>
             <h1>Approver Log of Organization</h1>
@@ -398,7 +401,7 @@ const Approverlog = () => {
                 <CTableBody>
 
 
-                    {localStorage.getItem('username') !== 'admin' ? (
+                    {/* {localStorage.getItem('username') !== 'admin' ? (
                         latestOrg && latestOrg.map((org, index) => {
                             // Check if allorg is null or if the organization is not present in the allorg array
                             if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
@@ -449,60 +452,87 @@ const Approverlog = () => {
                                 </CTableRow>
                             );
                         })
-                        // latestOrg && latestOrg.map((org, index) => (
-                        //     <CTableRow key={index}>
-                        //         <CTableDataCell>{reverse(org.createdon)}</CTableDataCell>
-                        //         <CTableDataCell>{org.clientname}</CTableDataCell>
-                        //         <CTableDataCell>{org.username}</CTableDataCell>
-                        //         <CTableDataCell>Pending</CTableDataCell>
-                        //     </CTableRow>
-                        // ))
-                    )}
+                       
+                    )} */}
 
 
 
-                    {/* {latestOrg && latestOrg.map((org, index) => {
-                        // Check if allorg is null or if the organization is not present in the allorg array
-                        if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
-                            // Check if the org has the approval array and if it contains the current user's username
-                            if (!org.approval || !org.approval.some(approval => approval.username === localStorage.getItem('username'))) {
+
+
+
+
+
+
+
+                    {
+                        localStorage.getItem('username') !== 'admin' ? (
+                            approvalname?.some(item => item.employeename === localStorage.getItem('username')) ? (
+                                latestOrg && latestOrg.map((org, index) => {
+                                    // Check if allorg is null or if the organization is not present in the allorg array
+                                    if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
+                                        // Check if the org has the approval array and if it contains the current user's username
+                                        if (!org.approval || !org.approval.some(approval => approval.username === localStorage.getItem('username'))) {
+                                            const hasRejected = org.approval && org.approval.some(approval => approval.status === 'Reject');
+                                            if (!hasRejected) {
+                                                return (
+                                                    <CTableRow key={index}>
+                                                        <CTableDataCell>{reverse(org.createdon)}</CTableDataCell>
+                                                        <CTableDataCell>{org.clientname}</CTableDataCell>
+                                                        <CTableDataCell>{org.username}</CTableDataCell>
+                                                        <CTableDataCell>
+                                                            <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
+                                                                <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
+                                                            </CPopover>
+                                                        </CTableDataCell>
+                                                    </CTableRow>
+                                                );
+                                            }
+                                        } else {
+                                            return null; // Skip rendering the row if the organization is present in allorg or if it has the current user's approval
+                                        }
+                                    } else {
+                                        return null; // Skip rendering the row if the organization is present in allorg
+                                    }
+                                })
+                            ) : (
+                                <p>You do not have permission for approval.</p>
+                            )
+                        ) : (
+                            latestOrg && latestOrg.map((org, index) => {
+                                const isPresent = allorg?.some(row => row.clientname === org.clientname);
+                                const rejct = org.approval?.some(item => item.status === 'Reject');
+                                // Set the status based on the conditions
+                                const status = isPresent ? 'Completed' : (rejct ? 'Rejected' : 'Pending');
+
                                 return (
                                     <CTableRow key={index}>
+                                        <CTableDataCell>{reverse(org.createdon)}</CTableDataCell>
                                         <CTableDataCell>{org.clientname}</CTableDataCell>
-                                        <CTableDataCell>
-                                            <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
-                                                <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
-                                            </CPopover>
-                                        </CTableDataCell>
+                                        <CTableDataCell>{org.username}</CTableDataCell>
+                                        <CTableDataCell>{status}</CTableDataCell>
                                     </CTableRow>
                                 );
-                            } else {
-                                return null; // Skip rendering the row if the organization is present in allorg or if it has the current user's approval
-                            }
-                        } else {
-                            return null; // Skip rendering the row if the organization is present in allorg
-                        }
-                    })} */}
+                            })
+                        )
+                    }
 
 
 
-                    {/* {latestOrg && latestOrg.map((org, index) => {
-                        // Check if allorg is null or if the organization is not present in the allorg array
-                        if (!allorg || !allorg.some(approvedOrg => approvedOrg.clientname === org.clientname)) {
-                            return (
-                                <CTableRow key={index}>
-                                    <CTableDataCell>{org.clientname}</CTableDataCell>
-                                    <CTableDataCell>
-                                        <CPopover content="Show Details of Organization" trigger={['hover', 'focus']}>
-                                            <CButton color="primary" onClick={() => openModal(org)}>Show More</CButton>
-                                        </CPopover>
-                                    </CTableDataCell>
-                                </CTableRow>
-                            );
-                        } else {
-                            return null; // Skip rendering the row if the organization is present in allorg
-                        }
-                    })} */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 </CTableBody>

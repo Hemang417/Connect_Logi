@@ -1,16 +1,16 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 const connection = await connectMySQL();
-export const fetchAllusers = async (orgcode, orgname, username) => {
+export const fetchAllusers = async (orgcode, orgname) => {
     try {
 
         const [rows] = await connection.execute(`
-        SELECT username, fullname
+        SELECT *
         FROM employees
         WHERE orgname = ? AND orgcode = ?
     `, [orgname, orgcode]);
 
 
-        const [row] = await connection.execute(`SELECT username FROM importaccess`);
+        const [row] = await connection.execute(`SELECT * FROM setworkflow`);
         
         return {
             rows: rows,

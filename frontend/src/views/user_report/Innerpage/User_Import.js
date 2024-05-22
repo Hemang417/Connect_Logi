@@ -218,7 +218,7 @@ const User_Import = ({onDataFetch}) => {
         params: {
           username: localStorage.getItem('empnameforaccess'),
           fullname: localStorage.getItem('fullname'),
-          branchname: localStorage.getItem('branchname')
+          branchname: localStorage.getItem('branchnameofemp')
         }
       });
       setAllData(response.data);
@@ -307,7 +307,7 @@ const User_Import = ({onDataFetch}) => {
   };
 
 
-
+console.log(originalData);
 
 
 

@@ -77,7 +77,6 @@ const Generate_Report = () => {
     },
   }
 
-  console.log(reportData);
 
   const renderDataUI = () => {
     if (!reportData) return null;
@@ -139,8 +138,8 @@ const Generate_Report = () => {
                 <h4>{localStorage.getItem('empnameforaccess')}</h4>
               </div>
               <div>
-                <label for="Branch" className='text-field-3'>Branch</label>
-                <h4>{localStorage.getItem('branchname')}</h4>
+                {/* <label for="Branch" className='text-field-3'>Branch</label>
+                <h4>{localStorage.getItem('branchnameofemp')}</h4> */}
               </div>
               <PDFDownloadLink
                 document={

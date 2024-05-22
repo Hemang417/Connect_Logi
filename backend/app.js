@@ -228,8 +228,8 @@ app.put('/updateContactduringNew', async (req, res) => {
 
 app.get('/fetchAllusers', async (req, res) => {
     try {
-        const { orgcode, orgname, username } = req.query;
-        const getAllusers = await fetchAllusers(orgcode, orgname, username);
+        const { orgcode, orgname } = req.query;
+        const getAllusers = await fetchAllusers(orgcode, orgname);
 
         // if(getAllusers.status === 200){
         //     res.status(200);

@@ -32,12 +32,12 @@ const User_Report = () => {
             try {
                 const codeoforg = localStorage.getItem('orgcode');
                 const nameoforg = localStorage.getItem('orgname');
-                const username = localStorage.getItem('empnameforaccess');
+                // const username = localStorage.getItem('empnameforaccess');
                 const response = await axios.get('http://localhost:5000/fetchAllusers', {
                     params: {
                         orgcode: codeoforg,
                         orgname: nameoforg,
-                        username: username
+                        // username: username
                     }
                 });
                 setAllData(response.data.rows);
@@ -50,6 +50,10 @@ const User_Report = () => {
         fetchAllUsernames();
     }, []);
     
+
+    console.log(allData);
+
+
     const handleAccess = async (index) => {
         // Access the username at the specified index in the allData state
         const username = allData[index].username;
@@ -68,9 +72,10 @@ const User_Report = () => {
 
 
     async function handleNavigate(userdata){
+        
         navigate('/Generate_Report');
         localStorage.setItem('empnameforaccess', userdata.username);
-        localStorage.setItem('branchname', userdata.branchname);
+        // localStorage.setItem('branchname', userdata.branchname);
         localStorage.setItem('fullname', userdata.fullname);
     }
 
