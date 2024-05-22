@@ -430,9 +430,15 @@ const Approverlog = () => {
                         })
                     ) : (
                         latestOrg && latestOrg.map((org, index) => {
-                            // Check if org.clientname is present in allorg
+
                             const isPresent = allorg?.some(row => row.clientname === org.clientname);
-                            const status = isPresent ? 'Completed' : 'Pending';
+
+                            const rejct = org.approval?.some(item => {
+                                return item.status === 'Reject'
+                            });
+
+                            // Set the status based on the conditions
+                            const status = isPresent ? 'Completed' : (rejct ? 'Rejected' : 'Pending');
 
                             return (
                                 <CTableRow key={index}>
