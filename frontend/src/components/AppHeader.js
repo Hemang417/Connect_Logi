@@ -19,7 +19,8 @@ import {
   CDropdownMenu,
   CDropdownToggle,
   CRow, CForm, CTable, CTableBody, CTableHead, CTableRow,
-  CButton
+  CButton,
+  CTableDataCell
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { Link } from 'react-router-dom'
@@ -49,7 +50,7 @@ const AppHeader = () => {
   const [allnotifications, setallnotifications] = useState([]);
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-
+  const [visibleNotifications, setVisibleNotifications] = useState([]);
   const [allorg, setallorg] = useState([]);
   async function getOrganizations() {
     try {
@@ -66,46 +67,115 @@ const AppHeader = () => {
   }
 
 
+
+  // useEffect(() => {
+  //   const ws = new WebSocket('ws://localhost:8081');
+  //   ws.onopen = () => {
+  //     ws.send(JSON.stringify({ type: 'register', username: localStorage.getItem('username') }));
+  //   };
+  //   ws.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     if (data.type === 'new_org') {
+  //       toast.success(data.message);
+  //       fetchNotifications();
+  //       addNotification(data.message);
+  //     }
+  //   };
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
+
+
+  // const addNotification = (message) => {
+  //   setVisibleNotifications((prev) => [...prev, message]);
+  //   setTimeout(() => {
+  //     setVisibleNotifications((prev) => prev.filter((notif) => notif !== message));
+  //   }, 300000); // 120000ms = 2 minutes
+  // };
+
+
+
+
+
+  // useEffect(() => {
+  //   const ws = new WebSocket('ws://localhost:8081');
+  //   ws.onopen = () => {
+  //     ws.send(JSON.stringify({ type: 'register', username: localStorage.getItem('username') }));
+  //   };
+  //   ws.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     if (data.type === 'new_org') {
+  //       toast.success(data.message);
+  //       fetchNotifications();
+  //     }
+  //   };
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
+
+
+
+
+
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8081');
+    const ws = new WebSocket('ws://localhost:8081')
     ws.onopen = () => {
-      ws.send(JSON.stringify({ type: 'register', username: localStorage.getItem('username') }));
-    };
+      ws.send(JSON.stringify({ type: 'register', username: localStorage.getItem('username') }))
+    }
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+      const data = JSON.parse(event.data)
       if (data.type === 'new_org') {
-        toast.success(data.message);
-        fetchNotifications();
+        toast.success(data.message)
+        fetchNotifications()
+        addNotification(data.message)
       }
-    };
+    }
     return () => {
-      ws.close();
+      ws.close()
+    }
+  }, [])
+
+  const addNotification = (message) => {
+    const expirationTime = Date.now() + 300000 // 5 minutes
+    const newNotification = { message, expirationTime }
+    const existingNotifications = JSON.parse(localStorage.getItem('notifications')) || []
+    const updatedNotifications = [...existingNotifications, newNotification]
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications))
+    setVisibleNotifications(updatedNotifications)
+    setTimeout(() => {
+      removeExpiredNotifications()
+    }, 300000) // Set timeout to remove expired notifications
+  }
+
+  const removeExpiredNotifications = () => {
+    const existingNotifications = JSON.parse(localStorage.getItem('notifications')) || []
+    const currentTime = Date.now()
+  
+    const filteredNotifications = existingNotifications.filter(
+      (notification) => notification.expirationTime > currentTime
+    )
+    localStorage.setItem('notifications', JSON.stringify(filteredNotifications))
+    setVisibleNotifications(filteredNotifications)
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      removeExpiredNotifications();
+    }, 1000); // Check for expired notifications every second
+
+    return () => {
+      clearInterval(intervalId);
     };
   }, []);
 
 
+
+
+
+
   const [approvers, setapprovers] = useState([])
-
-
-  // useEffect(() => {
-  //   const getapproved = async () => {
-  //     try {
-  //       const approverdata = await axios.get(`http://localhost:5000/getnamesofapproversinorg`, {
-  //         params: {
-  //           orgcode: loginData.orgcode
-  //         }
-  //       })
-  //       setapprovers(approverdata.data)
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   getapproved();
-  // }, [])
-
-  // console.log(approvers);
-
-
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -213,7 +283,6 @@ const AppHeader = () => {
 
 
 
-
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -271,34 +340,16 @@ const AppHeader = () => {
                 <CTable hover responsive striped className='notiftable'>
 
                   <CTableBody className='notifrow'>
+                    <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Alerts</CDropdownHeader>
+                    <CRow>
+                      <div className="notification-area">
+                        {visibleNotifications.map((notification, index) => (
+                          <CDropdownItem key={index} style={{ marginLeft: 20 }}>{notification.message}</CDropdownItem>
+                        ))}
 
-                    {/* <CRow>
+                      </div>
 
-                      {allnotifications && allnotifications.map((item, index) => {
-                        // Check if localStorage username matches any name in approvername array
-                        const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
-                        // Check if read and approved attributes are 0 for the localStorage username in reading array
-                        const isUnread = item.reading.some(entry => entry.employeename === localStorage.getItem('username') && entry.read === 0);
-                        // Render the notification only if conditions are met
-                        const isAlreadyApproved = allorg?.find(row => row.clientname === item.clientname);
-                        // don't render the notification if one is rejected
-                        const isRejected = item.reading.some(entry => entry.approved === -1);
-                        if (isApprover && isUnread && !isAlreadyApproved && !isRejected) {
-                          return (
-                            <CDropdownItem key={index} onClick={() => navigateToApproverLog(item)}>
-                              <p className="notif" >{`Organization: ${item.clientname} is waiting for your approval`}</p>
-                              <CButton className='button-mark-as-read' onClick={() => userhasread(item)}>
-                                <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
-                              </CButton>
-                            </CDropdownItem>
-                          );
-                        }
-                        return null; // Otherwise, return null to skip rendering
-                      })
-                      }
-
-
-                    </CRow> */}
+                    </CRow>
 
                   </CTableBody>
 
@@ -342,7 +393,13 @@ const AppHeader = () => {
         </CHeaderNav>
       </CContainer>
 
-
+      {/* <div className="notification-area">
+        {visibleNotifications.map((notification, index) => (
+          <div key={index} className="notification">
+            {notification}
+          </div>
+        ))}
+      </div> */}
     </CHeader>
   )
 }
