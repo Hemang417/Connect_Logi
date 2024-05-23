@@ -474,6 +474,16 @@ const General = ({ onSave, gData }) => {
     };
 
     const handleSave = async () => {
+
+        if(generalData.phone.length !== 10){
+            alert('Please enter the correct phone number');
+            return;
+        }
+        if(generalData.postalcode.length !==6){
+            alert('Please enter a proper postal code');
+            return;
+        }
+       
         toast.success('Data saved successfully');
         onSave(generalData);
     };

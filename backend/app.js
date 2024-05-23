@@ -29,6 +29,7 @@ import {
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js';
 import {fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotifications} from './api/notifications.js'
+import {storeArrangement,getBranchcodeandname,deleteArrangement,getArrangementofthatbranch,updateColumn} from './api/arrangement.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1542,6 +1543,58 @@ app.get('/getnamesofapproversinorg', async (req, res) => {
         const {orgcode} = req.query;
         const appdata =  await getApproverNameinOrg(orgcode);
         res.send(appdata);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.post('/storeArrangement', async (req, res) => {
+    try {
+        const {orgname, orgcode, data, branchname, branchcode} = req.body;
+        const storeArrangemented = await storeArrangement(orgname, orgcode, data, branchname, branchcode);
+        res.status(200).send(storeArrangemented);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getbranchesforarrangement', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const finallygot = await getBranchcodeandname(orgname, orgcode);
+        res.send(finallygot);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deleteArrangement', async (req, res) => {
+    try {
+        const {orgname, orgcode, data, branchname, branchcode} = req.body;
+        const deletedhaiye = await deleteArrangement(orgname, orgcode, data, branchname, branchcode);
+        res.status(200).send(deletedhaiye);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/getArrangementofthatbranch', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, branchcode} = req.query;
+        const gotit = await getArrangementofthatbranch(orgname, orgcode, branchname, branchcode);
+        res.send(gotit);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.put('/updateColumn', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, branchcode, custominput} = req.body;
+        const updated = await updateColumn(orgname, orgcode, branchname, branchcode, custominput);
+        res.status(200).send(updated);
     } catch (error) {
         console.log(error);
     }

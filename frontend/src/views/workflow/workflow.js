@@ -39,11 +39,11 @@ import Lob from './Innerpage/Lob';
 import Wf from './Innerpage/Wf';
 import toast from 'react-hot-toast';
 import MileStone from './Innerpage/milestone';
+import JobValue from './Innerpage/JobValue';
 
 const workflow = () => {
 
   const [isshown, setIsShown] = useState("Lob");
- 
 
 
   return (
@@ -60,13 +60,17 @@ const workflow = () => {
           <CNavItem>
             <CNavLink onClick={() => { setIsShown("Wf") }}>Workflow</CNavLink>
           </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => { setIsShown("JobValue") }}>JobValue</CNavLink>
+          </CNavItem>
+
         </CNav>
         {isshown === "Lob" && <Lob />}
         {isshown === "Milestone" && <MileStone />}
         {isshown === "Wf" && <Wf />}
+        {isshown === "JobValue" && <JobValue/>}
 
       </div>
-
 
     </CRow>
 

@@ -39,6 +39,10 @@ const connection = await connectMySQL();
 
 export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode) => {
     try {
+  
+        // const [jobformat] = await connection.execute(`SELECT * FROM customjobnumber WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
+
+        // console.log('Job Format:', jobformat);
 
         const firstletter = transportMode.charAt(0).toUpperCase();
 
@@ -1218,7 +1222,7 @@ export const deleteCompletedRowofImport = async (lobname, ownbranchname, importe
     } catch (error) {
         console.log(error);
     }
-}   
+}
 
 
 export const updateRemarks = async (id, lobname, importername, orgname, orgcode, remarks, workflowname) => {

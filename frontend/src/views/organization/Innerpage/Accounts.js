@@ -130,7 +130,7 @@ const Accounts = ({ onSave, aData }) => {
     const [accountData, setAccountData] = useState({
         creditdays: '',
     });
-
+    const [validationMessage, setValidationMessage] = useState('');
     // UseEffect to set prefilled data
     useEffect(() => {
         if (aData && aData.creditdays) {
@@ -146,6 +146,13 @@ const Accounts = ({ onSave, aData }) => {
 
     // Handle save button click
     const handleSave = () => {
+
+        if (accountData.creditdays < 1 || accountData.creditdays > 365) {
+            setValidationMessage('Credit Days must be between 1 and 365');
+            alert('Credit Days must be between 1 and 365');
+            return;
+        }
+
         toast.success('Account saved successfully')
         onSave(accountData);
     };

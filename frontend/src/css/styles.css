@@ -439,3 +439,55 @@
 .unread-row{
     background-color: brown;
 }
+
+
+
+
+
+.containerarrange {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.box-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px; /* Adjust as needed */
+}
+
+.box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    width: 100px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.box:hover {
+    background-color: #e0e0e0;
+}
+
+.table-container {
+    width: 100%;
+}
+
+.table-container th,
+.table-container td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.table-container th {
+    background-color: #f0f0f0;
+}
+
+.table-container td:last-child {
+    text-align: center;
+}
