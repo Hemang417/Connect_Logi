@@ -152,7 +152,7 @@ const AppHeader = () => {
   const removeExpiredNotifications = () => {
     const existingNotifications = JSON.parse(localStorage.getItem('notifications')) || []
     const currentTime = Date.now()
-  
+
     const filteredNotifications = existingNotifications.filter(
       (notification) => notification.expirationTime > currentTime
     )
@@ -232,22 +232,6 @@ const AppHeader = () => {
   }
 
 
-  // async function handleReadAll() {
-  //   try {
-  //     const currentDate = new Date().getTime();
-  //     const formatattedDate = moment(currentDate).format('YYYY-MM-DD HH'); // No need to format
-  //     const response = await axios.put(`http://localhost:5000/makereadall`, {
-  //       currentDate: formatattedDate,
-  //       notifications: allnotifications
-  //     });
-  //     if (response.status === 200) {
-  //       toast.success(`All Notifications have been read`);
-  //       fetchNotifications();
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
   const navigate = useNavigate();
 
   // Function to navigate to the '/approverlog' route and send the item object as state
@@ -255,18 +239,6 @@ const AppHeader = () => {
     navigate('/approverlog', { state: item })
   };
 
-  // useEffect(() => {
-  //   let countcount = allnotifications.filter(item =>
-  //     item.reading.some(entry =>
-  //       entry.employeename === localStorage.getItem('username') &&
-  //       entry.read === 0 &&
-  //       !allorg.find(row => row.clientname === item.clientname) &&
-  //       !item.reading.some(subEntry => subEntry.status === 'Reject')
-  //     ) &&
-  //     !item.reading.some(subEntry => subEntry.approved === -1)
-  //   ).length
-  //   localStorage.setItem('countofremainingrows', countcount)
-  // }, [allnotifications])
 
 
   useEffect(() => {
@@ -373,13 +345,11 @@ const AppHeader = () => {
                 allnotifications && allnotifications.filter(item =>
                   item.reading.some(entry =>
                     entry.employeename === localStorage.getItem('username') &&
-                    entry.read === 0 &&
-                    !allorg?.find(row => row.clientname === item.clientname) &&
-                    !item.reading.some(subEntry => subEntry.status === 'Reject')
-                  ) &&
-                  !item.reading.some(subEntry => subEntry.approved === -1)
-                ).length
+                    entry.read === 0
+                  )).length
               }
+
+
 
             </CBadge>
             <CNavLink href="#/notifyrender">
