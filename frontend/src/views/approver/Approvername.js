@@ -373,6 +373,7 @@ import {
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import '../../css/styles.css'
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Approvername = () => {
@@ -543,11 +544,15 @@ const Approvername = () => {
                 <CRow>
                     <CCardBody className="button-div">
                         <div className="createjob-button">
-                            <CButton color="primary" type="submit" onClick={() => setVisible(!visible)}>+</CButton>
+                        {/* ADD BUTTON */}
+                            <svg type="submit" onClick={() => setVisible(!visible)} width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM12 8.25C12.4142 8.25 12.75 8.58579 12.75 9V11.25H15C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H12.75L12.75 15C12.75 15.4142 12.4142 15.75 12 15.75C11.5858 15.75 11.25 15.4142 11.25 15V12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H11.25L11.25 9C11.25 8.58579 11.5858 8.25 12 8.25Z" fill="#1C274C" />
+                            </svg>
+                        {/* ADD BUTTON ENDS*/}
                         </div>
                     </CCardBody>
                 </CRow>
-                <CForm>
+                <CForm className='approver-table'>
                     <CTable hover responsive striped className="">
                         <CTableHead>
                             <CTableRow color="dark">
@@ -560,15 +565,41 @@ const Approvername = () => {
                                 <CTableRow key={index}>
                                     <CTableDataCell className="row-font">{item.approverlistname}</CTableDataCell>
                                     <CTableDataCell className="row-font">
-                                        <CPopover content="Edit the approver list" trigger={['hover', 'focus']}>
-                                            <CButton onClick={() => handleEdit(item)}>Edit</CButton>
-                                        </CPopover>
-                                        <CPopover content="Add approvers to the approver list" trigger={['hover', 'focus']}>
-                                            <CButton onClick={() => handleMembers(item)}>Add Members</CButton>
-                                        </CPopover>
-                                        <CPopover content="Delete the approver list" trigger={['hover', 'focus']}>
-                                            <CButton color="danger" onClick={() => handleDelete(item)}>Delete</CButton>
-                                        </CPopover>
+                                        {/* <CPopover content="Edit the approver list" trigger={['hover', 'focus']}> */}
+
+                                    {/* EDIT BUTTON */}
+                                        <svg className='edit-button-approver-1' onClick={() => handleEdit(item)} xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 50 50">
+                                            <path d="M 43.125 2 C 41.878906 2 40.636719 2.488281 39.6875 3.4375 L 38.875 4.25 L 45.75 11.125 C 45.746094 11.128906 46.5625 10.3125 46.5625 10.3125 C 48.464844 8.410156 48.460938 5.335938 46.5625 3.4375 C 45.609375 2.488281 44.371094 2 43.125 2 Z M 37.34375 6.03125 C 37.117188 6.0625 36.90625 6.175781 36.75 6.34375 L 4.3125 38.8125 C 4.183594 38.929688 4.085938 39.082031 4.03125 39.25 L 2.03125 46.75 C 1.941406 47.09375 2.042969 47.457031 2.292969 47.707031 C 2.542969 47.957031 2.90625 48.058594 3.25 47.96875 L 10.75 45.96875 C 10.917969 45.914063 11.070313 45.816406 11.1875 45.6875 L 43.65625 13.25 C 44.054688 12.863281 44.058594 12.226563 43.671875 11.828125 C 43.285156 11.429688 42.648438 11.425781 42.25 11.8125 L 9.96875 44.09375 L 5.90625 40.03125 L 38.1875 7.75 C 38.488281 7.460938 38.578125 7.011719 38.410156 6.628906 C 38.242188 6.246094 37.855469 6.007813 37.4375 6.03125 C 37.40625 6.03125 37.375 6.03125 37.34375 6.03125 Z"></path>
+                                        </svg>
+                                    {/* EDIT BUTTON ENDS*/}
+
+                                        {/* </CPopover> */}
+                                        {/* <CPopover content="Add approvers to the approver list" trigger={['hover', 'focus']}> */}
+
+                                    {/* ADD MEMBER BUTTON */}
+                                        <svg className='addmembers-button-approver-1' onClick={() => handleMembers(item)} width="30px" height="30px" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_14_1995)">
+                                                <path d="M27.865 31.758C33.5972 31.758 38.244 27.1112 38.244 21.379C38.244 15.6468 33.5972 11 27.865 11C22.1328 11 17.486 15.6468 17.486 21.379C17.486 27.1112 22.1328 31.758 27.865 31.758Z" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M40 36.346C37.0313 33.3973 33.0142 31.7466 28.83 31.756H26.9C22.6831 31.756 18.6388 33.4312 15.657 36.413C12.6752 39.3948 11 43.4391 11 47.656V52.516H44.73V51.756" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M48.621 38.146V46.123" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M52.609 42.134H44.632" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_14_1995">
+                                                    <rect width="45.609" height="45.516" fill="white" transform="translate(9 9)" />
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    {/* ADD MEMBER BUTTON END*/}
+
+                                        {/* </CPopover> */}
+                                        {/* <CPopover content="Delete the approver list" trigger={['hover', 'focus']}> */}
+
+                                    {/* DELETE BUTTON */}
+                                        <img className='delete-button-approver-1' onClick={() => handleDelete(item)} width="25" height="25" src="https://img.icons8.com/ios-filled/50/000000/cancel.png" alt="cancel" />
+                                    {/* DELETE BUTTON ENDS*/}
+
+                                        {/* </CPopover> */}
                                     </CTableDataCell>
                                 </CTableRow>
                             ))}
@@ -583,26 +614,26 @@ const Approvername = () => {
                         <CModalTitle id="LiveDemoExampleLabel">Add Approver List Name</CModalTitle>
                     </CModalHeader>
                     <CModalBody>
-                        <label htmlFor="ApproverName" className="text-field-3">Approver Name</label>
-                        <input type="text" id="ApproverName" placeholder="Enter list name" value={approverName} onChange={handleChange} />
-                        <div>
-                            <label htmlFor="Locations" className="text-field-3">Locations</label>
-                            <CDropdown>
+                        <label htmlFor="ApproverName" className="text-field-3"><h6>Approver Name</h6></label>
+                        <input className='approver-inputfield' type="text" id="ApproverName" placeholder="Enter list name" value={approverName} onChange={handleChange} />
+                        <div className='mt-3'>
+                            <label htmlFor="Locations" className="text-field-3"><h6>Locations</h6></label>
+                            <CDropdown className='approver-inputfield'>
                                 <CDropdownToggle className="dropdown-btn" color="secondary">{selectedBranch.branchname ? selectedBranch.branchname : 'Select'}</CDropdownToggle>
-                                <CDropdownMenu className="text-field-4">
+                                <CDropdownMenu className="text-field-4 approver-inputfield">
                                     {allbranches.map((item, index) => (
-                                        <CDropdownItem key={index} onClick={() => { setSelectedBranch({ branchname: item.ownbranchname, branchcode: item.branchcode }) }}>{item.ownbranchname}</CDropdownItem>
+                                        <CDropdownItem className='approver-inputfield-1' key={index} onClick={() => { setSelectedBranch({ branchname: item.ownbranchname, branchcode: item.branchcode }) }}>{item.ownbranchname}</CDropdownItem>
                                     ))}
                                 </CDropdownMenu>
                             </CDropdown>
                         </div>
                         <div>
-                            <label htmlFor="UniqueValues" className="text-field-3">Buttons</label>
-                            <CDropdown>
+                            <label htmlFor="UniqueValues" className="text-field-3 mt-3"><h6>Buttons</h6></label>
+                            <CDropdown className='approver-inputfield'>
                                 <CDropdownToggle className="dropdown-btn" color="secondary">{uniqueValue ? uniqueValue : 'Select'}</CDropdownToggle>
-                                <CDropdownMenu className="text-field-4">
+                                <CDropdownMenu className="text-field-4 approver-inputfield">
                                     {uniqueValuesArray.map((option, index) => (
-                                        <CDropdownItem key={index} onClick={() => { setUniqueValue(option) }}>{option}</CDropdownItem>
+                                        <CDropdownItem className='approver-inputfield-1' key={index} onClick={() => { setUniqueValue(option) }}>{option}</CDropdownItem>
                                     ))}
                                 </CDropdownMenu>
                             </CDropdown>

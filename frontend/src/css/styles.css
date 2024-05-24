@@ -11,6 +11,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    margin-top: -10px;
 }
 
 .delete-text-color{
@@ -72,10 +73,7 @@
     width:100%
 }
 
-.contact-add-button{
-    color: white;
-    margin-top: 5px;
-}
+
 
 /* Registration */
 
@@ -490,4 +488,185 @@
 
 .table-container td:last-child {
     text-align: center;
+}
+
+
+/* Approvers Buttons & Tables Styles - ADMIN */
+
+.edit-button-approver-1{
+    margin-right: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+    cursor: pointer;
+}
+
+.addmembers-button-approver-1{
+    margin-right: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+    cursor: pointer;
+}
+
+.delete-button-approver-1{
+    padding-top: 0;
+    padding-bottom: 0;
+    cursor: pointer;
+}
+
+.approver-table{
+    margin-top: -10px;
+}
+
+.approver-inputfield{
+    width: 100%;
+}
+
+.approver-inputfield-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.memberapprover{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    margin-bottom: -5px;
+}
+.memberapprover-howmanyapprover{
+    /* margin-left: 40px; */
+    width: fit-content;
+
+}
+.memberapprover-totalapprover{
+    width: fit-content;
+}
+.memberapprover-submit{
+    width: fit-content;
+    height: fit-content;
+}
+.memberapprover-addbutton{
+    margin-left: -10px;
+}
+.memberapprover-table{
+    margin-top: -10px;
+}
+.addapproverlist-memberapprover{
+    width: 100%;
+}
+.addapproverlist-memberapprover-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Branch List */
+
+.branchlist-table{
+    margin-top: -10px;
+}
+
+.branchlist-addbutton{
+    cursor: pointer;
+}
+.branchlist-inputfield-1{
+    width: 70%;
+    margin-left: 25px;
+}
+.branchlist-inputfield-2{
+    width: 65%;
+    margin-left: 28px;
+}
+.branchlist-inputfield-3{
+    width: 60%;
+    margin-left: 20px;
+}
+.branchlist-inputfield-4{
+    width: 70%;
+    margin-left: 10px;
+    height: 100px;
+}
+.branchlist-inputfield-5{
+    width: 80%;
+    margin-left: 18px;
+}
+.branchlist-inputfield-6{
+    width: 80%;
+    margin-left: 23px;
+}
+
+/* Workflow, Line of Business, Milestone, JobValue */
+.lob-addlob-dropdown{
+    width: 100%;
+}
+.lob-addlob-dropdown-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.lob-table{
+    margin-top: -15px;
+}
+.addbutton-lob{
+    margin-left: -20px;
+}
+.editbutton-lob{
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.milestone-worflow-addbutton{
+    margin-left: -20px;
+}
+.milestone-workflow-table{
+    margin-top: -15px;
+}
+.editbutton-milestone-workflow{
+    margin-right: 30px;
+    cursor: pointer;
+}
+.deletebutton-milestone-workflow{
+    cursor: pointer;
+}
+
+.worflow-addbutton{
+    margin-left: -10px;
+}
+.worflow-table{
+    margin-top: -15px;
+}
+.editbutton-workflow{
+    margin-right: 25px;
+}
+.addwf-dropdownbutton{
+    width: 100%;
+}
+.wf-selectbranch-dropdown{
+    width: 100%;
+}
+.wf-menu-dropdown{
+    width: 100%;
+}
+.wf-item-dropdown{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.setworkflow-input-org{
+    width: fit-content;
+}
+.setworkflow-table{
+    margin-top: -10px;
+}
+.addworkflow-checkboxbutton{
+    margin-top: 20px;
+}
+.addworflow-labelfield{
+    margin-left: 50px;
+}
+.addworkflow-day{
+    margin-left: 10px;
+}
+.addworkflow-deletebutton{
+    margin-left: 10px;
+}
+.addworkflow-dropdown-access{
+    margin-top: 10px;
 }
