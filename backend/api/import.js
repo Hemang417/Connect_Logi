@@ -40,10 +40,7 @@ const connection = await connectMySQL();
 export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode) => {
     try {
   
-        // const [jobformat] = await connection.execute(`SELECT * FROM customjobnumber WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
-
-        // console.log('Job Format:', jobformat);
-
+       
         const firstletter = transportMode.charAt(0).toUpperCase();
 
         let currentDate = new Date();
@@ -189,8 +186,13 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 
 
 
-export const updateJobNumber = async (id, transportMode, count) => {
+export const updateJobNumber = async (id, transportMode, count, branchname, branchcode, orgname, orgcode) => {
     try {
+
+
+        const [rows] = await connection.execute(`SELECT * FROM customjobnumber WHERE orgname = ? AND orgcode = ? AND branchname = ?
+        AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
+
 
         const firstletter = transportMode.charAt(0).toUpperCase();
 
@@ -213,6 +215,45 @@ export const updateJobNumber = async (id, transportMode, count) => {
         let yearPart = `${startYearPart}-${endYearPart}`;
 
 
+        let jobNumberParts = {};
+
+        // Default values
+        jobNumberParts['Fiscal Year'] = yearPart;
+        jobNumberParts['Air/Sea'] = firstletter;
+        jobNumberParts['BranchName'] = branchname;
+        jobNumberParts['Import/Export'] = 'I'; // Default value
+        jobNumberParts['Custom'] = ''; // Default to empty string
+
+        rows.forEach(item => {
+            switch (item.columnname) {
+                case 'Fiscal Year':
+                    jobNumberParts['Fiscal Year'] = yearPart;
+                    break;
+                case 'Air/Sea':
+                    jobNumberParts['Air/Sea'] = firstletter;
+                    break;
+                case 'Import/Export':
+                    jobNumberParts['Import/Export'] = 'I'; // or 'E' based on your logic
+                    break;
+                case 'BranchName':
+                    jobNumberParts['BranchName'] = branchname;
+                    break;
+                case 'Custom':
+                    jobNumberParts['Custom'] = item.inputofcustom;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // Construct job number dynamically based on the order of columns in `rows`
+        let jobNumberlatest = rows.map(item => jobNumberParts[item.columnname]).join('/');
+
+        // Append the count to the job number
+        jobNumberlatest += `/${count}`;
+
+
+
         // let currentYear = new Date().getFullYear();
         // let currentMonth = new Date().getMonth() - 1; // April (zero-based index)
 
@@ -227,7 +268,7 @@ export const updateJobNumber = async (id, transportMode, count) => {
         // // Construct the year range
         // let yearPart = `${startYearPart}-${endYearPart}`;
 
-        let jobNumberlatest = `${firstletter}/I/${count}/${yearPart}`
+        // let jobNumberlatest = `${firstletter}/I/${count}/${yearPart}`
 
 
         const [row] = await connection.execute(

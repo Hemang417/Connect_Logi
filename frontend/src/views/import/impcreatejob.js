@@ -147,7 +147,7 @@ const impcreatejob = () => {
         toast.success('Job created successfully.');
         const idofcol = response.data[0].id;
         let countofrow = response.data[0].count;
-        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode, count: countofrow });
+        const sendupdate = await axios.put('http://localhost:5000/updateId', { jobno: idofcol, transportMode: JobformData.transportMode, count: countofrow, branchname: branchnameoftheorg, branchcode: branchcodeoftheorg, orgname: nameoforg, orgcode: codeoforg });
         localStorage.setItem('jobNumber', sendupdate.data.jobNumberlatest);
         localStorage.setItem('jobDate', sendupdate.data.jobDaterow[0].jobdate);
       }

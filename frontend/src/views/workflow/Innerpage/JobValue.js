@@ -314,6 +314,7 @@ const JobValue = () => {
     const [selectedBranchName, setSelectedBranchName] = useState('');
     const [allbranchcode, setallbranchcode] = useState([]);
     const [custominput, setcustominput] = useState('');
+    const [visible, setvisible] = useState(false);
 
     useEffect(() => {
         const getbranchnameandcode = async () => {
@@ -485,6 +486,36 @@ const JobValue = () => {
                     </tbody>
                 </table>
             </div>
+            <div>
+                <CButton onClick={() => setvisible(true)}>Preview</CButton>
+            </div>
+
+
+            <CModal
+                visible={visible}
+                onClose={() => setvisible(false)}
+                aria-labelledby="LiveDemoExampleLabel"
+            >
+                <CModalBody>
+
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {tableData && tableData.map((box, index) => (
+                            <div key={index} style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+                                <label>{box.columnname + ' -'}</label>
+                            </div>
+                        ))}
+                    </div>
+
+                </CModalBody>
+                <CModalFooter>
+                    <CPopover content="Update Workflow" trigger={['hover', 'focus']}>
+                        <CButton color="secondary" onClick={() => setvisible(false)}>
+                            Close
+                        </CButton>
+                    </CPopover>
+                </CModalFooter>
+            </CModal>
         </>
     );
 }
