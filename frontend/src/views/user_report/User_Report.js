@@ -17,12 +17,16 @@ import { useLocation, Link } from 'react-router-dom'
 const User_Report = () => {
 
     const [allData, setAllData] = useState([]);
+    const [branchaccess, setbranchaccess] = useState([])
     const navigate = useNavigate();
     const [userAccessData, setuserAccessData] = useState([])
     const location = useLocation();
+    const [userBranchCount, setUserBranchCount] = useState({});
+    
+
     if (location.pathname === '/user_report') {
         localStorage.removeItem('empnameforaccess');
-        localStorage.removeItem('branchname');
+        localStorage.removeItem('branchnames');
         localStorage.removeItem('fullname');
     }
 
@@ -42,6 +46,7 @@ const User_Report = () => {
                 });
                 setAllData(response.data.rows);
                 setuserAccessData(response.data.row);
+                setbranchaccess(response.data.branchaccess); 
 
             } catch (error) {
                 console.log('Error: ' + error);
@@ -51,7 +56,26 @@ const User_Report = () => {
     }, []);
     
 
-    console.log(allData);
+    useEffect(() => {
+        if (allData.length > 0 && branchaccess.length > 0) {
+            const branchNames = {};
+
+            branchaccess.forEach(accessItem => {
+                allData.forEach(dataItem => {
+                    if (dataItem.username === accessItem.username) {
+                        if (!branchNames[dataItem.username]) {
+                            branchNames[dataItem.username] = [];
+                        }
+                        branchNames[dataItem.username].push(accessItem.ownbranchname);
+                       
+                    }
+                });
+            });
+
+            setUserBranchCount(branchNames);
+        }
+    }, [allData, branchaccess]);
+
 
 
     const handleAccess = async (index) => {
@@ -71,13 +95,15 @@ const User_Report = () => {
     };
 
 
-    async function handleNavigate(userdata){
+    async function handleNavigate(userdata, branchesaccessofuser){
         
         navigate('/Generate_Report');
         localStorage.setItem('empnameforaccess', userdata.username);
-        // localStorage.setItem('branchname', userdata.branchname);
+        localStorage.setItem('branchnames', JSON.stringify(branchesaccessofuser));
         localStorage.setItem('fullname', userdata.fullname);
+
     }
+
 
     return (
         <div>
@@ -92,20 +118,21 @@ const User_Report = () => {
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                    {allData.map((userData, index) => (
+                    {allData && allData.map((userData, index) => (
+                        
                         <CTableRow key={index}>
                             <CTableHeaderCell scope="row">
                                 {userData.fullname}
                             </CTableHeaderCell>
                             <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
-                            <CTableHeaderCell scope="row">{userData.branchname}</CTableHeaderCell>
+                            <CTableHeaderCell scope="row">{userBranchCount[userData.username]?.join(', ') || 'No Branches'}</CTableHeaderCell>
                             <CTableDataCell>
                                 {userAccessData.some(accessUser => accessUser.username === userData.username) ? 'Import' : 'Access'}
                             </CTableDataCell>
                             <CTableDataCell>
-                            <CPopover content="Get this users report" trigger={['hover', 'focus']}>
-                                <CButton onClick={() => handleNavigate(userData)}>Generate Report</CButton>
-                            </CPopover>
+                            {/* <CPopover content="Get this users report" trigger={['hover', 'focus']}> */}
+                                <CButton onClick={() => handleNavigate(userData, userBranchCount[userData.username])}>Generate Report</CButton>
+                            {/* </CPopover> */}
                             </CTableDataCell>
                         </CTableRow>
                     ))}

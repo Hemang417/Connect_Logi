@@ -255,9 +255,9 @@ function gotonewuser(){
           {allData.map((userData, index) => (
             <CTableRow key={index}>
               <CTableHeaderCell scope="row">
-                <CPopover content="Edit access for this user" trigger={['hover', 'focus']}>
+                {/* <CPopover content="Edit access for this user" trigger={['hover', 'focus']}> */}
                   <Link onClick={() => handleAccess(index)}>Edit</Link>
-                </CPopover>
+                {/* </CPopover> */}
               </CTableHeaderCell>
               <CTableHeaderCell scope="row">{userData.username}</CTableHeaderCell>
               <CTableDataCell>

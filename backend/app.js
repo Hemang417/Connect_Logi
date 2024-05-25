@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import multer from 'multer';
 import bodyParser from 'body-parser';
+import { promises as fs } from 'fs';
 import { getTheUser, insertUser, getApproverNameinOrg } from './api/user.js';
 import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess, storeBranchAccessforUser, deletethatbranchaccess, fetchExistingBranches } from './api/userlist.js';
@@ -23,13 +25,14 @@ import {
     storeApproverName, getApproverlist, deletedApproverlist, UpdatedApproverList,
     Addnametoapproverlist, getnamesoftheapproverlist, deletenamefromapproverlist,
     updateApproverName, getApproverName,
-    fetchLatestOrganizationfromtable,fetchApprovernameunique, updatedData, getApprovedRows, deletedRowlist, 
+    fetchLatestOrganizationfromtable, fetchApprovernameunique, updatedData, getApprovedRows, deletedRowlist,
     fetchOrganizationforrender, SelectedCount, GetSelectedCount
 } from './api/approver.js'
 import { getallthelobdataofbranchandlob } from './api/newimport.js'
 import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './api/role.js';
-import {fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotifications} from './api/notifications.js'
-import {storeArrangement,getBranchcodeandname,deleteArrangement,getArrangementofthatbranch,updateColumn} from './api/arrangement.js'
+import { fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotifications } from './api/notifications.js'
+import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangementofthatbranch, updateColumn } from './api/arrangement.js'
+import { getBranches, storeKYC } from './api/kyc.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -918,8 +921,8 @@ app.get('/gettimeandmail', async (req, res) => {
 
 app.get('/getAllRowsofUsername', async (req, res) => {
     try {
-        const { username, fullname, branchname } = req.query;
-        const alltherows = await getCompletedRows(username, fullname, branchname);
+        const { username, fullname, branchnames } = req.query;
+        const alltherows = await getCompletedRows(username, fullname, branchnames);
         res.send(alltherows);
     } catch (error) {
         console.log(error);
@@ -1352,7 +1355,7 @@ app.delete('/deleteapprovername', async (req, res) => {
 
 app.put('/updateapprovername', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, branchcode, approverlistname, employeename, id} = req.body;
+        const { orgname, orgcode, branchname, branchcode, approverlistname, employeename, id } = req.body;
         const updatedname = await updateApproverName(orgname, orgcode, branchname, branchcode, approverlistname, employeename, id);
         res.status(200).send(updatedname);
     } catch (error) {
@@ -1362,7 +1365,7 @@ app.put('/updateapprovername', async (req, res) => {
 
 app.post('/storeuserrole', async (req, res) => {
     try {
-        const {orgname, orgcode, userrole} = req.body;
+        const { orgname, orgcode, userrole } = req.body;
         const storedRole = await storingRole(orgname, orgcode, userrole);
         res.send(storedRole);
     } catch (error) {
@@ -1372,7 +1375,7 @@ app.post('/storeuserrole', async (req, res) => {
 
 app.get('/getuserroles', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const rolesofuser = await getUserRoles(orgname, orgcode);
         res.send(rolesofuser);
     } catch (error) {
@@ -1382,7 +1385,7 @@ app.get('/getuserroles', async (req, res) => {
 
 app.delete('/deleteduserrole', async (req, res) => {
     try {
-        const {orgname, orgcode, userrole} = req.body;
+        const { orgname, orgcode, userrole } = req.body;
         const deletedrole = await DeleteUserRole(orgname, orgcode, userrole);
         res.send(deletedrole);
     } catch (error) {
@@ -1392,7 +1395,7 @@ app.delete('/deleteduserrole', async (req, res) => {
 
 app.put('/updateuserrole', async (req, res) => {
     try {
-        const {orgname, orgcode, userrole, id} = req.body;
+        const { orgname, orgcode, userrole, id } = req.body;
         const updatedUserRole = updateRoleofuser(orgname, orgcode, userrole, id);
         res.status(200).send(updatedUserRole)
     } catch (error) {
@@ -1413,7 +1416,7 @@ app.get('/getApprovernamesfororg', async (req, res) => {
 
 app.get('/getlatestorg', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const fetchedlatestorg = await fetchLatestOrganizationfromtable(orgname, orgcode);
         res.send(fetchedlatestorg)
     } catch (error) {
@@ -1423,7 +1426,7 @@ app.get('/getlatestorg', async (req, res) => {
 
 app.get('/getapproverthathaveuniquevalue', async (req, res) => {
     try {
-        const {orgname, orgcode, uniquevalue} = req.query;
+        const { orgname, orgcode, uniquevalue } = req.query;
         const fetchedapproverthaveuniquevalue = await fetchApprovernameunique(orgname, orgcode, uniquevalue);
         res.send(fetchedapproverthaveuniquevalue);
     } catch (error) {
@@ -1433,11 +1436,11 @@ app.get('/getapproverthathaveuniquevalue', async (req, res) => {
 
 app.put('/approveOrganization', async (req, res) => {
     try {
-        const {orgId} = req.body;
-        const {country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgname, orgcode, clientname, branchname} = req.body.updatedFields;
-        const {username, status} = req.body.approval
-        const updatedRowinapproval = await updatedData(orgId, country, state, city, 
-        postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgname, orgcode, clientname, branchname, username, status);
+        const { orgId } = req.body;
+        const { country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgname, orgcode, clientname, branchname } = req.body.updatedFields;
+        const { username, status } = req.body.approval
+        const updatedRowinapproval = await updatedData(orgId, country, state, city,
+            postalcode, phone, email, PAN, GST, IEC, creditdays, address, orgname, orgcode, clientname, branchname, username, status);
         res.send(updatedRowinapproval);
     } catch (error) {
         console.log(error);
@@ -1453,9 +1456,9 @@ app.put('/approveOrganization', async (req, res) => {
 // })
 
 
-app.get('/getapprovedorg', async (req,res) => {
+app.get('/getapprovedorg', async (req, res) => {
     try {
-        const {orgname, orgcode, uniquevalue} = req.query;
+        const { orgname, orgcode, uniquevalue } = req.query;
         const approvedRows = await getApprovedRows(orgname, orgcode, uniquevalue);
         res.send(approvedRows)
     } catch (error) {
@@ -1465,7 +1468,7 @@ app.get('/getapprovedorg', async (req,res) => {
 
 app.delete('/deleteApproverlist', async (req, res) => {
     try {
-        const {orgname, orgcode, uniquevalue, approverlistname, branchname, branchcode, id} = req.body.item;
+        const { orgname, orgcode, uniquevalue, approverlistname, branchname, branchcode, id } = req.body.item;
         const deletedRow = await deletedRowlist(orgname, orgcode, uniquevalue, approverlistname, branchname, branchcode, id);
         res.status(200).send(deletedRow)
     } catch (error) {
@@ -1476,7 +1479,7 @@ app.delete('/deleteApproverlist', async (req, res) => {
 
 app.get('/getorg', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const fetchedorg = await fetchOrganizationforrender(orgname, orgcode);
         res.send(fetchedorg);
     } catch (error) {
@@ -1487,7 +1490,7 @@ app.get('/getorg', async (req, res) => {
 
 app.put('/updateSelectedCount', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, branchcode, approverlistname, selectedCount} = req.body;
+        const { orgname, orgcode, branchname, branchcode, approverlistname, selectedCount } = req.body;
         const selectedcountupdated = await SelectedCount(orgname, orgcode, branchname, branchcode, approverlistname, selectedCount)
     } catch (error) {
         console.log(error);
@@ -1496,7 +1499,7 @@ app.put('/updateSelectedCount', async (req, res) => {
 
 app.get('/getSelectedCount', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, branchcode, approverlistname} = req.query;
+        const { orgname, orgcode, branchname, branchcode, approverlistname } = req.query;
         const getthecount = await GetSelectedCount(orgname, orgcode, branchname, branchcode, approverlistname);
         res.send(getthecount);
     } catch (error) {
@@ -1506,7 +1509,7 @@ app.get('/getSelectedCount', async (req, res) => {
 
 app.get('/fetchnotifications', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const fetchednotifications = await fetchNotifications(orgname, orgcode);
         res.send(fetchednotifications);
     } catch (error) {
@@ -1529,7 +1532,7 @@ app.put('/userhasread', async (req, res) => {
 
 app.put('/makereadall', async (req, res) => {
     try {
-        const {currentDate, notifications} = req.body;
+        const { currentDate, notifications } = req.body;
         const everythingread = await readallnotifications(currentDate, notifications);
         res.status(200).send(everythingread);
     } catch (error) {
@@ -1540,8 +1543,8 @@ app.put('/makereadall', async (req, res) => {
 
 app.get('/getnamesofapproversinorg', async (req, res) => {
     try {
-        const {orgcode} = req.query;
-        const appdata =  await getApproverNameinOrg(orgcode);
+        const { orgcode } = req.query;
+        const appdata = await getApproverNameinOrg(orgcode);
         res.send(appdata);
     } catch (error) {
         console.log(error);
@@ -1551,7 +1554,7 @@ app.get('/getnamesofapproversinorg', async (req, res) => {
 
 app.post('/storeArrangement', async (req, res) => {
     try {
-        const {orgname, orgcode, data, branchname, branchcode} = req.body;
+        const { orgname, orgcode, data, branchname, branchcode } = req.body;
         const storeArrangemented = await storeArrangement(orgname, orgcode, data, branchname, branchcode);
         res.status(200).send(storeArrangemented);
     } catch (error) {
@@ -1561,7 +1564,7 @@ app.post('/storeArrangement', async (req, res) => {
 
 app.get('/getbranchesforarrangement', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const finallygot = await getBranchcodeandname(orgname, orgcode);
         res.send(finallygot);
     } catch (error) {
@@ -1571,7 +1574,7 @@ app.get('/getbranchesforarrangement', async (req, res) => {
 
 app.delete('/deleteArrangement', async (req, res) => {
     try {
-        const {orgname, orgcode, data, branchname, branchcode} = req.body;
+        const { orgname, orgcode, data, branchname, branchcode } = req.body;
         const deletedhaiye = await deleteArrangement(orgname, orgcode, data, branchname, branchcode);
         res.status(200).send(deletedhaiye);
     } catch (error) {
@@ -1582,7 +1585,7 @@ app.delete('/deleteArrangement', async (req, res) => {
 
 app.get('/getArrangementofthatbranch', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, branchcode} = req.query;
+        const { orgname, orgcode, branchname, branchcode } = req.query;
         const gotit = await getArrangementofthatbranch(orgname, orgcode, branchname, branchcode);
         res.send(gotit);
     } catch (error) {
@@ -1592,13 +1595,76 @@ app.get('/getArrangementofthatbranch', async (req, res) => {
 
 app.put('/updateColumn', async (req, res) => {
     try {
-        const {orgname, orgcode, branchname, branchcode, custominput} = req.body;
+        const { orgname, orgcode, branchname, branchcode, custominput } = req.body;
         const updated = await updateColumn(orgname, orgcode, branchname, branchcode, custominput);
         res.status(200).send(updated);
     } catch (error) {
         console.log(error);
     }
 })
+
+
+app.get('/branchesofthemp', async (req, res) => {
+    try {
+        const { username, orgname, orgcode } = req.query;
+
+        const gotbranches = await getBranches(username, orgname, orgcode);
+        res.send(gotbranches);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Destination folder for uploaded files
+    },
+    filename: function (req, file, cb) {
+        const currentDate = new Date().toISOString().slice(0, 10);
+        // Concatenate the original file name with the current date and a dash
+        const filename = `${currentDate}-${file.originalname}`;
+        cb(null, filename);
+    }
+});
+
+// Initialize multer middleware
+const upload = multer({ storage: storage });
+
+app.post('/uploadKYCData', upload.single('profilePhoto'), async (req, res) => {
+    try {
+        const formData = req.body; // Form data
+        const profilePhoto = req.file; // Uploaded file
+        const filePath = profilePhoto.path;
+
+        // Read the file as a buffer
+        const fileData = await fs.readFile(filePath);
+
+        const { fullName, mobileNumber, officeMobileNumber, dateOfBirth, personalEmail, officeEmail, dateOfJoining, aadharNumber, panNumber, orgname, orgcode, username, branches } = formData;
+
+        const storedData = await storeKYC(
+            fullName,
+            mobileNumber,
+            officeMobileNumber,
+            dateOfBirth,
+            personalEmail,
+            officeEmail,
+            dateOfJoining,
+            aadharNumber,
+            panNumber,
+            orgname,
+            orgcode,
+            username,
+            branches,
+            fileData
+        );
+
+        res.status(200).send({ message: 'KYC data stored successfully', storedData });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: 'An error occurred while processing the request' });
+    }
+});
 
 
 app.listen(PORT, () => {

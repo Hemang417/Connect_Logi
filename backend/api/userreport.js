@@ -104,43 +104,43 @@ const getAllJobs = async () => {
 
 
 
-const accessRowsforEmployees = async () => {
-    try {
-        // Step 1: Fetch all employees and their access rows
-        const empdata = await getAllEmployees();
-        const accessRows = [];
-        for (const emp of empdata) {
-            const [accessRowsResult] = await connection.execute(`SELECT value FROM importaccess WHERE username = ?`, [emp.username]);
-            const access = accessRowsResult.map(row => row.value);
+// const accessRowsforEmployees = async () => {
+//     try {
+//         // Step 1: Fetch all employees and their access rows
+//         const empdata = await getAllEmployees();
+//         const accessRows = [];
+//         for (const emp of empdata) {
+//             const [accessRowsResult] = await connection.execute(`SELECT value FROM importaccess WHERE username = ?`, [emp.username]);
+//             const access = accessRowsResult.map(row => row.value);
 
-            // Step 2: Fetch completed rows for each job done by the user
-            const jobsData = await getAllJobs();
-            const jobs = [];
-            for (const job of jobsData) {
-                const [completedRowsResult] = await connection.execute(`SELECT tatimpcolumn FROM o2dimport WHERE status = ? AND jobnumber = ? AND jobdoneby = ?`, ['Completed', job.jobnumber, emp.username]);
-                const completedRows = completedRowsResult.map(row => row.tatimpcolumn);
-                const structure = {
-                    jobnumber: job.jobnumber, completedRows: completedRows
-                }
-                jobs.push(JSON.stringify(structure));
-            }
+//             // Step 2: Fetch completed rows for each job done by the user
+//             const jobsData = await getAllJobs();
+//             const jobs = [];
+//             for (const job of jobsData) {
+//                 const [completedRowsResult] = await connection.execute(`SELECT tatimpcolumn FROM o2dimport WHERE status = ? AND jobnumber = ? AND jobdoneby = ?`, ['Completed', job.jobnumber, emp.username]);
+//                 const completedRows = completedRowsResult.map(row => row.tatimpcolumn);
+//                 const structure = {
+//                     jobnumber: job.jobnumber, completedRows: completedRows
+//                 }
+//                 jobs.push(JSON.stringify(structure));
+//             }
 
-            // Construct structured data for the user
-            const userData = {
-                username: emp.username,
-                access,
-                jobs
-            };
-            accessRows.push(userData);
-        }
+//             // Construct structured data for the user
+//             const userData = {
+//                 username: emp.username,
+//                 access,
+//                 jobs
+//             };
+//             accessRows.push(userData);
+//         }
 
-        // console.log(accessRows);
-    } catch (error) {
-        console.log(error);
-    }
-};
+//         // console.log(accessRows);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 
-accessRowsforEmployees();
+// accessRowsforEmployees();
 
 // let currentDate = new Date();
 // // Get the current month (zero-based index)
@@ -197,20 +197,36 @@ accessRowsforEmployees();
 
 
 
-export const getCompletedRows = async (username, fullname, branchname) => {
+export const getCompletedRows = async (username, fullname, branchnames) => {
     try {
-        const jobdata = await getAllJobs();
-        
-        const [accessRowsResult] = await connection.execute(`SELECT value FROM importaccess WHERE username = ?`, [username]);
 
-        const [rows] = await connection.execute(`SELECT * FROM o2dimport WHERE jobdoneby = ?`, [username]);
+        //branchnames and LOB
+
+
+
+
+
+
+        // total jobs in the organization
+        const jobdata = await getAllJobs();
+        // const allemployees = await getAllEmployees();
+       
+        // this is to get all the jobs created by that user
+        const [accessRowsResult] = await connection.execute(`SELECT * FROM impjobcreation WHERE jobowner = ? AND orgname = ? AND orgcode = ?`, [username, orgname, orgcode]);
+        // this is to get all the completed rows by that user
+        const [rows] = await connection.execute(`SELECT * FROM trackingimport WHERE jobdoneby = ? AND orgname = ? AND orgcode = ?`, [username, orgname, orgcode]);
+
+        // we send totaljobs in org, total jobs created by that user in org, name of user, completedrows of the job by the user
+        // access is individual job creations of that user
         const structuredData = {
             totalJobs: jobdata,
             access: accessRowsResult,
             completedRows: rows,
             name: username
         }
+
         return structuredData;
+
     } catch (error) {
         console.log(error);
     }

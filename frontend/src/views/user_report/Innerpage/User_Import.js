@@ -218,9 +218,12 @@ const User_Import = ({onDataFetch}) => {
         params: {
           username: localStorage.getItem('empnameforaccess'),
           fullname: localStorage.getItem('fullname'),
-          branchname: localStorage.getItem('branchnameofemp')
+          branchnames: localStorage.getItem('branchnames')
         }
       });
+
+      console.log(response.data);
+
       setAllData(response.data);
       setOriginalData(response.data);
       // Grouping code
@@ -307,7 +310,7 @@ const User_Import = ({onDataFetch}) => {
   };
 
 
-console.log(originalData);
+
 
 
 

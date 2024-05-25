@@ -189,7 +189,7 @@ export const insertEmployees = async (username, password, orgcode, orgname, full
             throw new Error('Organization does not exist');
         }
 
-        const usernameofuser = username + '@' + role;
+        const usernameofuser = username+'@'+role;
         // Insert employee data into the employees table
         await connection.execute(`
             INSERT INTO employees (username, password, orgcode, orgname, fullname, role) 

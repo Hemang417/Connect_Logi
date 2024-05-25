@@ -11,10 +11,12 @@ export const fetchAllusers = async (orgcode, orgname) => {
 
 
         const [row] = await connection.execute(`SELECT * FROM setworkflow`);
-        
+        const [branchaccess] = await connection.execute(`SELECT * FROM branchaccess WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+
         return {
             rows: rows,
-            row: row
+            row: row,
+            branchaccess: branchaccess
         }
     } catch (error) {
         console.log(error);

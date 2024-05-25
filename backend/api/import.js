@@ -250,7 +250,7 @@ export const updateJobNumber = async (id, transportMode, count, branchname, bran
         let jobNumberlatest = rows.map(item => jobNumberParts[item.columnname]).join('/');
 
         // Append the count to the job number
-        jobNumberlatest += `/${count}`;
+        jobNumberlatest += `${count}`;
 
 
 

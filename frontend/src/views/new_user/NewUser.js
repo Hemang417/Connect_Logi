@@ -50,7 +50,10 @@ const NewUser = () => {
         e.preventDefault();
         try {
             const nameoforg = localStorage.getItem('orgname')
-
+            if (regForm.username.includes(' ')) {
+                alert('No spacing in username');
+                return;
+              }
             const response = await axios.post('http://localhost:5000/emp/store', {
                 username: regForm.username,
                 password: regForm.password,
@@ -193,9 +196,9 @@ const NewUser = () => {
                                     </CInputGroup>
 
                                     <div className="d-grid">
-                                        <CPopover content="Create new user" trigger={['hover', 'focus']}>
+                                        {/* <CPopover content="Create new user" trigger={['hover', 'focus']}> */}
                                             <CButton color="success" onClick={handleSubmit}>Create Account</CButton>
-                                        </CPopover>
+                                        {/* </CPopover> */}
                                     </div>
                                 </CForm>
                             </CCardBody>
