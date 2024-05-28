@@ -141,7 +141,9 @@ const impcreatejob = () => {
       const codeoforg = localStorage.getItem('orgcode');
       const branchnameoftheorg = localStorage.getItem('branchnameofemp');
       const branchcodeoftheorg = localStorage.getItem('branchcodeofemp');
-      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime, branchname: branchnameoftheorg, branchcode: branchcodeoftheorg });
+      const currentDate = new Date();
+      const dateinformat = moment(currentDate).format('YYYY-MM-DD');
+      const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime, branchname: branchnameoftheorg, branchcode: branchcodeoftheorg, currentdate: dateinformat });
 
       if (response.status === 200) {
         toast.success('Job created successfully.');
@@ -441,6 +443,7 @@ const impcreatejob = () => {
                 </CDropdown>
               </div>
               <div>
+
 
 
                 {localStorage.getItem('onEdit') === 'true' ?

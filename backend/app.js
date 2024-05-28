@@ -33,6 +33,7 @@ import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './a
 import { fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotifications } from './api/notifications.js'
 import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangementofthatbranch, updateColumn } from './api/arrangement.js'
 import { getBranches, storeKYC } from './api/kyc.js'
+import {getapproverofJobs,getJob} from './api/jobapproval.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -362,9 +363,9 @@ app.post('/storeJob', async (req, res) => {
             bltypenumber,
             jobOwner,
             orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond,
-            branchname, branchcode
+            branchname, branchcode, currentdate
         } = req.body;
-        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode);
+        const storeandcreateJob = await storeJob(jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgcode, orgname, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode, currentdate);
 
         res.status(200).json(storeandcreateJob);
 
@@ -1665,6 +1666,26 @@ app.post('/uploadKYCData', upload.single('profilePhoto'), async (req, res) => {
         res.status(500).send({ error: 'An error occurred while processing the request' });
     }
 });
+
+app.get('/getapproverofJobs', async (req, res) => {
+    try {
+        const {orgname, orgcode, uniquevalue} = req.query;
+        const approverdata = await getapproverofJobs(orgname, orgcode, uniquevalue);
+        res.send(approverdata);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/fetchlatestjob', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const latestjob = await getJob(orgname, orgcode);
+        res.send(latestjob);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 app.listen(PORT, () => {

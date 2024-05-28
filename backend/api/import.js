@@ -1,6 +1,7 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 import cron from 'node-cron';
+const uniquevalue = 'JobsButton'
 // import { getJobsCompletedRow } from './mail.js';
 
 // let globalTime = null;
@@ -37,10 +38,9 @@ const connection = await connectMySQL();
 
 
 
-export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode) => {
+export const storeJob = async (jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, lastIc, freedays, blstatus, benumber, shippinglinebond, branchname, branchcode, currentdate) => {
     try {
-  
-       
+
         const firstletter = transportMode.charAt(0).toUpperCase();
 
         let currentDate = new Date();
@@ -55,7 +55,7 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
             endYearPart = (currentYear + 1).toString().slice(-2);
         }
         let yearPart = `${startYearPart}-${endYearPart}`;
-        const [lastYearRow] = await connection.execute('SELECT jobnumber FROM impjobcreation WHERE branchcode = ? ORDER BY id DESC LIMIT 1', [branchcode]);
+        const [lastYearRow] = await connection.execute('SELECT jobnumber FROM approvalimpjob WHERE branchcode = ? ORDER BY id DESC LIMIT 1', [branchcode]);
 
         if (!lastYearRow || lastYearRow.length === 0) {
             count = 1;
@@ -64,30 +64,31 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
                 if (lastYearRow[0].jobnumber.slice(-5) !== yearPart) {
                     count = 1;
                 } else {
-                    const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM impjobcreation WHERE branchcode = ?', [branchcode]);
+                    const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM approvalimpjob WHERE branchcode = ?', [branchcode]);
                     const maxCount = lastCountRow[0].maxCount || 0;
-
+                    
                     // Increment the count for the new job
-                    count = maxCount + 1;
+                    count = parseInt(maxCount) + 1;
                 }
             } else {
-                const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM impjobcreation WHERE branchcode = ?', [branchcode]);
+                const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM approvalimpjob WHERE branchcode = ?', [branchcode]);
                 const maxCount = lastCountRow[0].maxCount || 0;
-
+               
                 // Increment the count for the new job
-                count = maxCount + 1;
+                count = parseInt(maxCount) + 1;
             }
         }
 
         let jobNumber = `${firstletter}/I/${yearPart}`
 
-        const [result] = await connection.execute(`INSERT INTO impjobcreation 
-        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode]);
-
+        const [result] = await connection.execute(`INSERT INTO approvalimpjob 
+        (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode, uniquevalue, createdat)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode, uniquevalue, currentdate]);
+      
         const insertedId = result.insertId;
-        const [row] = await connection.execute('SELECT * FROM impjobcreation WHERE id = ?', [insertedId]);
+     
+        const [row] = await connection.execute('SELECT * FROM approvalimpjob WHERE id = ?', [insertedId]);
 
         return row;
 
@@ -189,6 +190,7 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 export const updateJobNumber = async (id, transportMode, count, branchname, branchcode, orgname, orgcode) => {
     try {
 
+        console.log(count);
 
         const [rows] = await connection.execute(`SELECT * FROM customjobnumber WHERE orgname = ? AND orgcode = ? AND branchname = ?
         AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
@@ -247,10 +249,18 @@ export const updateJobNumber = async (id, transportMode, count, branchname, bran
         });
 
         // Construct job number dynamically based on the order of columns in `rows`
-        let jobNumberlatest = rows.map(item => jobNumberParts[item.columnname]).join('/');
-
+        // let jobNumberlatest = rows.map(item => jobNumberParts[item.columnname]).join('/');
+        let jobNumberlatest = rows.map(item => {
+            const part = jobNumberParts[item.columnname];
+            // Check if the column is 'Custom' and if its value is not empty
+            if (item.columnname === 'Custom' && part) {
+                return part;
+            }
+            // For other columns or if 'Custom' is empty, trim whitespace if part is not empty
+            return part ? part.trim() : '';
+        }).filter(part => part.length > 0).join('/');
         // Append the count to the job number
-        jobNumberlatest += `${count}`;
+        jobNumberlatest += `/${count}`;
 
 
 
@@ -272,11 +282,11 @@ export const updateJobNumber = async (id, transportMode, count, branchname, bran
 
 
         const [row] = await connection.execute(
-            `UPDATE impjobcreation SET jobnumber = ? WHERE id = ?`,
+            `UPDATE approvalimpjob SET jobnumber = ? WHERE id = ?`,
             [jobNumberlatest, id]
         );
         const [jobDaterow] = await connection.execute(
-            `SELECT jobdate FROM impjobcreation WHERE jobnumber = ?`,
+            `SELECT jobdate FROM approvalimpjob WHERE jobnumber = ?`,
             [jobNumberlatest]
         );
 
@@ -320,11 +330,25 @@ export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, 
 export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode) => {
     try {
 
-        const [row] = await connection.execute(
-            `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination, branchname, branchnameofjob, branchcodeofjob) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, branchname, branchcode]
-        );
+        // const [row] = await connection.execute(
+        //     `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination, branchname, branchnameofjob, branchcodeofjob) 
+        //     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        //     [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, branchname, branchcode]
+        // );
+        const [usernames] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+
+        const getusernames = usernames
+            .filter(item => item.uniquevalue[0] === uniquevalue)
+            .map(item => ({
+                employeename: item.employeename,  // Assuming 'employeename' is the column name
+                status: null
+            }));
+
+        const [row] = await connection.execute(`UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`, [importerName, address, gst, iec, portShipment, finalDestination, getusernames
+            , jobnumber, branchname, branchcode])
+
+
+
 
 
         // const [emailofbranch] = await connection.execute(`SELECT email FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);

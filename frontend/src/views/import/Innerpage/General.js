@@ -763,13 +763,7 @@ const General = () => {
             
             const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp});
             toast.success('Successfully stored General Details');
-            const getApprovers = await axios.get('http://localhost:5000/getApprovernamesfororg', {
-                params: {
-                  orgname: localStorage.getItem('orgname'),
-                  orgcode: localStorage.getItem('orgcode'),
-                  unique: localStorage.getItem('uniquevalue')
-                }
-            })
+           
         } catch (error) {
             toast.error('Error storing General Details.');
             console.log(error);
