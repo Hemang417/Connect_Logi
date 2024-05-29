@@ -43,9 +43,9 @@ import { useNavigate } from 'react-router-dom'
 
 const NotifyRender = () => {
 
-
     const [currentBranch, setCurrentBranch] = useState('');
     const [allnotifications, setallnotifications] = useState([]);
+    const [alljobs, setalljobs] = useState([]);
     const dispatch = useDispatch()
     const sidebarShow = useSelector((state) => state.sidebarShow)
 
@@ -58,12 +58,21 @@ const NotifyRender = () => {
                     orgcode: localStorage.getItem('orgcode')
                 }
             })
-            setallorg(response.data)
+            setallorg(response.data);
+
+            const jobdata = await axios.get('http://localhost:5000/fetchJobnotifications', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode'),
+                    branchcode: localStorage.getItem('branchcodeofemp')
+                }
+            })
+            setalljobs(jobdata.data);
+
         } catch (error) {
             console.log(error);
         }
     }
-
 
     // useEffect(() => {
     //   const ws = new WebSocket('ws://localhost:8081');
@@ -81,9 +90,6 @@ const NotifyRender = () => {
     //     ws.close();
     //   };
     // }, []);
-
-
-
 
 
     useEffect(() => {
@@ -114,8 +120,6 @@ const NotifyRender = () => {
             console.log(error);
         }
     }
-
-
 
     useEffect(() => {
         fetchNotifications()
@@ -219,8 +223,6 @@ const NotifyRender = () => {
                         } */}
 
 
-
-
                         {allnotifications && allnotifications.map((item, index) => {
                             // Check if localStorage username matches any name in approvername array
                             const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
@@ -280,11 +282,32 @@ const NotifyRender = () => {
                             return null; // Otherwise, return null to skip rendering
                         })}
 
-
-
                     </CTableBody>
 
                 </CTable>
+
+
+                <CTable hover responsive>
+                    <CTableHead>
+                        <CTableRow>
+                            <CTableHeaderCell>Date</CTableHeaderCell>
+                            <CTableHeaderCell>Task Name</CTableHeaderCell>
+                        </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                        {alljobs && alljobs.map((job,index) => {
+                            return (
+                                <CTableRow key={index}>
+                                    <CTableDataCell className="notif">{reverse(job.createdat)}</CTableDataCell>
+                                    <CTableDataCell className="notif">{job.jobnumber}</CTableDataCell>
+                                </CTableRow>
+                            );
+                        })}
+                    </CTableBody>
+
+                </CTable>
+
+
 
             </CForm>
         </div>

@@ -18,6 +18,64 @@ USE `crm_db`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `approvalimpjob`
+--
+
+DROP TABLE IF EXISTS `approvalimpjob`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `approvalimpjob` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `jobnumber` varchar(50) NOT NULL,
+  `jobdate` datetime NOT NULL,
+  `docreceivedon` datetime NOT NULL,
+  `transportmode` varchar(45) NOT NULL,
+  `customhouse` varchar(45) NOT NULL,
+  `ownbooking` varchar(45) NOT NULL,
+  `deliverymode` varchar(45) NOT NULL,
+  `noofcontainer` int NOT NULL,
+  `owntransportation` varchar(45) NOT NULL,
+  `betype` varchar(45) NOT NULL,
+  `consignmenttype` varchar(45) NOT NULL,
+  `cfsname` varchar(45) NOT NULL,
+  `shippinglinename` varchar(45) NOT NULL,
+  `bltype` varchar(45) NOT NULL,
+  `bltypenum` varchar(45) NOT NULL,
+  `orgname` varchar(45) NOT NULL,
+  `orgcode` varchar(45) NOT NULL,
+  `jobowner` varchar(45) NOT NULL,
+  `freedays` varchar(45) NOT NULL,
+  `blstatus` varchar(45) NOT NULL,
+  `benumber` varchar(45) NOT NULL,
+  `shippinglinebond` varchar(45) NOT NULL,
+  `count` varchar(45) NOT NULL,
+  `branchname` varchar(45) NOT NULL,
+  `branchcode` varchar(45) NOT NULL,
+  `importername` varchar(150) DEFAULT 'null',
+  `address` varchar(50) DEFAULT 'null',
+  `GST` varchar(45) DEFAULT 'null',
+  `IEC` varchar(45) DEFAULT 'null',
+  `finaldestination` varchar(45) DEFAULT 'null',
+  `portofshipment` varchar(45) DEFAULT 'null',
+  `approval` json DEFAULT NULL,
+  `uniquevalue` varchar(45) NOT NULL,
+  `createdat` varchar(45) NOT NULL,
+  `importerbranchname` varchar(45) DEFAULT 'null',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this table is to store approvaljob before actually approving or rejecting';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `approvalimpjob`
+--
+
+LOCK TABLES `approvalimpjob` WRITE;
+/*!40000 ALTER TABLE `approvalimpjob` DISABLE KEYS */;
+INSERT INTO `approvalimpjob` VALUES (1,'24-25/A/Raxaul/I/xyzabc/1','2024-05-28 19:29:00','2024-05-22 19:29:00','Air','Kolkata Sea4dfg','Nodfgfd','Destuff34534',934,'Yes','Ex-Bond','FCL','345346gfh','ert','HBL/HAWB','goku','Seawave Forwarding Logistics','seawave@2323','rishi@manager','345','Surrender','hf56','OneTime','1','Raxaul','Raxaul-2323','Hari Hareshwar','dsg','5434','gdt435','fds','dsf','[{\"status\": null, \"employeename\": \"aayush@manager\"}, {\"status\": \"Approve\", \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"shreyash@executive\"}]','JobsButton','2024-05-28','hareshwar'),(2,'24-25/S/Raxaul/I/xyzabc/2','2024-05-29 17:39:00','2024-05-20 17:39:00','Sea','Vadodra ICD','Yes','Loaded',90,'Yes','Home','LCL','dfgd','fdg','MBL/MAWB','dgdf','Seawave Forwarding Logistics','seawave@2323','shreyash@executive','9','Surrender','gfdg334','Yearly','2','Raxaul','Raxaul-2323','Gazai Medicals','fsdg','h34','hfgt43','nana','nana','[{\"status\": null, \"employeename\": \"aayush@manager\"}, {\"status\": \"Approve\", \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"shreyash@executive\"}]','JobsButton','2024-05-29','ghana'),(3,'24-25/A/Raxaul/I/xyzabc/3','2024-05-29 18:06:00','2024-05-27 18:06:00','Air','Mumbai Sea','Yes','Loaded',768,'No','In-Bond','Break Bulk','345346gfh','gh56','HBL/HAWB','ert','Seawave Forwarding Logistics','seawave@2323','aayush@manager','9','Surrender','ret','OneTime','3','Raxaul','Raxaul-2323','zaza test','dsg','5434','gdt435','mumbai','goti','[{\"status\": \"Reject\", \"employeename\": \"aayush@manager\"}, {\"status\": null, \"employeename\": \"hemang@executive\"}, {\"status\": null, \"employeename\": \"shreyash@executive\"}]','JobsButton','2024-05-29','zaza'),(4,'24-25/S/Raxaul/I/xyzabc/4','2024-05-29 18:30:00','2024-05-24 18:30:00','Sea','Pipavav Victor Port','Yes','Loaded',3,'No','SEZ-T','FCL','dummy','dfhdfg','MBL/MAWB','dgdfhgd','Seawave Forwarding Logistics','seawave@2323','shreyash@executive','45','Surrender','rr45','OneTime','4','Raxaul','Raxaul-2323','GTA','dsg','34fds','534f','portland','miami','[{\"status\": \"Approve\", \"employeename\": \"aayush@manager\"}, {\"status\": null, \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"shreyash@executive\"}]','JobsButton','2024-05-29','Miami'),(5,'Jogbani/A/24-25/I/yy/1','2024-05-29 18:39:00','2024-05-23 18:39:00','Air','Jogbani LCS','Yes','Loaded',45,'No','SEZ-T','LCL','345346gfh','fgh','HBL/HAWB','goku','Seawave Forwarding Logistics','seawave@2323','hemang@executive','345','Original','hf56','Yearly','1','Jogbani','Jogbani-2323','Notif Test','Omkar Apartment  B-10-15 Sector-15 1:1','89','1','jnpt one','jnpt','[{\"status\": \"Approve\", \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"aayush@manager\"}]','JobsButton','2024-05-29','motif'),(6,'Jogbani/A/24-25/I/yy/2','2024-05-29 19:00:00','2024-05-25 19:00:00','Air','Mundra Sea','Yes','Loaded',768,'Yes','SEZ-T','Break Bulk','345346gfh','fgh','HBL/HAWB','gdfg','Seawave Forwarding Logistics','seawave@2323','hemang@executive','54','Surrender','hf56','OneTime','2','Jogbani','Jogbani-2323','Notification Test Final','Omkar Apartment B-10-15 Sector-15 1:1','32534','342','gendu','gendu','[{\"status\": \"Approve\", \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"aayush@manager\"}]','JobsButton','2024-05-29','Allorg'),(7,'Jogbani/A/24-25/I/yy/3','2024-05-29 19:23:00','2024-05-19 19:23:00','Air','Jogbani LCS','Yes','Destuff',8,'Yes','Home','FCL','cfs','ship','HBL/HAWB','hawb','Seawave Forwarding Logistics','seawave@2323','hemang@executive','1','Original','th4567fh','Yearly','3','Jogbani','Jogbani-2323','Hazardous notification','23-34-2 ghasoli ulwe mum','dsgsdf','fdsdf','gendu','gendu','[{\"status\": \"Approve\", \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"aayush@manager\"}]','JobsButton','2024-05-29','haland'),(8,'Jogbani/S/24-25/I/yy/4','2024-05-29 19:27:00','2024-05-28 19:26:00','Sea','Kolkata Sea','Yes','Destuff',3,'No','SEZ-Z','LCL','dummy','dfhdfg','HBL/HAWB','dgdfhgd','Seawave Forwarding Logistics','seawave@2323','aayush@manager','6','Surrender','t67','OneTime','4','Jogbani','Jogbani-2323','Damru','Omkar Apartment  B-10-15 Sector-15 1:1','dfg435','435gf','dfdsf','fddgf','[{\"status\": \"Approve\", \"employeename\": \"hemang@executive\"}, {\"status\": \"Approve\", \"employeename\": \"aayush@manager\"}]','JobsButton','2024-05-29','nanded'),(9,'Jogbani/S/24-25/I/yy/5','2024-05-29 20:11:00','2024-05-28 20:11:00','Sea','Hazira','Yes','Loaded',7,'No','Home','Break Bulk','fdgf','dfgf','MBL/MAWB','dgdfhgd','Seawave Forwarding Logistics','seawave@2323','aayush@manager','6','Surrender','rr45','OneTime','5','Jogbani','Jogbani-2323','usain bolt','Omkar Apartment B-10-15 Sector-15 1:1','erfd464','34','good bye','test','[{\"status\": null, \"employeename\": \"hemang@executive\"}, {\"status\": null, \"employeename\": \"aayush@manager\"}]','JobsButton','2024-05-29','gdsfds');
+/*!40000 ALTER TABLE `approvalimpjob` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `approvalorg`
 --
 
@@ -77,7 +135,7 @@ CREATE TABLE `approverlist` (
   `uniquevalue` json NOT NULL,
   `selectedcount` int DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this table is to store the name of the approver list of a particular organization';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this table is to store the name of the approver list of a particular organization';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +144,7 @@ CREATE TABLE `approverlist` (
 
 LOCK TABLES `approverlist` WRITE;
 /*!40000 ALTER TABLE `approverlist` DISABLE KEYS */;
-INSERT INTO `approverlist` VALUES ('Seawave Forwarding Logistics','seawave@2323',4,'Organizations','Raxaul','Raxaul-2323','[\"OrgButton\"]',2),('Seawave Forwarding Logistics','seawave@2323',5,'Jobs','Raxaul','Raxaul-2323','[\"JobsButton\"]',0);
+INSERT INTO `approverlist` VALUES ('Seawave Forwarding Logistics','seawave@2323',4,'Organizations','Raxaul','Raxaul-2323','[\"OrgButton\"]',2),('Seawave Forwarding Logistics','seawave@2323',5,'Jobs','Raxaul','Raxaul-2323','[\"JobsButton\"]',2),('Seawave Forwarding Logistics','seawave@2323',7,'Jobs','Jogbani','Jogbani-2323','[\"JobsButton\"]',2);
 /*!40000 ALTER TABLE `approverlist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,7 +166,7 @@ CREATE TABLE `approvername` (
   `uniquevalue` json NOT NULL,
   `aid` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this table is to store all the names of users for a particular approval list';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this table is to store all the names of users for a particular approval list';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +175,7 @@ CREATE TABLE `approvername` (
 
 LOCK TABLES `approvername` WRITE;
 /*!40000 ALTER TABLE `approvername` DISABLE KEYS */;
-INSERT INTO `approvername` VALUES (4,'Seawave Forwarding Logistics','seawave@2323','Organizations','rishi@manager','Raxaul','Raxaul-2323','[\"OrgButton\"]',4),(5,'Seawave Forwarding Logistics','seawave@2323','Organizations','hemang@executive','Raxaul','Raxaul-2323','[\"OrgButton\"]',4),(6,'Seawave Forwarding Logistics','seawave@2323','Organizations','aayush@manager','Raxaul','Raxaul-2323','[\"OrgButton\"]',4);
+INSERT INTO `approvername` VALUES (4,'Seawave Forwarding Logistics','seawave@2323','Organizations','rishi@manager','Raxaul','Raxaul-2323','[\"OrgButton\"]',4),(5,'Seawave Forwarding Logistics','seawave@2323','Organizations','hemang@executive','Raxaul','Raxaul-2323','[\"OrgButton\"]',4),(6,'Seawave Forwarding Logistics','seawave@2323','Organizations','aayush@manager','Raxaul','Raxaul-2323','[\"OrgButton\"]',4),(7,'Seawave Forwarding Logistics','seawave@2323','Jobs','aayush@manager','Raxaul','Raxaul-2323','[\"JobsButton\"]',5),(8,'Seawave Forwarding Logistics','seawave@2323','Jobs','hemang@executive','Raxaul','Raxaul-2323','[\"JobsButton\"]',5),(9,'Seawave Forwarding Logistics','seawave@2323','Jobs','shreyash@executive','Raxaul','Raxaul-2323','[\"JobsButton\"]',5),(10,'Seawave Forwarding Logistics','seawave@2323','Jobs','hemang@executive','Jogbani','Jogbani-2323','[\"JobsButton\"]',7),(11,'Seawave Forwarding Logistics','seawave@2323','Jobs','aayush@manager','Jogbani','Jogbani-2323','[\"JobsButton\"]',7);
 /*!40000 ALTER TABLE `approvername` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -349,7 +407,7 @@ CREATE TABLE `impgeneral` (
   `branchcodeofjob` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_job_number` (`jobnumber`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this is to store the general component data ';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this is to store the general component data ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -358,7 +416,7 @@ CREATE TABLE `impgeneral` (
 
 LOCK TABLES `impgeneral` WRITE;
 /*!40000 ALTER TABLE `impgeneral` DISABLE KEYS */;
-INSERT INTO `impgeneral` VALUES (1,'Apexsea Logistics Pvt Ltd','Omkar Apartment B-10-15 Sector-15 1:1','89','1','dddgfgfdgf','fddgf','Seawave Forwarding Logistics','seawave@2323','admin','A/I/1/24-25','Vashi','Raxaul','Raxaul-2323'),(2,'GTA','dsg','34fds','534f','good bye','test','Seawave Forwarding Logistics','seawave@2323','hemang@executive','24-25/S/Raxaul/I//xyzabc/2','Miami','Raxaul','Raxaul-2323'),(3,'Damru','Omkar Apartment  B-10-15 Sector-15 1:1','dfg435','435gf','good bye','hi','Seawave Forwarding Logistics','seawave@2323','aayush@manager','Jogbani/S/24-25//I/yy/1','nanded','Jogbani','Jogbani-2323'),(4,'GTA','dsg','34fds','534f','jh','yj','Seawave Forwarding Logistics','seawave@2323','rishi@manager','24-25/A/Raxaul/I//xyzabc/3','Miami','Raxaul','Raxaul-2323');
+INSERT INTO `impgeneral` VALUES (1,'Hari Hareshwar','dsg','5434','gdt435','fds','dsf','Seawave Forwarding Logistics','seawave@2323','rishi@manager','24-25/A/Raxaul/I/xyzabc/1','hareshwar','Raxaul','Raxaul-2323'),(2,'Gazai Medicals','fsdg','h34','hfgt43','nana','nana','Seawave Forwarding Logistics','seawave@2323','shreyash@executive','24-25/S/Raxaul/I/xyzabc/2','ghana','Raxaul','Raxaul-2323'),(3,'GTA','dsg','34fds','534f','portland','miami','Seawave Forwarding Logistics','seawave@2323','shreyash@executive','24-25/S/Raxaul/I/xyzabc/4','Miami','Raxaul','Raxaul-2323'),(4,'Notif Test','Omkar Apartment  B-10-15 Sector-15 1:1','89','1','jnpt one','jnpt','Seawave Forwarding Logistics','seawave@2323','hemang@executive','Jogbani/A/24-25/I/yy/1','motif','Jogbani','Jogbani-2323'),(5,'Notification Test Final','Omkar Apartment B-10-15 Sector-15 1:1','32534','342','gendu','gendu','Seawave Forwarding Logistics','seawave@2323','hemang@executive','Jogbani/A/24-25/I/yy/2','Allorg','Jogbani','Jogbani-2323'),(6,'Hazardous notification','23-34-2 ghasoli ulwe mum','dsgsdf','fdsdf','gendu','gendu','Seawave Forwarding Logistics','seawave@2323','hemang@executive','Jogbani/A/24-25/I/yy/3','haland','Jogbani','Jogbani-2323'),(7,'Damru','Omkar Apartment  B-10-15 Sector-15 1:1','dfg435','435gf','dfdsf','fddgf','Seawave Forwarding Logistics','seawave@2323','aayush@manager','Jogbani/S/24-25/I/yy/4','nanded','Jogbani','Jogbani-2323');
 /*!40000 ALTER TABLE `impgeneral` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -398,7 +456,7 @@ CREATE TABLE `impjobcreation` (
   `branchcode` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_jobnumber` (`jobnumber`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this is where all creation of job in import will be stored';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this is where all creation of job in import will be stored';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,8 +465,43 @@ CREATE TABLE `impjobcreation` (
 
 LOCK TABLES `impjobcreation` WRITE;
 /*!40000 ALTER TABLE `impjobcreation` DISABLE KEYS */;
-INSERT INTO `impjobcreation` VALUES ('A/I/1/24-25','2024-04-25 20:01:00','2024-04-20 20:01:00','Air','Mumbai Sea','Yes','Loaded',3,'Yes','Home','LCL','dummy','dfhdfg','HBL/HAWB','dgdfhgd','Seawave Forwarding Logistics','seawave@2323','admin',1,6,'Surrender','rr45','OneTime',1,'Raxaul','Raxaul-2323'),('24-25/S/Raxaul/I//xyzabc/2','2024-05-24 15:45:00','2024-05-09 15:45:00','Sea','Nhava Sea','Yes','Destuff',7,'No','Ex-Bond','Break Bulk','dummy','dfgf','HBL/HAWB','goku','Seawave Forwarding Logistics','seawave@2323','hemang@executive',12,5,'Surrender','yt56','Yearly',2,'Raxaul','Raxaul-2323'),('Jogbani/S/24-25//I/yy/1','2024-05-24 15:48:00','2024-05-07 15:48:00','Sea','Vadodra ICD','No','Destuff',7,'No','Ex-Bond','LCL','dgdfg','dfgf','MBL/MAWB','dgdfgfd','Seawave Forwarding Logistics','seawave@2323','aayush@manager',13,5,'Surrender','yt56','OneTime',1,'Jogbani','Jogbani-2323'),('24-25/A/Raxaul/I//xyzabc/3','2024-05-25 15:16:00','2024-05-08 15:16:00','Air','Raxaul LCS','No','Destuff',9,'Yes','Home','Break Bulk','fg','fgh','HBL/HAWB','goku','Seawave Forwarding Logistics','seawave@2323','rishi@manager',14,9,'Surrender','hf56','OneTime',3,'Raxaul','Raxaul-2323');
+INSERT INTO `impjobcreation` VALUES ('24-25/A/Raxaul/I/xyzabc/1','2024-05-28 19:29:00','2024-05-22 19:29:00','Air','Kolkata Sea4dfg','Nodfgfd','Destuff34534',934,'Yes','Ex-Bond','FCL','345346gfh','ert','HBL/HAWB','goku','Seawave Forwarding Logistics','seawave@2323','rishi@manager',1,345,'Surrender','hf56','OneTime',1,'Raxaul','Raxaul-2323'),('24-25/S/Raxaul/I/xyzabc/2','2024-05-29 17:39:00','2024-05-20 17:39:00','Sea','Vadodra ICD','Yes','Loaded',90,'Yes','Home','LCL','dfgd','fdg','MBL/MAWB','dgdf','Seawave Forwarding Logistics','seawave@2323','shreyash@executive',2,9,'Surrender','gfdg334','Yearly',2,'Raxaul','Raxaul-2323'),('24-25/S/Raxaul/I/xyzabc/4','2024-05-29 18:30:00','2024-05-24 18:30:00','Sea','Pipavav Victor Port','Yes','Loaded',3,'No','SEZ-T','FCL','dummy','dfhdfg','MBL/MAWB','dgdfhgd','Seawave Forwarding Logistics','seawave@2323','shreyash@executive',3,45,'Surrender','rr45','OneTime',4,'Raxaul','Raxaul-2323'),('Jogbani/A/24-25/I/yy/1','2024-05-29 18:39:00','2024-05-23 18:39:00','Air','Jogbani LCS','Yes','Loaded',45,'No','SEZ-T','LCL','345346gfh','fgh','HBL/HAWB','goku','Seawave Forwarding Logistics','seawave@2323','hemang@executive',4,345,'Original','hf56','Yearly',1,'Jogbani','Jogbani-2323'),('Jogbani/A/24-25/I/yy/2','2024-05-29 19:00:00','2024-05-25 19:00:00','Air','Mundra Sea','Yes','Loaded',768,'Yes','SEZ-T','Break Bulk','345346gfh','fgh','HBL/HAWB','gdfg','Seawave Forwarding Logistics','seawave@2323','hemang@executive',5,54,'Surrender','hf56','OneTime',2,'Jogbani','Jogbani-2323'),('Jogbani/A/24-25/I/yy/3','2024-05-29 19:23:00','2024-05-19 19:23:00','Air','Jogbani LCS','Yes','Destuff',8,'Yes','Home','FCL','cfs','ship','HBL/HAWB','hawb','Seawave Forwarding Logistics','seawave@2323','hemang@executive',6,1,'Original','th4567fh','Yearly',3,'Jogbani','Jogbani-2323'),('Jogbani/S/24-25/I/yy/4','2024-05-29 19:27:00','2024-05-28 19:26:00','Sea','Kolkata Sea','Yes','Destuff',3,'No','SEZ-Z','LCL','dummy','dfhdfg','HBL/HAWB','dgdfhgd','Seawave Forwarding Logistics','seawave@2323','aayush@manager',7,6,'Surrender','t67','OneTime',4,'Jogbani','Jogbani-2323');
 /*!40000 ALTER TABLE `impjobcreation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `impnotifications`
+--
+
+DROP TABLE IF EXISTS `impnotifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `impnotifications` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `jobnumber` varchar(50) NOT NULL,
+  `importername` varchar(45) NOT NULL,
+  `createdat` varchar(45) NOT NULL,
+  `uniquevalue` varchar(45) NOT NULL,
+  `importerbranchname` varchar(45) NOT NULL,
+  `approvername` json NOT NULL,
+  `timeofreading` json NOT NULL,
+  `reading` json NOT NULL,
+  `orgname` varchar(45) NOT NULL,
+  `orgcode` varchar(45) NOT NULL,
+  `branchname` varchar(45) NOT NULL,
+  `branchcode` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='this table is to store import notifications ';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `impnotifications`
+--
+
+LOCK TABLES `impnotifications` WRITE;
+/*!40000 ALTER TABLE `impnotifications` DISABLE KEYS */;
+INSERT INTO `impnotifications` VALUES (1,'Jogbani/S/24-25/I/yy/5','usain bolt','2024-05-29','JobsButton','gdsfds','[{\"employeename\": \"hemang@executive\"}, {\"employeename\": \"aayush@manager\"}]','[{\"time\": null, \"employeename\": \"hemang@executive\"}, {\"time\": null, \"employeename\": \"aayush@manager\"}]','[{\"read\": 0, \"approved\": 0, \"employeename\": \"hemang@executive\"}, {\"read\": 0, \"approved\": 0, \"employeename\": \"aayush@manager\"}]','Seawave Forwarding Logistics','seawave@2323','Jogbani','Jogbani-2323');
+/*!40000 ALTER TABLE `impnotifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -920,4 +1013,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-25 18:22:49
+-- Dump completed on 2024-05-29 20:27:55

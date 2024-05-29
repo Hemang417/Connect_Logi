@@ -66,14 +66,14 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
                 } else {
                     const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM approvalimpjob WHERE branchcode = ?', [branchcode]);
                     const maxCount = lastCountRow[0].maxCount || 0;
-                    
+
                     // Increment the count for the new job
                     count = parseInt(maxCount) + 1;
                 }
             } else {
                 const [lastCountRow] = await connection.execute('SELECT MAX(count) AS maxCount FROM approvalimpjob WHERE branchcode = ?', [branchcode]);
                 const maxCount = lastCountRow[0].maxCount || 0;
-               
+
                 // Increment the count for the new job
                 count = parseInt(maxCount) + 1;
             }
@@ -85,9 +85,9 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
         (jobnumber, jobdate, docreceivedon, transportmode, customhouse, ownbooking, deliverymode, noofcontainer, owntransportation, betype, consignmenttype, cfsname, shippinglinename, bltype, bltypenum, jobowner, orgcode, orgname, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode, uniquevalue, createdat)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [jobNumber, jobDate, docReceivedOn, transportMode, customHouse, ownBooking, deliveryMode, numberOfContainer, ownTransportation, beType, consignmentType, cfsName, shippingLineName, blType, bltypenumber, jobOwner, orgname, orgcode, freedays, blstatus, benumber, shippinglinebond, count, branchname, branchcode, uniquevalue, currentdate]);
-      
+
         const insertedId = result.insertId;
-     
+
         const [row] = await connection.execute('SELECT * FROM approvalimpjob WHERE id = ?', [insertedId]);
 
         return row;
@@ -326,7 +326,7 @@ export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, 
 
 
 
-export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode) => {
+export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode, createdat) => {
     try {
 
         // const [row] = await connection.execute(
@@ -336,6 +336,33 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         // );
         const [usernames] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
 
+        const readingarray = [];
+        const timeofreadingarray = [];
+        const approvername = [];
+        for (const user of usernames) {
+            readingarray.push({
+                employeename: user.employeename,
+                read: 0,
+                approved: 0
+            });
+
+            timeofreadingarray.push({
+                employeename: user.employeename,
+                time: null
+            });
+
+            approvername.push({
+                employeename: user.employeename,
+            });
+
+        }
+
+        const [impnotification] = await connection.execute(`INSERT INTO impnotifications 
+        (orgname, orgcode, jobnumber, importername, importerbranchname, uniquevalue, createdat, reading, timeofreading, approvername,branchname,branchcode)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+            [orgname, orgcode, jobnumber, importerName, selectedBranch, uniquevalue, createdat, JSON.stringify(readingarray),
+                JSON.stringify(timeofreadingarray), JSON.stringify(approvername),branchname,branchcode])
+
         const getusernames = usernames
             .filter(item => item.uniquevalue[0] === uniquevalue)
             .map(item => ({
@@ -344,7 +371,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
             }));
 
         const [row] = await connection.execute(`UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ?, importerbranchname = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`, [importerName, address, gst, iec, portShipment, finalDestination, getusernames,
-           selectedBranch , jobnumber, branchname, branchcode])
+            selectedBranch, jobnumber, branchname, branchcode])
 
 
 

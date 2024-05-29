@@ -1,4 +1,5 @@
 import { connectMySQL } from "../config/sqlconfig.js";
+import { broadcast } from '../websocketServer.js'
 const connection = await connectMySQL();
 
 export const getapproverofJobs = async (orgname, orgcode, uniquevalue, branchcode) => {
@@ -106,6 +107,16 @@ export const ApprovalJobMainLogic = async (orgname, orgcode, uniquevalue) => {
                 )
                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`, [job.importername, job.address, job.GST, job.IEC,
                 job.finaldestination, job.portofshipment, orgname, orgcode, job.jobowner, job.jobnumber, job.importerbranchname, job.branchname, job.branchcode]);
+
+                const [employees] = await connection.execute(`SELECT * FROM employees WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+
+                employees.forEach(employee => {
+                    broadcast({
+                        username: employee.username,
+                        type: 'new_job',
+                        message: `A new job ${job.jobnumber} has been added.`
+                    });
+                });
 
             }
         }

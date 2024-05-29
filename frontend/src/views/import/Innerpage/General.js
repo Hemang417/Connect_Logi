@@ -692,6 +692,7 @@ import '../../../css/styles.css';
 import { CChart } from '@coreui/react-chartjs'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import moment from 'moment';
 
 
 const General = () => {
@@ -760,8 +761,9 @@ const General = () => {
             const codeoforg = localStorage.getItem('orgcode');
             const branchnameofemp = localStorage.getItem('branchnameofemp');
             const branchcodeofemp = localStorage.getItem('branchcodeofemp');
-            
-            const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp});
+            const currentDate = new Date();
+            const formatDate = moment(currentDate).format('YYYY-MM-DD');
+            const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp, createdat: formatDate});
             toast.success('Successfully stored General Details');
            
         } catch (error) {

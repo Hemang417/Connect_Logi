@@ -34,6 +34,7 @@ import { fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotific
 import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangementofthatbranch, updateColumn } from './api/arrangement.js'
 import { getBranches, storeKYC } from './api/kyc.js'
 import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJobsofImp } from './api/jobapproval.js'
+import { fetchImpJobs } from './api/impjobnotifications.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -413,9 +414,9 @@ app.get('/getorganizationdetails', async (req, res) => {
 
 app.post('/createGeneral', async (req, res) => {
     try {
-        const { orgname, orgcode, jobowner, jobnumber, branchname, branchcode } = req.body;
+        const { orgname, orgcode, jobowner, jobnumber, branchname, branchcode, createdat } = req.body;
         const { importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id } = req.body.formData;
-        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode);
+        const storingGeneralImportData = await storeGeneralImportData(orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode, createdat);
 
         res.send(storingGeneralImportData);
     } catch (error) {
@@ -1716,9 +1717,20 @@ app.get('/getapprovedJob', async (req, res) => {
 
 app.get('/getAllJobs', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const allimpjobsisthis = await getAllJobsofImp(orgname, orgcode);
         res.send(allimpjobsisthis);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.get('/fetchJobnotifications', async (req, res) => {
+    try {
+        const { orgname, orgcode, branchcode } = req.query;
+        const fetchedjob = await fetchImpJobs(orgname, orgcode, branchcode);
+        res.send(fetchedjob);
     } catch (error) {
         console.log(error);
     }

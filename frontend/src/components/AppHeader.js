@@ -131,6 +131,11 @@ const AppHeader = () => {
         fetchNotifications()
         addNotification(data.message)
       }
+      if(data.type === 'new_job'){
+        toast.success(data.message)
+        // fetchNotifications()
+        addNotification(data.message)
+      }
     }
     return () => {
       ws.close()
@@ -315,10 +320,9 @@ const AppHeader = () => {
                     <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Alerts</CDropdownHeader>
                     <CRow>
                       <div className="notification-area">
-                        {visibleNotifications.map((notification, index) => (
+                        {visibleNotifications && visibleNotifications.map((notification, index) => (
                           <CDropdownItem key={index} style={{ marginLeft: 20 }}>{notification.message}</CDropdownItem>
                         ))}
-
                       </div>
 
                     </CRow>
