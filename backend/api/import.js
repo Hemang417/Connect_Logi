@@ -190,7 +190,6 @@ export const storeJob = async (jobDate, docReceivedOn, transportMode, customHous
 export const updateJobNumber = async (id, transportMode, count, branchname, branchcode, orgname, orgcode) => {
     try {
 
-        console.log(count);
 
         const [rows] = await connection.execute(`SELECT * FROM customjobnumber WHERE orgname = ? AND orgcode = ? AND branchname = ?
         AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
@@ -335,7 +334,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         //     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         //     [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, branchname, branchcode]
         // );
-        const [usernames] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const [usernames] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
 
         const getusernames = usernames
             .filter(item => item.uniquevalue[0] === uniquevalue)
@@ -344,8 +343,8 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
                 status: null
             }));
 
-        const [row] = await connection.execute(`UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`, [importerName, address, gst, iec, portShipment, finalDestination, getusernames
-            , jobnumber, branchname, branchcode])
+        const [row] = await connection.execute(`UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ?, importerbranchname = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`, [importerName, address, gst, iec, portShipment, finalDestination, getusernames,
+           selectedBranch , jobnumber, branchname, branchcode])
 
 
 

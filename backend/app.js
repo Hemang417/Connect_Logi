@@ -33,7 +33,7 @@ import { storingRole, getUserRoles, DeleteUserRole, updateRoleofuser } from './a
 import { fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotifications } from './api/notifications.js'
 import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangementofthatbranch, updateColumn } from './api/arrangement.js'
 import { getBranches, storeKYC } from './api/kyc.js'
-import {getapproverofJobs,getJob} from './api/jobapproval.js'
+import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJobsofImp } from './api/jobapproval.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1669,8 +1669,8 @@ app.post('/uploadKYCData', upload.single('profilePhoto'), async (req, res) => {
 
 app.get('/getapproverofJobs', async (req, res) => {
     try {
-        const {orgname, orgcode, uniquevalue} = req.query;
-        const approverdata = await getapproverofJobs(orgname, orgcode, uniquevalue);
+        const { orgname, orgcode, uniquevalue, branchcode } = req.query;
+        const approverdata = await getapproverofJobs(orgname, orgcode, uniquevalue, branchcode);
         res.send(approverdata);
     } catch (error) {
         console.log(error);
@@ -1679,7 +1679,7 @@ app.get('/getapproverofJobs', async (req, res) => {
 
 app.get('/fetchlatestjob', async (req, res) => {
     try {
-        const {orgname, orgcode} = req.query;
+        const { orgname, orgcode } = req.query;
         const latestjob = await getJob(orgname, orgcode);
         res.send(latestjob);
     } catch (error) {
@@ -1687,6 +1687,42 @@ app.get('/fetchlatestjob', async (req, res) => {
     }
 })
 
+
+app.put('/approveImpJob', async (req, res) => {
+    try {
+        const { jobId } = req.body;
+        const { GST, IEC, address, benumber, betype, blstatus, bltype, bltypenum, branchcode, branchname,
+            cfsname, consignmenttype, customhouse, deliverymode, finaldestination, freedays, importername, jobdate, jobnumber, jobowner, noofcontainer, orgname,
+            orgcode, ownbooking, owntransportation, portofshipment, shippinglinebond, shippinglinename, transportmode } = req.body.updatedFields;
+        const { username, status } = req.body.approval
+        const updatedRowinjobapproval = await approveImpJob(jobId, GST, IEC, address, benumber, betype, blstatus, bltype, bltypenum, branchcode, branchname,
+            cfsname, consignmenttype, customhouse, deliverymode, finaldestination, freedays, importername, jobdate, jobnumber, jobowner, noofcontainer, orgname,
+            orgcode, ownbooking, owntransportation, portofshipment, shippinglinebond, shippinglinename, transportmode, username, status);
+        res.send(updatedRowinjobapproval);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getapprovedJob', async (req, res) => {
+    try {
+        const { orgname, orgcode, uniquevalue } = req.query;
+        const approvedJobshaiye = await ApprovalJobMainLogic(orgname, orgcode, uniquevalue);
+        res.send(approvedJobshaiye)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getAllJobs', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const allimpjobsisthis = await getAllJobsofImp(orgname, orgcode);
+        res.send(allimpjobsisthis);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
