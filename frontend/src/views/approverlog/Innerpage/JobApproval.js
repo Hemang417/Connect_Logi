@@ -16,6 +16,7 @@ import {
 } from '@coreui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import "../../../css/styles.css"
 
 const JobApproval = () => {
     const [selectedJob, setSelectedJob] = useState(null);
@@ -214,108 +215,107 @@ const JobApproval = () => {
                 </CTableBody>
             </CTable>
 
-            <CModal visible={selectedJob !== null} onClose={closeModal}>
+            <CModal size="xl" visible={selectedJob !== null} onClose={closeModal}>
                 <CModalHeader onClose={closeModal}>
                     <CModalTitle>All Job Data</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     {selectedJob && (
                         <>
-                            <div>
+                            <div className='impapprovalmodal'>
+                                <label>Importer Name:</label>
+                                <input type="text" value={selectedJob.importername} readOnly />
+
+                                <label>Branch</label>
+                                <input type="text" value={selectedJob.importername} readOnly />
+                            </div>
+
+                            <div className='impapprovalmodal'>
                                 <label>Job Number:</label>
                                 <input type="text" value={selectedJob.jobnumber} readOnly />
-                            </div>
-                            <div>
+
                                 <label>Job Date:</label>
                                 <input type="text" value={selectedJob.jobdate} readOnly />
-                            </div>
-                            <div>
-                                <label>Doc received on:</label>
+
+                                <label>Doc Received On:</label>
                                 <input type="text" value={selectedJob.docreceivedon} readOnly />
-                            </div>
-                            <div>
+
                                 <label>Transport Mode:</label>
-                                <input type="text" value={selectedJob.transportmode} onChange={(e) => handleInputChange(e, 'transportmode')} />
+                                <input type="text" value={selectedJob.transportmode} onChange={(e) => handleInputChange(e, 'transportmode')} readOnly />
+
                             </div>
-                            <div>
+
+                            <div className='impapprovalmodal'>
                                 <label>Custom House:</label>
                                 <input type="text" value={selectedJob.customhouse} onChange={(e) => handleInputChange(e, 'customhouse')} />
-                            </div>
-                            <div>
+
                                 <label>Own Booking:</label>
                                 <input type="text" value={selectedJob.ownbooking} onChange={(e) => handleInputChange(e, 'ownbooking')} />
-                            </div>
-                            <div>
-                                <label>Delivery mode:</label>
+
+                                <label>Delivery Mode:</label>
                                 <input type="text" value={selectedJob.deliverymode} onChange={(e) => handleInputChange(e, 'deliverymode')} />
-                            </div>
-                            <div>
-                                <label>Number of Container:</label>
+
+                                <label>No. of Container:</label>
                                 <input type="text" value={selectedJob.noofcontainer} onChange={(e) => handleInputChange(e, 'noofcontainer')} />
                             </div>
-                            <div>
+
+                            <div className='impapprovalmodal'>
                                 <label>Own Transportation:</label>
                                 <input type="text" value={selectedJob.owntransportation} onChange={(e) => handleInputChange(e, 'owntransportation')} />
-                            </div>
-                            <div>
-                                <label>Be Type:</label>
+
+                                <label>BE Type:</label>
                                 <input type="text" value={selectedJob.betype} onChange={(e) => handleInputChange(e, 'betype')} />
-                            </div>
-                            <div>
+
+                                <label>BE No:</label>
+                                <input type="text" value={selectedJob.benumber} onChange={(e) => handleInputChange(e, 'benumber')} />
+
                                 <label>Consignment Type:</label>
                                 <input type="text" value={selectedJob.consignmenttype} onChange={(e) => handleInputChange(e, 'consignmenttype')} />
                             </div>
-                            <div>
+
+                            <div className='impapprovalmodal'>
                                 <label>CFS Name:</label>
                                 <input type="text" value={selectedJob.cfsname} onChange={(e) => handleInputChange(e, 'cfsname')} />
-                            </div>
-                            <div>
+
                                 <label>Shipping Line Name:</label>
                                 <input type="text" value={selectedJob.shippinglinename} onChange={(e) => handleInputChange(e, 'shippinglinename')} />
-                            </div>
-                            <div>
-                                <label>BLType:</label>
-                                <input type="text" value={selectedJob.bltype} onChange={(e) => handleInputChange(e, 'bltype')} />
-                            </div>
-                            <div>
-                                <label>BLType Num:</label>
-                                <input type="text" value={selectedJob.bltypenum} onChange={(e) => handleInputChange(e, 'bltypenum')} />
-                            </div>
-                            <div>
-                                <label>Free Days:</label>
-                                <input type="text" value={selectedJob.freedays} onChange={(e) => handleInputChange(e, 'freedays')} />
-                            </div>
-                            <div>
-                                <label>BLStatus:</label>
-                                <input type="text" value={selectedJob.blstatus} onChange={(e) => handleInputChange(e, 'blstatus')} />
-                            </div>
-                            <div>
-                                <label>BEnumber:</label>
-                                <input type="text" value={selectedJob.benumber} onChange={(e) => handleInputChange(e, 'benumber')} />
-                            </div>
-                            <div>
+
                                 <label>Shipping Line Bond:</label>
                                 <input type="text" value={selectedJob.shippinglinebond} onChange={(e) => handleInputChange(e, 'shippinglinebond')} />
+
+                                <label>BL Type:</label>
+                                <input type="text" value={selectedJob.bltype} onChange={(e) => handleInputChange(e, 'bltype')} />
                             </div>
-                            <div>
-                                <label>Importer Name:</label>
-                                <input type="text" value={selectedJob.importername} readOnly />
-                            </div>
-                            <div>
+
+                            <div className='impapprovalmodal'>
+                                <label>BL No:</label>
+                                <input type="text" value={selectedJob.bltypenum} onChange={(e) => handleInputChange(e, 'bltypenum')} />
+
+                                <label>BL Status:</label>
+                                <input type="text" value={selectedJob.blstatus} onChange={(e) => handleInputChange(e, 'blstatus')} />
+
+                                <label>Free Days:</label>
+                                <input type="text" value={selectedJob.freedays} onChange={(e) => handleInputChange(e, 'freedays')} />
+
                                 <label>GST:</label>
                                 <input type="text" value={selectedJob.GST} readOnly />
+
                             </div>
-                            <div>
+
+                            <div className='impapprovalmodal'>
                                 <label>IEC:</label>
                                 <input type="text" value={selectedJob.IEC} readOnly />
-                            </div>
-                            <div>
+
                                 <label>Final Destination:</label>
                                 <input type="text" value={selectedJob.finaldestination} onChange={(e) => handleInputChange(e, 'finaldestination')} />
-                            </div>
-                            <div>
+
                                 <label>Port of Shipment:</label>
                                 <input type="text" value={selectedJob.portofshipment} onChange={(e) => handleInputChange(e, 'portofshipment')} />
+
+                            </div>
+
+                            <div className='impapprovalmodal-1'>
+                                
                             </div>
                         </>
                     )}

@@ -195,9 +195,9 @@ const OrgApproval = () => {
 
 
 
-  return (
-    <div>
-      <h1>Approver Log of Organization</h1>
+    return (
+        <div>
+            <h1>Approver Log of Organization</h1>
             <CTable striped hover responsive>
                 <CTableHead>
                     <CTableRow>
@@ -269,6 +269,7 @@ const OrgApproval = () => {
                 visible={selectedOrg !== null}
                 onClose={closeModal}
                 aria-labelledby="LiveDemoExampleLabel"
+                size='lg'
             >
                 <CModalHeader onClose={closeModal}>
                     <CModalTitle id="LiveDemoExampleLabel">
@@ -278,61 +279,69 @@ const OrgApproval = () => {
                 <CModalBody>
                     {selectedOrg && (
                         <>
-                            <div>
-                                <label>GST:</label>
-                                <input type="text" value={selectedOrg.GST} onChange={(e) => handleInputChange(e, 'GST')} />
-                            </div>
-                            <div>
-                                <label>IEC:</label>
-                                <input type="text" value={selectedOrg.IEC} onChange={(e) => handleInputChange(e, 'IEC')} />
-                            </div>
-                            <div>
-                                <label>PAN:</label>
-                                <input type="text" value={selectedOrg.PAN} onChange={(e) => handleInputChange(e, 'PAN')} />
-                            </div>
-                            <div>
-                                <label>Address:</label>
-                                <input type="text" value={selectedOrg.address} onChange={(e) => handleInputChange(e, 'address')} />
-                            </div>
-                            <div>
-                                <label>Creditdays:</label>
-                                <input type="text" value={selectedOrg.creditdays} onChange={(e) => handleInputChange(e, 'creditdays')} />
-                            </div>
-                            <div>
-                                <label>Phone:</label>
-                                <input type="text" value={selectedOrg.phone} onChange={(e) => handleInputChange(e, 'phone')} />
-                            </div>
-                            <div>
-                                <label>PostalCode:</label>
-                                <input type="text" value={selectedOrg.postalcode} onChange={(e) => handleInputChange(e, 'postalcode')} />
-                            </div>
-                            <div>
-                                <label>City:</label>
-                                <input type="text" value={selectedOrg.city} onChange={(e) => handleInputChange(e, 'city')} />
-                            </div>
-                            <div>
-                                <label>State:</label>
-                                <input type="text" value={selectedOrg.state} onChange={(e) => handleInputChange(e, 'state')} />
-                            </div>
-                            <div>
-                                <label>Country:</label>
-                                <input type="text" value={selectedOrg.country} onChange={(e) => handleInputChange(e, 'country')} />
-                            </div>
-                            <div>
-                                <label>Email:</label>
-                                <input type="text" value={selectedOrg.email} onChange={(e) => handleInputChange(e, 'email')} />
-                            </div>
-                            <div>
-                                <label>Branchname:</label>
+
+                            <div className='orgapprovalmodal'>
+                                <CModalTitle className='modaltitleorgapproval'>Organization Details</CModalTitle>
+
+                                <label>Organization Name</label>
+                                <input type="text" value={selectedOrg.clientname} onChange={(e) => handleInputChange(e, 'clientname')} />
+
+                                <label className='branchnameorgapprovalmodal'>Branch Name</label>
                                 <input type="text" value={selectedOrg.branchname} onChange={(e) => handleInputChange(e, 'branchname')} />
                             </div>
+
                             <div>
-                                <label>Clientname</label>
-                                <input type="text" value={selectedOrg.clientname} onChange={(e) => handleInputChange(e, 'clientname')} />
+                                <CModalTitle className='modaltitleorgapproval'>Address Details</CModalTitle>
+                                <label className='addresslabeltorgapprovalmodal'>Address</label>
+                                <input className='addressinputorgapprovalmodal' type="text" value={selectedOrg.address} onChange={(e) => handleInputChange(e, 'address')} />
+                            </div>
+                            <div className='orgapprovalmodal-1'>
+                                <label className='addresslabelorgapprovalmodal'>City</label>
+                                <input type="text" value={selectedOrg.city} onChange={(e) => handleInputChange(e, 'city')} />
+
+                                <label className='addresslabelorgapprovalmodal-1'>State</label>
+                                <input className='addresslabelorgapprovalmodal-2' type="text" value={selectedOrg.state} onChange={(e) => handleInputChange(e, 'state')} />
+                            </div>
+                            <div className='orgapprovalmodal-1'>
+                                <label className='addresslabelorgapprovalmodal'>Country</label>
+                                <input className='addresslabelorgapprovalmodal-2' type="text" value={selectedOrg.country} onChange={(e) => handleInputChange(e, 'country')} />
+
+                                <label className='addresslabelorgapprovalmodal-1'>PostalCode</label>
+                                <input className='addresslabelorgapprovalmodal-2' type="text" value={selectedOrg.postalcode} onChange={(e) => handleInputChange(e, 'postalcode')} />
+                            </div>
+
+                            <CModalTitle className='modaltitleorgapproval'>Registration Details</CModalTitle>
+                            <div className='registrationorgarpproval'>
+                                <label><h6>GST</h6></label>
+                                <input type="text" value={selectedOrg.GST} onChange={(e) => handleInputChange(e, 'GST')} />
+
+                                <label className='registrationorgarpproval-1'><h6>IEC</h6></label>
+                                <input type="text" value={selectedOrg.IEC} onChange={(e) => handleInputChange(e, 'IEC')} />
+
+                                <label className='registrationorgarpproval-1'><h6>PAN</h6></label>
+                                <input type="text" value={selectedOrg.PAN} onChange={(e) => handleInputChange(e, 'PAN')} />
+
+                            </div>
+
+                            <div>
+                                <CModalTitle className='modaltitleorgapproval'>Account Details</CModalTitle>
+
+                                <label className='accountorgapproval'><h6>Credit Days</h6></label>
+                                <input type="text" value={selectedOrg.creditdays} onChange={(e) => handleInputChange(e, 'creditdays')} />
+                            </div>
+
+                            <CModalTitle className='modaltitleorgapproval'>Contact Details</CModalTitle>
+                            <div>
+                                <label className='contactorgapprovalmodal'><h6>Phone</h6></label>
+                                <input className='contactorgapprovalmodal' type="text" value={selectedOrg.phone} onChange={(e) => handleInputChange(e, 'phone')} />
+
+                                <label><h6>Email</h6></label>
+                                <input className='contactorgapprovalmodal-1' type="text" value={selectedOrg.email} onChange={(e) => handleInputChange(e, 'email')} />
                             </div>
                             <div>
-                                <label>Username</label>
-                                <input type="text" value={selectedOrg.username} onChange={(e) => handleInputChange(e, 'username')} />
+                                <CModalTitle className='modaltitleorgapproval'>Created By</CModalTitle>
+                                <label><h6>Username</h6></label>
+                                <input className='contactorgapprovalmodal-1' type="text" value={selectedOrg.username} onChange={(e) => handleInputChange(e, 'username')} />
                             </div>
                         </>
                     )}
@@ -357,7 +366,7 @@ const OrgApproval = () => {
                 </CModalFooter>
             </CModal>
         </div>
-  )
+    )
 }
 
 export default OrgApproval

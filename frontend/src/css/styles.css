@@ -670,3 +670,104 @@
 .addworkflow-dropdown-access{
     margin-top: 10px;
 }
+
+
+/* Import Approval */
+
+.impapprovalmodal{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+    font-size: small;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.impapprovalmodal input{
+    width: fit-content;
+}
+
+.impapprovalmodal-1{
+
+    font-size: small;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.impapprovalmodal-1 input{
+    margin-left: 20px;
+}
+
+/* Organization Approval */
+
+.orgapprovalmodal{
+    font-size: medium;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.orgapprovalmodal input{
+    margin-left: 20px;
+}
+
+.modaltitleorgapproval{
+    margin-bottom: 5px;
+}
+
+.branchnameorgapprovalmodal{
+    margin-left: 20px;
+}
+
+.addressinputorgapprovalmodal{
+    width: 80%;
+    margin-left: 10px;
+    font-size: medium;
+    margin-bottom: 10px;
+}
+
+.addresslabeltorgapprovalmodal{
+    font-weight: 500;
+}
+
+.orgapprovalmodal-1{
+    font-size: medium;
+}
+
+.addresslabelorgapprovalmodal{
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.addresslabelorgapprovalmodal-1{
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.addresslabelorgapprovalmodal-2{
+    margin-left: 10px;
+}
+
+.registrationorgarpproval{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    font-size: medium;
+
+}
+
+.registrationorgarpproval-1{
+    margin-left: 10px;
+    font-size: medium;
+}
+
+.accountorgapproval{
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: medium;
+}
+
+.contactorgapprovalmodal{
+    margin-right: 10px;
+}
+.contactorgapprovalmodal-1{
+    margin-left: 10px;
+}
