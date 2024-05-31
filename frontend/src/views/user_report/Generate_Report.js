@@ -159,27 +159,27 @@ const Generate_Report = () => {
           </CCardBody>
         </CCard>
       </CCol>
-      <CNav variant="tabs" className='nav-link-text'>
+      <CNav variant="tabs" className='nav-link-text userlist-cnav-cusros'>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("urImport") }}>Import</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urImport' ? 'active' : ''}`} onClick={() => { setIsShown("urImport") }}>Import</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("export") }}>Export</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urExport' ? 'active' : ''}`} onClick={() => { setIsShown("urExport") }}>Export</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("transport") }}>Transport</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urTransport' ? 'active' : ''}`} onClick={() => { setIsShown("urTransport") }}>Transport</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("ff") }}>Freight Forwarding</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urFF' ? 'active' : ''}`} onClick={() => { setIsShown("urFF") }}>Freight Forwarding</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("sales") }}>Sales</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urSales' ? 'active' : ''}`} onClick={() => { setIsShown("urSales") }}>Sales</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("accounts") }}>Accounts</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urAccounts' ? 'active' : ''}`} onClick={() => { setIsShown("urAccounts") }}>Accounts</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("crm") }}>CRM</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'urCrm' ? 'active' : ''}`} onClick={() => { setIsShown("urCrm") }}>CRM</CNavLink>
         </CNavItem>
       </CNav>
 

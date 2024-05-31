@@ -225,7 +225,7 @@ const Accounts = ({ onSave, aData }) => {
     return (
         <div>
             <CCol xs={12}>
-                <CCard className="mb-2 container-div">
+                <CCard className="mt-0 container-div">
                     <CCardBody>
                         <input
                             type="text"

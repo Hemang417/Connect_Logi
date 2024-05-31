@@ -394,12 +394,12 @@ const Approverlog = () => {
 
     return (
         <div>
-            <CNav variant="tabs" className='nav-link-text'>
+            <CNav variant="tabs" className='nav-link-text userlist-cnav-cusros'>
                 <CNavItem>
-                    <CNavLink onClick={() => { setIsShown("organization") }}>Organization</CNavLink>
+                    <CNavLink className={`nav-link ${isshown === 'organization' ? 'active' : ''}`} onClick={() => { setIsShown("organization") }}>Organization</CNavLink>
                 </CNavItem>
                 <CNavItem>
-                    <CNavLink onClick={() => { setIsShown("jobapproval") }}>Import Job</CNavLink>
+                    <CNavLink className={`nav-link ${isshown === 'jobapproval' ? 'active' : ''}`} onClick={() => { setIsShown("jobapproval") }}>Import Job</CNavLink>
                 </CNavItem>
             </CNav>
 

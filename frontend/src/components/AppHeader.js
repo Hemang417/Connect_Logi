@@ -274,12 +274,12 @@ const AppHeader = () => {
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink}>
-              Dashboard
+            <CNavLink to="/dashboard" component={NavLink} style={{ fontWeight: 700, color: 'blue' }}>
+            Welcome,  {localStorage.getItem('username')}
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <p>`Welcome` + {localStorage.getItem('username')}</p>
+            <p></p>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>

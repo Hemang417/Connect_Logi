@@ -50,18 +50,18 @@ const workflow = () => {
     <CRow>
       
       <div>
-        <CNav variant="tabs">
+        <CNav variant="tabs" className='userlist-cnav-cusros'>
           <CNavItem>
-            <CNavLink onClick={() => { setIsShown("Lob") }}>Line of Business</CNavLink>
+            <CNavLink className={`nav-link ${isshown === 'Lob' ? 'active' : ''}`} onClick={() => { setIsShown("Lob") }}>Line of Business</CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink onClick={() => { setIsShown("Milestone") }}>Milestone</CNavLink>
+            <CNavLink className={`nav-link ${isshown === 'Milestone' ? 'active' : ''}`} onClick={() => { setIsShown("Milestone") }}>Milestone</CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink onClick={() => { setIsShown("Wf") }}>Workflow</CNavLink>
+            <CNavLink className={`nav-link ${isshown === 'Wf' ? 'active' : ''}`} onClick={() => { setIsShown("Wf") }}>Workflow</CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink onClick={() => { setIsShown("JobValue") }}>JobValue</CNavLink>
+            <CNavLink className={`nav-link ${isshown === 'JobValue' ? 'active' : ''}`} onClick={() => { setIsShown("JobValue") }}>JobValue</CNavLink>
           </CNavItem>
 
         </CNav>

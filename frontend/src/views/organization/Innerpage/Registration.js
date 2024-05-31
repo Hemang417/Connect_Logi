@@ -356,7 +356,7 @@ const Registration = ({ onSave, rData }) => {
     return (
         <div>
             <CCol xs={12}>
-                <CCard className="mb-2 container-div">
+                <CCard className="mt-0 container-div">
                     <CCardBody>
                         
                         <input type="text" placeholder="PAN Details" className='text-field-1' name='PAN' onChange={handleChange} value={registrationData.PAN} />

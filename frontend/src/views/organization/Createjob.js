@@ -558,18 +558,18 @@ const Createjob = () => {
         </CCard>
       </CCol> */}
 
-      <CNav variant="tabs">
+      <CNav variant="tabs" className='userlist-cnav-cusros'>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'general' ? 'active' : ''}`} onClick={() => { setIsShown("general") }}>General</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("registration") }}>Registration</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'registration' ? 'active' : ''}`} onClick={() => { setIsShown("registration") }}>Registration</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("accounts") }}>Accounts</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'accounts' ? 'active' : ''}`} onClick={() => { setIsShown("accounts") }}>Accounts</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("contactdetails") }}>Contact Details</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'contactdetails' ? 'active' : ''}`} onClick={() => { setIsShown("contactdetails") }}>Contact Details</CNavLink>
         </CNavItem>
 
       </CNav>

@@ -107,7 +107,7 @@ const KYCAccess = () => {
 
 
     return (
-        <CCard className="mb-2 container-div">
+        <CCard className="mt-0 container-div">
             <CCardBody>
                 <div className='grid-KYC'>
                     <div>

@@ -256,6 +256,7 @@ const impcreatejob = () => {
   }
 
 
+
   // useEffect(() => {
   //   if (isshown === "general") {
   //     setPrefillData(null);
@@ -468,25 +469,23 @@ const impcreatejob = () => {
       </CCol>
 
 
-      <CNav variant="tabs" className='nav-link-text'>
+      {/* <CNav variant="tabs" className='nav-link-text'>
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("general") }}>General</CNavLink>
         </CNavItem>
-        {/* <CNavItem>
-          <CNavLink onClick={() => { setIsShown("o2d") }}>O2D</CNavLink>
-        </CNavItem> */}
+
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("DoNDelivery") }}>Tracking</CNavLink>
         </CNavItem>
-        {/* <CNavItem>
-          <CNavLink onClick={() => { setIsShown("d2c") }}>Delivery to Disptach</CNavLink>
-        </CNavItem> */}
+
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("d2c") }}>Transport</CNavLink>
         </CNavItem>
+
         <CNavItem>
           <CNavLink onClick={() => { setIsShown("Collection") }}>Collection</CNavLink>
         </CNavItem>
+
         <CNavItem>
           {showQuotation && (
             <CNavLink onClick={() => { setIsShown("Quotation") }}>Quotation</CNavLink>
@@ -499,7 +498,34 @@ const impcreatejob = () => {
           <CNavLink onClick={() => { setIsShown("Transactionhistory") }}>Transaction History</CNavLink>
         </CNavItem>
 
-      </CNav>
+      </CNav> */}
+
+      <CNav variant="tabs" className='nav-link-text userlist-cnav-cusros'>
+              <CNavItem>
+                <CNavLink className={`nav-link ${isshown === 'general' ? 'active' : ''}`} onClick={() => setIsShown('general')}>General</CNavLink>
+              </CNavItem>
+
+              <CNavItem>
+                <CNavLink className={`nav-link ${isshown === 'DoNDelivery' ? 'active' : ''}`} onClick={() => setIsShown('DoNDelivery')}>Tracking</CNavLink>
+              </CNavItem>
+
+              <CNavItem>
+                <CNavLink className={`nav-link ${isshown === 'documentupload' ? 'active' : ''}`} onClick={() => setIsShown('documentupload')}>Document Upload</CNavLink>
+              </CNavItem>
+
+              <CNavItem>
+                <CNavLink className={`nav-link ${isshown === 'Collection' ? 'active' : ''}`} onClick={() => setIsShown('Collection')}>Collection</CNavLink>
+              </CNavItem>
+
+              <CNavItem>
+                <CNavLink className={`nav-link ${isshown === 'Transactionhistory' ? 'active' : ''}`} onClick={() => setIsShown('Transactionhistory')}>Transaction History</CNavLink>
+              </CNavItem>
+              {showQuotation && (
+                <CNavItem>
+                  <CNavLink className={`nav-link ${isshown === 'Quotation' ? 'active' : ''}`} onClick={() => setIsShown('Quotation')}>Quotation</CNavLink>
+                </CNavItem>
+              )}
+            </CNav>
 
 
 

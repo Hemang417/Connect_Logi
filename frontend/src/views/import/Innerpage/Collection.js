@@ -46,11 +46,13 @@ const Collection = () => {
     const [visible, setVisible] = useState(false)
     return (
         <div>
-            <div className='mb-2 mt-2'>
-            <label for="Credit Days" className='text-field-3'>Credit Days</label>
-            <input type="text" placeholder="" className='text-field-4' />
+
+            <div className='mb-2'>
+                <label for="Credit Days" className='text-field-3'>Credit Days</label>
+                <input type="text" placeholder="" className='text-field-4' />
             </div>
-            
+
+
             <div className='left-div-table'>
                 <CTable hover responsive striped>
                     <CTableHead className='c-table-head'>
@@ -102,8 +104,8 @@ const Collection = () => {
 
                     </CTableBody>
                 </CTable>
-
             </div>
+
             <CModal
                 visible={visible}
                 onClose={() => setVisible(false)}
@@ -147,6 +149,7 @@ const Collection = () => {
                 </CModalFooter>
             </CModal>
         </div>
+
     )
 }
 

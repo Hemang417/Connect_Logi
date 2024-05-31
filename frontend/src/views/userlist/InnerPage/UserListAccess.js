@@ -71,21 +71,12 @@ const UserListAccess = () => {
       </CCol>
 
 
-      <CNav variant="tabs">
-        {/* <CNavItem>
-          <CNavLink onClick={() => { setIsShown("import") }}>Import</CNavLink>
+      <CNav variant="tabs" className='userlist-cnav-cusros'>
+        <CNavItem>
+          <CNavLink className={`nav-link ${isshown === 'branches' ? 'active' : ''}`} onClick={() => { setIsShown("branches") }}>Branches</CNavLink>
         </CNavItem>
         <CNavItem>
-          <CNavLink onClick={() => { setIsShown("export") }}>Export</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("transport") }}>Transport</CNavLink>
-        </CNavItem> */}
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("branches") }}>Branches</CNavLink>
-        </CNavItem>
-        <CNavItem>
-          <CNavLink onClick={() => { setIsShown("kyc") }}>KYC</CNavLink>
+          <CNavLink className={`nav-link ${isshown === 'kyc' ? 'active' : ''}`} onClick={() => { setIsShown("kyc") }}>KYC</CNavLink>
         </CNavItem>
 
       </CNav>
