@@ -329,12 +329,46 @@ export const fetchAllorgdata = async (clientName, branchName, orgcode, orgname, 
 export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, id, branchname, branchcode, createdat) => {
     try {
 
-        // const [row] = await connection.execute(
-        //     `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination, branchname, branchnameofjob, branchcodeofjob) 
-        //     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        //     [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, branchname, branchcode]
+        // const [usernames] = await connection.execute(
+        //     `SELECT * employeename FROM approvername WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ?`,
+        //     [orgname, orgcode, branchname, branchcode]
         // );
-        const [usernames] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ?`, [orgname, orgcode, branchname, branchcode]);
+
+        // // Ensure no duplicates
+        // const readingarray = usernames.map(user => ({
+        //     employeename: user.employeename,
+        //     read: 0,
+        //     approved: 0
+        // }));
+
+        // const timeofreadingarray = usernames.map(user => ({
+        //     employeename: user.employeename,
+        //     time: null
+        // }));
+
+        // const approvername = usernames.map(user => ({
+        //     employeename: user.employeename
+        // }));
+
+        // const uniquevalue = 'JobsButton'; // Define how to generate a unique value
+
+        // const [impnotification] = await connection.execute(
+        //     `INSERT INTO impnotifications (orgname, orgcode, jobnumber, importername, importerbranchname, uniquevalue, createdat, reading, timeofreading, approvername, branchname, branchcode, username)
+        //      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        //     [
+        //         orgname, orgcode, jobnumber, importerName, selectedBranch, uniquevalue, createdat,
+        //         JSON.stringify(readingarray), JSON.stringify(timeofreadingarray), JSON.stringify(approvername),
+        //         branchname, branchcode, jobowner
+        //     ]
+        // );
+
+
+        const [row] = await connection.execute(
+            `INSERT INTO impgeneral (orgname, orgcode, jobowner, jobnumber, importername, address, gst, iec, portofshipment, finaldestination, branchname, branchnameofjob, branchcodeofjob) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [orgname, orgcode, jobowner, jobnumber, importerName, address, gst, iec, portShipment, finalDestination, selectedBranch, branchname, branchcode]
+        );
+        const [usernames] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ? AND branchname = ? AND branchcode = ? AND JSON_CONTAINS(uniquevalue, '\"JobsButton\"')`, [orgname, orgcode, branchname, branchcode]);
 
         const readingarray = [];
         const timeofreadingarray = [];
@@ -358,10 +392,10 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         }
 
         const [impnotification] = await connection.execute(`INSERT INTO impnotifications 
-        (orgname, orgcode, jobnumber, importername, importerbranchname, uniquevalue, createdat, reading, timeofreading, approvername,branchname,branchcode)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+        (orgname, orgcode, jobnumber, importername, importerbranchname, uniquevalue, createdat, reading, timeofreading, approvername,branchname,branchcode,username)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             [orgname, orgcode, jobnumber, importerName, selectedBranch, uniquevalue, createdat, JSON.stringify(readingarray),
-                JSON.stringify(timeofreadingarray), JSON.stringify(approvername),branchname,branchcode])
+                JSON.stringify(timeofreadingarray), JSON.stringify(approvername),branchname,branchcode,jobowner])
 
         const getusernames = usernames
             .filter(item => item.uniquevalue[0] === uniquevalue)
@@ -370,11 +404,24 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
                 status: null
             }));
 
-        const [row] = await connection.execute(`UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ?, importerbranchname = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`, [importerName, address, gst, iec, portShipment, finalDestination, getusernames,
+        const [rows] = await connection.execute(`UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ?, importerbranchname = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`, [importerName, address, gst, iec, portShipment, finalDestination, getusernames,
             selectedBranch, jobnumber, branchname, branchcode])
 
 
-
+        // const getusernames = usernames
+        //     .filter(item => item.uniquevalue === uniquevalue)
+        //     .map(item => ({
+        //         employeename: item.employeename,  // Assuming 'employeename' is the column name
+        //         status: null
+        //     }));
+        //     console.log(getusernames);
+        // const [row] = await connection.execute(
+        //     `UPDATE approvalimpjob SET importername = ?, address = ?, GST = ?, IEC = ?, portofshipment = ?, finaldestination = ?, approval = ?, importerbranchname = ? WHERE jobnumber = ? AND branchname = ? AND branchcode = ?`,
+        //     [
+        //         importerName, address, gst, iec, portShipment, finalDestination, JSON.stringify(getusernames),
+        //         selectedBranch, jobnumber, branchname, branchcode
+        //     ]
+        // );
 
 
         // const [emailofbranch] = await connection.execute(`SELECT email FROM organizations WHERE orgname = ? AND orgcode = ? AND branchname = ? AND id = ?`, [orgname, orgcode, selectedBranch, id]);

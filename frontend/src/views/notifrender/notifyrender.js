@@ -127,6 +127,9 @@ const NotifyRender = () => {
     }, [currentBranch])
 
 
+
+
+
     async function userhasread(item) {
         try {
             const currentDate = new Date().getTime();
@@ -151,6 +154,26 @@ const NotifyRender = () => {
     };
 
 
+    async function readjob(item) {
+        try {
+            const { jobnumber, branchcode, branchname } = item;
+
+            const updatereadforuser = await axios.put(`http://localhost:5000/userreadforjob`, {
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode'),
+                username: localStorage.getItem('username'),
+                jobnumber: jobnumber,
+                branchcode: branchcode,
+                branchname: branchname
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
+
 
 
     // useEffect(() => {
@@ -166,14 +189,48 @@ const NotifyRender = () => {
     // }, [allnotifications])
 
 
-    function reverse(dateString) {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-indexed
-        const year = date.getFullYear();
-        return `${day}-${month}-${year}`;
-    }
+    // function reverse(dateString) {
+    //     const date = new Date(dateString);
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-indexed
+    //     const year = date.getFullYear();
+    //     return `${day}-${month}-${year}`;
+    // }
+    // const reverse = (dateString) => {
+    //     return moment(dateString).format('YYYY-MM-DD HH');
+    // };
 
+    // const mergeAndSortNotifications = () => {
+    //     const mergedArray = [
+    //         ...alljobs.map(job => ({ ...job, type: 'job' })),
+    //         ...allnotifications.map(notification => ({ ...notification, type: 'notification' }))
+    //     ];
+
+    //     return mergedArray.sort((a, b) => moment(a.createdat).diff(moment(b.createdat)));
+    // };
+
+    // const sortedItems = mergeAndSortNotifications();
+
+
+
+    const mergeAndSortNotifications = () => {
+        const mergedArray = [
+            ...alljobs.map(job => ({ ...job, type: 'job' })),
+            ...allnotifications.map(notification => ({ ...notification, type: 'notification' }))
+        ];
+
+        return mergedArray.sort((a, b) => moment(b.createdat).diff(moment(a.createdat))); // Sorting in descending order
+    };
+
+    const sortedItems = mergeAndSortNotifications();
+
+    async function navigateToJobApproval(item){
+        try {
+            navigate('/approverlog', { state: item })
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
 
@@ -192,48 +249,102 @@ const NotifyRender = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {/* {allnotifications && allnotifications.map((item, index) => {
-                            // Check if localStorage username matches any name in approvername array
+
+
+                        {sortedItems.map((item, index) => {
+                            if (item.type === 'job') {
+                                const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
+                                const readingEntry = item.reading.find(entry => entry.employeename === localStorage.getItem('username'));
+                                if (readingEntry && isApprover) {
+                                    const isRead = readingEntry.read === 1;
+                                    const isApproved = readingEntry.approved === 1;
+                                    const hasBeenRejected = item.reading.some(row => row.approved === -1);
+                                    const isRejected = readingEntry.approved === -1;
+                                    const hasBeenApproved = allorg?.find(row => row.clientname === item.clientname);
+
+                                    return (
+                                        <CTableRow key={index}>
+                                            <CTableDataCell className="notif" onClick={(isRead && isApproved || hasBeenApproved) || (isRead && isRejected || hasBeenRejected) ? null : () => navigateToJobApproval(item)}>{item.createdat}</CTableDataCell>
+                                            <CTableDataCell className="notif" onClick={(isRead && isApproved || hasBeenApproved) || (isRead && isRejected || hasBeenRejected) ? null : () => navigateToJobApproval(item)}>{`Job: ${item.jobnumber}`}</CTableDataCell>
+                                            <CTableDataCell className="notif" onClick={(isRead && isApproved || hasBeenApproved) || (isRead && isRejected || hasBeenRejected) ? null : () => navigateToJobApproval(item)}>{item.username}</CTableDataCell>
+                                            <CTableDataCell>
+                                                {isRead ? (
+                                                    <CTableHeaderCell style={{ fontSize: 15 }} className="readtext">Read</CTableHeaderCell>
+                                                ) : (
+                                                    <CButton className='button-mark-as-read' onClick={() => readjob(item)}>
+                                                        <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
+                                                    </CButton>
+                                                )}
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+
+                                                {hasBeenRejected ? (
+                                                    <p>Rejected</p>
+                                                ) : isApproved ? (
+                                                    <p>Approved</p>
+                                                ) : (
+                                                    <p>Pending</p>
+                                                )}
+
+                                            </CTableDataCell>
+                                        </CTableRow>
+                                    );
+                                }
+
+                            }
+
                             const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
-                            // Check if read and approved attributes are 0 for the localStorage username in reading array
-                            const isUnread = item.reading.some(entry => entry.employeename === localStorage.getItem('username'));
-                            // Render the notification only if conditions are met
-                            const isAlreadyApproved = allorg?.find(row => row.clientname === item.clientname);
-                            // don't render the notification if one is rejected
-                            const isRejected = item.reading.some(entry => entry.approved === -1);
+                            const readingEntry = item.reading.find(entry => entry.employeename === localStorage.getItem('username'));
 
-                            if (isApprover && isUnread && !isAlreadyApproved && !isRejected) {
+                            if (isApprover && readingEntry) {
+                                const hasBeenApproved = allorg?.find(row => row.clientname === item.clientname);
+                                const isRead = readingEntry.read === 1;
+                                const isApproved = readingEntry.approved === 1;
+                                const isRejected = readingEntry.approved === -1;
+                                const hasBeenRejected = item.reading.some(row => row.approved === -1);
+
                                 return (
-
-                                    <CTableRow key={index} onClick={() => navigateToApproverLog(item)}>
-                                        <CTableDataCell className="notif">{reverse(item.createdon)}</CTableDataCell>
-                                        <CTableDataCell className="notif" >{`Organization: ${item.clientname} is waiting for your approval`}</CTableDataCell>
-                                        <CTableDataCell className="notif">{item.username}</CTableDataCell>
+                                    <CTableRow key={index} className={isRead ? 'read-row' : 'unread-row'}>
+                                        <CTableDataCell className="notif" onClick={(isRead && isApproved || hasBeenApproved) || (isRead && isRejected || hasBeenRejected) ? null : () => navigateToApproverLog(item)}>{item.createdat}</CTableDataCell>
+                                        <CTableDataCell className="notif" onClick={(isRead && isApproved || hasBeenApproved) || (isRead && isRejected || hasBeenRejected) ? null : () => navigateToApproverLog(item)}>{`Organization: ${item.clientname} is waiting for your approval`}</CTableDataCell>
+                                        <CTableDataCell className="notif" onClick={(isRead && isApproved || hasBeenApproved) || (isRead && isRejected || hasBeenRejected) ? null : () => navigateToApproverLog(item)}>{item.username}</CTableDataCell>
                                         <CTableDataCell>
-                                            <CButton className='button-mark-as-read' onClick={() => userhasread(item)}>
-                                                <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
-                                            </CButton>
+                                            {isRead ? (
+                                                <CTableHeaderCell style={{ fontSize: 15 }} className="readtext">Read</CTableHeaderCell>
+                                            ) : (
+                                                <CButton className='button-mark-as-read' onClick={() => userhasread(item)}>
+                                                    <CIcon className='icon-envelope-open' icon={cilEnvelopeOpen} size="lg" />
+                                                </CButton>
+                                            )}
+                                        </CTableDataCell>
+                                        <CTableDataCell>
+                                            {isRead && isApproved || hasBeenApproved ? (
+                                                <p>Approved</p>
+                                            ) : (
+                                                isRejected || hasBeenRejected ? (
+                                                    <p>Rejected</p>
+                                                ) : (
+                                                    <p>Pending</p>
+                                                )
+                                            )}
                                         </CTableDataCell>
                                     </CTableRow>
-
                                 );
                             }
-                            return null; // Otherwise, return null to skip rendering
-                        })
-                        } */}
+                            return null;
+                        })}
 
 
+
+
+                        {/* 
                         {allnotifications && allnotifications.map((item, index) => {
                             // Check if localStorage username matches any name in approvername array
                             const isApprover = item.approvername.some(approver => approver.employeename === localStorage.getItem('username'));
                             // Check if the localStorage username exists in the reading array
                             const readingEntry = item.reading.find(entry => entry.employeename === localStorage.getItem('username'));
 
-                            // don't render the notification if one is rejected
-                            // const isRejected = item.reading.some(entry => entry.approved === -1);
-
                             if (isApprover && readingEntry) {
-
 
                                 // Render the notification only if conditions are met
                                 const hasbeenapproved = allorg?.find(row => row.clientname === item.clientname);
@@ -245,7 +356,7 @@ const NotifyRender = () => {
                                 return (
 
                                     <CTableRow key={index} className={readingEntry.read === 0 ? 'unread-row' : 'read-row'}>
-                                        <CTableDataCell className="notif" onClick={(isread && isapproved || hasbeenapproved) || (isread && isrejected || hasbeenrejected) ? null : () => navigateToApproverLog(item)}>{reverse(item.createdon)}</CTableDataCell>
+                                        <CTableDataCell className="notif" onClick={(isread && isapproved || hasbeenapproved) || (isread && isrejected || hasbeenrejected) ? null : () => navigateToApproverLog(item)}>{reverse(item.createdat)}</CTableDataCell>
                                         <CTableDataCell className="notif" onClick={(isread && isapproved || hasbeenapproved) || (isread && isrejected || hasbeenrejected) ? null : () => navigateToApproverLog(item)}>{`Organization: ${item.clientname} is waiting for your approval`}</CTableDataCell>
                                         <CTableDataCell className="notif" onClick={(isread && isapproved || hasbeenapproved) || (isread && isrejected || hasbeenrejected) ? null : () => navigateToApproverLog(item)}>{item.username}</CTableDataCell>
                                         <CTableDataCell>
@@ -280,14 +391,14 @@ const NotifyRender = () => {
                                 );
                             }
                             return null; // Otherwise, return null to skip rendering
-                        })}
+                        })} */}
 
                     </CTableBody>
 
                 </CTable>
 
 
-                <CTable hover responsive>
+                {/* <CTable hover responsive>
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell>Date</CTableHeaderCell>
@@ -295,19 +406,20 @@ const NotifyRender = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {alljobs && alljobs.map((job,index) => {
-                            return (
-                                <CTableRow key={index}>
-                                    <CTableDataCell className="notif">{reverse(job.createdat)}</CTableDataCell>
-                                    <CTableDataCell className="notif">{job.jobnumber}</CTableDataCell>
-                                </CTableRow>
-                            );
-                        })}
+                        {alljobs &&
+                            alljobs
+                                .filter(job =>
+                                    job.approvername.some(approver => approver.employeename === localStorage.getItem('username'))
+                                )
+                                .map((job, index) => (
+                                    <CTableRow key={index}>
+                                        <CTableDataCell className="notif">{reverse(job.createdat)}</CTableDataCell>
+                                        <CTableDataCell className="notif">{job.jobnumber}</CTableDataCell>
+                                    </CTableRow>
+                                ))
+                        }
                     </CTableBody>
-
-                </CTable>
-
-
+                </CTable> */}
 
             </CForm>
         </div>

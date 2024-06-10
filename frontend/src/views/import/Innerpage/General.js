@@ -762,8 +762,8 @@ const General = () => {
             const branchnameofemp = localStorage.getItem('branchnameofemp');
             const branchcodeofemp = localStorage.getItem('branchcodeofemp');
             const currentDate = new Date();
-            const formatDate = moment(currentDate).format('YYYY-MM-DD');
-            const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp, createdat: formatDate});
+            const dateinformat = moment(currentDate).format('YYYY-MM-DD HH:mm:ss')
+            const response = await axios.post('http://localhost:5000/createGeneral', { formData: formData, orgname: nameoforg, orgcode: codeoforg, jobowner: username, jobnumber: jobkanum, branchname: branchnameofemp, branchcode: branchcodeofemp, createdat: dateinformat});
             toast.success('Successfully stored General Details');
            
         } catch (error) {

@@ -224,15 +224,15 @@ const Approverlog = () => {
     const [selectedOrg, setSelectedOrg] = useState(null); // State to store selected organization
     const [approvedOrgs, setapprovedOrgs] = useState([])
     const uniquevalue = "OrgButton";
-    const location = useLocation();
-    const { state } = location;
+    // const location = useLocation();
+    // const { state } = location;
     const navigate = useNavigate();
     const [isshown, setIsShown] = useState('organization');
 
 
-    useEffect(() => {
-        setSelectedOrg(state);
-    }, []);
+    // useEffect(() => {
+    //     setSelectedOrg(state);
+    // }, []);
 
     const fetchlatestOrg = async () => {
         try {
@@ -396,15 +396,16 @@ const Approverlog = () => {
         <div>
             <CNav variant="tabs" className='nav-link-text userlist-cnav-cusros'>
                 <CNavItem>
-                    <CNavLink className={`nav-link ${isshown === 'organization' ? 'active' : ''}`} onClick={() => { setIsShown("organization") }}>Organization</CNavLink>
+                    <CNavLink className={`nav-link ${isshown === 'organization' ? 'active' : ''}`} onClick={() => setIsShown('organization')}>Organization</CNavLink>
                 </CNavItem>
                 <CNavItem>
-                    <CNavLink className={`nav-link ${isshown === 'jobapproval' ? 'active' : ''}`} onClick={() => { setIsShown("jobapproval") }}>Import Job</CNavLink>
+                    <CNavLink className={`nav-link ${isshown === 'jobapproval' ? 'active' : ''}`} onClick={() => setIsShown('jobapproval')}>Import Job</CNavLink>
                 </CNavItem>
             </CNav>
 
-            {isshown === "organization" && <OrgApproval />}
-            {isshown === "jobapproval" && < JobApproval/>}
+            {isshown === 'organization' && <OrgApproval/>}
+            {isshown === 'jobapproval' && <JobApproval/>}
+
         </div>
 
     );

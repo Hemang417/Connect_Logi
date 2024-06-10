@@ -1,7 +1,7 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 import { broadcast } from '../websocketServer.js'
 const connection = await connectMySQL();
-
+import moment from 'moment';
 export const getapproverofJobs = async (orgname, orgcode, uniquevalue, branchcode) => {
     try {
         const [rows] = await connection.execute(`SELECT * FROM approvername WHERE orgname = ? AND orgcode = ? AND branchcode = ?`, [orgname, orgcode, branchcode]);
@@ -28,8 +28,7 @@ export const approveImpJob = async (jobId, GST, IEC, address, benumber, betype, 
     cfsname, consignmenttype, customhouse, deliverymode, finaldestination, freedays, importername, jobdate, jobnumber, jobowner, noofcontainer, orgname,
     orgcode, ownbooking, owntransportation, portofshipment, shippinglinebond, shippinglinename, transportmode, username, status) => {
     try {
-
-
+        console.log(status);
         const [row] = await connection.execute(`
             UPDATE approvalimpjob 
             SET address = ?, benumber = ?, betype = ?, blstatus = ?, bltype = ?, bltypenum = ?, 
@@ -54,6 +53,49 @@ export const approveImpJob = async (jobId, GST, IEC, address, benumber, betype, 
         });
 
         const [updateRow] = await connection.execute(`UPDATE approvalimpjob SET approval = ? WHERE orgname = ? AND orgcode = ? AND jobnumber = ?`, [JSON.stringify(updatedApproval), orgname, orgcode, jobnumber]);
+
+        const [approvalrownotification] = await connection.execute(`SELECT * FROM impnotifications WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND branchname = ? AND branchcode = ?`, 
+            [orgname, orgcode, jobnumber, branchname, branchcode]
+        )
+
+        if (approvalrownotification.length === 0) {
+            throw new Error('No matching record found.');
+        }
+        const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const tobeupdated = approvalrownotification[0];
+
+        const updatingarray = await tobeupdated.reading.map((row) => {
+            if (row.employeename === username) {
+                if(status === 'Approve'){
+                    return { ...row, approved: 1, read: 1 };
+                }else if(status === 'Reject'){
+                    return { ...row, approved: -1, read: 1 };
+                }
+            }
+            return row;
+        })
+        
+        const updatedTime = await tobeupdated.timeofreading.map((row) => {
+            if (row.employeename === username) {
+                return { ...row, time: currentTime };
+            }
+            return row; // Return the original object if the condition is not met
+        });
+
+
+        await connection.execute(
+            `UPDATE impnotifications SET reading = ?, timeofreading = ? WHERE orgname = ? AND orgcode = ? AND branchname = ? AND jobnumber = ? AND branchcode = ?`,
+            [
+                updatingarray,
+                updatedTime,
+                orgname,
+                orgcode,
+                branchname,
+                jobnumber,
+                branchcode
+            ]
+        );
+
         return row;
     } catch (error) {
         console.log(error);

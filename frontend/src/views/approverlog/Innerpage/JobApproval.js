@@ -17,15 +17,21 @@ import {
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import "../../../css/styles.css"
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const JobApproval = () => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [latestJobs, setLatestJobs] = useState([]);
     const [approvalName, setApprovalName] = useState([]);
     const uniqueValue = "JobsButton";
+    const location = useLocation();
+    const { state } = location;
+    const navigate = useNavigate();
     const [approvedJobs, setapprovedJobs] = useState([]);
     const [alljobsimp, setalljobsimp] = useState([]);
-
+    useEffect(() => {
+        setSelectedJob(state);
+    }, [])
     const fetchApprovers = async () => {
         try {
             const response = await axios.get('http://localhost:5000/getapproverofJobs', {
@@ -41,6 +47,8 @@ const JobApproval = () => {
             console.error('Error fetching approvers:', error);
         }
     };
+
+  
 
     const fetchLatestJobs = async () => {
         try {
@@ -154,6 +162,9 @@ const JobApproval = () => {
             toast.error('Failed to reject Import Job');
         }
     };
+    useEffect(() => {
+        navigate('/approverlog', { state: null })
+    }, [])
 
     return (
         <div>

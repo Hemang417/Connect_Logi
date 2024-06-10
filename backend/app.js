@@ -34,7 +34,7 @@ import { fetchNotifications, updatethereadingrowwithtimeandvalue, readallnotific
 import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangementofthatbranch, updateColumn } from './api/arrangement.js'
 import { getBranches, storeKYC } from './api/kyc.js'
 import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJobsofImp } from './api/jobapproval.js'
-import { fetchImpJobs } from './api/impjobnotifications.js'
+import { fetchImpJobs, readjobforuser } from './api/impjobnotifications.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1731,6 +1731,16 @@ app.get('/fetchJobnotifications', async (req, res) => {
         const { orgname, orgcode, branchcode } = req.query;
         const fetchedjob = await fetchImpJobs(orgname, orgcode, branchcode);
         res.send(fetchedjob);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+app.put('/userreadforjob', async (req, res) => {
+    try {
+        const {orgname, orgcode, username, jobnumber, branchcode, branchname} = req.body;
+        const readedjob = await readjobforuser(orgname, orgcode, username, jobnumber, branchcode, branchname)
     } catch (error) {
         console.log(error);
     }

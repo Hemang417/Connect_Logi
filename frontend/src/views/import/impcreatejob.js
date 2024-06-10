@@ -142,7 +142,7 @@ const impcreatejob = () => {
       const branchnameoftheorg = localStorage.getItem('branchnameofemp');
       const branchcodeoftheorg = localStorage.getItem('branchcodeofemp');
       const currentDate = new Date();
-      const dateinformat = moment(currentDate).format('YYYY-MM-DD');
+      const dateinformat = moment(currentDate).format('YYYY-MM-DD HH:mm:ss')
       const response = await axios.post('http://localhost:5000/storeJob', { ...JobformData, jobOwner: username, orgname: nameoforg, orgcode: codeoforg, jobDate: currentdateandtime, branchname: branchnameoftheorg, branchcode: branchcodeoftheorg, currentdate: dateinformat });
 
       if (response.status === 200) {

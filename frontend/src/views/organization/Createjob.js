@@ -295,8 +295,8 @@ const Createjob = () => {
       const nameoforg = localStorage.getItem('orgname');
       const codeoforg = localStorage.getItem('orgcode');
       const employeename = localStorage.getItem('username');
-      const currentDate = new Date().getTime();
-      const formattedDate = moment(currentDate).format('YYYY-MM-DD');
+      const currentDate = new Date();
+      const dateinformat = moment(currentDate).format('YYYY-MM-DD HH:mm:ss')
       const response = await axios.post('http://localhost:5000/org/store', {
         branchName: generalData.branchName,
         clientname: generalData.clientname,
@@ -314,7 +314,7 @@ const Createjob = () => {
         orgname: nameoforg,
         orgcode: codeoforg,
         username: employeename,
-        createdon: formattedDate
+        createdon: dateinformat
       })
       localStorage.removeItem('isEditing');
       toast.success('Stored client successfully');
@@ -508,56 +508,9 @@ const Createjob = () => {
 
 
 
-
-
-  // async function updateData(e) {
-  //   try {
-  //     e.preventDefault();
-  //     const nameoforg = localStorage.getItem('orgname');
-  //     const codeoforg = localStorage.getItem('orgcode');
-  //     const alias = localStorage.getItem('alias');
-  //     // const clientname = localStorage.getItem('clientname');
-  //     const selectedBranchName = localStorage.getItem('selectedBranchName');
-  //     console.log(generalData, registrationData, accountData);
-  //     const response = await axios.put('http://localhost:5000/updateData', {
-  //       alias: alias,
-  //       branchname: selectedBranchName,
-  //       clientname: generalData.clientname,
-  //       address: generalData.address,
-  //       country: generalData.country,
-  //       state: generalData.state,
-  //       city: generalData.city,
-  //       postalcode: generalData.postalcode,
-  //       phone: generalData.phone,
-  //       email: generalData.email,
-  //       PAN: registrationData.PAN,
-  //       GST: registrationData.GST,
-  //       IEC: registrationData.IEC,
-  //       creditdays: accountData.creditdays,
-  //       orgname: nameoforg,
-  //       orgcode: codeoforg
-  //     })
-
-  //     navigate('/organization#/organization')
-  //   } catch (error) {
-  //     console.log("Error: " + error);
-  //   }
-  // }
-
-
-
-
   return (
     <div>
-      {/* <CCol xs={12}>
-        <CCard className="mb-2 container-div">
-          <CCardBody>
-            <input type="text" placeholder="Name" className='text-field-1' />
-            <input type="text" placeholder="Alias" className='text-field-1' />
-          </CCardBody>
-        </CCard>
-      </CCol> */}
-
+      
       <CNav variant="tabs" className='userlist-cnav-cusros'>
         <CNavItem>
           <CNavLink className={`nav-link ${isshown === 'general' ? 'active' : ''}`} onClick={() => { setIsShown("general") }}>General</CNavLink>

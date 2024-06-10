@@ -55,7 +55,7 @@ export const OrgDataStorage = async (clientname, orgname, orgcode, address, coun
 
 
         const [rowsnotifications] = await connection.execute(`
-            INSERT INTO crm_db.notifications (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname, username, uniquevalue, approvername, reading, timeofreading, approvalid, createdon)
+            INSERT INTO crm_db.notifications (clientname, alias, address, country, state, city, postalcode, phone, email, PAN, GST, IEC, creditdays, orgname, orgcode, branchname, username, uniquevalue, approvername, reading, timeofreading, approvalid, createdat)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [clientname, aliasisthis, address, country, state, city, postalCode, phoneNumber, emailAddress, PAN, GST, IEC, creditdays, orgname, orgcode, branchName, username, "OrgButton", valuesArray, readingarray, timeofreading, insertedId, createdon]);
 
