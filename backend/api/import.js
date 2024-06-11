@@ -2,6 +2,7 @@ import { connectMySQL } from "../config/sqlconfig.js";
 import nodemailer from 'nodemailer'
 import cron from 'node-cron';
 const uniquevalue = 'JobsButton'
+
 // import { getJobsCompletedRow } from './mail.js';
 
 // let globalTime = null;
@@ -504,7 +505,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
 
 
 
-// cron.schedule('02 21 * * *', async () => {
+// cron.schedule('54 * * *', async () => {
 //     try {
 //         for (const item of data) {
 //             let emailContent = '';

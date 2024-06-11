@@ -6,6 +6,231 @@ const orgcode = 'seawave@2323';
 import cron from 'node-cron';
 import nodemailer from 'nodemailer'
 
+// let recipients;
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'shreyashpingle752@gmail.com',
+        pass: 'vircbhwmcnqfinrb'
+    }
+});
+
+
+export const setMail = async (email, passcode, hours, minutes, orgname, orgcode) => {
+    try {
+        const [row] = await connection.execute(`SELECT * FROM maildata WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+
+        if (row.length > 0) {
+            const [updatedRow] = await connection.execute(`UPDATE maildata SET email = ?, passcode = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ?`, [email, passcode, hours, minutes, orgname, orgcode]);
+        } else {
+            const [insertedRow] = await connection.execute(`INSERT INTO maildata (email, passcode, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`, [email, passcode, hours, minutes, orgname, orgcode]);
+        }
+        // await fetchDataFromTable();
+        // if (data.length > 0) {
+        //     for (const item of data) {
+        //         sendMailorg(item);
+        //     }
+        // } else {
+        //     console.log('No data fetched from the table.');
+        // }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+export const fetchMail = async (orgname, orgcode) => {
+    try {
+        const [row] = await connection.execute(`SELECT email, passcode, hours, minutes FROM maildata WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return row;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const getClientsofthatOrg = async () => {
+    try {
+        const [rows] = await connection.execute('SELECT branchname, clientname FROM organizations WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+const fetchContactsByEmail = async (branchName, clientName) => {
+    try {
+        const [rows] = await connection.execute('SELECT email FROM contacts WHERE branchname = ? AND clientname = ? AND orgname = ? AND orgcode = ?', [branchName, clientName, orgname, orgcode]);
+        return rows.map(row => row.email); // Extract email addresses from the result
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+const fetchContactsofBranches = async () => {
+    try {
+        const globalData = [];
+        const branchesAndClients = await getClientsofthatOrg();
+        for (const { branchname, clientname } of branchesAndClients) {
+            const contacts = await fetchContactsByEmail(branchname, clientname);
+
+            const structuredData = {
+                clientname: clientname,
+                branchname: branchname,
+                contacts: contacts
+            };
+
+            globalData.push(structuredData); // Add data to global array
+        }
+        return globalData;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const fetchJobsByClientAndBranch = async () => {
+    try {
+        const allJobsofClientandBranches = [];
+        const allData = await fetchContactsofBranches();
+        for (const { clientname, branchname, contacts } of allData) {
+            const [rows] = await connection.execute('SELECT jobnumber FROM impgeneral WHERE orgname = ? AND orgcode = ? AND importername = ? AND branchname = ?', [orgname, orgcode, clientname, branchname]);
+            const jobs = rows.map(row => row.jobnumber); // Extract job numbers
+            const structuredJobs = {
+                clientname: clientname,
+                branchname: branchname,
+                jobs: jobs,
+                contacts: contacts
+            };
+            allJobsofClientandBranches.push(structuredJobs); // Add client, branch, and jobs to the array
+        }
+
+        return allJobsofClientandBranches; // Return the array of job data
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+
+export const getJobsCompletedRow = async () => {
+    try {
+        const completedRowsandAll = [];
+        const allJobs = await fetchJobsByClientAndBranch();
+        for (const { clientname, branchname, jobs, contacts } of allJobs) {
+            const branchData = {
+                clientname: clientname,
+                branchname: branchname,
+                contacts: contacts,
+                jobs: []
+            };
+            for (const job of jobs) {
+                const [rows] = await connection.execute('SELECT tatimpcolumn, actualdate FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND status = ?', [orgname, orgcode, job, 'Completed']);
+                if (rows.length > 0) {
+                    const formattedRows = rows.map(row => ({
+                        tatimpcolumn: row.tatimpcolumn,
+                        actualdate: row.actualdate
+                    }));
+                    const jobsstructure = {
+                        jobnumber: job,
+                        completedRows: formattedRows
+                    }
+                    branchData.jobs.push(JSON.stringify(jobsstructure))
+                }
+            }
+
+            completedRowsandAll.push(branchData);
+        }
+
+        return completedRowsandAll;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+
+const data = await getJobsCompletedRow();
+
+cron.schedule('20 13 * * *', async () => {
+    try {
+
+        // mailarr.map(async (eachmail) => {
+        //     const mailOptions = {
+        //         from: 'shreyashpingle752@gmail.com',
+        //         to: eachmail.mail,
+        //         subject: 'Daily Report',
+        //         html: `Email Content`
+        //     };
+        //     await transporter.sendMail(mailOptions);
+        //     console.log(`Email sent successfully to ${eachmail.mail}`);
+        // })
+        
+
+        // for (const item of data) {
+        //     let emailContent = '';
+        //     emailContent += `<h2>Client: ${item.clientname}</h2>`;
+        //     emailContent += `<p>Branch: ${item.branchname}</p>`;
+        //     emailContent += '<table border="1">';
+        //     emailContent += '<tr><th>Job Number</th><th>Completed Rows</th><th>Actual Time</th></tr>';
+
+        //     for (const job of item.jobs) {
+        //         const allJobdata = JSON.parse(job);
+        //         const { completedRows, jobnumber } = allJobdata;
+        //         let completedRowsHtml = '';
+        //         let actualDatesHtml = '';
+        //         for (const row of completedRows) {
+        //             completedRowsHtml += `<p>${row.tatimpcolumn}</p>`;
+        //             const actualDate = row.actualdate.includes('T') ? row.actualdate.replace('T', ' ') : row.actualdate;
+        //             actualDatesHtml += `<p>${actualDate}</p>`;
+
+        //         }
+
+        //         emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
+        //     }
+
+        //     emailContent += '</table><br>';
+
+        //     // Loop through the contacts of the current item
+        //     for (const contact of item.contacts) {
+        //         try {
+        //             const mailOptions = {
+        //                 from: 'shreyashpingle752@gmail.com',
+        //                 to: contact,
+        //                 subject: 'Daily Report',
+        //                 html: emailContent
+        //             };
+        //             await transporter.sendMail(mailOptions);
+        //             console.log(`Email sent successfully to ${contact}`);
+        //         } catch (error) {
+        //             console.error(`Error sending email to ${contact}:`, error);
+        //         }
+        //     }
+        // }
+
+
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const mailarr = [{mail: 'yungcode2003@gmail.com'}, { mail: 'shreypingle23@gmail.com'}]
+
 // let globalDataa = []; // Initialize globalDataa
 
 // // Function to create and return a nodemailer transporter
@@ -139,17 +364,39 @@ import nodemailer from 'nodemailer'
 
 
 
+// export const getJobsCompletedRow = async () => {
+//     try {
+//         const completedRowsandAll = [];
+//         const allJobs = await fetchJobsByClientAndBranch();
+//         for (const { clientname, branchname, jobs, contacts } of allJobs) {
+//             for (const job of jobs) {
+//                 const [rows] = await connection.execute('SELECT tatimpcolumn, actualdate, jobnumber FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND status = ?', [orgname, orgcode, job, 'Completed']);
 
+//                 if (rows.length > 0) {
+//                     const formattedRows = rows.map(row => ({
+//                         tatimpcolumn: row.tatimpcolumn,
+//                         actualdate: row.actualdate,
+//                         jobnumber: row.jobnumber
+//                     }));
+//                     const structuredData = {
+//                         clientname: clientname,
+//                         branchname: branchname,
+//                         jobs: jobs,
+//                         contacts: contacts,
+//                         completedRows: JSON.stringify(formattedRows) // use formattedRows instead of rows
+//                     }
+//                     completedRowsandAll.push(structuredData); // Push JSON string representation of structuredData
+//                 }
+//             }
+//         }
+//        console.log(completedRowsandAll);
+//         return completedRowsandAll;
+//     } catch (error) {
+//         console.log(error);
+//         return [];
+//     }
+// }
 
-
-// let recipients;
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'shreyashpingle752@gmail.com',
-        pass: 'vircbhwmcnqfinrb'
-    }
-});
 
 // const fetchDataFromTable = async () => {
 //     const currentHour = new Date().getHours();
@@ -199,280 +446,3 @@ const transporter = nodemailer.createTransport({
 // setInterval(() => {
 //     scheduleEmails();
 // }, 60000)
-
-
-
-
-
-
-
-
-export const setMail = async (email, passcode, hours, minutes, orgname, orgcode) => {
-    try {
-        const [row] = await connection.execute(`SELECT * FROM maildata WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
-
-        if (row.length > 0) {
-            const [updatedRow] = await connection.execute(`UPDATE maildata SET email = ?, passcode = ?, hours = ?, minutes = ? WHERE orgname = ? AND orgcode = ?`, [email, passcode, hours, minutes, orgname, orgcode]);
-        } else {
-            const [insertedRow] = await connection.execute(`INSERT INTO maildata (email, passcode, hours, minutes, orgname, orgcode) VALUES (?, ?, ?, ?, ?, ?)`, [email, passcode, hours, minutes, orgname, orgcode]);
-        }
-        // await fetchDataFromTable();
-        // if (data.length > 0) {
-        //     for (const item of data) {
-        //         sendMailorg(item);
-        //     }
-        // } else {
-        //     console.log('No data fetched from the table.');
-        // }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const fetchMail = async (orgname, orgcode) => {
-    try {
-        const [row] = await connection.execute(`SELECT email, passcode, hours, minutes FROM maildata WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
-        return row;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-const getClientsofthatOrg = async () => {
-    try {
-        const [rows] = await connection.execute('SELECT branchname, clientname FROM organizations WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
-        return rows;
-    } catch (error) {
-        console.log(error);
-        return [];
-    }
-}
-
-const fetchContactsByEmail = async (branchName, clientName) => {
-    try {
-        const [rows] = await connection.execute('SELECT email FROM contacts WHERE branchname = ? AND clientname = ? AND orgname = ? AND orgcode = ?', [branchName, clientName, orgname, orgcode]);
-        return rows.map(row => row.email); // Extract email addresses from the result
-    } catch (error) {
-        console.log(error);
-        return [];
-    }
-}
-
-const fetchContactsofBranches = async () => {
-    try {
-        const globalData = [];
-        const branchesAndClients = await getClientsofthatOrg();
-        for (const { branchname, clientname } of branchesAndClients) {
-            const contacts = await fetchContactsByEmail(branchname, clientname);
-
-            const structuredData = {
-                clientname: clientname,
-                branchname: branchname,
-                contacts: contacts
-            };
-
-            globalData.push(structuredData); // Add data to global array
-        }
-        return globalData;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-const fetchJobsByClientAndBranch = async () => {
-    try {
-        const allJobsofClientandBranches = [];
-        const allData = await fetchContactsofBranches();
-        for (const { clientname, branchname, contacts } of allData) {
-            const [rows] = await connection.execute('SELECT jobnumber FROM impgeneral WHERE orgname = ? AND orgcode = ? AND importername = ? AND branchname = ?', [orgname, orgcode, clientname, branchname]);
-            const jobs = rows.map(row => row.jobnumber); // Extract job numbers
-            const structuredJobs = {
-                clientname: clientname,
-                branchname: branchname,
-                jobs: jobs,
-                contacts: contacts
-            };
-            allJobsofClientandBranches.push(structuredJobs); // Add client, branch, and jobs to the array
-        }
-
-        return allJobsofClientandBranches; // Return the array of job data
-    } catch (error) {
-        console.log(error);
-        return [];
-    }
-}
-
-
-// export const getJobsCompletedRow = async () => {
-//     try {
-//         const completedRowsandAll = [];
-//         const allJobs = await fetchJobsByClientAndBranch();
-//         for (const { clientname, branchname, jobs, contacts } of allJobs) {
-//             for (const job of jobs) {
-//                 const [rows] = await connection.execute('SELECT tatimpcolumn, actualdate, jobnumber FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND status = ?', [orgname, orgcode, job, 'Completed']);
-
-//                 if (rows.length > 0) {
-//                     const formattedRows = rows.map(row => ({
-//                         tatimpcolumn: row.tatimpcolumn,
-//                         actualdate: row.actualdate,
-//                         jobnumber: row.jobnumber
-//                     }));
-//                     const structuredData = {
-//                         clientname: clientname,
-//                         branchname: branchname,
-//                         jobs: jobs,
-//                         contacts: contacts,
-//                         completedRows: JSON.stringify(formattedRows) // use formattedRows instead of rows
-//                     }
-//                     completedRowsandAll.push(structuredData); // Push JSON string representation of structuredData
-//                 }
-//             }
-//         }
-//        console.log(completedRowsandAll);
-//         return completedRowsandAll;
-//     } catch (error) {
-//         console.log(error);
-//         return [];
-//     }
-// }
-
-
-
-
-export const getJobsCompletedRow = async () => {
-    try {
-        const completedRowsandAll = [];
-        const allJobs = await fetchJobsByClientAndBranch();
-        for (const { clientname, branchname, jobs, contacts } of allJobs) {
-            const branchData = {
-                clientname: clientname,
-                branchname: branchname,
-                contacts: contacts,
-                jobs: []
-            };
-            for (const job of jobs) {
-                const [rows] = await connection.execute('SELECT tatimpcolumn, actualdate FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND status = ?', [orgname, orgcode, job, 'Completed']);
-                if (rows.length > 0) {
-                    const formattedRows = rows.map(row => ({
-                        tatimpcolumn: row.tatimpcolumn,
-                        actualdate: row.actualdate
-                    }));
-                    const jobsstructure = {
-                        jobnumber: job,
-                        completedRows: formattedRows
-                    }
-                    branchData.jobs.push(JSON.stringify(jobsstructure))
-                }
-            }
-
-            completedRowsandAll.push(branchData);
-        }
-
-        return completedRowsandAll;
-    } catch (error) {
-        console.log(error);
-        return [];
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const data = await getJobsCompletedRow();
-
-cron.schedule('30 18 * * *', async () => {
-    try {
-        for (const item of data) {
-            let emailContent = '';
-            emailContent += `<h2>Client: ${item.clientname}</h2>`;
-            emailContent += `<p>Branch: ${item.branchname}</p>`;
-            emailContent += '<table border="1">';
-            emailContent += '<tr><th>Job Number</th><th>Completed Rows</th><th>Actual Time</th></tr>';
-
-            for (const job of item.jobs) {
-                const allJobdata = JSON.parse(job);
-                const { completedRows, jobnumber } = allJobdata;
-                let completedRowsHtml = '';
-                let actualDatesHtml = '';
-                for (const row of completedRows) {
-                    completedRowsHtml += `<p>${row.tatimpcolumn}</p>`;
-                    const actualDate = row.actualdate.includes('T') ? row.actualdate.replace('T', ' ') : row.actualdate;
-                    actualDatesHtml += `<p>${actualDate}</p>`;
-
-                }
-
-                emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
-            }
-
-            emailContent += '</table><br>';
-
-            // Loop through the contacts of the current item
-            for (const contact of item.contacts) {
-                try {
-                    const mailOptions = {
-                        from: 'shreyashpingle752@gmail.com',
-                        to: contact,
-                        subject: 'Daily Report',
-                        html: emailContent
-                    };
-                    await transporter.sendMail(mailOptions);
-                    console.log(`Email sent successfully to ${contact}`);
-                } catch (error) {
-                    console.error(`Error sending email to ${contact}:`, error);
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error sending email:', error);
-    }
-});
-
