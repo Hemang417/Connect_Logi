@@ -1215,12 +1215,12 @@ app.get('/Getcompletedrowsofthatjobandbranchandlob', async (req, res) => {
 app.post('/insertCompletedRow', async (req, res) => {
     try {
 
-        const { lobname, ownbranchname, importername,
+        const { lobname, ownbranchname,
             orgname, orgcode, workflowname, status, planDate,
             timedelay, days, hours, minutes, actualdate } =
             req.body.row;
 
-        const { jobnumber, jobdoneby, ownbranchcode } = req.body;
+        const { jobnumber, jobdoneby, ownbranchcode, importername } = req.body;
         const insertedCompletedRow = await insertedCompletedTrackingRows(lobname, ownbranchname, importername,
             orgname, orgcode, workflowname, status, planDate,
             timedelay, days, hours, minutes, actualdate, jobnumber, jobdoneby, ownbranchcode)
@@ -1234,10 +1234,10 @@ app.post('/insertCompletedRow', async (req, res) => {
 app.delete('/deleteCompletedRow', async (req, res) => {
 
     try {
-        const { jobnumber, ownbranchcode } = req.body;
-        const { lobname, ownbranchname, importername,
+        const { jobnumber, ownbranchcode, importername } = req.body;
+        const { lobname, ownbranchname,
             orgname, orgcode, workflowname } = req.body.row;
-        console.log(req.body.row);
+      
         const deletedRow = await deleteCompletedRowofImport(lobname, ownbranchname, importername,
             orgname, orgcode, workflowname, jobnumber, ownbranchcode);
 

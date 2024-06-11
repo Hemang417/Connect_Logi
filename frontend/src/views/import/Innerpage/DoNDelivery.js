@@ -884,17 +884,18 @@ const DoNDelivery = () => {
                 newData[index].status = '';
                 newData[index].actualdate = '';
                 newData[index].timedelay = '';
-
+    
                 // Update the state with the modified data
                 setAllLobData(newData);
-
+                
                 // Send a request to update the backend
                 await axios.delete('http://localhost:5000/deleteCompletedRow', {
                     data: {
                         row: newData[index],
                         jobnumber: localStorage.getItem('jobNumber'),
                         jobdoneby: localStorage.getItem('username'),
-                        ownbranchcode: localStorage.getItem('branchcodeofemp')
+                        ownbranchcode: localStorage.getItem('branchcodeofemp'),
+                        importername: localStorage.getItem('importernameofjob')
                     }
                 });
             } else {
@@ -918,13 +919,14 @@ const DoNDelivery = () => {
 
                 // Update the state with the modified data
                 setAllLobData(newData);
-
+        
                 // Send a request to update the backend
                 await axios.post('http://localhost:5000/insertCompletedRow', {
                     row: newData[index],
                     jobnumber: localStorage.getItem('jobNumber'),
                     jobdoneby: localStorage.getItem('username'),
-                    ownbranchcode: localStorage.getItem('branchcodeofemp')
+                    ownbranchcode: localStorage.getItem('branchcodeofemp'),
+                    importername: localStorage.getItem('importernameofjob')
                 });
             }
         } catch (error) {

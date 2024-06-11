@@ -39,7 +39,7 @@ export const setMail = async (email, passcode, hours, minutes, orgname, orgcode)
 }
 
 
-
+// correct function
 export const fetchMail = async (orgname, orgcode) => {
     try {
         const [row] = await connection.execute(`SELECT email, passcode, hours, minutes FROM maildata WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
@@ -49,10 +49,10 @@ export const fetchMail = async (orgname, orgcode) => {
     }
 }
 
-
+// correct function
 const getClientsofthatOrg = async () => {
     try {
-        const [rows] = await connection.execute('SELECT branchname, clientname FROM organizations WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
+        const [rows] = await connection.execute('SELECT * FROM organizations WHERE orgname = ? AND orgcode = ?', [orgname, orgcode]);
         return rows;
     } catch (error) {
         console.log(error);
@@ -60,6 +60,7 @@ const getClientsofthatOrg = async () => {
     }
 }
 
+// correct function
 const fetchContactsByEmail = async (branchName, clientName) => {
     try {
         const [rows] = await connection.execute('SELECT email FROM contacts WHERE branchname = ? AND clientname = ? AND orgname = ? AND orgcode = ?', [branchName, clientName, orgname, orgcode]);
@@ -70,6 +71,7 @@ const fetchContactsByEmail = async (branchName, clientName) => {
     }
 }
 
+// correct function
 const fetchContactsofBranches = async () => {
     try {
         const globalData = [];
@@ -128,7 +130,8 @@ export const getJobsCompletedRow = async () => {
                 jobs: []
             };
             for (const job of jobs) {
-                const [rows] = await connection.execute('SELECT tatimpcolumn, actualdate FROM o2dimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND status = ?', [orgname, orgcode, job, 'Completed']);
+                const [rows] = await connection.execute('SELECT * FROM trackingimport WHERE orgname = ? AND orgcode = ? AND jobnumber = ? AND status = ?', [orgname, orgcode, job, 'Completed']);
+
                 if (rows.length > 0) {
                     const formattedRows = rows.map(row => ({
                         tatimpcolumn: row.tatimpcolumn,
@@ -152,23 +155,10 @@ export const getJobsCompletedRow = async () => {
     }
 }
 
-
 const data = await getJobsCompletedRow();
 
-cron.schedule('20 13 * * *', async () => {
+cron.schedule('30 18 * * *', async () => {
     try {
-
-        // mailarr.map(async (eachmail) => {
-        //     const mailOptions = {
-        //         from: 'shreyashpingle752@gmail.com',
-        //         to: eachmail.mail,
-        //         subject: 'Daily Report',
-        //         html: `Email Content`
-        //     };
-        //     await transporter.sendMail(mailOptions);
-        //     console.log(`Email sent successfully to ${eachmail.mail}`);
-        // })
-        
 
         // for (const item of data) {
         //     let emailContent = '';
@@ -186,7 +176,6 @@ cron.schedule('20 13 * * *', async () => {
         //             completedRowsHtml += `<p>${row.tatimpcolumn}</p>`;
         //             const actualDate = row.actualdate.includes('T') ? row.actualdate.replace('T', ' ') : row.actualdate;
         //             actualDatesHtml += `<p>${actualDate}</p>`;
-
         //         }
 
         //         emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
@@ -210,6 +199,73 @@ cron.schedule('20 13 * * *', async () => {
         //         }
         //     }
         // }
+
+
+
+
+
+
+        for (const item of data) {
+            // Skip items with no jobs
+            if (!item.jobs || item.jobs.length === 0) {
+                continue;
+            }
+
+            let emailContent = '';
+            emailContent += `<h2>Client: ${item.clientname}</h2>`;
+            emailContent += `<p>Branch: ${item.branchname}</p>`;
+            emailContent += '<table border="1">';
+            emailContent += '<tr><th>Job Number</th><th>Completed Rows</th><th>Actual Time</th></tr>';
+
+            let hasCompletedTasks = false;
+
+            for (const job of item.jobs) {
+                const allJobdata = JSON.parse(job);
+                const { completedRows, jobnumber } = allJobdata;
+
+                // Skip jobs with no completed rows
+                if (!completedRows || completedRows.length === 0) {
+                    continue;
+                }
+
+                let completedRowsHtml = '';
+                let actualDatesHtml = '';
+                for (const row of completedRows) {
+                    hasCompletedTasks = true; // Mark that there is at least one completed task
+                    completedRowsHtml += `<p>${row.tatimpcolumn}</p>`;
+                    const actualDate = row.actualdate.includes('T') ? row.actualdate.replace('T', ' ') : row.actualdate;
+                    actualDatesHtml += `<p>${actualDate}</p>`;
+                }
+
+                emailContent += `<tr><td>${jobnumber}</td><td>${completedRowsHtml}</td><td>${actualDatesHtml}</td></tr>`;
+            }
+
+            emailContent += '</table><br>';
+
+            // Send emails only if there are completed tasks
+            if (hasCompletedTasks) {
+                for (const contact of item.contacts) {
+                    try {
+                        const mailOptions = {
+                            from: 'shreyashpingle752@gmail.com',
+                            to: contact,
+                            subject: 'Daily Report',
+                            html: emailContent
+                        };
+                        await transporter.sendMail(mailOptions);
+                        console.log(`Email sent successfully to ${contact}`);
+                    } catch (error) {
+                        console.error(`Error sending email to ${contact}:`, error);
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
 
 
     } catch (error) {
