@@ -202,17 +202,38 @@ export const getCompletedRows = async (username, fullname, branchnames) => {
 
         //branchnames and LOB
 
-
-
-
-
-
         // total jobs in the organization
         const jobdata = await getAllJobs();
         // const allemployees = await getAllEmployees();
-       
+
+        const [getrowaccessofimportforthatuser] = await connection.execute(`SELECT assignedperson, workflowname FROM setworkflow WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const accesshaiye = JSON.stringify(getrowaccessofimportforthatuser);
+        const data = JSON.parse(accesshaiye);
+
+        // Initialize an array to store matching workflow names
+        const matchingWorkflowNames = [];
+        
+        // Iterate over the data to find matching usernames
+        data.forEach(item => {
+          const assignedPersons = item.assignedperson;
+          const workflowName = item.workflowname;
+        
+          // Check if the username is in the assignedPersons array
+          const isUsernamePresent = assignedPersons.some(person => person.username === username);
+        
+          // If the username matches, add the workflow name to the result array
+          if (isUsernamePresent) {
+            matchingWorkflowNames.push(workflowName);
+          }
+        });
+        
+
         // this is to get all the jobs created by that user
-        const [accessRowsResult] = await connection.execute(`SELECT * FROM impjobcreation WHERE jobowner = ? AND orgname = ? AND orgcode = ?`, [username, orgname, orgcode]);
+        // access is number of jobs created by that user in the organization
+        const [accessRowsResult] = await connection.execute(`SELECT * FROM impjobcreation WHERE 
+            jobowner = ? AND orgname = ? AND orgcode = ?`,
+            [username, orgname, orgcode]);
+
         // this is to get all the completed rows by that user
         const [rows] = await connection.execute(`SELECT * FROM trackingimport WHERE jobdoneby = ? AND orgname = ? AND orgcode = ?`, [username, orgname, orgcode]);
 
@@ -222,7 +243,8 @@ export const getCompletedRows = async (username, fullname, branchnames) => {
             totalJobs: jobdata,
             access: accessRowsResult,
             completedRows: rows,
-            name: username
+            name: username,
+            rowshaiye: matchingWorkflowNames
         }
 
         return structuredData;
