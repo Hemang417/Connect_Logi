@@ -78,48 +78,48 @@ const Generate_Report = () => {
   }
 
 
-  const renderDataUI = () => {
-    if (!reportData) return null;
+  // const renderDataUI = () => {
+  //   if (!reportData) return null;
   
-    const { allData, groupedData, nonNegativeCount, originalData } = reportData;
+  //   const { allData, groupedData, nonNegativeCount, originalData } = reportData;
   
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Report Data</Text>
-        <Text style={styles.text}>Name: {allData.name}</Text>
-        <Text style={styles.text}>Non-negative Count: {nonNegativeCount}</Text>
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text style={styles.text}>Report Data</Text>
+  //       <Text style={styles.text}>Name: {allData.name}</Text>
+  //       <Text style={styles.text}>Non-negative Count: {nonNegativeCount}</Text>
   
-        {/* Rendering total jobs */}
-        <Text style={styles.text}>Total Jobs:</Text>
-        {allData.totalJobs.map((job, index) => (
-          <Text key={index} style={styles.text}>{job.property}</Text>
-        ))}
+  //       {/* Rendering total jobs */}
+  //       <Text style={styles.text}>Total Jobs:</Text>
+  //       {allData.totalJobs.map((job, index) => (
+  //         <Text key={index} style={styles.text}>{job.property}</Text>
+  //       ))}
   
-        {/* Rendering access */}
-        <Text style={styles.text}>Access:</Text>
-        {allData.access.map((access, index) => (
-          <Text key={index} style={styles.text}>{access.property}</Text>
-        ))}
+  //       {/* Rendering access */}
+  //       <Text style={styles.text}>Access:</Text>
+  //       {allData.access.map((access, index) => (
+  //         <Text key={index} style={styles.text}>{access.property}</Text>
+  //       ))}
   
-        {/* Rendering grouped data */}
-        <Text style={styles.text}>Grouped Data:</Text>
-        {Object.keys(groupedData).map((key, index) => (
-          <View key={index} style={styles.container}>
-            <Text style={styles.text}>{key}:</Text>
-            {groupedData[key].map((item, idx) => (
-              <Text key={idx} style={styles.text}>{item.property}</Text>
-            ))}
-          </View>
-        ))}
+  //       {/* Rendering grouped data */}
+  //       {/* <Text style={styles.text}>Grouped Data:</Text> */}
+  //       {Object.keys(groupedData).map((key, index) => (
+  //         <View key={index} style={styles.container}>
+  //           <Text style={styles.text}>{key}:</Text>
+  //           {groupedData[key].map((item, idx) => (
+  //             <Text key={idx} style={styles.text}>{item.property}</Text>
+  //           ))}
+  //         </View>
+  //       ))}
   
-        {/* Rendering completed rows */}
-        <Text style={styles.text}>Completed Rows:</Text>
-        {originalData.completedRows.map((row, index) => (
-          <Text key={index} style={styles.text}>{row.property}</Text>
-        ))}
-      </View>
-    );
-  };
+  //       {/* Rendering completed rows */}
+  //       <Text style={styles.text}>Completed Rows:</Text>
+  //       {originalData.completedRows.map((row, index) => (
+  //         <Text key={index} style={styles.text}>{row.property}</Text>
+  //       ))}
+  //     </View>
+  //   );
+  // };
   
 
 
@@ -141,7 +141,7 @@ const Generate_Report = () => {
                 {/* <label for="Branch" className='text-field-3'>Branch</label>
                 <h4>{localStorage.getItem('branchnameofemp')}</h4> */}
               </div>
-              <PDFDownloadLink
+              {/* <PDFDownloadLink
                 document={
                   <Document>
                     <Page>
@@ -152,7 +152,7 @@ const Generate_Report = () => {
                 fileName="user_import_data.pdf"
               >
                 {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download PDF')}
-              </PDFDownloadLink>
+              </PDFDownloadLink> */}
             </div>
 
 

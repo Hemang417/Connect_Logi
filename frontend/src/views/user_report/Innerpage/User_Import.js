@@ -496,7 +496,6 @@
 
 
 
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CChart } from '@coreui/react-chartjs';
@@ -574,17 +573,19 @@ const User_Import = ({ onDataFetch }) => {
     return selectedColors;
   };
 
-  const filterData = () => {
+  const filterData = async () => {
     try {
-      const filteredRows = originalData.completedRows.filter(row => {
+      const filteredRows = (originalData.completedRows || []).filter(row => {
         const actualDate = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
         const startDateObj = moment(startDate).format('YYYY-MM-DDTHH:mm');
         const endDateObj = moment(endDate).format('YYYY-MM-DDTHH:mm');
         return actualDate >= startDateObj && actualDate <= endDateObj;
       });
 
-      setAllData({ ...allData, completedRows: filteredRows });
+      const updatedAllData = { ...allData, completedRows: filteredRows };
 
+      setAllData(updatedAllData);
+      
       // Count non-negative rows
       let count = 0;
       filteredRows.forEach(row => {
@@ -594,7 +595,7 @@ const User_Import = ({ onDataFetch }) => {
       });
       setNonNegativeCount(count);
       onDataFetch({
-        allData: { ...allData, completedRows: filteredRows },
+        allData: updatedAllData,
         nonNegativeCount: count
       });
     } catch (error) {
@@ -602,11 +603,13 @@ const User_Import = ({ onDataFetch }) => {
     }
   };
 
+
   const clearFilters = () => {
     setStartDate('');
     setEndDate('');
     setAllData(originalData);
   };
+
 
   const empnameasusername = localStorage.getItem('fullname');
 
