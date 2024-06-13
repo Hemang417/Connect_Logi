@@ -761,6 +761,47 @@ const DoNDelivery = () => {
             // Update the state with the final updated data
             setAllLobData(updatedData);
 
+
+            const reminders = updatedData.filter(item =>
+                item.reminderdays !== null &&
+                item.reminderhours !== null &&
+                item.reminderminutes !== null &&
+                item.status === 'Pending' &&
+                item.planDate !== null &&
+                item.planDate !== undefined &&
+                item.planDate !== 0
+            ).map(item => {
+                const reminderDate = calculateReminderTimes(item.planDate, item.reminderdays, item.reminderhours, item.reminderminutes);
+                return { ...item, reminderdate: reminderDate, assignedperson: JSON.stringify(item.assignedperson) };
+            });
+            
+            
+            const reminderinserted = await axios.post('http://localhost:5000/insertreminder', {
+                reminders: reminders,
+                jobnumber: localStorage.getItem('jobNumber'),
+            });
+
+            // const reminderinserted = await axios.post('http://localhost:5000/insertreminder', {
+            //     reminders: reminders,
+            // })
+
+            // const reminders = updatedData.filter(item =>
+            //     item.reminderdays !== null &&
+            //     item.reminderhours !== null &&
+            //     item.reminderminutes !== null &&
+            //     item.status === 'Pending' 
+            //     // &&
+            //     // new Date(item.planDate) > new Date()
+            // ).map(item => {
+            //     const reminderDate = calculateReminderTimes(item.planDate, item.reminderdays, item.reminderhours, item.reminderminutes);
+            //     return { ...item, reminderdate: reminderDate, users: item.assignedperson };
+            // });
+
+            // localStorage.setItem('reminders', JSON.stringify(reminders));
+
+
+
+
         } catch (error) {
             console.log(error);
         }
@@ -771,6 +812,15 @@ const DoNDelivery = () => {
     }, [localStorage.getItem('jobDate'), localStorage.getItem('orgname'), localStorage.getItem('orgcode'), localStorage.getItem('modeoftransport'), localStorage.getItem('branchnameofemp'), localStorage.getItem('jobNumber')]);
 
 
+    const calculateReminderTimes = (planDate, reminderdays, reminderhours, reminderminutes) => {
+        const reminderDate = new Date(planDate);
+        reminderDate.setDate(reminderDate.getDate() - parseInt(reminderdays));
+        reminderDate.setHours(reminderDate.getHours() - parseInt(reminderhours));
+        reminderDate.setMinutes(reminderDate.getMinutes() - parseInt(reminderminutes));
+        return reminderDate;
+    };
+
+    console.log(allLobData);
 
     const calculatePlanDate = (referenceDate, days, hours, minutes, duration) => {
         const milestoneDays = parseInt(days);
@@ -817,10 +867,6 @@ const DoNDelivery = () => {
     };
 
 
-
-
-
-
     const isEditable = (item) => {
         try {
             if (localStorage.getItem('username') === 'admin') {
@@ -850,30 +896,6 @@ const DoNDelivery = () => {
     };
 
 
-
-
-
-
-
-    // const isEditable = (item) => {
-    //     try {
-
-    //         // Check if the localStorage username and assignedperson match
-    //         if(localStorage.getItem('username') === item.assignedperson){
-    //             // If they match, the row should be editable
-    //             return false;
-    //         } else {
-    //             // If they don't match, check if the localStorage username is 'admin'
-    //             return localStorage.getItem('username') !== 'admin';
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         // Default to false if there's an error
-    //         return false;
-    //     }
-    // }
-
-
     const handleCheckboxChange = async (index) => {
         try {
             const newData = [...allLobData];
@@ -884,10 +906,10 @@ const DoNDelivery = () => {
                 newData[index].status = '';
                 newData[index].actualdate = '';
                 newData[index].timedelay = '';
-    
+
                 // Update the state with the modified data
                 setAllLobData(newData);
-                
+
                 // Send a request to update the backend
                 await axios.delete('http://localhost:5000/deleteCompletedRow', {
                     data: {
@@ -919,7 +941,7 @@ const DoNDelivery = () => {
 
                 // Update the state with the modified data
                 setAllLobData(newData);
-        
+
                 // Send a request to update the backend
                 await axios.post('http://localhost:5000/insertCompletedRow', {
                     row: newData[index],
@@ -928,6 +950,11 @@ const DoNDelivery = () => {
                     ownbranchcode: localStorage.getItem('branchcodeofemp'),
                     importername: localStorage.getItem('importernameofjob')
                 });
+
+                const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+                const updatedReminders = reminders.filter(reminder => reminder.workflowname !== newData[index].workflowname);
+                localStorage.setItem('reminders', JSON.stringify(updatedReminders));
+
             }
         } catch (error) {
             console.error('Error:', error);
@@ -956,8 +983,6 @@ const DoNDelivery = () => {
             console.log(error);
         }
     }
-
-
 
 
     return (

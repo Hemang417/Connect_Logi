@@ -35,6 +35,7 @@ import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangeme
 import { getBranches, storeKYC } from './api/kyc.js'
 import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJobsofImp } from './api/jobapproval.js'
 import { fetchImpJobs, readjobforuser } from './api/impjobnotifications.js'
+import {StoringReminders} from './api/reminder.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1114,8 +1115,8 @@ app.put('/updatemilestone', async (req, res) => {
 app.post('/createworkflow', async (req, res) => {
     try {
         const { orgname, orgcode, branchName, lob, importername } = req.body;
-        const { workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee } = req.body.workflowData;
-        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, JSON.stringify(selectedEmployee));
+        const { workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee, reminderdays, reminderhours, reminderminutes } = req.body.workflowData;
+        const storedWorkflow = await storeWorkflow(orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, JSON.stringify(selectedEmployee), reminderdays, reminderhours, reminderminutes);
         res.status(200).send(storedWorkflow);
     } catch (error) {
         console.log(error);
@@ -1175,8 +1176,8 @@ app.delete('/deletesetworkflow', async (req, res) => {
 
 app.put('/updatesetworkflow', async (req, res) => {
     try {
-        const { id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee } = req.body;
-        const updatedWorkflowHaiYe = await updatesetworkflow(id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee);
+        const { id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee, reminderdays, reminderhours, reminderminutes } = req.body;
+        const updatedWorkflowHaiYe = await updatesetworkflow(id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee,reminderdays, reminderhours, reminderminutes);
         res.status(200).send(updatedWorkflowHaiYe);
     } catch (error) {
         console.log(error);
@@ -1741,6 +1742,15 @@ app.put('/userreadforjob', async (req, res) => {
     try {
         const {orgname, orgcode, username, jobnumber, branchcode, branchname} = req.body;
         const readedjob = await readjobforuser(orgname, orgcode, username, jobnumber, branchcode, branchname)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/insertreminder', async (req, res) => {
+    try {
+        const {jobnumber} = req.body;
+        const storedreminders = await StoringReminders(req.body.reminders, jobnumber);
     } catch (error) {
         console.log(error);
     }

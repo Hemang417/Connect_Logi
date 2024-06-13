@@ -56,7 +56,10 @@ const setWorkflow = () => {
     minutes: '',
     milestone: '',
     plandatechange: '',
-    selectedEmployee: []
+    selectedEmployee: [],
+    reminderdays: '',
+    reminderhours: '',
+    reminderminutes: '',
   })
 
   const [employeeData, setemployeeData] = useState([]);
@@ -142,7 +145,10 @@ const setWorkflow = () => {
       minutes: workflow.minutes,
       milestone: workflow.workflowmilestone,
       plandatechange: workflow.plandatechange,
-      selectedEmployee: workflow.assignedperson // Split existing selected employees into an array
+      selectedEmployee: workflow.assignedperson,
+      reminderdays: workflow.reminderdays,
+      reminderhours: workflow.reminderhours,
+      reminderminutes: workflow.reminderminutes // Split existing selected employees into an array
       // selectedEmployee: workflow.assignedperson
     });
     setVisible(true); // Open the modal
@@ -194,7 +200,10 @@ const setWorkflow = () => {
       minutes: '',
       milestone: '',
       plandatechange: '',
-      selectedEmployee: []
+      selectedEmployee: [],
+      reminderdays: '',
+      reminderhours: '',
+      reminderminutes: '',
     });
     setSelectedWorkflow(null);
   };
@@ -327,7 +336,6 @@ const setWorkflow = () => {
       selectedEmployee: Array.isArray(prevState.selectedEmployee) ? prevState.selectedEmployee.filter((_, i) => i !== index) : []
     }));
   };
-
 
 
 
@@ -503,31 +511,21 @@ const setWorkflow = () => {
                 </svg>
                 {/* ADD BUTTON ENDS*/}
 
-
-
-
-
-
-
-                {/* {workflowData.selectedEmployee && workflowData.selectedEmployee.map((selectedEmployee, index) => (
-                <div key={index}>
-                  <CDropdown>
-                    <CDropdownToggle color="secondary">{selectedEmployee || 'Select'}</CDropdownToggle>
-                    <CDropdownMenu>
-                      {employeeData && employeeData.map((employee, empIndex) => (
-                        <CDropdownItem key={empIndex} onClick={() => handleEmployeeSelect(employee, index)}>{employee.username}</CDropdownItem>
-                      ))}
-                    </CDropdownMenu>
-                  </CDropdown>
-                  <CButton onClick={() => handleDeleteDropdown(index)}>Delete</CButton>
-                </div>
-              ))} */}
-
-                {/* <CButton onClick={handleAddDropdown}>Add Dropdown</CButton> */}
-
-
               </div>
 
+
+              {/* Reminder days, hrs, mins  */}
+              <div>
+                <CModalTitle id="LiveDemoExampleLabel" className='mt-4'>
+                  Reminder Duration
+                </CModalTitle>
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('reminderdays', e.target.value)} value={workflowData.reminderdays}/>
+                <label htmlFor="Job Date" className='text-field-3 addworkflow-day'>Days</label>
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('reminderhours', e.target.value)} value={workflowData.reminderhours}/>
+                <label htmlFor="Job Date" className='text-field-3 addworkflow-day'>Hours</label>
+                <input type="text" placeholder="" className='text-field-4' onChange={(e) => handleChange('reminderminutes', e.target.value)} value={workflowData.reminderminutes}/>
+                <label htmlFor="Job Date" className='text-field-3 addworkflow-day'>Mins.</label>
+              </div>
 
             </CModalBody>
 

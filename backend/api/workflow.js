@@ -1,15 +1,15 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 const connection = await connectMySQL();
 
-export const storeWorkflow = async (orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee) => {
+export const storeWorkflow = async (orgname, orgcode, branchName, lob, importername, workflowname, duration, days, hours, minutes, milestone, plandatechange, selectedEmployee, reminderdays, reminderhours, reminderminutes) => {
     try {
         // Check if plandatechange is empty
         const plandatechangeValue = plandatechange ? plandatechange : 0;
 
         const [row] = await connection.execute(`
-            INSERT INTO setworkflow (orgname, orgcode, lobname, ownbranchname, importername, duration, days, hours, minutes, workflowmilestone, plandatechange, workflowname, assignedperson) 
-            VALUES (?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?)`, 
-            [orgname, orgcode, lob, branchName, importername, duration, days, hours, minutes, milestone, plandatechangeValue, workflowname, selectedEmployee]
+            INSERT INTO setworkflow (orgname, orgcode, lobname, ownbranchname, importername, duration, days, hours, minutes, workflowmilestone, plandatechange, workflowname, assignedperson, reminderdays, reminderhours, reminderminutes) 
+            VALUES (?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+            [orgname, orgcode, lob, branchName, importername, duration, days, hours, minutes, milestone, plandatechangeValue, workflowname, selectedEmployee, reminderdays, reminderhours, reminderminutes]
         );
     } catch (error) {
         console.log(error);
@@ -67,9 +67,9 @@ export const deletesetworkflow = async (id, orgname, orgcode, importername, ownb
 }
 
 
-export const updatesetworkflow = async(id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee) => {
+export const updatesetworkflow = async(id, workflowname, days, hours, minutes, milestone, plandatechange, selectedEmployee, reminderdays, reminderhours, reminderminutes) => {
     try {
-        const [row] = await connection.execute('UPDATE setworkflow SET workflowname = ?, days = ?, hours = ?, minutes = ?, workflowmilestone = ?, plandatechange = ?, assignedperson = ? WHERE id = ?', [workflowname, days, hours, minutes, milestone, plandatechange,selectedEmployee, id]);
+        const [row] = await connection.execute('UPDATE setworkflow SET workflowname = ?, days = ?, hours = ?, minutes = ?, workflowmilestone = ?, plandatechange = ?, assignedperson = ?, reminderdays = ?, reminderhours = ?, reminderminutes = ? WHERE id = ?', [workflowname, days, hours, minutes, milestone, plandatechange,selectedEmployee, reminderdays, reminderhours, reminderminutes, id]);
         return row;
     } catch (error) {
         console.log(error);
