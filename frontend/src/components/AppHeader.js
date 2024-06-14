@@ -288,6 +288,13 @@ const AppHeader = () => {
   }, [allnotifications])
 
 
+
+  const navigateToImport = (item) => {
+    navigate('/import', { state: item })
+  };
+
+
+
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -390,6 +397,7 @@ const AppHeader = () => {
                         whiteSpace: 'normal',    // Allow text to wrap
                         width: '100%',           // Ensure boxes take the full width of the parent container
                       }}
+                      onClick={() => navigateToImport(reminder)}
                     >
                       {`Reminder for ${reminder.workflowname}: ${reminder.status} for job ${reminder.jobnumber}`}
                     </CDropdownItem>

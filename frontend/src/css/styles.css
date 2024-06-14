@@ -797,3 +797,12 @@
 .userlist-cnav-cusros{
     cursor: pointer;
 }
+
+.highlighted-row {
+    background-color: lightyellow; /* or any color you prefer */
+  }
+  
+  .red-row {
+    background-color: red; /* or any color you prefer */
+  }
+  

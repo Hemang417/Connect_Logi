@@ -662,11 +662,18 @@ import {
 } from '@coreui/react';
 import 'react-datepicker/dist/react-datepicker.css';
 import toast from 'react-hot-toast';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const DoNDelivery = () => {
     const [allLobData, setAllLobData] = useState([]);
     const [manualDate, setmanualDate] = useState('');
-
+    // const location = useLocation();
+    // // const { state } = location;
+    // // useEffect(() => {
+    // //     (state);
+    // // }, []);
+  
+    const navigate = useNavigate();
     const readAllSpecificLobData = async () => {
         try {
             const response = await axios.get('http://localhost:5000/readlobdataspecific', {
@@ -984,6 +991,9 @@ const DoNDelivery = () => {
         }
     }
 
+    useEffect(() => {
+        navigate('/impcreatejob', { state: null })
+    }, [])
 
     return (
         <div>
