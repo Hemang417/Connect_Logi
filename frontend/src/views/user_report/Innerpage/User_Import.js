@@ -496,6 +496,10 @@
 
 
 
+
+// All branches data 
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CChart } from '@coreui/react-chartjs';
@@ -520,10 +524,9 @@ const User_Import = ({ onDataFetch }) => {
         }
       });
 
-      console.log(response.data);
-
       setAllData(response.data);
       setOriginalData(response.data);
+
       // Grouping code
       const grouped = response.data.completedRows.reduce((acc, item) => {
         const key = item.tatimpcolumn;
@@ -718,3 +721,303 @@ const User_Import = ({ onDataFetch }) => {
 }
 
 export { User_Import };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { CChart } from '@coreui/react-chartjs';
+// import { CCard, CCol, CCardBody, CButton, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell } from '@coreui/react';
+// import moment from 'moment';
+
+// const User_Import = ({ onDataFetch }) => {
+//   const [allData, setAllData] = useState([]);
+//   const [originalData, setOriginalData] = useState([]);
+//   const [startDate, setStartDate] = useState('');
+//   const [endDate, setEndDate] = useState('');
+//   const [nonNegativeCount, setNonNegativeCount] = useState({});
+//   const [branchnames, setBranchNames] = useState([]);
+
+//   useEffect(() => {
+//     const branchNames = JSON.parse(localStorage.getItem('branchnames')) || [];
+//     setBranchNames(branchNames);
+//   }, []);
+  
+//   const fetchAllData = async () => {
+//     try {
+//       const response = await axios.get('http://localhost:5000/getAllRowsofUsername', {
+//         params: {
+//           username: localStorage.getItem('empnameforaccess'),
+//           fullname: localStorage.getItem('fullname'),
+//           branchnames: localStorage.getItem('branchnames')
+//         }
+//       });
+
+//       setAllData(response.data);
+//       setOriginalData(response.data);
+
+//       // Initialize nonNegativeCount for each branch
+//       const initialNonNegativeCount = {};
+//       branchnames.forEach(branch => {
+//         initialNonNegativeCount[branch] = 0;
+//       });
+//       setNonNegativeCount(initialNonNegativeCount);
+
+//       onDataFetch({
+//         allData: response.data,
+//         originalData: response.data,
+//         nonNegativeCount: initialNonNegativeCount
+//       });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchAllData();
+//   }, [branchnames]);
+
+//   const generateRandomColor = (numColors) => {
+//     const randomColor = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+//       '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+//       '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
+//       '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+//       '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
+//       '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+//       '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
+//       '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+//       '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+//       '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+//     const selectedColors = [];
+//     for (let i = 0; i < numColors; i++) {
+//       const randomIndex = Math.floor(Math.random() * randomColor.length);
+//       selectedColors.push(randomColor[randomIndex]);
+//     }
+//     return selectedColors;
+//   };
+
+//   const filterData = async () => {
+//     try {
+//       const filteredRows = (originalData.completedRows || []).filter(row => {
+//         const actualDate = moment(row.actualdate).format('YYYY-MM-DDTHH:mm');
+//         const startDateObj = moment(startDate).format('YYYY-MM-DDTHH:mm');
+//         const endDateObj = moment(endDate).format('YYYY-MM-DDTHH:mm');
+//         return actualDate >= startDateObj && actualDate <= endDateObj;
+//       });
+
+//       const updatedAllData = { ...allData, completedRows: filteredRows };
+
+//       setAllData(updatedAllData);
+
+//       // Update nonNegativeCount for each branch
+//       const updatedNonNegativeCount = { ...nonNegativeCount };
+//       branchnames.forEach(branch => {
+//         updatedNonNegativeCount[branch] = filteredRows.filter(row => row.ownbranchname === branch && !row.timedelay.includes('-')).length;
+//       });
+//       setNonNegativeCount(updatedNonNegativeCount);
+
+//       onDataFetch({
+//         allData: updatedAllData,
+//         nonNegativeCount: updatedNonNegativeCount
+//       });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   const clearFilters = () => {
+//     setStartDate('');
+//     setEndDate('');
+//     setAllData(originalData);
+//   };
+
+//   const empnameasusername = localStorage.getItem('fullname');
+
+//   const getPieChartData = (branch) => {
+//     const totalJobs = allData.totalJobs ? allData.totalJobs.length : 0;
+
+//     const chartData = allData.rowshaiye ? allData.rowshaiye.map(item => {
+//       const completedRowsForItem = allData.completedRows.filter(row => row.tatimpcolumn === item && row.ownbranchname === branch);
+//       const completedCount = completedRowsForItem.length;
+//       const percentage = ((completedCount / totalJobs) * 100).toFixed(2);
+//       return parseFloat(percentage);
+//     }) : [];
+
+//     return {
+//       labels: allData.rowshaiye ? allData.rowshaiye : [],
+//       datasets: [
+//         {
+//           backgroundColor: allData.rowshaiye ? generateRandomColor(allData.rowshaiye.length) : [],
+//           data: chartData
+//         }
+//       ]
+//     };
+//   };
+
+//   return (
+//     <div>
+//       <CCol xs={12}>
+//         <CCard className="mb-2 container-div">
+//           <CCardBody>
+//             <div className="date-filters-report">
+//               <input
+//                 className='start-date-filters-report'
+//                 type="datetime-local"
+//                 placeholder="Start Date"
+//                 name='startDate'
+//                 value={startDate}
+//                 onChange={(e) => setStartDate(e.target.value)}
+//               />
+//               <input
+//                 className='end-date-filters-report'
+//                 type="datetime-local"
+//                 placeholder="End Date"
+//                 name='endDate'
+//                 value={endDate}
+//                 onChange={(e) => setEndDate(e.target.value)}
+//               />
+//               <div className='mt-4 all-buttons-user-import'>
+//                 <CButton color="primary" onClick={filterData} className='filter-button'>Search</CButton>
+//                 <CButton color="primary" onClick={clearFilters} className='clear-button'>Clear</CButton>
+//               </div>
+//             </div>
+
+//             {branchnames.map(branch => (
+//               <div key={branch}>
+//                 <h3>{branch}</h3>
+//                 <CTable className='left-div-report'>
+//                   <CTableHead>
+//                     <CTableRow>
+//                       <CTableHeaderCell scope="col">Assigned</CTableHeaderCell>
+//                       <CTableHeaderCell scope="col">Completed</CTableHeaderCell>
+//                       <CTableHeaderCell scope="col">Delayed</CTableHeaderCell>
+//                       <CTableHeaderCell scope="col">%</CTableHeaderCell>
+//                     </CTableRow>
+//                   </CTableHead>
+//                   <CTableBody>
+//                     {allData.rowshaiye && allData.rowshaiye.map((item, index) => {
+//                       const completedRowsForItem = allData.completedRows.filter(row => row.tatimpcolumn === item && row.ownbranchname === branch);
+//                       const completedCount = completedRowsForItem.length;
+//                       const totalCount = allData.totalJobs.length;
+//                       const percentage = ((completedCount / totalCount) * 100).toFixed(2);
+
+//                       return (
+//                         <CTableRow key={index}>
+//                           <CTableHeaderCell>{item}</CTableHeaderCell>
+//                           <CTableDataCell>{completedCount}/{totalCount}</CTableDataCell>
+//                           <CTableDataCell>{completedRowsForItem.filter(row => !row.timedelay.includes('-')).length}</CTableDataCell>
+//                           <CTableDataCell>{percentage}%</CTableDataCell>
+//                         </CTableRow>
+//                       );
+//                     })}
+//                   </CTableBody>
+//                 </CTable>
+//                 <div>
+//                   <div>Total rows completed with time delay: {nonNegativeCount[branch]}/{allData.totalJobs ? allData.totalJobs.length : 0}</div>
+//                   <div>Number of Jobs created by {empnameasusername} : {allData.access?.length}/{allData.totalJobs ? allData.totalJobs.length : 0}</div>
+//                 </div>
+
+//                 <div className='right-div-report'>
+//                   <CChart
+//                     type="pie"
+//                     data={getPieChartData(branch)}
+//                     options={{
+//                       plugins: {
+//                         legend: {
+//                           labels: {
+//                             color: 'blue',
+//                           }
+//                         }
+//                       },
+//                     }}
+//                   />
+//                 </div>
+//               </div>
+//             ))}
+//           </CCardBody>
+//         </CCard>
+//       </CCol>
+//     </div>
+//   );
+// }
+
+// export { User_Import };

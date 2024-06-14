@@ -27,9 +27,23 @@ import { PDFDownloadLink, Document, Page, Text, View } from '@react-pdf/renderer
 const Generate_Report = () => {
 
   const [isshown, setIsShown] = useState("urImport");
-
+  const [branchdata, setbranchdata] = useState([]);
 
   const [reportData, setReportData] = useState(null);
+
+  useEffect(() => {
+    const branchnames = localStorage.getItem('branchnames');
+    if (branchnames) {
+      try {
+        // Parse the JSON-like string
+        const parsedData = JSON.parse(branchnames.replace(/'/g, '"'));
+        setbranchdata(parsedData);
+      } catch (error) {
+        console.error("Error parsing branch names:", error);
+      }
+    }
+  }, []);
+
 
   const handleDataFetch = (data) => {
     setReportData(data);
@@ -80,27 +94,27 @@ const Generate_Report = () => {
 
   // const renderDataUI = () => {
   //   if (!reportData) return null;
-  
+
   //   const { allData, groupedData, nonNegativeCount, originalData } = reportData;
-  
+
   //   return (
   //     <View style={styles.container}>
   //       <Text style={styles.text}>Report Data</Text>
   //       <Text style={styles.text}>Name: {allData.name}</Text>
   //       <Text style={styles.text}>Non-negative Count: {nonNegativeCount}</Text>
-  
+
   //       {/* Rendering total jobs */}
   //       <Text style={styles.text}>Total Jobs:</Text>
   //       {allData.totalJobs.map((job, index) => (
   //         <Text key={index} style={styles.text}>{job.property}</Text>
   //       ))}
-  
+
   //       {/* Rendering access */}
   //       <Text style={styles.text}>Access:</Text>
   //       {allData.access.map((access, index) => (
   //         <Text key={index} style={styles.text}>{access.property}</Text>
   //       ))}
-  
+
   //       {/* Rendering grouped data */}
   //       {/* <Text style={styles.text}>Grouped Data:</Text> */}
   //       {Object.keys(groupedData).map((key, index) => (
@@ -111,7 +125,7 @@ const Generate_Report = () => {
   //           ))}
   //         </View>
   //       ))}
-  
+
   //       {/* Rendering completed rows */}
   //       <Text style={styles.text}>Completed Rows:</Text>
   //       {originalData.completedRows.map((row, index) => (
@@ -120,7 +134,7 @@ const Generate_Report = () => {
   //     </View>
   //   );
   // };
-  
+
 
 
   return (
@@ -137,10 +151,36 @@ const Generate_Report = () => {
                 <label for="User Name" className='text-field-3'>User Name</label>
                 <h4>{localStorage.getItem('empnameforaccess')}</h4>
               </div>
-              <div>
-                {/* <label for="Branch" className='text-field-3'>Branch</label>
-                <h4>{localStorage.getItem('branchnameofemp')}</h4> */}
+
+
+
+              <div className='branch-container'>
+                <label>Branch Access to {localStorage.getItem('fullname')}</label>
+                <div className='branch-items'>
+                  {branchdata.length > 0 ? (
+                    branchdata.map((item, index) => (
+                      <div key={index} className='branch-item'>
+                        <h4>{item}</h4>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No branch data available</p>
+                  )}
+                </div>
               </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
               {/* <PDFDownloadLink
                 document={
                   <Document>
