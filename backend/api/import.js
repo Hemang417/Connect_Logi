@@ -396,7 +396,7 @@ export const storeGeneralImportData = async (orgname, orgcode, jobowner, jobnumb
         (orgname, orgcode, jobnumber, importername, importerbranchname, uniquevalue, createdat, reading, timeofreading, approvername,branchname,branchcode,username)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             [orgname, orgcode, jobnumber, importerName, selectedBranch, uniquevalue, createdat, JSON.stringify(readingarray),
-                JSON.stringify(timeofreadingarray), JSON.stringify(approvername),branchname,branchcode,jobowner])
+                JSON.stringify(timeofreadingarray), JSON.stringify(approvername), branchname, branchcode, jobowner])
 
         const getusernames = usernames
             .filter(item => item.uniquevalue[0] === uniquevalue)
@@ -1346,6 +1346,12 @@ export const insertedCompletedTrackingRows = async (
                 importername
             ]
         );
+
+
+        const [rowdeleted] = await connection.execute(`DELETE FROM reminders 
+            WHERE orgname = ? AND orgcode = ? AND lobname = ? AND ownbranchname = ? AND jobnumber = ? AND workflowname = ?`,
+            [orgname, orgcode, lobname, ownbranchname, jobnumber, workflowname]);
+
 
     } catch (error) {
         console.log(error);

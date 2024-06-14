@@ -29,3 +29,13 @@ export const StoringReminders = async (reminders, jobnumber) => {
         console.log('Error processing reminders:', error);
     }
 };
+
+
+export const fetchReminders = async (orgname, orgcode, branchname) => {
+    try {
+        const [rows] = await connection.execute(`SELECT * FROM reminders WHERE orgname = ? AND orgcode = ? AND ownbranchname = ?`, [orgname, orgcode, branchname]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}

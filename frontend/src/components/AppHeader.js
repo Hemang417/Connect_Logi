@@ -52,6 +52,8 @@ const AppHeader = () => {
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [visibleNotifications, setVisibleNotifications] = useState([]);
   const [allorg, setallorg] = useState([]);
+  const [reminderNotifications, setReminderNotifications] = useState([])
+
   async function getOrganizations() {
     try {
       const response = await axios.get(`http://localhost:5000/getorg`, {
@@ -65,6 +67,33 @@ const AppHeader = () => {
       console.log(error);
     }
   }
+
+
+  useEffect(() => {
+    const remindernotif = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/fetchremindernotifications', {
+          params: {
+            orgname: localStorage.getItem('orgname'),
+            orgcode: localStorage.getItem('orgcode'),
+            branchname: localStorage.getItem('branchnameofemp')
+          }
+        });
+        const fetchedReminders = response.data
+
+        const username = localStorage.getItem('username')
+        const filteredReminders = fetchedReminders.filter(reminder =>
+          JSON.parse(reminder.assignedpeoplereminder).some(person => person.username === username)
+        )
+
+        setReminderNotifications(filteredReminders)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    remindernotif();
+  }, [localStorage.getItem('branchnameofemp')]);
 
 
 
@@ -131,7 +160,7 @@ const AppHeader = () => {
         fetchNotifications()
         addNotification(data.message)
       }
-      if(data.type === 'new_job'){
+      if (data.type === 'new_job') {
         toast.success(data.message)
         // fetchNotifications()
         addNotification(data.message)
@@ -259,7 +288,6 @@ const AppHeader = () => {
   }, [allnotifications])
 
 
-
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -275,7 +303,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
             <CNavLink to="/dashboard" component={NavLink} style={{ fontWeight: 700, color: 'blue' }}>
-            Welcome,  {localStorage.getItem('username')}
+              Welcome,  {localStorage.getItem('username')}
             </CNavLink>
           </CNavItem>
           <CNavItem>
@@ -333,6 +361,43 @@ const AppHeader = () => {
               </CForm>
               <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Reminders</CDropdownHeader>
 
+              <CForm>
+                <CTableBody
+                  className='notifrow'
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    maxHeight: '300px', // Limit the height to show scrollbar when necessary
+                    overflowY: 'auto',  // Enable vertical scrolling
+                    padding: '10px',    // Add padding for better spacing
+                    alignItems: 'center', // Center the notification boxes
+                  }}
+                >
+                  {reminderNotifications && reminderNotifications.map((reminder, index) => (
+                    <CDropdownItem
+                      key={index}
+                      style={{
+                        backgroundColor: '#f8f9fa',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        fontFamily: 'Arial, sans-serif',
+                        fontSize: '14px',
+                        color: '#333',
+                        maxWidth: '300px',
+                        wordWrap: 'break-word',  // Ensure text wraps to the next line if too long
+                        whiteSpace: 'normal',    // Allow text to wrap
+                        width: '100%',           // Ensure boxes take the full width of the parent container
+                      }}
+                    >
+                      {`Reminder for ${reminder.workflowname}: ${reminder.status} for job ${reminder.jobnumber}`}
+                    </CDropdownItem>
+                  ))}
+                </CTableBody>
+              </CForm>
+
+
 
             </CDropdownMenu>
           </CDropdown>
@@ -352,8 +417,6 @@ const AppHeader = () => {
                     entry.read === 0
                   )).length
               }
-
-
 
             </CBadge>
             <CNavLink href="#/notifyrender">

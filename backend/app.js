@@ -35,7 +35,7 @@ import { storeArrangement, getBranchcodeandname, deleteArrangement, getArrangeme
 import { getBranches, storeKYC } from './api/kyc.js'
 import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJobsofImp } from './api/jobapproval.js'
 import { fetchImpJobs, readjobforuser } from './api/impjobnotifications.js'
-import {StoringReminders} from './api/reminder.js'
+import {StoringReminders,fetchReminders} from './api/reminder.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1751,6 +1751,16 @@ app.post('/insertreminder', async (req, res) => {
     try {
         const {jobnumber} = req.body;
         const storedreminders = await StoringReminders(req.body.reminders, jobnumber);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/fetchremindernotifications', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname} = req.query;
+        const fetchedreminders = await fetchReminders(orgname, orgcode, branchname);
+        res.send(fetchedreminders);
     } catch (error) {
         console.log(error);
     }
