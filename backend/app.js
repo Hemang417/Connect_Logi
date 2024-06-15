@@ -4,7 +4,7 @@ import multer from 'multer';
 import bodyParser from 'body-parser';
 import { promises as fs } from 'fs';
 import { getTheUser, insertUser, getApproverNameinOrg } from './api/user.js';
-import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact } from './api/organization.js';
+import { OrgDataStorage, OrgRender, insertEmployees, fetchBranchData, updateRow, insertContact, fetchAllContacts, deleteContact, updateContact, saveBranchinTable, updateBID, deleteBranch, fetchAllContactsofNew, updateContactduringNew, updateBIDContact, getOrgsforfiltering } from './api/organization.js';
 import { fetchAllusers, storeimpaccess, removeimpaccess, fetchAllaccesspoints, getUserAccess, storeBranchAccessforUser, deletethatbranchaccess, fetchExistingBranches } from './api/userlist.js';
 import {
     storeJob, updateJobNumber, fetchBranches, fetchAllorgdata, storeGeneralImportData,
@@ -1765,6 +1765,19 @@ app.get('/fetchremindernotifications', async (req, res) => {
         console.log(error);
     }
 })
+
+
+app.get('/getallorgsforfiltering', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const fetchedorgs = await getOrgsforfiltering(orgname, orgcode);
+        res.send(fetchedorgs);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -431,3 +431,14 @@ export const deleteBranch = async (id, branchname, orgcode, orgname, clientname)
     }
 }
 
+
+
+
+export const getOrgsforfiltering = async (orgname, orgcode) => {
+    try {
+        const [rows] = await connection.execute(`SELECT clientname FROM organizations WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        return rows;
+    } catch (error) {
+        console.log(error);
+    }
+}

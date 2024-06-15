@@ -251,7 +251,7 @@ export const getCompletedRows = async (username, fullname, branchnames) => {
             // Workflownames access to that user
             rowshaiye: matchingWorkflowNames
         }
-     
+    
         return structuredData;
 
     } catch (error) {

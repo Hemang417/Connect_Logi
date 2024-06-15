@@ -135,6 +135,16 @@ const Generate_Report = () => {
   //   );
   // };
 
+  const renderBranchNames = () => {
+    if (branchdata.length === 0) {
+      return <p>No branch data available</p>;
+    }
+
+    // Join branch names with commas
+    const branchNamesString = branchdata.join(', ');
+
+    return <h4>{branchNamesString}</h4>;
+  };
 
 
   return (
@@ -156,15 +166,7 @@ const Generate_Report = () => {
               <div className='branch-container'>
                 <label>Branch Access to {localStorage.getItem('fullname')}</label>
                 <div className='branch-items'>
-                  {branchdata.length > 0 ? (
-                    branchdata.map((item, index) => (
-                      <div key={index} className='branch-item'>
-                        <h4>{`${item}`}</h4>
-                      </div>
-                    ))
-                  ) : (
-                    <p>No branch data available</p>
-                  )}
+                  {renderBranchNames()}
                 </div>
               </div>
 
