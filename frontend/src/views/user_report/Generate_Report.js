@@ -12,17 +12,17 @@ import {
   CCardBody,
   CNav,
   CNavItem,
-  CNavLink
+  CNavLink, CSidebar, CSidebarNav, CSidebarBrand, CSidebarHeader
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser, cilBuilding, cilChartPie, cilArrowRight } from '@coreui/icons'
+
+import { cilLockLocked, cilUser, cilBuilding, cilChartPie, cilArrowRight, cilSpeedometer, cilLayers, cilCloudDownload } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import toast from 'react-hot-toast'
 import { useLocation, Link } from 'react-router-dom'
 import { User_Import } from './Innerpage/User_Import';
 import { PDFDownloadLink, Document, Page, Text, View } from '@react-pdf/renderer';
-
 
 const Generate_Report = () => {
 
@@ -153,14 +153,13 @@ const Generate_Report = () => {
               </div>
 
 
-
               <div className='branch-container'>
                 <label>Branch Access to {localStorage.getItem('fullname')}</label>
                 <div className='branch-items'>
                   {branchdata.length > 0 ? (
                     branchdata.map((item, index) => (
                       <div key={index} className='branch-item'>
-                        <h4>{item}</h4>
+                        <h4>{`${item}`}</h4>
                       </div>
                     ))
                   ) : (
@@ -168,18 +167,6 @@ const Generate_Report = () => {
                   )}
                 </div>
               </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
               {/* <PDFDownloadLink
                 document={

@@ -206,27 +206,27 @@ export const getCompletedRows = async (username, fullname, branchnames) => {
         const jobdata = await getAllJobs();
         // const allemployees = await getAllEmployees();
 
-        const [getrowaccessofimportforthatuser] = await connection.execute(`SELECT assignedperson, workflowname FROM setworkflow WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
+        const [getrowaccessofimportforthatuser] = await connection.execute(`SELECT assignedperson, workflowname, ownbranchname FROM setworkflow WHERE orgname = ? AND orgcode = ?`, [orgname, orgcode]);
         const accesshaiye = JSON.stringify(getrowaccessofimportforthatuser);
         const data = JSON.parse(accesshaiye);
 
         // Initialize an array to store matching workflow names
         const matchingWorkflowNames = [];
-        
+
         // Iterate over the data to find matching usernames
         data.forEach(item => {
-          const assignedPersons = item.assignedperson;
-          const workflowName = item.workflowname;
-        
-          // Check if the username is in the assignedPersons array
-          const isUsernamePresent = assignedPersons.some(person => person.username === username);
-        
-          // If the username matches, add the workflow name to the result array
-          if (isUsernamePresent) {
-            matchingWorkflowNames.push(workflowName);
-          }
+            const assignedPersons = item.assignedperson;
+            const workflowName = item.workflowname;
+            const branchname = item.ownbranchname
+            // Check if the username is in the assignedPersons array
+            const isUsernamePresent = assignedPersons.some(person => person.username === username);
+
+            // If the username matches, add the workflow name to the result array
+            if (isUsernamePresent) {
+                matchingWorkflowNames.push({workflowName: workflowName, branchname: branchname});
+            }
         });
-        
+
 
         // this is to get all the jobs created by that user
         // access is number of jobs created by that user in the organization
@@ -240,13 +240,18 @@ export const getCompletedRows = async (username, fullname, branchnames) => {
         // we send totaljobs in org, total jobs created by that user in org, name of user, completedrows of the job by the user
         // access is individual job creations of that user
         const structuredData = {
+            // all org jobs
             totalJobs: jobdata,
+            // all org jobs created by that user
             access: accessRowsResult,
+            // completed rows by that user
             completedRows: rows,
+            // name of user
             name: username,
+            // Workflownames access to that user
             rowshaiye: matchingWorkflowNames
         }
-
+     
         return structuredData;
 
     } catch (error) {
