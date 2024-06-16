@@ -70,6 +70,20 @@ const _nav = [
 
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Accounts',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+
+    items: [
+      {
+        component: CNavItem,
+        name: 'Payment Sheet',
+        to: '/PaymentSheet',
+      },
+
+    ],
+  },
 
   {
     component: CNavGroup,
