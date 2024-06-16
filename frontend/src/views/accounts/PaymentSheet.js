@@ -135,58 +135,9 @@ const PaymentSheet = () => {
                             <CNavLink className={`nav-link ${isshown === 'debit' ? 'active' : ''}`} onClick={() => setIsShown('debit')}>Debit</CNavLink>
                         </CNavItem>
                     </CNav>
-
-
-                    {/* <CDropdown>
-                        <label>Payment/Receipt</label>
-                        <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
-                        <CDropdownMenu className="text-field-4">
-                            <CDropdownItem>CR</CDropdownItem>
-                            <CDropdownItem>DR</CDropdownItem>
-                        </CDropdownMenu>
-                    </CDropdown>
-
-                    <label htmlFor="Payment Details">Date</label>
-                    <input type="date" placeholder="" />
-
-                    <label htmlFor="Payment Details">Payment Details</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Type of Expense</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Taxable Amount</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">GST Amount</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Total Invoice Amount</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">TDS Deduction Amount</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Net Payment Amount</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Job No.</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Customer Name</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">UTR Details</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Remarks</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Bank Name</label>
-                    <input type="text" placeholder="" />
-
-                    <label htmlFor="Payment Details">Purchase No.</label>
-                    <input type="text" placeholder="" /> */}
+                    
+                    {isshown === "credit" && <Credit />}
+                    {isshown === "debit" && <Debit />}
 
                 </CModalBody>
                 <CModalFooter>
@@ -197,8 +148,7 @@ const PaymentSheet = () => {
                         Add
                     </CButton>
                 </CModalFooter>
-                {isshown === "credit" && <Credit />}
-                {isshown === "debit" && <Debit />}
+
             </CModal>
 
         </CRow>
