@@ -25,9 +25,11 @@ import {
     CModalHeader,
     CModalTitle,
     CModalBody,
-    CModalFooter,
+    CModalFooter, CNav, CNavItem, CNavLink
 } from '@coreui/react'
 import '../../css/styles.css';
+import Credit from './Innerpages/Credit';
+import Debit from './Innerpages/Debit';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
@@ -39,134 +41,18 @@ import Cookies from 'js-cookie'
 
 const PaymentSheet = () => {
     const [visible, setVisible] = useState(false);
-    const [date, setDate] = useState(new Date());
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
-    const [organization, setOrganization] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const checkToken = async () => {
-          const token = Cookies.get('userauthtoken');
-          if (!token){
-            navigate('/login')
-          }
+            const token = Cookies.get('userauthtoken');
+            if (!token) {
+                navigate('/login')
+            }
         };
         checkToken();
-      }, []);
-
-
-    const location = useLocation();
-    const [searchValue, setSearchValue] = useState('');
-
-    if (location.pathname == '/organization') {
-        localStorage.removeItem('updateBtn');
-        localStorage.removeItem('clientname');
-        localStorage.removeItem('branchnames');
-        localStorage.removeItem('organizationclientname');
-        localStorage.removeItem('firstorgofclient');
-        localStorage.removeItem('isEditing');
-        localStorage.removeItem('branchDataforprefill');
-        localStorage.removeItem('alias');
-        localStorage.removeItem('organizationbranches');
-        localStorage.removeItem('uniquevalue')
-    }
-
-    useEffect(() => {
-        const renderOverview = async () => {
-            try {
-                const nameoforg = localStorage.getItem('orgname');
-                const codeoforg = localStorage.getItem('orgcode');
-
-                const response = await axios.get('http://localhost:5000/getOrg', {
-                    params: {
-                        orgname: nameoforg,
-                        orgcode: codeoforg
-                    }
-                });
-
-                setOrganization(response.data);
-            } catch (error) {
-                console.log("Error: " + error);
-            }
-        }
-        renderOverview();
-    }, [])
-
-
-
-
-
-
-    const prefillData = (org) => {
-        try {
-            localStorage.setItem('alias', org.alias);
-            localStorage.setItem('organizationbranches', JSON.stringify(org.branches));
-            localStorage.setItem('organizationclientname', org.clientname);
-            localStorage.setItem('firstorgofclient', JSON.stringify(org.branches[0]));
-            localStorage.setItem('updateBtn', true);
-            localStorage.setItem('isEditing', true);
-            localStorage.setItem('uniquevalue', 'OrgButton')
-        } catch (error) {
-            toast.error(error);
-            console.log("Error: " + error);
-        }
-    };
-
-
-
-
-    function removeLocal() {
-        toast.success('Create new client now')
-        localStorage.setItem('updateBtn', false);
-        localStorage.removeItem('clientname');
-        localStorage.removeItem('alias');
-        localStorage.removeItem('branchname');
-        localStorage.removeItem('selectedBranchName');
-        localStorage.removeItem('isEditing');
-        localStorage.setItem('uniquevalue', 'OrgButton')
-    }
-
-
-
-
-
-
-    const handleSearch = async () => {
-        // Check if there is a search value
-        if (searchValue.trim() !== '') {
-            // Filter organizations based on searchValue
-            const filteredOrg = organization.filter(org => {
-                const clientname = org.clientname.toLowerCase();
-                const alias = org.alias.toLowerCase();
-                const searchTerm = searchValue.toLowerCase();
-                return clientname.includes(searchTerm) || alias.includes(searchTerm);
-            });
-
-            setOrganization(filteredOrg);
-        } else {
-            // If no search value, display all organizations again
-            const nameoforg = localStorage.getItem('orgname');
-            const codeoforg = localStorage.getItem('orgcode');
-
-            try {
-                const response = await axios.get('http://localhost:5000/getOrg', {
-                    params: {
-                        orgname: nameoforg,
-                        orgcode: codeoforg
-                    }
-                });
-                setOrganization(response.data);
-            } catch (error) {
-                console.log("Error: " + error);
-            }
-        }
-    };
-
-
-
-
-
+    }, []);
+    const [isshown, setIsShown] = useState("credit");
 
     return (
         // JOB SEARCH - DROPDOWN & TEXT FIELD
@@ -174,7 +60,7 @@ const PaymentSheet = () => {
             <CCardBody className='button-div'>
                 <div className='createjob-button'>
                     <svg type="submit" onClick={() => {
-                        setVisible (true)
+                        setVisible(true)
                     }} width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM12 8.25C12.4142 8.25 12.75 8.58579 12.75 9V11.25H15C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H12.75L12.75 15C12.75 15.4142 12.4142 15.75 12 15.75C11.5858 15.75 11.25 15.4142 11.25 15V12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H11.25L11.25 9C11.25 8.58579 11.5858 8.25 12 8.25Z" fill="#1C274C" />
                     </svg>
@@ -221,7 +107,7 @@ const PaymentSheet = () => {
                             <CTableHeaderCell scope="col" className='row-font'>Remarks</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Bank Name</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Purchase No.</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell>
+                            <CTableHeaderCell scope="col" className='row-font'>CR/DR</CTableHeaderCell>
 
                         </CTableRow>
 
@@ -239,74 +125,83 @@ const PaymentSheet = () => {
                     <CModalTitle id="LiveDemoExampleLabel">Make Payment Details</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
+
+                    <CNav variant="tabs" className='nav-link-text userlist-cnav-cusros'>
+                        <CNavItem>
+                            <CNavLink className={`nav-link ${isshown === 'credit' ? 'active' : ''}`} onClick={() => setIsShown('credit')}>Credit</CNavLink>
+                        </CNavItem>
+
+                        <CNavItem>
+                            <CNavLink className={`nav-link ${isshown === 'debit' ? 'active' : ''}`} onClick={() => setIsShown('debit')}>Debit</CNavLink>
+                        </CNavItem>
+                    </CNav>
+
+
+                    {/* <CDropdown>
+                        <label>Payment/Receipt</label>
+                        <CDropdownToggle className="dropdown-btn" color='secondary'>Select</CDropdownToggle>
+                        <CDropdownMenu className="text-field-4">
+                            <CDropdownItem>CR</CDropdownItem>
+                            <CDropdownItem>DR</CDropdownItem>
+                        </CDropdownMenu>
+                    </CDropdown>
+
                     <label htmlFor="Payment Details">Date</label>
-                    <input type="date" placeholder=""/>
-                    
+                    <input type="date" placeholder="" />
+
                     <label htmlFor="Payment Details">Payment Details</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Type of Expense</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Taxable Amount</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">GST Amount</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Total Invoice Amount</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">TDS Deduction Amount</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Net Payment Amount</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Job No.</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Customer Name</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">UTR Details</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Remarks</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Bank Name</label>
-                    <input type="text" placeholder=""/>
-                    
+                    <input type="text" placeholder="" />
+
                     <label htmlFor="Payment Details">Purchase No.</label>
-                    <input type="text" placeholder=""/>
+                    <input type="text" placeholder="" /> */}
+
                 </CModalBody>
                 <CModalFooter>
-                    <CPopover content="Close the modal" trigger={['hover', 'focus']}>
-                        <CButton color="secondary" >
-                            Close
-                        </CButton>
-                    </CPopover>
-
-                    {/* {
-                            editRoleId ?
-                                <CPopover content="Update the Role" trigger={['hover', 'focus']}>
-                                    <CButton color="primary" >
-                                        Update
-                                    </CButton>
-                                </CPopover>
-                                :
-                                <CPopover content="Add the user role" trigger={['hover', 'focus']}>
-                                    <CButton color="primary" >
-                                        Add
-                                    </CButton>
-                                </CPopover>
-                        } */}
+                    <CButton color="secondary" onClick={() => setVisible(false)}>
+                        Close
+                    </CButton>
+                    <CButton color="primary" >
+                        Add
+                    </CButton>
                 </CModalFooter>
+                {isshown === "credit" && <Credit />}
+                {isshown === "debit" && <Debit />}
             </CModal>
 
         </CRow>
-
 
     )
 }
