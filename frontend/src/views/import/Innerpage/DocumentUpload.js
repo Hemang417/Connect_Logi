@@ -36,7 +36,8 @@ import '../../../css/styles.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'
 // import createjob from './CreateJob';
 
 const DocumentUpload = () => {
@@ -44,6 +45,17 @@ const DocumentUpload = () => {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
     const [visible, setVisible] = useState(false)
+    const navigate = useNavigate();
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (!token){
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
+
     return (
         <div>
         <div className='left-div-table'>

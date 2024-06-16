@@ -23,12 +23,12 @@ import toast from 'react-hot-toast'
 import { useLocation, Link } from 'react-router-dom'
 import { User_Import } from './Innerpage/User_Import';
 import { PDFDownloadLink, Document, Page, Text, View } from '@react-pdf/renderer';
-
+import Cookies from 'js-cookie'
 const Generate_Report = () => {
 
   const [isshown, setIsShown] = useState("urImport");
   const [branchdata, setbranchdata] = useState([]);
-
+  const navigate = useNavigate();
   const [reportData, setReportData] = useState(null);
 
   useEffect(() => {
@@ -44,6 +44,15 @@ const Generate_Report = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (!token){
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
   const handleDataFetch = (data) => {
     setReportData(data);

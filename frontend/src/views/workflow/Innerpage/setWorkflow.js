@@ -27,18 +27,19 @@ import {
 // import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import Select from 'react-select';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie'
 const setWorkflow = () => {
 
   const [allbranches, setallbranches] = useState([]);
   const [allineofbusinesses, setalllineofbusinesses] = useState([]);
   const [allorgs, setallorgs] = useState([]);
   const [visible, setVisible] = useState(false);
-
+  const navigate = useNavigate();
   const [selectedLOB, setselectedLOB] = useState('');
   const [selectedBranch, setselectedBranch] = useState('');
   const [selectedOrg, setselectedOrg] = useState('');
@@ -303,7 +304,15 @@ const setWorkflow = () => {
     }
   }, [])
 
-
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (!token){
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
 
 

@@ -663,7 +663,7 @@ import {
 import 'react-datepicker/dist/react-datepicker.css';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import Cookies from 'js-cookie'
 const DoNDelivery = () => {
     const [allLobData, setAllLobData] = useState([]);
     const [manualDate, setmanualDate] = useState('');
@@ -672,6 +672,19 @@ const DoNDelivery = () => {
     // // useEffect(() => {
     // //     (state);
     // // }, []);
+
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (!token){
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
+
+
+
   
     const navigate = useNavigate();
     const readAllSpecificLobData = async () => {
@@ -827,7 +840,6 @@ const DoNDelivery = () => {
         return reminderDate;
     };
 
-    console.log(allLobData);
 
     const calculatePlanDate = (referenceDate, days, hours, minutes, duration) => {
         const milestoneDays = parseInt(days);

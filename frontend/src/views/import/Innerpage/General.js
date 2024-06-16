@@ -693,7 +693,7 @@ import { CChart } from '@coreui/react-chartjs'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import moment from 'moment';
-
+import Cookies from 'js-cookie'
 
 const General = () => {
     const [formData, setFormData] = useState({
@@ -876,6 +876,15 @@ const General = () => {
     };
 
 
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (!token){
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
 
 
 

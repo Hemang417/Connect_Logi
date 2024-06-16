@@ -412,10 +412,7 @@ const Approvername = () => {
     useEffect(() => {
         const checkToken = async () => {
           const token = Cookies.get('userauthtoken');
-          if (token) {
-            // Token exists, redirect to dashboard
-            navigate('/dashboard');
-          }else{
+          if (!token){
             navigate('/login')
           }
         };

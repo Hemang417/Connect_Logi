@@ -10,6 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie'
 
 const ImpAccess = () => {
   const [allAccessData, setAllAccessData] = useState([]);
@@ -47,7 +48,15 @@ const ImpAccess = () => {
   //   }
   //  }
 
-
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (!token){
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
   useEffect(() => {
     const prefillCheckbox = () => {

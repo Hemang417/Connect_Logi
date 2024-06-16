@@ -447,7 +447,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
 import toast from 'react-hot-toast';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'
 // import createjob from './CreateJob';
 
 const General = ({ onSave, gData }) => {
@@ -467,7 +468,15 @@ const General = ({ onSave, gData }) => {
         email: '',
         branchName: ''
     });
-
+    useEffect(() => {
+        const checkToken = async () => {
+            const token = Cookies.get('userauthtoken');
+            if (!token) {
+                navigate('/login')
+            }
+        };
+        checkToken();
+    }, []);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setGeneralData({ ...generalData, [name]: value });
@@ -475,15 +484,15 @@ const General = ({ onSave, gData }) => {
 
     const handleSave = async () => {
 
-        if(generalData.phone.length !== 10){
+        if (generalData.phone.length !== 10) {
             alert('Please enter the correct phone number');
             return;
         }
-        if(generalData.postalcode.length !==6){
+        if (generalData.postalcode.length !== 6) {
             alert('Please enter a proper postal code');
             return;
         }
-       
+
         toast.success('Data saved successfully');
         onSave(generalData);
     };
@@ -773,7 +782,7 @@ const General = ({ onSave, gData }) => {
 
             // Handle success response
             toast.success('Branch deleted successfully');
-            
+
             navigate('/organization#/organization')
 
         } catch (error) {

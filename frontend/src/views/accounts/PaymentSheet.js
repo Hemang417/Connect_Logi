@@ -33,8 +33,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Cookies from 'js-cookie'
 
 const PaymentSheet = () => {
     const [visible, setVisible] = useState(false);
@@ -42,14 +43,12 @@ const PaymentSheet = () => {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
     const [organization, setOrganization] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkToken = async () => {
           const token = Cookies.get('userauthtoken');
-          if (token) {
-            // Token exists, redirect to dashboard
-            navigate('/dashboard');
-          }else{
+          if (!token){
             navigate('/login')
           }
         };
