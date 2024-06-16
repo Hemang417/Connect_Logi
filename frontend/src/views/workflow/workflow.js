@@ -32,7 +32,7 @@ import {
 import '../../css/styles.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import Lob from './Innerpage/Lob';
@@ -40,10 +40,25 @@ import Wf from './Innerpage/Wf';
 import toast from 'react-hot-toast';
 import MileStone from './Innerpage/milestone';
 import JobValue from './Innerpage/JobValue';
+import Cookies from 'js-cookie'
 
 const workflow = () => {
 
+  const navigate = useNavigate();
   const [isshown, setIsShown] = useState("Lob");
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (token) {
+        // Token exists, redirect to dashboard
+        navigate('/dashboard');
+      }else{
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
 
   return (

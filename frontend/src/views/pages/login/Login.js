@@ -221,6 +221,7 @@ import { cilLockLocked, cilUser } from '@coreui/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -230,9 +231,23 @@ const Login = () => {
     password: '',
     orgcode: ''
   });
+  const [isNavigatingAway, setIsNavigatingAway] = useState(false);
   const [allBranchesOfOurOwn, setAllBranchesOfOurOwn] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState({});
   const [approvers, setapprovers] = useState([]);
+
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (token) {
+        // Token exists, redirect to dashboard
+        navigate('/dashboard');
+      }
+    };
+    checkToken();
+  }, []);
+
 
   function handleChange(e) {
     setLoginData({
@@ -251,14 +266,16 @@ const Login = () => {
       });
 
       if (response.status === 200) {
+        console.log(response.data);
         localStorage.setItem('orgcode', response.data.orgcode);
         localStorage.setItem('orgname', response.data.orgname);
         localStorage.setItem('username', response.data.username);
         toast.success('Logged in successfully. Navigating to dashboard.');
-
+        Cookies.set('userauthtoken', response.data.token);
         if (response.data.username === 'admin') {
           navigate('/dashboard');
-        } else {
+        }
+        else {
           const branches = await fetchBranchesOfOurOwn(response.data.orgcode, response.data.orgname, response.data.username);
           if (branches.length === 1) {
             handleSelect(branches[0].ownbranchname, branches[0].branchcode);
@@ -299,7 +316,19 @@ const Login = () => {
     navigate('/dashboard');
   }
 
+  const handleUnload = () => {
+    if (!isNavigatingAway) {
+      Cookies.remove('userauthtoken');
+    }
+  };
 
+  // Add event listener for beforeunload when component mounts
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, []);
 
 
   return (

@@ -375,6 +375,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import '../../css/styles.css'
 import { useNavigate, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie'
 
 const Approvername = () => {
     const navigate = useNavigate();
@@ -406,6 +407,21 @@ const Approvername = () => {
         getAllBranches();
         getApproverList();
     }, []);
+
+
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
+
 
     // Fetch all branches
     const getAllBranches = async () => {

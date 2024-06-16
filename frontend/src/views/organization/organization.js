@@ -217,16 +217,32 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Cookies from 'js-cookie'
 
 const organization = () => {
   const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [organization, setOrganization] = useState([]);
+  const navigate = useNavigate();
   // const [searchName, setSearchName] = useState('');
   // const [searchAlias, setSearchAlias] = useState('');
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (token) {
+        // Token exists, redirect to dashboard
+        navigate('/dashboard');
+      }else{
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
+
 
   const location = useLocation();
   const [searchValue, setSearchValue] = useState('');

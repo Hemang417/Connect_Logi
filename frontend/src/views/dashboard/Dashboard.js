@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 
 import {
   CAvatar,
@@ -50,12 +50,25 @@ import avatar3 from 'src/assets/images/avatars/3.jpg'
 import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
-
+import Cookies from 'js-cookie';
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
-
+import { useNavigate } from 'react-router-dom'
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (token) {
+        // Token exists, redirect to dashboard
+        navigate('/dashboard');
+      }else{
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },

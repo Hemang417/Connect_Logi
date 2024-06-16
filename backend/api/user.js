@@ -1,39 +1,64 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 const connection = await connectMySQL();
+import jwt from "jsonwebtoken";
+const SECRET_KEY = 'SeawaveForwardingLogistics'; // Replace with your actual secret key
 
-// LOGIN API
 export const getTheUser = async (username, password, orgcode) => {
     try {
-
+        let tableName;
         if (username === "admin") {
-            const [rows] = await connection.execute(
-                `SELECT * FROM users WHERE username = ? AND password = ? AND orgcode = ?`,
-                [username, password, orgcode]
-            );
-            if (rows.length === 0) {
-                return null;
-            }
-            return rows[0];
+            tableName = 'users';
         } else {
-            const [rows] = await connection.execute(
-                `SELECT * FROM employees WHERE username = ? AND password = ? AND orgcode = ?`,
-                [username, password, orgcode]
-            );
-            if (rows.length === 0) {
-                return null;
-            }
-            return rows[0];
+            tableName = 'employees';
         }
-
-
-        
-
-
+        const [rows] = await connection.execute(
+            `SELECT * FROM ${tableName} WHERE username = ? AND password = ? AND orgcode = ?`,
+            [username, password, orgcode]
+        );
+        if (rows.length === 0) {
+            return null;
+        }
+        const user = rows[0];
+        const token = jwt.sign({ username: user.username, orgcode: user.orgcode }, SECRET_KEY, { expiresIn: '24h' });
+        user.token = token;
+        return user;
     } catch (error) {
         console.error('Error fetching user:', error.message);
         throw error;
     }
-}
+};
+
+
+
+// LOGIN API
+// export const getTheUser = async (username, password, orgcode) => {
+//     try {
+
+//         if (username === "admin") {
+//             const [rows] = await connection.execute(
+//                 `SELECT * FROM users WHERE username = ? AND password = ? AND orgcode = ?`,
+//                 [username, password, orgcode]
+//             );
+//             if (rows.length === 0) {
+//                 return null;
+//             }
+//             return rows[0];
+//         } else {
+//             const [rows] = await connection.execute(
+//                 `SELECT * FROM employees WHERE username = ? AND password = ? AND orgcode = ?`,
+//                 [username, password, orgcode]
+//             );
+//             if (rows.length === 0) {
+//                 return null;
+//             }
+//             return rows[0];
+//         }
+
+//     } catch (error) {
+//         console.error('Error fetching user:', error.message);
+//         throw error;
+//     }
+// }
 
 
 

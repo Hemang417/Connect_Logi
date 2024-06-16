@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import toast from 'react-hot-toast'
 import "../../css/styles.css"
+import Cookies from 'js-cookie'
 
 const NewUser = () => {
 
@@ -44,7 +45,18 @@ const NewUser = () => {
         })
     }
 
-
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
 
     async function handleSubmit(e) {
         e.preventDefault();

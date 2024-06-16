@@ -42,8 +42,20 @@ const PaymentSheet = () => {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
     const [organization, setOrganization] = useState([]);
-    // const [searchName, setSearchName] = useState('');
-    // const [searchAlias, setSearchAlias] = useState('');
+
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
+
 
     const location = useLocation();
     const [searchValue, setSearchValue] = useState('');

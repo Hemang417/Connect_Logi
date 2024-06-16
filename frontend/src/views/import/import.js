@@ -30,6 +30,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import './css/import-styles.css';
+import Cookies from 'js-cookie'
 
 const Import = () => {
   const [date, setDate] = useState(new Date());
@@ -53,6 +54,19 @@ const Import = () => {
     localStorage.removeItem('uniquevalue');
     localStorage.removeItem('importernameofjob');
   }
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (token) {
+        // Token exists, redirect to dashboard
+        navigate('/dashboard');
+      }else{
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
 
   useEffect(() => {

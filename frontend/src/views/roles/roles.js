@@ -20,7 +20,7 @@ import {
     CForm,
     CPopover
 } from '@coreui/react';
-
+import Cookies from 'js-cookie'
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -149,6 +149,18 @@ const UserRoles = () => {
         }
     }
 
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
 
 
 

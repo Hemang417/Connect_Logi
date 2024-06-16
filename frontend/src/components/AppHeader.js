@@ -345,7 +345,6 @@ const AppHeader = () => {
             </CDropdownToggle>
 
             <CDropdownMenu className="pt-4 dropdown-menu-notifications" placement="bottom-end">
-              {/* <CDropdownHeader className="bg-light fw-bold py-2 notif-header1">Organizations Approval List</CDropdownHeader> */}
 
               <CForm>
 
@@ -405,8 +404,6 @@ const AppHeader = () => {
                 </CTableBody>
               </CForm>
 
-
-
             </CDropdownMenu>
           </CDropdown>
 
@@ -438,13 +435,6 @@ const AppHeader = () => {
         </CHeaderNav>
       </CContainer>
 
-      {/* <div className="notification-area">
-        {visibleNotifications.map((notification, index) => (
-          <div key={index} className="notification">
-            {notification}
-          </div>
-        ))}
-      </div> */}
     </CHeader>
   )
 }

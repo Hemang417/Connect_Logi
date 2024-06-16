@@ -40,7 +40,7 @@ import "../../css/styles.css";
 import moment from 'moment'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-
+import Cookies from 'js-cookie'
 const NotifyRender = () => {
 
     const [currentBranch, setCurrentBranch] = useState('');
@@ -73,6 +73,21 @@ const NotifyRender = () => {
             console.log(error);
         }
     }
+
+
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
+
 
     // useEffect(() => {
     //   const ws = new WebSocket('ws://localhost:8081');

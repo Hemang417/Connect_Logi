@@ -149,7 +149,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/styles.css';
 import { useLocation } from 'react-router-dom'
-
+import Cookies from 'js-cookie'
 const UserList = () => {
   const [allData, setAllData] = useState([]);
   const navigate = useNavigate();
@@ -159,7 +159,18 @@ const UserList = () => {
     localStorage.removeItem('empnameforaccess');
     localStorage.removeItem('accessedRows')
   }
-
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = Cookies.get('userauthtoken');
+      if (token) {
+        // Token exists, redirect to dashboard
+        navigate('/dashboard');
+      }else{
+        navigate('/login')
+      }
+    };
+    checkToken();
+  }, []);
 
   useEffect(() => {
     const fetchAllUsernames = async () => {

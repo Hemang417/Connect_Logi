@@ -13,7 +13,9 @@ import { cilLockLocked, cilUser, cilBuilding, cilChartPie, cilArrowRight } from 
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import toast from 'react-hot-toast'
+import Cookies from 'js-cookie'
 import { useLocation, Link } from 'react-router-dom'
+
 const User_Report = () => {
 
     const [allData, setAllData] = useState([]);
@@ -23,6 +25,19 @@ const User_Report = () => {
     const location = useLocation();
     const [userBranchCount, setUserBranchCount] = useState({});
     
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
+
 
     if (location.pathname === '/user_report') {
         localStorage.removeItem('empnameforaccess');

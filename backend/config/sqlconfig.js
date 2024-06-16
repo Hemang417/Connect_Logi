@@ -5,7 +5,7 @@ export const connectMySQL = async () => {
       host: '127.0.0.1',
       port: 3306,
       user: 'root',
-      password: 'Seawave@9822',
+      password: 'yungcode23#@@',
       database: 'crm_db',
       waitForConnections: true,
       connectionLimit: Infinity,

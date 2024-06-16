@@ -152,13 +152,25 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/styles.css';
 import { useLocation } from 'react-router-dom'
-
+import Cookies from 'js-cookie'
 const BranchList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [ownBranch, setOwnBranch] = useState([]);
     const [editData, setEditData] = useState(null);
     const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
 
     const fetchOwnBranches = async () => {
         try {

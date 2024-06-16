@@ -24,9 +24,10 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios'
 import '../../css/styles.css'
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import Cookies from 'js-cookie';
 
 const AppHeaderDropdown = () => {
- 
+
   const [allBranches, setallBranches] = useState([]);
   const FetchAllBranches = async () => {
     try {
@@ -55,6 +56,13 @@ const AppHeaderDropdown = () => {
     localStorage.setItem('branchcodeofemp', branch.branchcode);
     FetchAllBranches();
   }
+
+
+  const handleLogout = () => {
+    Cookies.remove('userauthtoken');
+    window.location.href = '/login';
+  }
+
 
 
   return (
@@ -134,9 +142,9 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
-          <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+        <CDropdownItem style={{cursor: 'pointer'}} onClick={handleLogout}>
+          <CIcon icon={cilLockLocked} className="me-2"/>
+          Log Out
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

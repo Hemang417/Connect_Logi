@@ -218,6 +218,7 @@ import toast from 'react-hot-toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import OrgApproval from './Innerpage/OrgApproval';
 import JobApproval from './Innerpage/JobApproval';
+import Cookies from 'js-cookie'
 const Approverlog = () => {
     const [latestOrg, setlatestOrg] = useState([]);
     const [approvalname, setapprovalname] = useState([]);
@@ -228,7 +229,18 @@ const Approverlog = () => {
     // const { state } = location;
     const navigate = useNavigate();
     const [isshown, setIsShown] = useState('organization');
-
+    useEffect(() => {
+        const checkToken = async () => {
+          const token = Cookies.get('userauthtoken');
+          if (token) {
+            // Token exists, redirect to dashboard
+            navigate('/dashboard');
+          }else{
+            navigate('/login')
+          }
+        };
+        checkToken();
+      }, []);
 
     // useEffect(() => {
     //     setSelectedOrg(state);
