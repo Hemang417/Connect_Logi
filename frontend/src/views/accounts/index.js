@@ -1,3 +1,4 @@
-import PaymentSheet from "./PaymentSheet";
+import PaymentSheet  from "./PaymentSheet";
+import { BankDetails } from "./BankDetails";
 
-export default { PaymentSheet };
+export default { PaymentSheet, BankDetails };

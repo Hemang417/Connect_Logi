@@ -81,6 +81,11 @@ const _nav = [
         name: 'Payment Sheet',
         to: '/PaymentSheet',
       },
+      {
+        component: CNavItem,
+        name: 'Bank Details',
+        to: '/BankDetails',
+      },
 
     ],
   },

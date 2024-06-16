@@ -9,6 +9,7 @@ const OrgApproval = React.lazy(() => import('./views/approverlog/Innerpage/OrgAp
 const JobApproval = React.lazy(() => import('./views/approverlog/Innerpage/JobApproval'))
 const NotifyRender = React.lazy(() => import('./views/notifrender/notifyrender'))
 const PaymentSheet = React.lazy(() => import('./views/accounts/PaymentSheet'))
+const BankDetails = React.lazy(() => import('./views/accounts/BankDetails'))
 const Memberapprover = React.lazy(() => import('./views/approver/Memberapprover'))
 const Approvername = React.lazy(() => import('./views/approver/Approvername'))
 const Import = React.lazy(() => import('./views/import/import'))
@@ -90,6 +91,7 @@ const routes = [
   { path: '/userlist', element: UserList },
   { path: '/tat', element: TAT },
   { path: '/PaymentSheet', element: PaymentSheet},
+  { path: '/BankDetails', element: BankDetails },
   { path: '/branches', element: branches},
   { path: '/branchlist', element: branchlist},
   { path: '/ImpTAT', element: IMPTAT },
