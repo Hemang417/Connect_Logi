@@ -1,63 +1,227 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import {
-    CCard,
     CCardBody,
-    CCardHeader,
-    CCol,
     CRow,
     CTable,
-    CTableBody,
-    CTableCaption,
-    CTableDataCell,
     CTableHead,
     CTableHeaderCell,
     CTableRow,
-    CDropdown,
-    CDropdownToggle,
-    CDropdownMenu,
-    CDropdownItem,
-    CFormInput,
-    CFormLabel,
-    CForm,
-    CButton,
-    CPopover,
     CModal,
     CModalHeader,
     CModalTitle,
     CModalBody,
-    CModalFooter, CNav, CNavItem, CNavLink
-} from '@coreui/react'
+    CModalFooter,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
+    CButton,
+    CForm, CTableDataCell
+} from '@coreui/react';
 import '../../css/styles.css';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios'
-import { useLocation, useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast'
-import Cookies from 'js-cookie'
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
+
 
 const BankDetails = () => {
+    const [branchlist, setBranchlist] = useState([]);
     const [visible, setVisible] = useState(false);
+    const [allbankdetails, setAllBankdetails] = useState([]);
+    // const [isEdit, setisEdit] = useState(false);
+    const [bankdetails, setBankdetails] = useState({
+        bankname: '',
+        accounttype: '',
+        bankaccountno: '',
+        ifsc: '',
+        branchname: '',
+        branchcode: '',
+        closingBalance: ''
+    });
+
+    const navigate = useNavigate();
+
+    const getbankdetails = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/getbankdetails', {
+                params: {
+                    orgname: localStorage.getItem('orgname'),
+                    orgcode: localStorage.getItem('orgcode')
+                }
+            })
+            setAllBankdetails(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getbankdetails();
+    }, [])
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const token = Cookies.get('userauthtoken');
+            if (!token) {
+                navigate('/login');
+            }
+        };
+        checkToken();
+    }, [navigate]);
+
+    useEffect(() => {
+        const getBranches = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/getbranchesforacc', {
+                    params: {
+                        orgname: localStorage.getItem('orgname'),
+                        orgcode: localStorage.getItem('orgcode')
+                    }
+                });
+                setBranchlist(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getBranches();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setBankdetails({
+            ...bankdetails,
+            [name]: value
+        });
+    };
+
+    const handleDropdownChange = (selectedItem) => {
+        setBankdetails({
+            ...bankdetails,
+            accounttype: selectedItem
+        });
+    };
+
+    const handleAddBankDetails = async () => {
+
+        let regex = new RegExp(/^[A-Z]{4}0[A-Z0-9]{6}$/)
+        if (bankdetails.ifsc === null || bankdetails.ifsc === '') {
+            alert('Please enter a valid IFSC Code');
+            setBankdetails({
+                bankname: '',
+                accounttype: '',
+                bankaccountno: '',
+                ifsc: '',
+                branchname: '',
+                branchcode: '',
+                closingBalance: ''
+            });
+            return;
+        }
+
+        if (!regex.test(bankdetails.ifsc)) {
+            alert('Invalid IFSC Code format');
+            setBankdetails({
+                bankname: '',
+                accounttype: '',
+                bankaccountno: '',
+                ifsc: '',
+                branchname: '',
+                branchcode: '',
+                closingBalance: ''
+            });
+            return;
+        }
+        try {
+
+            const response = await axios.post('http://localhost:5000/addbankdetails', {
+                ...bankdetails,
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode')
+            });
+
+
+            if (response.status === 200) {
+                toast.success('Bank details added successfully');
+                getbankdetails();
+                setBankdetails({
+                    bankname: '',
+                    accounttype: '',
+                    bankaccountno: '',
+                    ifsc: '',
+                    branchname: '',
+                    branchcode: '',
+                    closingBalance: ''
+                });
+            }
+            setVisible(false); // Close modal after adding
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+    async function handleDelete(bank) {
+
+        const response = await axios.delete('http://localhost:5000/deletebankdetails', {
+            data: {
+                branchcode: bank.ownbranchcode,
+                accountnum: bank.accountnum,
+                ifscCode: bank.ifscCode,
+                orgname: localStorage.getItem('orgname'),
+                orgcode: localStorage.getItem('orgcode')
+            }
+        });
+
+        if (response.status === 200) {
+            toast.success('Bank details deleted successfully');
+            getbankdetails();
+        }
+    }
+
+    const handleModalClose = async () => {
+        setVisible(false);
+        // setisEdit(false);
+        setBankdetails({
+            bankname: '',
+            accounttype: '',
+            bankaccountno: '',
+            ifsc: '',
+            branchname: '',
+            branchcode: '',
+            closingBalance: '',
+        });
+    }
+
+    // const handleEdit = async (bank) => {
+    //     setisEdit(true);
+    //     setBankdetails({
+    //         bankname: bank.bankname,
+    //         accounttype: bank.accountype,
+    //         bankaccountno: bank.accountnum,
+    //         ifsc: bank.ifscCode,
+    //         branchname: bank.ownbranchname,
+    //         branchcode: bank.ownbranchcode
+    //     });
+    //     setVisible(true);
+    // }
 
     return (
         <CRow>
             <CCardBody className='button-div'>
                 <div className='createjob-button'>
-                    <svg type="submit" onClick={() => {
-                        setVisible(true)
-                    }} width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM12 8.25C12.4142 8.25 12.75 8.58579 12.75 9V11.25H15C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H12.75L12.75 15C12.75 15.4142 12.4142 15.75 12 15.75C11.5858 15.75 11.25 15.4142 11.25 15V12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H11.25L11.25 9C11.25 8.58579 11.5858 8.25 12 8.25Z" fill="#1C274C" />
+                    <svg type="button" onClick={() => setVisible(true)} width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" clipRule="evenodd" d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM12 8.25C12.4142 8.25 12.75 8.58579 12.75 9V11.25H15C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H12.75L12.75 15C12.75 15.4142 12.4142 15.75 12 15.75C11.5858 15.75 11.25 15.4142 11.25 15V12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H11.25L11.25 9C11.25 8.58579 11.5858 8.25 12 8.25Z" fill="#1C274C" />
                     </svg>
                 </div>
                 <div className='createjob-button'>
-                    <CButton color="primary" type="submit">
-                        <img src='../../importIcons/delete.png' />
+                    <CButton color="primary" type="button">
+                        <img src='../../importIcons/delete.png' alt="Delete" />
                     </CButton>
                 </div>
                 <div className='createjob-button'>
-                    <CButton color="primary" type="submit">
-                        <img src='../../importIcons/refresh.png' width="10px" height="10px" />
+                    <CButton color="primary" type="button">
+                        <img src='../../importIcons/refresh.png' width="10px" height="10px" alt="Refresh" />
                     </CButton>
                 </div>
                 <div className='createjob-button'>
@@ -69,12 +233,11 @@ const BankDetails = () => {
                         <span className="visually-hidden">Download file</span>
                     </CButton>
                 </div>
-
             </CCardBody>
             <CForm className='form-import'>
                 <CTable hover borderless className='table-import'>
                     <CTableHead className='head-import'>
-                        <CTableRow color='dark' >
+                        <CTableRow color='dark'>
                             <CTableHeaderCell scope="col" className='row-font'></CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Bank Name</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Account Type</CTableHeaderCell>
@@ -82,14 +245,33 @@ const BankDetails = () => {
                             <CTableHeaderCell scope="col" className='row-font'>IFSC Code</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Branch Name</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className='row-font'>Cheque Details</CTableHeaderCell>
-
+                            <CTableHeaderCell scope="col" className='row-font'>Operations</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
+                    {
+                        allbankdetails?.map((bank, index) => {
+                            return (
+                                <CTableRow key={index}>
+                                    <CTableHeaderCell scope="row" className='row-font'></CTableHeaderCell>
+                                    <CTableDataCell >{bank.bankname}</CTableDataCell>
+                                    <CTableDataCell >{bank.accountype}</CTableDataCell>
+                                    <CTableDataCell >{bank.accountnum}</CTableDataCell>
+                                    <CTableDataCell >{bank.ifscCode}</CTableDataCell>
+                                    <CTableDataCell >{bank.ownbranchname}</CTableDataCell>
+                                    <CTableDataCell >NA</CTableDataCell>
+                                    <CButton onClick={() => handleDelete(bank)}>Delete</CButton>
+{/* 
+                                    <CButton onClick={() => handleEdit(bank)}>Edit</CButton> */}
+                                </CTableRow>
+                            )
+                        })
+                    }
                 </CTable>
-            </CForm>
+
+            </CForm >
             <CModal
                 visible={visible}
-                // onClose={handleModalClose}
+                onClose={handleModalClose}
                 aria-labelledby="LiveDemoExampleLabel"
                 size="xl"
             >
@@ -98,42 +280,68 @@ const BankDetails = () => {
                 </CModalHeader>
                 <CModalBody>
                     <div>
-                        <label for="bank-name" className='text-field-3'>Bank Name</label>
-                        <input type="text" placeholder="" className='text-field-4' name='bank-name' />
+                        <label htmlFor="bankname" className='text-field-3'>Bank Name</label>
+                        <input type="text" placeholder="" className='text-field-4' name='bankname' value={bankdetails.bankname} onChange={handleInputChange} />
                     </div>
                     <div>
-                        <label for="account-type" className='text-field-3'>Account Type</label>
-                        <input type="text" placeholder="" className='text-field-4' name='account-type' />
+                        <label htmlFor="accounttype" className='text-field-3'>Account Type</label>
+                        <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>
+                                {bankdetails.accounttype || 'Select'}
+                            </CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                <CDropdownItem onClick={() => handleDropdownChange('Savings')}>Savings</CDropdownItem>
+                                <CDropdownItem onClick={() => handleDropdownChange('Current')}>Current</CDropdownItem>
+                                <CDropdownItem onClick={() => handleDropdownChange('Cash Credit')}>Cash Credit</CDropdownItem>
+                                <CDropdownItem onClick={() => handleDropdownChange('Fixed Deposit')}>Fixed Deposit</CDropdownItem>
+                                <CDropdownItem onClick={() => handleDropdownChange('Recurring Deposit')}>Recurring Deposit</CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
                     </div>
                     <div>
-                        <label for="bank-account-no" className='text-field-3'>Bank Account No.</label>
-                        <input type="text" placeholder="" className='text-field-4' name='bank-account-no' />
+                        <label htmlFor="bankaccountno" className='text-field-3'>Bank Account No.</label>
+                        <input type="text" placeholder="" className='text-field-4' name='bankaccountno' value={bankdetails.bankaccountno} onChange={handleInputChange} />
                     </div>
                     <div>
-                        <label for="ifsc-code" className='text-field-3'>IFSC Code</label>
-                        <input type="text" placeholder="" className='text-field-4' name='ifsc-code' />
+                        <label htmlFor="ifsc" className='text-field-3'>IFSC Code</label>
+                        <input type="text" placeholder="" className='text-field-4' name='ifsc' value={bankdetails.ifsc} onChange={handleInputChange} />
                     </div>
                     <div>
-                        <label for="branch-name" className='text-field-3'>Branch Name</label>
-                        <input type="text" placeholder="" className='text-field-4' name='branch-name' />
+                        <label htmlFor="branchname" className='text-field-3'>Branch Name</label>
+                        <CDropdown>
+                            <CDropdownToggle className="dropdown-btn" color='secondary'>
+                                {bankdetails.branchname || 'Select'}
+                            </CDropdownToggle>
+                            <CDropdownMenu className="text-field-4">
+                                {branchlist.map((branch, index) => (
+                                    <CDropdownItem key={index} onClick={() => setBankdetails({ ...bankdetails, branchname: branch.ownbranchname, branchcode: branch.branchcode })}>
+                                        {branch.ownbranchname}
+                                    </CDropdownItem>
+                                ))}
+                            </CDropdownMenu>
+                        </CDropdown>
                     </div>
                     <div>
-                        <label for="cheque-details" className='text-field-3'>Cheque Details</label>
-                        <input type="text" placeholder="" className='text-field-4' name='cheque-details' />
+                        <label htmlFor="closingBalance" className='text-field-3'>Closing Balance</label>
+                        <input type="text" placeholder="" className='text-field-4' name='closingBalance' value={bankdetails.closingBalance} onChange={handleInputChange} />
+                    </div>
+                    <div>
+                        <label htmlFor="chequedetails" className='text-field-3'>Cheque Details</label>
+                        <input type="text" placeholder="" className='text-field-4' name='chequedetails' onChange={handleInputChange} />
                     </div>
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setVisible(false)}>
                         Close
                     </CButton>
-                    <CButton color="primary" >
+                    <CButton color="primary" onClick={handleAddBankDetails}>
                         Add
                     </CButton>
-                </CModalFooter>
 
+                </CModalFooter>
             </CModal>
-        </CRow>
-    )
+        </CRow >
+    );
 }
 
 export default BankDetails;

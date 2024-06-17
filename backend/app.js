@@ -36,6 +36,7 @@ import { getBranches, storeKYC } from './api/kyc.js'
 import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJobsofImp } from './api/jobapproval.js'
 import { fetchImpJobs, readjobforuser } from './api/impjobnotifications.js'
 import {StoringReminders,fetchReminders} from './api/reminder.js'
+import {GetbranchesforAccounts, StoreBankDetails, GetBankDetails, deleteBankDetails} from './api/bankdetails.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1776,6 +1777,48 @@ app.get('/getallorgsforfiltering', async (req, res) => {
         console.log(error);
     }
 })
+
+app.get('/getbranchesforacc', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const fetchedbranches = await GetbranchesforAccounts(orgname, orgcode);
+        res.send(fetchedbranches);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/addbankdetails', async (req, res) => {
+    try {
+        const {bankname, accounttype, bankaccountno, ifsc, branchname, orgname, orgcode, branchcode, closingBalance} = req.body;
+        const storeddatabank = await StoreBankDetails(bankname, accounttype, bankaccountno, ifsc, branchname, orgname, orgcode, branchcode, closingBalance);
+        res.status(200).send(storeddatabank);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get('/getbankdetails', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const gotbankdata = await GetBankDetails(orgname, orgcode);
+        res.send(gotbankdata);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/deletebankdetails', async (req, res) => {
+    try {
+        const { orgname, orgcode } = req.body;
+        const { branchcode, accountnum, ifscCode } = req.body;
+        const deletedbankdata = await deleteBankDetails(orgname, orgcode, branchcode, accountnum, ifscCode);
+        res.status(200).send(deletedbankdata);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Failed to delete bank details');
+    }
+});
 
 
 
