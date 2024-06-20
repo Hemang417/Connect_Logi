@@ -37,6 +37,7 @@ import { getapproverofJobs, getJob, approveImpJob, ApprovalJobMainLogic, getAllJ
 import { fetchImpJobs, readjobforuser } from './api/impjobnotifications.js'
 import {StoringReminders,fetchReminders} from './api/reminder.js'
 import {GetbranchesforAccounts, StoreBankDetails, GetBankDetails, deleteBankDetails} from './api/bankdetails.js'
+import {GetClientNamesofTheOrg, StoreDebit} from './api/debit.js'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1820,6 +1821,25 @@ app.delete('/deletebankdetails', async (req, res) => {
     }
 });
 
+app.get('/getclientnameoforg', async (req, res) => {
+    try {
+        const {orgname, orgcode} = req.query;
+        const clientnamesgotten = await GetClientNamesofTheOrg(orgname, orgcode);
+        res.send(clientnamesgotten);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post('/addDebit', async (req, res) => {
+    try {
+        const {orgname, orgcode, branchname, branchcode, userInput} = req.body;
+        const {date, bankname, typeofExpense, taxableAmount, gstAmount, totalInvoiceAmount, tdsAmount, netPaymentAmount, utrDetails, jobNo, customerName, remarks} = req.body.formData;
+        const storedDebit = await StoreDebit(orgname, orgcode, branchname, branchcode, date, bankname, typeofExpense, taxableAmount, gstAmount, totalInvoiceAmount, tdsAmount, netPaymentAmount, utrDetails, jobNo, customerName, remarks, userInput);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 app.listen(PORT, () => {
