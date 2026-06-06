@@ -1,0 +1,35 @@
+:root {
+  --border-color: #535b87;
+}
+
+:global(.dark-mode) {
+  --border-color: #d1eeff;
+}
+
+.importDropdown {
+  background-color: transparent;
+  display: flex;
+  padding-top: 2px;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 7px;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  height: 31px;
+  z-index: 0; /*added temporary */
+}
+/* Target the actual <input> that React-Select creates */
+.importDropdown input:-webkit-autofill,
+.importDropdown input:-webkit-autofill:focus,
+.importDropdown input:-webkit-autofill:active {
+  background-color: transparent !important;
+  -webkit-text-fill-color: #d1eeff !important; /* or your theme color */
+  transition: background-color 9999s ease-in-out 0s;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+}
+
+/* .span {
+  width: 100%;
+  height: 100%;
+} */

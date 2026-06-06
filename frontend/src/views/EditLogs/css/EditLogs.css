@@ -1,0 +1,113 @@
+:root {
+  --nav-bg-color: #1e2652;
+  --bg-color: #ebeff8;
+  --page-title: #1e2652;
+  --pagination-bg: #f6fcff;
+  --label-color: #333d70;
+  --deleted-row-bg: #f6fcff;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --tableHead-bg: #2f4096;
+  --tableData-color: #1e2652;
+  --line-color: #333d70;
+}
+.dark-mode {
+  --nav-bg-color: #101322;
+  --bg-color: #242a36;
+  --page-title: #f6fcff;
+  --pagination-bg: #101322;
+  --input-font-color: #d1eeff;
+  --deleted-row-bg: #7b3232;
+  --label-color: #d1eeff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --tableHead-bg: #101322;
+  --tableData-color: #f6fcff;
+  --line-color: #f6fcff;
+}
+.top-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+  gap: 1%;
+  /* margin-left: 20px;
+  margin-top: -10px;
+  margin-bottom: 5px; */
+}
+.table-log {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0; /* No default gap */
+  background-color: transparent;
+  border: none !important;
+}
+.body-log tr {
+  margin-bottom: 10px;
+  display: table-row;
+}
+
+/* Table Header Styling */
+.head-log th {
+  background-color: var(--tableHead-bg); /* Dark blue background */
+  color: white; /* White text */
+  text-align: left; /* Align text to the left */
+  padding: 10px 12px; /* Padding for better spacing */
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-log tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 14px;
+  text-align: center;
+}
+.body-log tr td * {
+  word-break: break-word !important;
+}
+
+td {
+  font-family: "Instrument Sans";
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+  text-align: center;
+  color: var(--tableData-color);
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  /* background-color: #ffffe2 !important; Light yellow background for selected row */
+  font-weight: 600;
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+}
+
+/* Table Data Cell Styling */
+.td-log {
+  text-align: center;
+  padding: 8px 10px; /* Consistent padding */
+  border: none !important;
+  color: var(--page-title); /* Text color */
+  transition: color 0.3s ease;
+}
+
+/* Table Row Alternate Colors for Readability */
+.body-log tr:nth-child(even) {
+  /* background-color: #f9fafc;  */
+}
+
+/* Button Cell Alignment */
+.td-log button {
+  margin: 0 4px; /* Space between buttons */
+}

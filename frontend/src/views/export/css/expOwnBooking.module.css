@@ -1,0 +1,233 @@
+:root{
+  --font-color-1: #1E2652;
+  --font-color-2: #333D70;
+  --font-color-3: #2F4096;
+  --font-color-4: #D8F0FD;
+  --box-bg: #2F4096;
+  --box-border: #F6FCFF;
+  --tableData-color: #1e2652;
+  --tableHead-bg: #2f4096;
+  --activetab-color:#60B6E8;
+  --activetab-bg-color:#1E2652;
+  --tab-color:#60B6E8;
+  --tab-bg-color:#F6FCFF;
+}
+:global(.dark-mode){
+  --font-color-1: #F6FCFF;
+  --font-color-2: #F6FCFF;
+  --font-color-3: #D1EEFF;
+  --font-color-4: #D1EEFF;
+  --box-bg: #151C3D;
+  --box-border: #10152E;
+  --tableData-color: #f6fcff;
+  --tableHead-bg: #101322;
+  --activetab-color:#101322;
+  --activetab-bg-color:#ABD3EB;
+  --tab-color:#F6FCFF;
+  --tab-bg-color:#10152E;
+}
+.container {
+  width: 100%;
+  height: fit-content;
+}
+.firstRow {
+  display: flex;
+  flex-direction: row;
+}
+.backButtonP {
+  flex-shrink: 0;
+}
+.impBookBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  left: calc(50% - 190px);
+}
+.impBookTitle {
+  color: Var(--font-color-1);
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition: color 0.3s ease;
+}
+.impBookTotalJobs {
+  color: var(--font-color-3) !important;
+
+  /* Lato Body 2 */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  word-spacing: 3px;  transition: color 0.3s ease;
+
+}
+.title {
+  margin-top: 10px;
+  align-self: stretch;
+  color: var(--font-color-4);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  transition: color 0.3s ease;
+
+  line-height: normal;
+}
+.secondRow {
+  margin-top: 20px;
+  padding: 10px 30px;
+  border-radius: 40px;
+  border: 4px solid var(--box-border);
+  background-color: var(--box-bg);
+  transition: border 0.3s ease , background-color 0.3s ease;
+
+}
+.innerContainer {
+  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.subTitle {
+  color: var(--Card-Stroke, #f6fcff);
+
+  /* Lato Body */
+  font-family: Lato;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.subNo {
+  color: var(--Card-Digits, #d1eeff);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.line {
+  margin-top: 20px;
+  width: 95%;
+  transform: translate(2.5%, 0%);
+  height: 1px;
+  background-color: Var(--font-color-1);
+  transition: color 0.3s ease , background-color 0.3s ease;
+
+}
+.thirdRow {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.tableTitle {
+  width: fit-content;
+  margin: 20px 0px;
+  position: relative;
+  left: calc(50% - 100px);
+  color: var(--font-color-3);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition:  color 0.3s ease;
+}
+.tableTitle2 {
+  width: fit-content;
+  margin: 20px 0px;
+  position: relative;
+  left: calc(50% - 120px);
+  color: var(--font-color-3);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition:  color 0.3s ease;
+}
+.tableHead {
+  background: var(--tableHead-bg);
+  color: var(--Table-Row-1, #f6fcff);
+
+  /* Table Title */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+}
+.tableData {
+  color: var(--tableData-color);
+
+  /* Table Body */
+  font-family: "Instrument Sans";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+}
+.tableData td {
+  white-space: nowrap;
+}
+table {
+  table-layout: auto; /* ✅ Allows dynamic column width */
+  width: 100%; /* Ensures it uses full space */
+}
+.overflow-x-auto {
+  overflow-x: auto; /* ✅ Enables horizontal scrolling */
+  max-width: 100%;
+}
+.graphMainContainer {
+  display: flex;
+  padding: 0px 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.graphInnerBox {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0px 20px;
+  width: 49%;
+}
+.graph {
+  margin-top: 20px;
+  width: 66%;
+  height: 230px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  border: 1px solid var(--Top-Bar, #1e2652);
+  background: url(../../../assets/images/graph.png) lightgray 50% / contain
+    no-repeat;
+}
+
+.graphTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.fourthRow {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}

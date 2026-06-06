@@ -1,0 +1,47 @@
+.table-quo-ref {
+    width: 1094.123px;
+    border-collapse: collapse; /* Ensures clean borders */
+    margin-top: 10px;
+    background-color: #fff; /* White background */
+    border: 1px solid #ddd; /* Subtle outer border */
+  }
+
+  /* Table Header Styling */
+.head-quo-ref th {
+    background-color: #4f5d73; /* Dark blue background */
+    color: white; /* White text */
+    text-align: left; /* Align text to the left */
+    padding: 4px 8px; /* Padding for better spacing */
+    font-size: 14px;
+    white-space: nowrap;
+    font-weight: 600;
+    /* border-bottom: 1px solid #333;  */
+  }
+
+
+  .form-quotation {
+    overflow-x: scroll;
+    /* overflow-x: hidden; */
+  }
+  .td-quo-ref{
+    text-align: left;
+    padding: 4px 8px; 
+    border-bottom: 1px solid #ddd; /* Subtle row separator */
+    color: #333; /* Text color */
+    white-space: nowrap;
+  }
+
+  .body-quo-ref tr {
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    font-size: 12px;
+    
+  }
+  .top-btn{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1%;
+    margin-left: 20px;
+    margin-top: -10px;
+    margin-bottom: 5px;
+  }

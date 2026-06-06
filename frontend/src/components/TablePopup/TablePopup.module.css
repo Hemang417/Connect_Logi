@@ -1,0 +1,188 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --importTitle: #1e2652;
+  --tableData-color: #1e2652;
+  --border-color: #535b87;
+  --label-color: #333d70;
+  --placeHolder-color: #333d70;
+  --svg-color: #1e2652;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --line-color: #333d70;
+  --background-color: #ebeff8;
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --importTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+  --border-color: #d1eeff;
+  --label-color: #d1eeff;
+  --placeHolder-color: #d1eeff;
+  --svg-color: #f6fcff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --line-color: #f6fcff;
+  --background-color: #242a36;
+}
+.darkBg {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 201;
+  opacity: 0.5;
+  background: var(--Popup-Layer, #2d2d2d);
+}
+.tableHead {
+  background: var(--tableHead-bg);
+  color: var(--Table-Row-1, #f6fcff);
+  position: sticky;
+  top: 0px;
+
+  /* Table Title */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+}
+.tableData {
+  color: var(--tableData-color);
+
+  /* Table Body */
+  font-family: "Instrument Sans";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+}
+.tableData td {
+  white-space: nowrap;
+}
+table {
+  table-layout: auto; /* ✅ Allows dynamic column width */
+  width: 100%; /* Ensures it uses full space */
+}
+.overflow {
+  overflow-x: auto; /* ✅ Enables horizontal scrolling */
+  max-width: 100%;
+  max-height: 408px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: gray transparent; /* Firefox */
+}
+
+.firstRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  /* background: var(--Card-Stroke-4, #f6fcff); */
+  border-radius: 12px 12px 0px 0px;
+  position: relative;
+}
+.container {
+  border-radius: 12px;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+}
+.title {
+  color: var(--importTitle);
+  text-align: center;
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin: 10px 0px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.closeBtn {
+  position: absolute;
+  right: 20px;
+}
+.popupWrapper {
+  z-index: 100;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 8px;
+}
+.span {
+  width: 100%;
+  margin: 0px 20px;
+  margin-bottom: 20px;
+}
+.secondRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popupWrapper {
+  z-index: 202;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 8px;
+}
+.lastColumnCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.cellContent {
+  transition: max-width 0.3s ease;
+}
+
+.collapsed {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px; /* Adjust this value as needed */
+}
+
+.expanded {
+  white-space: normal;
+  overflow-x: auto;
+  max-width: none;
+}
+
+.readMoreBtn:hover {
+  opacity: 0.8;
+}
+
+/* Optional: Add a custom scrollbar for better UX when expanded */
+.expanded::-webkit-scrollbar {
+  height: 4px;
+}
+
+.expanded::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.expanded::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.expanded::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

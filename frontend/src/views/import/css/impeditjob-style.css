@@ -1,0 +1,33 @@
+.job-import-type-input-box{
+    padding: 2px;
+  }
+.form-select-imp-create{
+    height: 24px;
+    padding-bottom: 10px;
+    border: 1px solid #c7c7c7;
+
+}
+.Custom-MultiSelect{
+    height: 22px;
+}
+.imp-job-create-dropdown-btn {
+    font-size: small;
+    padding: 4px;
+    border-radius: 5px;
+    background: transparent;
+    color: #444141;
+    width: 130px;
+  }
+  .imp-create-field-btn {
+    /* width: 100px; */
+    font-size: small;
+    padding: 4px;
+    border-radius: 5px;
+    background: transparent;
+    color: #444141;
+  }
+  .imp-create-field-input-btn{
+    font-size: 12px;
+    margin-right: 12px;
+    font-weight: 600;
+  }

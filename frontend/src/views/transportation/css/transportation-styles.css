@@ -1,0 +1,176 @@
+.transport-label{
+  width: 200px;
+  margin: 10px 20px;
+}
+.transport-label-1{
+  width: 200px;
+  margin: 10px 20px;
+}
+.own-vehicle-first-div{
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+}
+.type-checkbox{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* margin-top: 6px; */
+}
+.select-type-imp-exp{
+  display: flex;
+  /* margin: 10px 0px; */
+}
+.select-width-input{
+  width: 190px;
+}
+.transport-remark{
+  width: 190px;
+  min-height: 35px;
+}
+.remark-field-owncreate{
+  display: flex;
+  align-items: flex-start;
+}
+.card-body-1{
+  margin-bottom: 10px;
+}
+.balance-diesel{
+  display: flex;
+}
+.balance-details-diesel{
+  display: flex;
+  flex-direction: column;
+}
+
+.balance-diesel-refill-question{
+  font-size: 11px;
+  display: block;
+  font-weight: 600;
+  white-space: wrap;
+}
+
+.diesel-span-input{
+  height: 30px;
+}
+.transport-label-block{
+  display: block;
+}
+
+
+/* grid last div alignment */
+.grid-transport-section{
+  display: grid ;
+  padding: 30px 40px;
+  grid-template-columns: 1fr 1fr  ;
+  gap: 12px 10px;
+}
+
+
+.transport-label-grid-section{
+  width:150px;
+  white-space: nowrap;
+}
+
+.section-grid-item{
+  /* width: 70px; */
+
+  white-space: nowrap;
+}
+
+
+
+
+.toll-tax-div{
+  display: flex;
+  flex-direction: column;
+}
+.toll-tax-input-width{
+  width: 30vw;
+}
+.transport-heading{
+  font-size: 18px;
+}
+
+.class-bold-toll{
+  font-weight:700;
+  margin: 4px 2px;
+}
+
+
+
+
+/* General styling for the select dropdown */
+.form-select-imp-create {
+  padding: 4px;
+  text-align: start;
+  border: 1px solid #c7c7c7;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Hover effect for the select itself */
+.form-select-imp-create:hover {
+  border-color: #007bff; /* Highlight border on hover */
+  background-color: #f9f9f9; /* Subtle background change */
+}
+
+/* Focus effect for the select */
+.form-select-imp-create:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling the options (applies to the dropdown items) */
+.form-select-imp-create option {
+  padding: 6px;
+  background-color: #fff; /* Default background */
+  color: #333;
+}
+
+/* Hover effect for options */
+.form-select-imp-create option:hover {
+  background-color: #007bff; /* Blue highlight */
+  color: #fff; /* White text */
+}
+.all-buttons{
+ display: flex;
+ gap: 12px;
+  
+}
+
+.all-buttons-inner-div{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card-search-padding-set{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 30px 25px ;
+  gap: 14px 0px;
+  margin: 12px 0px;
+}
+
+.label-width-planning-search{
+  width: 160px;
+  white-space: nowrap;
+}
+
+.transport-planning-modal-table{
+  width: 60%;
+  margin: 10px 0px;
+}
+.modal-inner-fields-alignment{
+  display: flex;
+  flex-direction: column;
+  /* align-items:center ; */
+  padding-left: 40px;
+}
+.pickupDate-css-fix{
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,79 @@
+.darkBg {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 201;
+  opacity: 0.5;
+  background: var(--Popup-Layer, #2d2d2d);
+}
+.firstRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  background: var(--Card-Stroke-4, #f6fcff);
+  border-radius: 12px 12px 0px 0px;
+  position: relative;
+}
+.container{
+  border-radius: 12px;}
+.title {
+  color: var(--Card-Bg, #333d70);
+  text-align: center;
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin: 10px 0px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.closeBtn{
+  position: absolute;
+  right: 20px;
+}
+.content {
+  padding: 6% 15%;
+}
+
+.content *:nth-child(2) *{
+  text-align: right;
+}
+.content * {
+  list-style-type: none;
+  color: var(--Card-Stroke-4, #f6fcff);
+  /* Lato Body 2 */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.content * * {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.popupWrapper {
+  z-index: 202;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  width: 34vw;
+  height: fit-content;
+  border-radius: 8px;
+}

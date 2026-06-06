@@ -1,0 +1,92 @@
+:root {
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --tableHead-bg: #2f4096;
+}
+:global(.dark-mode) {
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --tableHead-bg: #101322;
+}
+/* ========================= Table Styling ========================== */
+
+.table-wf {
+  width: 100%;
+  border-collapse: separate; /* Ensures clean borders */
+  /* margin-top: 10px; */
+  background-color: transparent; /* White background */
+  border: none !important;
+  border-spacing: 0 10px;
+}
+
+/* Table Header Styling */
+.head-wf th {
+  background-color: var(--tableHead-bg); /* Dark blue background */
+  color: white; /* White text */
+  text-align: left; /* Align text to the left */
+  padding: 10px 12px; /* Padding for better spacing */
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-wf tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+  text-align: center;
+}
+
+.body-wf tr td {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+  text-align: center;
+  color: var(--tableData-color);
+  padding: 3px 0px;
+}
+
+/* Hover Effect on Rows */
+.body-wf tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  /* background-color: #ffffe2 !important; Light yellow background for selected row */
+  font-weight: 600;
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+}
+
+/* Table Data Cell Styling */
+.td-wf {
+  text-align: center;
+  padding: 8px 10px; /* Consistent padding */
+  border: none !important;
+  color: var(--page-title); /* Text color */
+  transition: color 0.3s ease;
+}
+
+/* Table Row Alternate Colors for Readability */
+.body-wf tr:nth-child(even) {
+  /* background-color: #f9fafc;  */
+}
+
+/* Button Cell Alignment */
+.td-wf button {
+  margin: 0 4px; /* Space between buttons */
+}
+
+.delete-hover-color svg {
+  transition: fill 0.2s ease-in-out; /* Smooth transition for fill color */
+}
+
+.delete-hover-color:hover svg path {
+  fill: red; /* Change only the SVG path fill color on hover */
+}

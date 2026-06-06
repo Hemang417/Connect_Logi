@@ -1,0 +1,794 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --importTitle: #1e2652;
+  --tableData-color: #1e2652;
+  --border-color: #535b87;
+  --label-color: #333d70;
+  --placeHolder-color: #333d70;
+  --svg-color: #1e2652;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --line-color: #333d70;
+  --input-border-color: #535b87;
+  --svg-color: #1e2652;
+  --page-title: #1e2652;
+  --upload-btn-bg: #9d9d9d;
+  --upload-btn-color: #1e2652;
+  --calender-logo: light;
+  --table-bg: #EBEFF8;
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --importTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+  --border-color: #d1eeff;
+  --label-color: #d1eeff;
+  --placeHolder-color: #d1eeff;
+  --svg-color: #f6fcff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --line-color: #f6fcff;
+  --page-title: #f6fcff;
+  --upload-btn-bg: #9d9d9d;
+  --upload-btn-color: #1e2652;
+  --calender-logo: dark;
+  --table-bg: #242A36;
+}
+.imp-create-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0px;
+}
+.imp-create-title h4 {
+  color: var(--page-title);
+  transition: color 0.3s ease;
+}
+.container-div-import {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 6px;
+  width: 100%;
+  padding: 0px 0px;
+}
+.IMPORTPaginationAlignment {
+  width: 100%;
+}
+
+.form-import {
+  overflow-x: scroll;
+  width: 93%;
+  justify-content: space-around;
+  display: flex;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: gray transparent; /* Firefox */
+}
+
+/* Chrome, Edge, Safari */
+.form-import::-webkit-scrollbar {
+  height: 8px;
+  background-color: transparent !important;
+}
+
+.form-import::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+.form-import::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 4px;
+}
+
+.table-export {
+  width: max-content;
+  min-width: 100vw;
+}
+.impcollection-txt-field {
+  width: 100px;
+  margin: 4px 12px;
+}
+.import-label-width {
+  width: 110px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--label-color);
+  transition: color 0.3s ease;
+}
+
+.line {
+  margin-top: 20px;
+  width: 95%;
+  transform: translate(2.5%, 0%);
+  height: 1px;
+  background: var(--line-color);
+  transition: background-color 0.3s ease;
+}
+
+.option-font-size-set {
+  font-size: 14px;
+}
+
+.imp-exp-dropdown-btn-1 {
+  width: auto;
+  min-width: 110px;
+  height: 32px;
+  padding: 1px 3px;
+  background-color: transparent;
+  font-size: 14px;
+  border-radius: 2px;
+}
+.start-date-end-date-container {
+  padding: 0px;
+}
+.date-picker-wrapper {
+  /* display: flex; */
+  flex-direction: row;
+  margin-left: 0px;
+  width: 344px;
+  /* gap: 8px;
+  width: 35vw; */
+  /* margin-top: 0px !important; */
+  align-items: center;
+  justify-content: flex-start;
+}
+@media (max-width: 520px) {
+  .date-picker-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    /* gap: 8px;
+    width: 35vw; */
+    /* margin-top: 5px; */
+    align-items: flex-start;
+  }
+}
+.new-date-label-imp-exp {
+  /* width: 82px; */
+  font-size: 14px;
+  margin-right: 4px;
+  /* display: block; */
+}
+.start-date-margin-set-imp-search {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.end-date-margin-set-imp-search {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+}
+.date-range-highlight {
+  /* background: linear-gradient(to right, rgba(0, 123, 255, 0.2), rgba(0, 123, 255, 0.2)); */
+  /* height: 5px; */
+  margin-left: -8px;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  /* opacity: 0; */
+  /* width: 0; */
+  /* margin-top: 5px; */
+}
+
+.date-range-highlight.animate {
+  opacity: 1;
+  /* width: 100%; */
+}
+
+.date-picker-button {
+  background-color: #4a90e2; /* Soft blue color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 4px 7px; /* Padding for button */
+  font-size: 12px; /* Font size */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.date-picker-button:hover {
+  background-color: #357abd; /* Darker shade on hover */
+  cursor: pointer; /* Pointer cursor on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.date-picker-dropdown {
+  border: 1px solid #d1d1d1; /* Light gray border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 4px; /* Padding for dropdown */
+  font-size: 12px; /* Font size */
+  background-color: white; /* White background */
+  color: #333; /* Dark text color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+  font-size: 14px;
+}
+
+.date-picker-dropdown:focus {
+  border-color: #4a90e2; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Glow effect on focus */
+}
+
+.date-picker-dropdown option {
+  padding: 10px; /* Padding for dropdown options */
+}
+.imp-exp-dropdown-btn-2 {
+  width: 60px;
+}
+.imp-exp-text-field-3 {
+  font-size: 12px;
+  /* margin-right: 8px; */
+}
+.form-conatiner {
+  width: 40vw;
+  margin: 0px;
+  height: fit-content;
+}
+.grid-container-imp-exp {
+  /* display: grid; */
+  display: flex;
+  flex-direction: column;
+  /* justify-self: start; */
+
+  /* grid-template-columns: 2fr 2fr; */
+  padding: 0px 0px;
+  /* align-items: center; */
+}
+.grid-container-imp-exp-1 {
+  display: flex;
+  align-items: center;
+  /* gap: 10px;  */
+  flex-wrap: wrap;
+}
+.imp-exp-all-buttons {
+  padding: 5px 20px;
+  border-radius: 50px;
+}
+.imp-create-field-btn {
+  /* width: 100px; */
+  font-size: small;
+  padding: 4px;
+  border-radius: 5px;
+  background: transparent;
+  color: #444141;
+}
+
+.custom-date-field {
+  display: flex;
+  align-items: center;
+  outline: none;
+  /* gap: 22px; */
+}
+
+.bank-date-imp-exp {
+  width: 220px;
+  /* margin: 6px 8px; */
+  border-radius: 2px;
+  padding: 2px 8px;
+  border: 1px solid gray;
+  outline: none;
+  /* margin-left: 18px; */
+}
+.imp-job-create-dropdown-btn {
+  font-size: small;
+  padding: 4px;
+  border-radius: 5px;
+  background: transparent;
+  color: #444141;
+  width: 130px;
+}
+.custom-date-dropdown {
+  width: 21px;
+  margin: 0px 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  outline: none;
+}
+
+.grid-container-imp-exp-jobnum {
+  /* display: flex; */
+  align-items: center;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  margin-top: 4px;
+  width: 150px;
+}
+.grid-container-imp-exp-search {
+  display: flex;
+  /* flex-direction: flex-end; */
+  /* margin-left: 44px; */
+  /* margin: 12px 24px; */
+  align-items: flex-end;
+  justify-content: flex-end;
+
+  padding: 0px 84px;
+  gap: 12px;
+}
+
+.imp-exp-input-field-4 {
+  font-size: small;
+  /* border-bottom: 2px solid black; */
+  /* border-radius: 5px; */
+  box-shadow: none;
+  box-sizing: border-box;
+  margin: 4px 0px;
+  outline: none;
+}
+.imp-exp-input-field {
+  /* min-width: 100px;
+  width: auto; */
+  width: 100px;
+
+  /* width: auto;
+  min-width: 140px; */
+}
+.imp-exp-text-field-4 {
+  width: 140px;
+  font-size: 12px;
+  padding: 0px;
+
+  /* width: auto;
+  min-width: 140px; */
+}
+.top-aligning-div-search {
+  display: flex;
+  /* gap: 12px; */
+  padding: 0px 28px;
+  justify-content: space-between;
+  align-items: center;
+}
+.bottom-aligning-div-search {
+  padding: 0px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.imp-exp-react-select-field-4 {
+  width: 22vw;
+  font-size: 12px;
+}
+.impgen-select-field {
+  padding: 2px 6px;
+  /* text-align: center; */
+  margin: 8px 0px;
+  width: 35vw;
+  border-radius: 2px;
+  height: 35px;
+}
+.new-impgen-select-field {
+  padding: 2px 6px;
+  /* text-align: center; */
+  margin: 8px 0px;
+  /* width: 15vw; */
+  border-radius: 2px;
+  height: 35px;
+  width: 15vw;
+  /* outline: none; */
+  border: 1px solid black;
+}
+.new-impgen-react-select-field {
+  width: 25vw;
+}
+.new-imp-create-label-width {
+  width: 160px;
+  color: var(--label-color);
+}
+.imp-create-subtitles {
+  color: var(--page-title);
+  margin: 10px 0px;
+}
+.grid-new-imp-create-alignment {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* gap: 0px -20px ;
+   */
+  /* padding: 0px 50px 0px 0px; */
+}
+.grid-imp-create-flex-inner-div {
+  display: flex;
+  /* margin-right: 90px; */
+  align-items: center;
+  margin-top: 10px;
+}
+
+.table-import {
+  width: max-content;
+  min-width: 100vw;
+}
+/* General styling for the select dropdown */
+.form-select-imp-create {
+  padding: 4px;
+  text-align: start;
+  border: 1px solid #c7c7c7;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 12px;
+  cursor: pointer;
+  /* outline: none; */
+}
+
+.form-branch-select-imp-create {
+  padding: 4px;
+  text-align: start;
+  border: 1px solid #767676;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  /* outline: none; */
+}
+
+.form-control-table-underline {
+  border: none;
+  border-radius: none;
+  /* outline: 1px solid grey; */
+  outline: none;
+  border-bottom: 1px solid grey;
+}
+/* Hover effect for the select itself */
+.form-select-imp-create:hover {
+  border-color: #007bff; /* Highlight border on hover */
+  background-color: #f9f9f9; /* Subtle background change */
+}
+
+/* Focus effect for the select */
+.form-select-imp-create:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling the options (applies to the dropdown items) */
+.form-select-imp-create option {
+  padding: 6px;
+  background-color: #fff; /* Default background */
+  color: #333;
+}
+
+/* Hover effect for options */
+.form-select-imp-create option:hover {
+  background-color: #007bff; /* Blue highlight */
+  color: #fff; /* White text */
+}
+
+.impgen-select-field:hover {
+  border-color: #007bff; /* Highlight border on hover */
+  background-color: #f9f9f9; /* Subtle background change */
+}
+
+/* Focus effect for the select */
+.impgen-select-field:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling the options (applies to the dropdown items) */
+.impgen-select-field option {
+  padding: 6px;
+  background-color: #fff; /* Default background */
+  color: #333;
+}
+
+/* Hover effect for options */
+.impgen-select-field option:hover {
+  background-color: #007bff; /* Blue highlight */
+  color: #fff; /* White text */
+}
+
+.imp-create-modal-label {
+  width: 180px;
+  margin-top: 12px;
+}
+
+.thead-space {
+  display: flex;
+  gap: 20px;
+}
+
+.container-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 20px 0px;
+}
+
+.container-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.margin-table {
+  margin: 4px 0px;
+}
+
+.imp-create-weight-value,
+.imp-create-container-no-value {
+  border: none;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.596);
+  outline: none;
+}
+
+.transport-planning-modal-table {
+  width: 60%;
+  margin: 10px 0px;
+  padding: 0px 80px;
+}
+.modal-table-weight {
+  width: 60%;
+  margin: 10px 0px;
+}
+.container-upload-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+}
+.address-span {
+  grid-column: span 2; /* This will make the address field span across two columns */
+  margin: 10px 0px;
+}
+.new-impgen-address-text-area {
+  width: 88%;
+  min-height: 80px;
+  max-height: 120px;
+  color: var(--border-color);
+  border-color: var(--border-color);
+  background-color: transparent !important;
+  border-radius: 12px;
+  outline: none;
+  transition: color 0.3s ease, border-color 0.3s ease,
+    background-color 5000s ease-in-out 0s;
+  font-size: 12px;
+  padding: 5px;
+  padding-left: 20px;
+}
+
+.custom-select .react-select__multi-value {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-select .react-select__multi-value__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.split-search-date-importer-dropdown-imp-div {
+  display: flex;
+  margin: 0px 62px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media (max-width: 1002px) {
+  .split-search-date-importer-dropdown-imp-div {
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+  }
+  .split-search-dropdown-imp-div {
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+  }
+}
+
+.split-search-dropdown-imp-div {
+  display: flex;
+  margin: 0px 62px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.form-select-imp-create-search-main-page {
+  padding: 4px;
+  text-align: start;
+  border: 1px solid #767676;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #000000;
+  font-size: 12px;
+  width: 100px;
+  cursor: pointer;
+  /* outline: none; */
+}
+
+/* Header styling */
+.head-import th {
+  background-color: #4f5d73;
+  color: white;
+  text-align: start;
+  padding: 8px;
+}
+
+/* create page */
+.job-import-label-field {
+  font-weight: 600;
+  /* white-space: pre; */
+  font-size: 12px;
+  margin-right: 4px;
+  color: var(--label-color);
+  /* Instrument Sans */
+  font-weight: 600;
+
+  font-family: Lato;
+  font-style: normal;
+  line-height: normal;
+}
+
+.job-import-type-input-box {
+  width: 130px;
+  border: 1px solid #767676;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.table-border-import {
+  border: 1px solid rgba(0, 0, 0, 0.562);
+}
+
+/* ========================= Table Styling ========================== */
+.table-imp-ref {
+  width: 1364.123px;
+  border-collapse: collapse; /* Ensures clean borders */
+  margin-top: 10px;
+  background-color: #fff; /* White background */
+  border: 1px solid #ddd; /* Subtle outer border */
+}
+
+/* Table Header Styling */
+.head-imp-ref th {
+  background-color: var(--tableHead-bg); /* Dark blue background */
+  color: white; /* White text */
+  text-align: center; /* Align text to the left */
+  padding: 10px 12px; /* Padding for better spacing */
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  height: 41px;
+  transition: background-color 0.3s ease;
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-imp-ref tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+  height: 29.5px !important;
+  text-align: center !important;
+}
+
+/* Hover Effect on Rows */
+.body-imp-ref tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  /* background-color: #ffffe2 !important; Light yellow background for selected row */
+  font-weight: 500 !important;
+  /* height: 29.5px !important; */
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+  transition: all 0.3s ease;
+}
+
+/* Table Data Cell Styling */
+.td-imp-ref {
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid #ddd; /* Subtle row separator */
+  color: #333; /* Text color */
+  white-space: nowrap;
+}
+
+/* Button Cell Alignment */
+.td-imp-ref button {
+  margin: 0 4px; /* Space between buttons */
+  font-size: 14px;
+  align-items: center;
+}
+
+.IMPORTpagination {
+  position: fixed;
+  bottom: -9px;
+  left: 50vw;
+  z-index: 2;
+}
+
+.collection-actions-cell {
+  display: flex;
+  width: 59px;
+  gap: 13px;
+  justify-content: center;
+}
+
+/* Document Upload */
+
+.documentHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.documentUpload-mainContainer {
+  display: flex;
+  gap: 34px;
+  color: var(--label-color);
+  align-items: center;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.document_upload_btn {
+  position: relative;
+  right: 4%;
+  width: fit-content;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background-color: var(--upload-btn-bg);
+  padding: 8px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  /* Placeholder Text */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.table-responsive {
+  overflow-x: auto !important;
+}
+.imp-create-job-all-buttons {
+  display: flex;
+  padding: 15px 20px;
+  gap: 20px;
+}
+/* Table Data Cell Styling */
+.td-accounts {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 92px;
+  max-width: 200px;
+  text-align: center;
+  color: var(--tableData-color);
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+}
+.o2d-field-4[type="datetime-local"] {
+  color-scheme: var(--calender-logo) !important;
+}
+.o2d-field-4[type="date"] {
+  color-scheme: var(--calender-logo) !important;
+}
+
+.tracking-container {
+  width: 100vw;
+  max-width: 100%;
+  background: var(--table-bg);
+  min-height: 50vh;
+  /* border-radius: 36px; */
+  padding: 10px;
+  transition: all 0.3s ease;
+}

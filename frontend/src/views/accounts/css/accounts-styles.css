@@ -1,0 +1,580 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --importTitle: #1e2652;
+  --tableData-color: #1e2652;
+  --border-color: #535b87;
+  --label-color: #333d70;
+  --placeHolder-color: #333d70;
+  --svg-color: #1e2652;
+  --activetab-color: #60b6e8;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --line-color: #333d70;
+  --input-border-color: #535b87;
+  --svg-color: #1e2652;
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --importTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+  --border-color: #d1eeff;
+  --label-color: #d1eeff;
+  --placeHolder-color: #d1eeff;
+  --svg-color: #f6fcff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --line-color: #f6fcff;
+}
+.paye-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Space between each form element */
+  padding: 16px; /* Add padding around the modal */
+}
+.form-account {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color:  gray transparent;
+  width : 90%;
+}
+.credit-table-import {
+  width: max-content;
+}
+.table-debit {
+  width: max-content;
+  min-width: 100vw;
+}
+.paye-modal-details-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 40%;
+  height: 35px;
+}
+.grid-container-account-1 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+.grid-container-filter {
+  display: flex;
+  margin: 0px 62px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media (max-width: 1002px) {
+  .grid-container-filter {
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+  }
+}
+
+.paye-modal-details-2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
+}
+.accounts-dropdown-btn {
+  width: 190px;
+  background-color: transparent;
+}
+
+.paye-modal label {
+  font-size: 18px;
+}
+
+.paye-details-1 {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  align-items: flex-start;
+  /* width: 40%;
+    height: 35px; */
+}
+
+.accounts-text-field-4 {
+  width: 200px;
+  padding: 4px 10px;
+}
+
+.payee-credit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paye-debit-details-1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  /* align-items: center; */
+  /* width: 40%; */
+  /* height: 35px; */
+}
+
+.debit-modal-field-2 {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  align-items: flex-start;
+}
+.tds-field {
+  width: 100px;
+  margin: 0px 12px;
+}
+
+.tds-modal-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* gap: 10px; */
+}
+
+.bankdetails-account-dropdown-btn {
+  width: 200px;
+  background-color: transparent;
+  padding: 2px 28px;
+}
+
+.accounts-bank-details-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bank-details-branchname-addbutton {
+  display: flex;
+  /* align-items: center; */
+  width: 40%;
+  /* justify-content: space-between; */
+}
+.accounts-ref-field-3 {
+  background-color: #9aa3ac41;
+}
+.accounts-bank-details-text-field-3 {
+  font-size: 18px;
+  width: 200px;
+}
+
+.branchname-dropdown-btn {
+  width: 200px;
+  background-color: transparent;
+}
+.debit-dropdown {
+  width: 100px;
+  height: 30px;
+}
+
+.tds-debit-dropdown {
+  width: 100px;
+  height: 30px;
+}
+.grid-container-paye-details {
+  display: flex;
+  justify-content: space-between;
+}
+.accounts-container-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 6px;
+  width: 100%;
+  padding: 0px 0px;
+}
+.payee-details-container-div {
+  display: grid;
+  /* display: flex; */
+  gap: 15px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 16px;
+}
+.payesheet-date {
+  margin-right: 2px;
+  width: 80px;
+}
+
+.payesheet-search-field {
+  width: 40vw;
+  margin: 0px;
+  height: fit-content;
+}
+/* .accounts-container-div input{
+    width: 120px;
+} */
+
+.bank-text-field-4 {
+  width: 180px;
+}
+.accounts-text-field-4-org {
+  display: inline-block;
+
+  max-width: auto;
+  width: 200px;
+}
+.payeesheet-text-field-4 {
+  width: 400px;
+}
+.bank-text-field-full {
+  width: 60vw;
+}
+.grid-container-search {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+.bank-dropdown {
+  width: 140px;
+}
+.paye-bank-text-field-1 {
+  width: 140px;
+}
+
+.paye-bank-label-field {
+  width: 120px;
+}
+
+.paye-bank-label-field-1 {
+  white-space: nowrap;
+}
+.date-picker-buttons {
+  outline: none;
+  border: none;
+}
+.payee-account-type-dropdown {
+  background-color: transparent;
+  color: white;
+  font-size: 12px;
+}
+.custom-date-field {
+  display: flex;
+  align-items: center;
+  outline: none;
+  gap: 10px;
+  width: 802px;
+  padding: 0px 40px;
+}
+.custom-date-picker {
+  /* gap: 12px; */
+  width: 180px;
+}
+
+.custom-date-dropdown {
+  width: 21px;
+  margin: 0px 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  outline: none;
+}
+.paye-detail-text-field {
+  width: 160px;
+  margin-right: 32px;
+}
+.date-picker-wrapper-account {
+  /* display: flex; */
+  flex-direction: row;
+  margin-left: 0px;
+  margin-top: -11px !important;
+  width: 100%;
+  /* gap: 8px;
+  width: 35vw; */
+  align-items: center;
+  justify-content: flex-start;
+}
+@media (max-width: 520px) {
+  .date-picker-wrapper-account {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    /* gap: 8px;
+    width: 35vw; */
+    /* margin-top: 5px; */
+    align-items: flex-start;
+  }
+}
+.form-select-accounts {
+  width: 180px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  text-align: center;
+  background: rgba(248, 246, 246, 0.5);
+}
+.select-full-width {
+  /* width: 100%; */
+  margin: 8px 0px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.select-amount {
+  width: 160px;
+  height: 30px;
+  padding: 2px 6px;
+}
+.select-payee-name {
+  width: 300px;
+  border-radius: 2px;
+  margin-left: 12px;
+  padding: 2px 6px;
+}
+.credits-save-btn-div {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0px;
+}
+.credit-primary-div {
+  display: flex;
+  justify-content: space-between;
+}
+.accounts-text-field-3 {
+  width: 180px;
+  margin: 8px 0px;
+    /* margin-right: 10px;
+  font-size: 13px;
+  width: 100px; */
+  color: var(--label-color);
+  font-weight: 600;
+  /* white-space: pre; */
+  font-size: 12px;
+  margin-right: 4px;
+  font-family: "Instrument Sans" !important ;
+  font-style: normal !important ;
+  font-weight: 600;
+  line-height: normal !important ;
+}
+
+.credit-secondary-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  /* width: 100%; */
+  margin-top: 12px;
+}
+
+.credit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+}
+
+.credit-table th,
+.credit-table td {
+  border: 1px solid #dee2e6;
+  padding: 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.credit-table th {
+  background-color: #f1f3f5;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+}
+
+.credit-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease;
+}
+
+.credit-table tfoot {
+  background-color: #f1f3f5;
+  font-weight: 600;
+  color: #212529;
+}
+
+.credit-table input.form-control {
+  height: 36px;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  box-shadow: none;
+  width: 100%;
+}
+
+/* Buttons in credit-table */
+.credit-table .btn {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+/* Adjust column widths if needed */
+.credit-table th:nth-child(1),
+.credit-table td:nth-child(1) {
+  width: 20%;
+}
+
+.credit-table th:nth-child(5),
+.credit-table td:nth-child(5) {
+  width: 15%;
+}
+.against-outstanding-textarea {
+  /* width: 930px; */
+  gap: 12px;
+  margin: 12px 10px;
+  display: flex;
+}
+
+.table-sales {
+  width: 100%;
+  /* min-width: 100vw; */
+  font-size: 12px;
+}
+.table-sales tr {
+  transition: background-color 0.3s ease;
+  font-size: 12px;
+}
+
+.table-sales tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+.table-sales td {
+  padding: 4px;
+  /* border: 1px solid #ddd; Add borders for a clean table look */
+}
+
+.table-sales th,
+.table-sales td {
+  text-align: start; /* Center-align content */
+}
+
+/* ========================= Table Styling ========================== */
+.table-accounts {
+  width: 100%;
+  border-collapse: collapse; /* Ensures clean borders */
+  margin-top: 10px;
+  background-color: #fff; /* White background */
+  border: 1px solid #ddd; /* Subtle outer border */
+}
+
+/* Table Header Styling */
+.head-accounts th {
+  height: 41px;
+  white-space: nowrap; /*Prevents text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 92px;
+  max-width: 200px; /* ✅ Adjust max width if necessary*/
+  font-weight: 500;
+  text-align: center;
+  padding: 0px 12px;
+
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-accounts tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+}
+
+/* Hover Effect on Rows */
+.body-accounts tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  font-weight: 600;
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+}
+
+/* Table Data Cell Styling */
+.td-accounts {
+  white-space: nowrap;
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  min-width: 92px;
+  max-width: 200px;
+  text-align: center;
+  color: var(--tableData-color);
+  /* display: flex; */
+  /* align-items: center;
+  justify-content: center; */
+}
+
+/* Table Row Alternate Colors for Readability */
+
+/* Button Cell Alignment */
+.td-accounts button {
+  margin: 0 4px; /* Space between buttons */
+}
+.fixed-width-select {
+  width: 155px; /* Set fixed width */
+  margin: 2px 0px;
+}
+
+.delete-hover-color svg {
+  transition: fill 0.2s ease-in-out; /* Smooth transition for fill color */
+}
+
+.delete-hover-color:hover svg path {
+  fill: red; /* Change only the SVG path fill color on hover */
+}
+
+.account-label-width {
+  width: 110px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--label-color);
+  transition: color 0.3s ease;
+}
+
+.IMPORTPaginationAlignment {
+  width: 100%;
+}
+
+.IMPORTpagination {
+  position: fixed;
+  bottom: -9px;
+  left: 50vw;
+  z-index: 2;
+}
+
+.line {
+  margin-top: 20px;
+  width: 95%;
+  transform: translate(2.5%, 0%);
+  height: 1px;
+  background: var(--line-color);
+  transition: background-color 0.3s ease;
+}
+
+.paymentsheet-create-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0px;
+}
+.paymentsheet-create-title h4 {
+  color: var(--page-title);
+  transition: color 0.3s ease;
+}
+.credit-date-fields{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.payee-row-container{
+  display: flex;
+  justify-content: space-between;
+}
+.newBorder{
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  width: 180px;
+}

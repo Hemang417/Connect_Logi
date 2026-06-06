@@ -1,0 +1,505 @@
+/* Component.module.css */
+:root {
+  --border-radius: 8px;
+  --pg-title-color: #1e2652;
+  --pg-total-job-color: #333d70;
+
+  --dark-green-color: #337039;
+  --dark-blue-color: #336c70;
+  --dark-darkBlue-color: #333d70;
+  --dark-lightBlue-color: #4092a4;
+  --dark-red-color: #9c565a;
+  --dark-brown-color: #8e7b3a;
+  --dark-lightPink-color: #823d7f;
+  --dark-darkPink-color: #823d7f;
+  --svg-color: #1e2652;
+}
+
+/* Apply dark mode globally inside module.css */
+:global(.dark-mode) {
+  --pg-title-color: #f6fcff;
+  --pg-total-job-color: #d1eeff;
+  --dark-green-color: #1e4722;
+  --dark-blue-color: #173e40;
+  --dark-darkBlue-color: #151c3d;
+  --dark-lightBlue-color: #173e40;
+  --dark-red-color: #531f22;
+  --dark-brown-color: #4b4018;
+  --dark-lightPink-color: #4d1339;
+  --dark-darkPink-color: #3d163b;
+  --svg-color: #f6fcff;
+}
+
+.exportTitle {
+  color: var(--pg-title-color);
+}
+
+.exportTotalJobs {
+  color: var(--pg-total-job-color);
+}
+.exportTotalJobs svg:nth-child(1) {
+  fill: var(--svg-color);
+  transition: fill 0.3 ease;
+}
+.container {
+  /* background-color: #333d7049; */
+  height: 500px;
+  width: 100%;
+  position: relative;
+  user-select: none;
+
+}
+.firstRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.backButton {
+  flex-shrink: 0;
+}
+.datePicker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 16px;
+}
+.DatePickerTitle {
+  color: var(--pg-total-job-color);
+  width: fit-content;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  transition: color 0.3 ease;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.startEndDateContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dateIputContainer {
+  display: flex;
+  width: 131px;
+  height: 26px;
+  padding: 10px 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--Placeholder-Stroke, #535b87);
+}
+.dateInput {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  height: 18px;
+  font-size: 14px;
+  background-color: transparent;
+  border: 0px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.exportBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  left: 135px;
+}
+.exportTitle {
+  color: var(--pg-title-color);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition: color 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.exportTotalJobs {
+  color: var(--pg-total-job-color);
+  transition: color 0.3s ease;
+
+  padding-top: 5px;
+  /* Lato Body 2 */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  word-spacing: 3px;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.exportTotalJobs:hover {
+  color: var(--Card-Bg, #0044ff);
+}
+
+.exportTotalJobs svg {
+  margin-left: 5px;
+}
+.secondRow {
+  margin-top: 20px;
+  display: flex;
+  width: 100%;
+  height: 20%;
+  align-items: center;
+  gap: 24px;
+}
+.firstBlock {
+  display: flex;
+  height: 100%;
+  padding: 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+  background-color: var(--dark-green-color);
+}
+.secondBlock {
+  display: flex;
+  height: 100%;
+  padding: 17px 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+  background-color: var(--dark-darkBlue-color);
+}
+.thirdBlock {
+  display: flex;
+  height: 100%;
+  padding: 17px 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+  background-color: var(--dark-red-color);
+}
+.fourthBlock {
+  display: flex;
+  height: 100%;
+  padding: 17px 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+  background-color: var(--dark-darkPink-color);
+}
+.fifthBlock {
+  display: flex;
+  height: 100%;
+  padding: 17px 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+  background-color: var(--dark-blue-color);
+}
+.innerBlock {
+  display: flex;
+  padding: 1px 2px;
+  align-items: flex-end;
+  gap: 25px;
+  flex-shrink: 0;
+  align-self: stretch;
+  position: relative;
+}
+.firstHalf {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.blockTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  color: var(--Card-Stroke-1, #f6fcff);
+
+  /* Lato Body */
+  font-family: Lato;
+  font-size: 12px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.firstBlockNo {
+  color: var(--Card-Digits-1, #d5f1d2);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.secondBlockNo {
+  color: var(--Card-Digits, #d1eeff);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.thirdBlockNo {
+  color: var(--Card-Digits-2, #ffdbdd);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.fourthBlockNo {
+  color: var(--Card-Digits-3, #f1d2f0);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.fifthBlockNo {
+  color: var(--Card-Digits-4, #bdf2f5);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.secondHalf {
+  position: absolute;
+  right: 15px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.thirdRow {
+  padding-top: 20px;
+  height: 52%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.thirdRow img {
+  height: 100%;
+  width: 32%;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--Top-Bar, #1e2652);
+  background: url(../../../assets/images/graph.png) lightgray 50% / contain
+    no-repeat;
+}
+.fourthRow {
+  margin-top: 20px;
+  height: 12%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.firstBlockForthRow {
+  width: 31%;
+  padding: 0px 30px;
+  height: 100%;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+
+  background-color: var(--dark-brown-color);
+  transition: background-color 0.3s ease;
+}
+.secondBlockForthRow {
+  width: 31%;
+  padding: 0px 30px;
+  height: 100%;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+
+  background-color: var(--dark-lightBlue-color);
+}
+.thirdBlockForthRow {
+  width: 31%;
+  padding: 0px 30px;
+  height: 100%;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+
+  background-color: var(--dark-lightPink-color);
+}
+.outerBoxForthRow {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.firstBolckForthRowTitle {
+  color: var(--Card-Stroke, #f6fcff);
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.secondBolckForthRowTitle {
+  color: var(--Card-Stroke, #f6fcff);
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.thirdBolckForthRowTitle {
+  color: var(--Card-Stroke, #f6fcff);
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+
+.thirdRow {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.chartContainer {
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 240px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Media query for larger screens */
+@media (min-width: 1200px) {
+  .thirdRow {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .chartContainer {
+    width: calc(33% - 15px);
+    margin-bottom: 0;
+  }
+}
+
+/* Media query for medium screens */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .thirdRow {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .chartContainer {
+    width: calc(50% - 10px);
+  }
+}

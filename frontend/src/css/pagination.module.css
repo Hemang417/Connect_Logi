@@ -1,0 +1,39 @@
+:root {
+  --pagination-bg-1: #aae1ff;
+  --pagination-ct-bg: #f6fcff;
+}
+:global(.dark-mode) {
+  --pagination-bg-1: #263a52;
+  --pagination-ct-bg: #1a1f27;
+
+}
+* {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.svg {
+  fill: var(--fill-color);
+  transition: fill 0.3 ease;
+}
+
+.active a {
+  border-radius: 50% !important;
+  margin-top: 5px;
+  margin-left: 5px !important;
+  background-color: var(--pagination-bg-1) !important;
+  transform: background-color 0.3s ease;
+  height: 70% !important;
+  width: 34px !important;
+  transition: border-radius 0.7s ease;
+}
+
+.paginationContainer {
+  background-color:var(--pagination-ct-bg);
+  width: fit-content;
+  height: fit-content;
+  border-radius: 15px;
+  display: flex;
+  transform: translateY(-4px);
+}

@@ -1,0 +1,326 @@
+:root {
+    --tableHead-bg: #2f4096;
+    --importTitle: #1e2652;
+    --tableData-color: #1e2652;
+    --border-color: #535b87;
+    --label-color: #333d70;
+    --placeHolder-color: #333d70;
+    --svg-color: #1e2652;
+    --activetab-color: #d1eeff;
+    --activetab-bg-color: #1e2652;
+    --tab-color: #60b6e8;
+    --tab-bg-color: #f6fcff;
+    --line-color: #333d70;
+    --link-color: #5D70D7;
+  }
+  :global(.dark-mode) {
+    --tableHead-bg: #101322;
+    --importTitle: #f6fcff;
+    --tableData-color: #f6fcff;
+    --border-color: #d1eeff;
+    --label-color: #d1eeff;
+    --placeHolder-color: #d1eeff;
+    --svg-color: #f6fcff;
+    --activetab-color: #101322;
+    --activetab-bg-color: #abd3eb;
+    --tab-color: #f6fcff;
+    --tab-bg-color: #10152e;
+    --line-color: #f6fcff;
+    --link-color: #29B0FF;
+  }
+  
+  .container {
+    /* background-color: #333d7049; */
+    height: 500px;
+    width: 100%;
+    position: relative;
+  }
+  .firstRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 48px;
+  }
+  .backButton {
+    position: absolute;
+    left: 0px;
+  }
+  .datePicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 16px;
+  }
+  .DatePickerTitle {
+    color: var(--Card-Bg, #333d70);
+    width: fit-content;
+  
+    /* Instrument Sans */
+    font-family: "Instrument Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .startEndDateContainer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dateIputContainer {
+    display: flex;
+    width: 131px;
+    height: 26px;
+    padding: 10px 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--Placeholder-Stroke, #535b87);
+  }
+  .dateInput {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    height: 18px;
+    font-size: 14px;
+    background-color: transparent;
+    border: 0px;
+  }
+  .importBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .Title {
+    color: var(--importTitle);
+  
+    /* Instrument Sans T1 */
+    font-family: "Instrument Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  .secondRow {
+    height: 5%;
+  
+    margin: 20px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .secondRowBlocks {
+    /* width: 33.333%; */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+  /* .secondRowBlocks:nth-of-type(3) {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+  }
+  .secondRowBlocks:nth-of-type(2) {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    transform: translate(15%, 0%);
+  } */
+  .secondRowBlocks label {
+    color: var(--label-color);
+  
+    /* Instrument Sans */
+    font-family: "Instrument Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  
+  .thirdRow {
+    height: 5%;
+  
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .fourthRow {
+    margin-top: 12px;
+  }
+  .tableHead {
+    background: var(--tableHead-bg);
+    color: var(--Table-Row-1, #f6fcff);
+  
+    /* Table Title */
+    font-family: "Instrument Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  .tableData {
+    color: var(--tableData-color);
+  
+    /* Table Body */
+    font-family: "Instrument Sans";
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.14px;
+    
+  }
+  .tableData td {
+    white-space: nowrap;
+  }
+  table {
+    table-layout: auto; /* ✅ Allows dynamic column width */
+    width: 100%; /* Ensures it uses full space */
+  }
+  .overflow-x-auto {
+    overflow-x: auto; /* ✅ Enables horizontal scrolling */
+    max-width: 100%;
+  }
+  .customInput {
+    width: 70%; /* Adjust width as needed */
+    font-size: 12px;
+    color: var(--placeHolder-color);
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    text-align: left; /* Align text to the left */
+    outline: none;
+  }
+  
+  .customInput::placeholder {
+    color: var(--placeHolder-color);
+  }
+  .tabsRow {
+    margin-top: 20px;
+  }
+  .tabsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content horizontally */
+    text-align: center;
+    width: 180px;
+    padding: 9px 1%;
+    border-radius: 12px;
+    background-color: var(--tab-bg-color);
+    color: var(--tab-color);
+    transition: background-color 0.3 ease, color 0.3 ease;
+  
+    /* Instrument Sans */
+    font-family: "Instrument Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    cursor: pointer;
+  }
+  
+  .ActiveTab {
+    display: flex;
+    width: 180px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 1%;
+    border-radius: 12px;
+    background-color: var(--activetab-bg-color);
+    color: var(--activetab-color);
+    transition: background-color 0.3 ease, color 0.3 ease;
+  
+    /* Instrument Sans */
+    font-family: "Instrument Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+  .line {
+    margin-top: 20px;
+    width: 95%;
+    transform: translate(2.5%, 0%);
+    height: 1px;
+    background: var(--line-color);
+  }
+  .importDropdown {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+  }
+
+  .searchBox {
+    border: 1px solid var(--page-title);
+    border-radius: 8px;
+    width: 32%;
+    display: flex;
+    align-items: center;
+    transition: border-color 0.3s ease;
+  }
+  .searchInput {
+    width: 250px;
+    border: none !important;
+    /* border-radius: 8px; */
+    margin: 0px 20px;
+    /* border: 1px solid var(--page-title); */
+    background-color: transparent;
+    color: var(--input-font-color);
+    transition: background-color 0.3s ease;
+    /* -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px; */
+  }
+
+  .searchInput::placeholder{
+    color: var(--input-font-color);
+    transition: color 0.3s ease;
+    opacity: 75;
+  }
+
+  .searchInput:focus {
+    outline: none;
+    border: none !important;
+    box-shadow: none; /* just in case there's a focus shadow */
+  }
+  
+
+  .branchFilter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+
+
+  .line {
+    margin-top: 20px;
+    width: 95%;
+    transform: translate(2.5%, 0%);
+    height: 1px;
+    background: var(--line-color);
+    transition: background-color 0.3s ease;
+  }

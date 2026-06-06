@@ -1,0 +1,410 @@
+:root {
+  --nav-bg-color: #1e2652;
+  --bg-color: #ebeff8;
+  --page-title: #1e2652;
+  --pagination-bg: #f6fcff;
+  --label-color: #333d70;
+  --deleted-row-bg: #f6fcff;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --tableHead-bg: #2f4096;
+  --tableData-color: #1e2652;
+  --line-color: #333d70;
+}
+.dark-mode {
+  --nav-bg-color: #101322;
+  --bg-color: #242a36;
+  --page-title: #f6fcff;
+  --pagination-bg: #101322;
+  --input-font-color: #d1eeff;
+  --deleted-row-bg: #7b3232;
+  --label-color: #d1eeff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --tableHead-bg: #101322;
+  --tableData-color: #f6fcff;
+  --line-color: #f6fcff;
+}
+
+.workflow-text-field-3 {
+  margin: 4px 6px;
+  font-size: small;
+}
+
+.workflow-text-field-3 h6 {
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+.workflow-text-field-4 {
+  font-size: small;
+  padding: 3px 3px;
+  /* border-bottom: 2px solid black; */
+  /* border-radius: 5px; */
+  box-shadow: none;
+  box-sizing: border-box;
+  margin: 4px 0px;
+  outline: none;
+}
+
+.grid-container-workflow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: auto auto auto ; */
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workflow-dropdown-btn {
+  margin: 0px 12px;
+  background-color: transparent;
+  color: black;
+  width: 84px;
+  height: 33px;
+  font-size: 14px;
+}
+
+.workflow-dropdown-text-field {
+  font-size: 14px;
+}
+
+.addworkflow-dropdown-access {
+  margin: 6px 12px;
+  background-color: transparent;
+  color: black;
+  width: 164px;
+  height: 33px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addworkflow-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.select-transport-mode-div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 30px;
+}
+
+.select-milestone-mode-div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 30px;
+  /* margin-top: 16px; */
+}
+
+.lob-name {
+  width: 180px;
+}
+.lob-label {
+  min-width: 140px;
+  width: 180px;
+}
+.milestone-dropDown-field {
+  width: 160px;
+}
+
+.milestone-label-name {
+  width: 180px;
+  /* border-radius: 6px;
+    outline: none; */
+}
+
+.wf-label {
+  width: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--label-color);
+  transition: color 0.3s ease;
+}
+.wf-search-btn {
+  padding: 6px 18px;
+  border-radius: 8px;
+  margin: 8px 0px;
+}
+
+.set-workflow-radio-spacing {
+  display: flex;
+  margin-left: 12px;
+  margin-top: 8px;
+  gap: 20px;
+}
+
+.set-workflow-radio-inner-spacing {
+  display: flex;
+  gap: 6px;
+}
+
+.set-workflow-checkbox-spacing {
+  display: flex;
+  margin-left: 12px;
+  margin-top: 8px;
+  gap: 15px;
+}
+.workflow-milestone-name-spacing {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.workflow-milestone-name-inner-spacing {
+  /* display: flex; */
+  align-items: center;
+  margin-left: 24px;
+  /* gap:6px; */
+}
+.addworkflow-checkboxbutton-fix {
+  margin-bottom: 32px;
+  margin-left: 20px;
+}
+.form-select-lob {
+  border-radius: 6px;
+  /* outline: none; */
+  text-align: center;
+  padding: 2px;
+}
+
+/* General styling for the select dropdown */
+.form-select-lob {
+  /* width: 100%; */
+  width: 180px;
+
+  padding: 4px;
+  text-align: start;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Hover effect for the select itself */
+.form-select-lob:hover {
+  border-color: #007bff; /* Highlight border on hover */
+  background-color: #f9f9f9; /* Subtle background change */
+}
+
+/* Focus effect for the select */
+.form-select-lob:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling the options (applies to the dropdown items) */
+.form-select-lob option {
+  padding: 6px;
+  background-color: #fff; /* Default background */
+  color: #333;
+}
+
+/* Hover effect for options */
+.form-select-lob option:hover {
+  background-color: #007bff; /* Blue highlight */
+  color: #fff; /* White text */
+}
+
+.wf-modal-fiels-width {
+  width: 200px;
+}
+
+/* General styling for the select dropdown */
+.form-select-wf {
+  /* width: 100%; */
+  padding: 4px;
+  text-align: start;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Hover effect for the select itself */
+.form-select-wf:hover {
+  border-color: #007bff; /* Highlight border on hover */
+  background-color: #f9f9f9; /* Subtle background change */
+}
+
+/* Focus effect for the select */
+.form-select-wf:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling the options (applies to the dropdown items) */
+.form-select-wf option {
+  padding: 6px;
+  background-color: #fff; /* Default background */
+  color: #333;
+}
+
+/* Hover effect for options */
+.form-select-wf option:hover {
+  background-color: #007bff; /* Blue highlight */
+  color: #fff; /* White text */
+}
+.delete-hover-color svg {
+  transition: fill 0.2s ease-in-out; /* Smooth transition for fill color */
+}
+
+.delete-hover-color:hover svg path {
+  fill: red; /* Change only the SVG path fill color on hover */
+}
+.table-wf {
+  width: 100%;
+  border-collapse: separate; /* Ensures clean borders */
+  /* margin-top: 10px; */
+  background-color: transparent; /* White background */
+  border: none !important;
+  border-spacing: 0 10px;
+}
+
+/* Table Header Styling */
+.head-wf th {
+  background-color: var(--tableHead-bg); /* Dark blue background */
+  color: white; /* White text */
+  text-align: left; /* Align text to the left */
+  padding: 10px 12px; /* Padding for better spacing */
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-wf tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+  text-align: center;
+}
+
+.body-wf tr td {
+  text-align: center;
+  color: var(--tableData-color);
+  padding: 3px 0px;
+}
+
+td {
+  text-align: center;
+  color: var(--tableData-color);
+}
+
+/* Hover Effect on Rows */
+.body-wf tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  /* background-color: #ffffe2 !important; Light yellow background for selected row */
+  font-weight: 600;
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+}
+
+/* Table Data Cell Styling */
+.td-wf {
+  text-align: center;
+  padding: 8px 10px; /* Consistent padding */
+  border: none !important;
+  color: var(--page-title); /* Text color */
+  transition: color 0.3s ease;
+}
+
+/* Table Row Alternate Colors for Readability */
+.body-wf tr:nth-child(even) {
+  /* background-color: #f9fafc;  */
+}
+
+/* Button Cell Alignment */
+.td-wf button {
+  margin: 0 4px; /* Space between buttons */
+}
+
+.wf-line {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  width: 100%;
+  height: 1px;
+  background: var(--line-color);
+  transition: background-color 0.3s ease;
+}
+.textType1-JobValue {
+  color: var(--label-color);
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 160% */
+}
+.textType2-JobValue {
+  color: var(--page-title);
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 160% */
+}
+.textType3-JobValue {
+  padding: 2px 16px;
+  color: var(--label-color);
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 160% */
+  border-radius: 8px;
+  border: 1px solid var(--label-color);
+}
+.textType4-JobValue {
+  color: var(--label-color);
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 160% */
+}
+
+.textType5-JobValue {
+  color: var(--label-color);
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 160% */
+}
+.textType6-JobValue {
+  margin-top: 8px;
+  color: var(--label-color);
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 160% */
+}
+.workflow-label {
+  color: var(--page-title);
+  font-family: "Instrument Sans";
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 160% */
+}

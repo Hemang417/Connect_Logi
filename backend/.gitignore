@@ -1,0 +1,4 @@
+node_modules
+/config/sqlconfig.js
+.env.production
+readMeBeforeDeploy.txt

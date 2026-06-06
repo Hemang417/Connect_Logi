@@ -1,0 +1,56 @@
+:root {
+    --PrimaryBtn-bg: #2f4096;
+    --PrimaryBtn-color:#d1eeff;
+     
+  }
+  :global(.dark-mode) {
+    --PrimaryBtn-bg: #abd3eb;
+    --PrimaryBtn-color:#101322;
+  }
+
+.span {
+    display: flex;
+    justify-content: center;  /* Centers text horizontally */
+    align-items: center;  /* Centers text vertically */
+    background-color: var(--PrimaryBtn-bg);
+    color: var(--PrimaryBtn-color);
+    font-family: "Instrument Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    width: 120px;
+    height: 35px;
+    border-color: transparent;
+    border-radius: 8px;
+    text-align: center; /* Helps with multi-line text */
+    cursor: pointer;
+}
+.close{
+    display: flex;
+    justify-content: center;  /* Centers text horizontally */
+    align-items: center;  /* Centers text vertically */
+    background-color: #D4D4D7;
+    color: #212121;
+    font-family: "Instrument Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    border-color: transparent;
+    width: 120px;
+    height: 35px;
+    border-radius: 8px;
+    text-align: center; /* Helps with multi-line text */
+    cursor: pointer;
+}
+.span:focus {
+    outline: 2px solid #000000; /* Change to any color */
+    outline-offset: 2px; /* Adds space between button and outline */
+}
+.close:focus {
+    outline: 2px solid #2F4096; /* Change to any color */
+    outline-offset: 2px; /* Adds space between button and outline */
+}
+
+

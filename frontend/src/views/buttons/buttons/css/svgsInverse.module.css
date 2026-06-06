@@ -1,0 +1,36 @@
+:root {
+    --fill-color: #1e2652;
+    --pagination-bg-1: #c1e9ff;
+    --fill-color-inverse: #f6fcff;
+  }
+  :global(.dark-mode) {
+    --fill-color: #f6fcff;
+    --pagination-bg-1: #263a52;
+    --fill-color-inverse: #1e2652;
+  
+  }
+  * {
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+  }
+  .svg {
+    fill: var(--fill-color);
+    transition: fill 0.3 ease;
+  }
+  
+  .active a {
+    border-radius: 50% !important;
+    background-color: var(--pagination-bg-1) !important;
+    transform: background-color 0.3s ease;
+  }
+  
+  .paginationContainer{
+    background-color: aqua;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 15px;
+    display: flex;
+  }
+  

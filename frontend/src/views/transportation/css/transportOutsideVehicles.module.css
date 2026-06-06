@@ -1,0 +1,241 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --transTitle: #1e2652;
+  --tableData-color: #1e2652;
+  --border-color: #535b87;
+  --label-color: #333d70;
+  --placeHolder-color: #333d70;
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --transTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+  --border-color: #d1eeff;
+  --label-color: #d1eeff;
+  --placeHolder-color: #d1eeff;
+}
+.container {
+    /* background-color: #333d7049; */
+    height: 500px;
+    width: 100%;
+    position: relative;
+  }
+  .firstRow {
+    display: flex;
+    flex-direction: row;
+  }
+  .backButtonP {
+    flex-shrink: 0;
+  }
+  .datePicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 16px;
+  }
+  .DatePickerTitle {
+    color: var(--label-color);
+    width: fit-content;
+  
+    /* Instrument Sans */
+    font-family: "Instrument Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    transition: color 0.3s ease ;
+
+  }
+  .startEndDateContainer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dateIputContainer {
+    display: flex;
+    width: 131px;
+    height: 26px;
+    padding: 10px 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--Placeholder-Stroke, #535b87);
+  }
+  .importBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    left: 435px;
+  }
+  .importTitle {
+    color: var(--label-color);
+  
+    /* Instrument Sans T1 */
+    font-family: "Instrument Sans";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    transition: color 0.3s ease ;
+
+  }
+  .secondRow {
+    height: 5%;
+  
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .secondRowBlocks {
+    width: 33.333%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-direction: row;
+  }
+  .secondRowBlocks:nth-of-type(3) {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+  }
+  .secondRowBlocks:nth-of-type(2) {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    transform: translate(5%, 0%);
+  }
+  .secondRowBlocks label {
+    color: var(--label-color);
+  
+    /* Instrument Sans */
+    font-family: "Instrument Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    transition: color 0.3s ease ;
+
+  }
+  .nameInput {
+    display: flex;
+    width: 60%;
+    height: 115%;
+    padding: 4px 6px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    border: 1px solid var(--border-color);
+    transition: border 0.3s ease ;
+
+  }
+  .HBLinput {
+    display: flex;
+    width: 40%;
+    height: 115%;
+    padding: 4px 6px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    border: 1px solid var(--border-color);
+    transition: border 0.3s ease ;
+
+  }
+  
+  .thirdRow {
+    height: 5%;
+  
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .MBLinput {
+    display: flex;
+    width: 40%;
+    height: 115%;
+    padding: 4px 6px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    border: 1px solid var(--border-color);
+    transition: border 0.3s ease ;
+
+  }
+  .fourthRow{
+    margin-top: 20px;
+  }
+  .tableHead {
+    background-color: var(--tableHead-bg);
+    color: var(--Table-Row-1, #f6fcff);
+  
+    /* Table Title */
+    font-family: "Instrument Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    white-space: nowrap;
+    transition: background-color 0.3s ease ;
+
+  }
+  .tableData {
+    color: var(--tableData-color);
+  
+    /* Table Body */
+    font-family: "Instrument Sans";
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.14px;
+    transition: color 0.3s ease ;
+
+  }
+  .tableData td {
+    white-space: nowrap;
+  }
+  table {
+    table-layout: auto; /* ✅ Allows dynamic column width */
+    width: 100%; /* Ensures it uses full space */
+  }
+  .overflow-x-auto {
+    overflow-x: auto; /* ✅ Enables horizontal scrolling */
+    max-width: 100%;
+  }
+  .customInput {
+    width: 70%; /* Adjust width as needed */
+    font-size: 12px;
+    color: var(--placeHolder-color);
+    background-color:transparent;
+    border: none;
+    border-radius: 4px;
+    text-align: left; /* Align text to the left */
+    outline: none;
+  }
+  
+  .customInput::placeholder {
+    color: var(--placeHolder-color);
+    transition: color 0.3s ease ;
+
+    
+  }
+  
+  

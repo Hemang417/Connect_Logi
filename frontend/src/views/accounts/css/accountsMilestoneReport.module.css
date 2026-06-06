@@ -1,0 +1,106 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --accountsTitle: #1e2652;
+  --tableData-color: #1e2652;
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --accountsTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+
+}
+
+.container {
+  /* background-color: #333d7049; */
+  height: 500px;
+  width: 100%;
+}
+.firstRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.backButtonP {
+  flex-shrink: 0;
+}
+.accountsBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  right: calc(50% - 92px);
+}
+.accountsTitle {
+  color: var(--accountsTitle);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition: color 0.3s ease ;
+
+}
+.secondRow {
+  margin-top: 20px;
+  height: 12%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.thirdRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  height: 70%;
+}
+.graphs {
+  width: 49%;
+  height: 100%;
+  flex-shrink: 0;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--Top-Bar, #1e2652);
+  background: url(../../../assets/images/graph.png) lightgray 50% / contain
+    no-repeat;
+}
+.tableHead {
+  background-color: var(--tableHead-bg);
+  color: var(--Table-Row-1, #f6fcff);
+
+  /* Table Title */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+  transition: background-color 0.3s ease ;
+
+}
+.tableData {
+  color: var(--tableData-color);
+
+  /* Table Body */
+  font-family: "Instrument Sans";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+  transition: color 0.3s ease ;
+
+}
+.tableData td {
+  white-space: nowrap;
+}
+table {
+  table-layout: auto; /* ✅ Allows dynamic column width */
+  width: 100%; /* Ensures it uses full space */
+}
+.overflow-x-auto {
+  overflow-x: auto; /* ✅ Enables horizontal scrolling */
+  max-width: 100%;
+}

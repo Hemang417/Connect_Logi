@@ -1,0 +1,129 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --importTitle: #1e2652;
+  --tableData-color: #1e2652;
+  --border-color: #535b87;
+  --label-color: #333d70;
+  --placeHolder-color: #333d70;
+  --svg-color: #1e2652;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --line-color: #333d70;
+  --calender-logo: light;
+  --inactive-color: #cfcfcf;
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --importTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+  --border-color: #d1eeff;
+  --label-color: #d1eeff;
+  --placeHolder-color: #d1eeff;
+  --svg-color: #f6fcff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --line-color: #f6fcff;
+  --calender-logo: dark;
+  --inactive-color: #cfcfcf;
+
+
+}
+.customInput {
+  width: 90%; /* Adjust width as needed */
+  font-size: 12px;
+  color: var(--placeHolder-color);
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  text-align: left; /* Align text to the left */
+  outline: none;
+  appearance: none; /* Hides default arrow */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+}
+.customInput::placeholder {
+  color: var(--placeHolder-color);
+}
+.input {
+  display: flex;
+  width: 44%;
+  min-height: 31px;
+  max-height: 100px;
+  padding-top: 2px;
+  padding-left: 12px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  border: 1px solid var(--border-color);
+}
+.textarea {
+  width: 98%; /* Adjust width as needed */
+  font-size: 12px;
+  min-height: 86px;
+  padding-left: 0px;
+  max-height: 100px;
+  color: var(--placeHolder-color);
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  text-align: left; /* Align text to the left */
+  outline: none;
+  appearance: none; /* Hides default arrow */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  text-shadow: 0 0 0 var(--placeHolder-color) !important;
+}
+
+.customInput {
+  background-color: transparent !important;
+  color: var(--placeHolder-color);
+  /* -webkit-text-fill-color: var(--placeHolder-color);   */
+  text-shadow: 0 0 0 var(--placeHolder-color) !important;
+  caret-color: var(--placeHolder-color) !important;
+}
+
+.customInput[type="datetime-local"] {
+  color-scheme: var(--calender-logo) !important;
+}
+.customInput[type="date"] {
+  color-scheme: var(--calender-logo) !important;
+}
+
+.customInput:-webkit-autofill,
+.customInput:-webkit-autofill:focus,
+.customInput:-webkit-autofill:active {
+  background-color: transparent !important;
+  -webkit-text-fill-color: var(--placeHolder-color) !important;
+  text-shadow: 0 0 0 var(--placeHolder-color) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
+.customInput:-webkit-autofill::first-line {
+  -webkit-text-fill-color: var(--placeHolder-color) !important;
+}
+
+/* Additional Fix for Spelling Suggestions */
+.customInput::selection {
+  background: transparent !important;
+  color: var(--placeHolder-color) !important;
+}
+
+.customInput::-moz-selection {
+  background: transparent !important;
+  color: var(--placeHolder-color) !important;
+}
+
+.customInput[spellcheck="true"] {
+  text-decoration-color: red !important; /* Keeps red underline */
+  -webkit-text-fill-color: var(
+    --placeHolder-color
+  ) !important; /* Forces correct text color */
+  color: var(--placeHolder-color) !important;
+}

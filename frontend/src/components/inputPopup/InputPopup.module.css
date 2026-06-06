@@ -1,0 +1,270 @@
+:root {
+  --tableHead-bg: #2f4096;
+  --importTitle: #1e2652;
+  --tableData-color: #1e2652;
+  --border-color: #535b87;
+  --label-color: #333d70;
+  --placeHolder-color: #333d70;
+  --svg-color: #1e2652;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+  --line-color: #333d70;
+  --background-color: #ebeff8;
+  --btn-background-color: #c9d7f5;
+
+}
+:global(.dark-mode) {
+  --tableHead-bg: #101322;
+  --importTitle: #f6fcff;
+  --tableData-color: #f6fcff;
+  --border-color: #d1eeff;
+  --label-color: #d1eeff;
+  --placeHolder-color: #d1eeff;
+  --svg-color: #f6fcff;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+  --line-color: #f6fcff;
+  --background-color: #242a36;
+  --btn-background-color: #4b566d;
+}
+.darkBg {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1002;
+  opacity: 0.5;
+  background: var(--Popup-Layer, #2d2d2d);
+}
+.firstRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px 12px 0px 0px;
+  position: relative;
+}
+.container {
+  width: 100%;
+  background: var(--background-color);
+  border-radius: 12px;
+  height: fit-content;
+  padding: 6px 16px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--border-color);
+}
+.title {
+  color: var(--importTitle);
+  text-align: center;
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin: 10px 0px;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.selectButton {
+  color: var(--importTitle);
+  background-color: var(--btn-background-color);
+  text-align: center;
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  padding: 4px 0px;
+  margin-bottom: 4px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  line-height: normal;
+}
+.closeBtn {
+  position: absolute;
+  right: 10px;
+}
+.content {
+  padding: 6% 8%;
+  color: var(--Card-Bg, #333d70);
+  font-family: "Instrument Sans";
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.contentCheckbox {
+  padding: 4% 8%;
+  color: var(--Card-Bg, #333d70);
+  font-family: "Instrument Sans";
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.popupWrapper {
+  z-index: 1003;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  /* width: fit-content; */
+  height: fit-content;
+  border-radius: 8px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--placeHolder-color);
+  font-family: "Instrument Sans";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+}
+.input {
+  height: 34px;
+  padding-left: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--placeHolder-color);
+  font-family: "Instrument Sans";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  background-color: transparent;
+}
+.input::placeholder {
+  color: var(--placeHolder-color);
+}
+
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover, 
+.input:-webkit-autofill:focus, 
+.input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  color: var(--placeHolder-color) !important; /* or inherit */
+  background-color: transparent !important;
+  caret-color: auto;
+}
+
+
+.thirdRow {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+/* -------------------------------------------------------- */
+.fileUploadContainer {
+  margin-bottom: 15px;
+}
+.fileInputLabel {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.fileInput {
+  position: absolute;
+  left: -9999px;
+}
+
+.customFileButton {
+  padding: 8px 16px;
+  background-color: #f0f0ff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.customFileButton:hover {
+  background-color: #e0e0ff;
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.075);
+  border-radius: 4px;
+  border: 1px solid #e6e6e6;
+}
+
+.fileName {
+  flex: 1;
+  color:  var(--label-color);
+  margin-right: 10px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.deleteButton {
+  background-color: #ff5c5c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.deleteButton:hover {
+  background-color: #ff3c3c;
+}
+/* //////////////////////////////////// */
+.expandedPanel {
+  overflow: hidden;
+  max-height: 999px; /* Adjust as needed */
+  opacity: 1;
+  transition: max-height 1s ease, opacity 0.4s ease 0.1s;
+}
+
+.collapsedPanel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+.errorText {
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+/* Add to your InputPopup.module.css */
+.invalid {
+  /* border: 1px solid #ff8484 !important; */
+}
+.invalidSelectWrapper {
+  /* border: 1px solid #ff4444;
+  border-radius: 8px;
+  padding: 1px; */
+}

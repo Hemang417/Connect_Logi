@@ -1,0 +1,149 @@
+:root {
+  --tableData-color: #1e2652;
+}
+.dark-mode {
+  --tableData-color: #f6fcff;
+}
+.container-table-head {
+  width: 100px;
+  background-color: rgb(255, 255, 255);
+}
+
+.table-input {
+  border: none;
+  border-bottom: 1px solid gray;
+  background-color: transparent;
+
+  /* outline: 1px solid rgba(128, 128, 128, 0.103); */
+}
+.table-head-style {
+  background-color: #4f5d73;
+  color: #e8eaed;
+}
+.header-names {
+  padding: 4px;
+  /* text-align: center; */
+  color: var(--tableData-color);
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+  transition: color 0.3s ease;
+}
+
+.container-table-width {
+  width: 70%;
+}
+
+.collection-card {
+  flex: 1 1 auto;
+  padding: var(--cui-card-spacer-y) var(--cui-card-spacer-x);
+  color: var(--cui-card-color);
+  width: 100%;
+  transition: color 0.3s ease;
+}
+.table-wf {
+  width: 100%;
+  border-collapse: separate; /* Ensures clean borders */
+  /* margin-top: 10px; */
+  background-color: transparent; /* White background */
+  border: none !important;
+  border-spacing: 0 10px;
+}
+
+/* Table Header Styling */
+.head-wf th {
+  background-color: var(--tableHead-bg); /* Dark blue background */
+  color: white; /* White text */
+  text-align: left; /* Align text to the left */
+  padding: 10px 12px; /* Padding for better spacing */
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-wf tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+  text-align: center;
+}
+
+.body-wf tr td {
+  text-align: center;
+  color: var(--tableData-color);
+  transition: color 0.3s ease;
+  padding: 3px 0px;
+}
+
+/* Hover Effect on Rows */
+.body-wf tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  /* background-color: #ffffe2 !important; Light yellow background for selected row */
+  font-weight: 600;
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+}
+
+/* Table Data Cell Styling */
+.td-wf {
+  text-align: center;
+  padding: 8px 10px; /* Consistent padding */
+  border: none !important;
+  color: var(--page-title); /* Text color */
+  transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+.exp-create-tabledata {
+  background-color: transparent;
+  font-size: 14px;
+  color: var(--tableData-color);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: color 0.3s ease;
+  border-radius: 8px;
+}
+.exp-create-tabledata::placeholder {
+  font-size: 16px;
+  /* border: none;
+    border-bottom: 1px solid gray;
+    background-color: transparent;
+  
+    outline: 1px solid rgba(128, 128, 128, 0.103); */
+}
+.exp-create-tabledata::placeholder {
+  background-color: transparent;
+  color: var(--tableData-color);
+  text-align: center;
+  transition: color 0.3s ease;
+}
+.exp-create-tabledata-select {
+  width: 100%;
+  background-color: transparent;
+  color: var(--tableData-color);
+  text-align: center;
+  transition: color 0.3s ease;
+
+  border-color: #9e9e9e;
+}
+.exp-create-tabledata-select option {
+  color: #000000;
+}
+.container-details-label {
+  color: var(--tableData-color);
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  line-height: normal;
+  letter-spacing: 0.14px;
+}

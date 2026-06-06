@@ -1,0 +1,291 @@
+/* Add these styles to your SingleCalender.css file */
+
+:root {
+  --header-color: #1e2652;
+  --input-border-color: #535b87;
+  --svg-color: #1e2652;
+  --background-color: #ebeff8;
+  --datepicker-bg: #f6fcff;
+  --preset-bg: #1e2652;
+  --active-btn-color: #1e2652;
+  --active-btn-text: white;
+  --inactive-btn-color: #e9ecef;
+  --inactive-btn-text: #495057;
+  --dropdown-bg: white;
+  --dropdown-border: #ced4da;
+  --dropdown-text: #212529;
+}
+
+.dark-mode {
+  --header-color: #101322;
+  --input-border-color: #d1eeff;
+  --input-font-color: #d1eeff;
+  --svg-color: #f6fcff;
+  --background-color: #242a36;
+  --datepicker-bg: #2d3340;
+  --preset-bg: #d1eeff;
+  --active-btn-color: #d1eeff;
+  --active-btn-text: #242a36;
+  --inactive-btn-color: #3d4655;
+  --inactive-btn-text: #d1eeff;
+  --dropdown-bg: #242a36;
+  --dropdown-border: #4d5665;
+  --dropdown-text: #d1eeff;
+}
+
+/* Custom time selection styling */
+.custom-time-selection {
+  padding: 5px 15px 15px;
+  background-color: var(--datepicker-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.time-label {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--svg-color);
+  margin-bottom: 8px;
+}
+
+.time-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Time selector styling */
+.time-select {
+  background-color: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border);
+  border-radius: 4px;
+  color: var(--dropdown-text);
+  font-size: 14px;
+  padding: 4px;
+  width: 60px;
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+
+  /* Scroll settings */
+  max-height: 40px; /* show ~4 options */
+  overflow-y: auto;
+}
+
+/* WebKit scroll for better appearance */
+.time-select::-webkit-scrollbar {
+  width: 6px;
+}
+
+.time-select::-webkit-scrollbar-thumb {
+  background-color: var(--input-border-color);
+  border-radius: 4px;
+}
+
+/* Style the selected option */
+.time-select option:checked {
+  background-color: var(--active-btn-color);
+  color: var(--active-btn-text);
+}
+.time-select option:hover {
+  background-color: var(--active-btn-color);
+  color: var(--active-btn-text);
+}
+
+.time-select:focus {
+  outline: none;
+  border-color: var(--header-color);
+  box-shadow: 0 0 0 2px rgba(30, 38, 82, 0.2);
+}
+
+.time-separator {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 4px;
+  color: var(--dropdown-text);
+}
+
+/* AM/PM selector styling */
+.period-buttons {
+  display: flex;
+  margin-left: 10px;
+}
+
+.period-btn {
+  padding: 4px 10px;
+  border: none;
+  background-color: var(--inactive-btn-color);
+  color: var(--inactive-btn-text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.period-btn:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.period-btn:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.period-btn.active {
+  background-color: var(--active-btn-color);
+  color: var(--active-btn-text);
+}
+
+/* Style for the datepicker container */
+.SingleCalContainer .react-datepicker {
+  background: var(--datepicker-bg);
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  height: fit-content;
+}
+
+/* Style the date picker header */
+.SingleCalContainer .react-datepicker__header {
+  background-color: var(--header-color);
+  color: white;
+  border-bottom: none;
+  padding: 12px 0 8px;
+}
+
+.SingleCalContainer .react-datepicker__current-month {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  transform: translateX(25px);
+}
+
+.SingleCalContainer .react-datepicker__day-name {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  width: 36px;
+}
+
+/* Style the date portion */
+.SingleCalContainer .react-datepicker__month {
+  margin: 10px 0;
+}
+
+.SingleCalContainer .react-datepicker__day {
+  width: 25px;
+  height: 25px;
+  line-height: 36px;
+  margin: 0;
+  border-radius: 50%;
+  color: var(--dropdown-text);
+  font-size: 12px;
+}
+.SingleCalContainer .react-datepicker__week {
+  display: flex;
+  justify-content: space-around;
+  /* gap: 10px; */
+}
+
+.SingleCalContainer .react-datepicker__day--selected,
+.SingleCalContainer .react-datepicker__day--keyboard-selected {
+  background-color: rgba(33, 107, 165, 0.5);
+  color: white;
+  border-radius: 50%;
+}
+
+.SingleCalContainer .react-datepicker__day:hover {
+  background-color: rgba(30, 38, 82, 0.2);
+  border-radius: 50%;
+}
+
+/* Mobile responsiveness - adjust for small screens */
+@media (max-width: 480px) {
+  .SingleCalContainer .react-datepicker {
+    width: 100%;
+  }
+
+  .time-select {
+    width: 50px;
+  }
+
+  .period-btn {
+    padding: 4px 8px;
+  }
+}
+
+/* Hide react-datepicker's default time selection since we're using our own */
+.react-datepicker__time-container,
+.react-datepicker__time,
+.react-datepicker__time-box {
+  display: none !important;
+}
+.calendar-drop-up {
+  margin-bottom: 5px;
+  display: flex;
+  position: fixed;
+  width: 316%;
+  height: 343px;
+  top: 34px;
+  /* left: -210px; */
+  background-color: var(--background-color);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 150;
+  padding: 20px;
+  padding-left: 15px;
+  padding-right: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-drop-down {
+  margin-top: 5px;
+  display: flex;
+  position: fixed;
+  width: 316%;
+  height: 343px;
+  top: 34px;
+  /* left: -210px; */
+  background-color: var(--background-color);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 150;
+  padding: 20px;
+  padding-left: 15px;
+  padding-right: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.singleCalenderPopupLeft {
+  display: flex;
+  position: fixed;
+  width: 316%;
+  height: 343px;
+  top: 34px;
+  /* left: -210px; */
+  background-color: var(--background-color);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 150;
+  padding: 20px;
+  padding-left: 15px;
+  padding-right: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.singleCalenderPopupRight {
+  display: flex;
+  position: fixed;
+  width: 316%;
+  height: 343px;
+  top: 34px;
+  left: 0px !important;
+  background-color: var(--background-color);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 150;
+  padding: 20px;
+  padding-left: 15px;
+  padding-right: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}

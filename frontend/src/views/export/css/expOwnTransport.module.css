@@ -1,0 +1,236 @@
+:root {
+  ---card-bg-color: #2f4096;
+  ---card-border-color: #f6fcff;
+  --expTransTitle-color: #1e2652;
+  --expTransJobs-color: #333d70;
+  --line-color: #333d70;
+  --title-color: #D8F0FD;
+  --tableData-color: #1e2652;
+  --tableHead-bg: #2f4096;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+}
+:global(.dark-mode) {
+  ---card-bg-color: #151c3d;
+  ---card-border-color: #10152e;
+  --expTransTitle-color: #f6fcff;
+  --expTransJobs-color: #d1eeff;
+  --line-color: #f6fcff;
+  --title-color: #d1eeff;
+  --tableData-color: #f6fcff;
+  --tableHead-bg: #101322;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+}
+
+.container {
+  width: 100%;
+  height: fit-content;
+  user-select: none;
+}
+.firstRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.backButtonP {
+  flex-shrink: 0;
+}
+.datePicker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 16px;
+}
+.expTransBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  left: calc(50% - 180px);
+}
+.expTransTitle {
+  color: var(--expTransTitle-color);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  transition: color 0.3s ease;
+}
+.expTransTotalJobs {
+  color: var(--expTransJobs-color);
+
+  /* Lato Body 2 */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  word-spacing: 3px;
+  transition: color 0.3s ease;
+}
+.title {
+  margin-top: 10px;
+  align-self: stretch;
+  color: var(--title-color);
+  transition: color 0.3s ease;
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.secondRow {
+  margin-top: 20px;
+  padding: 10px 30px;
+  border-radius: 40px;
+  border: 4px solid var(---card-border-color);
+  background: var(---card-bg-color);
+}
+.innerContainer {
+  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.subTitle {
+  color: var(--Card-Stroke, #f6fcff);
+
+  /* Lato Body */
+  font-family: Lato;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.subNo {
+  color: var(--Card-Digits, #d1eeff);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.line {
+  margin-top: 20px;
+  width: 95%;
+  transform: translate(2.5%, 0%);
+  height: 1px;
+  background: var(--line-color);
+}
+.thirdRow {
+  margin-top: 12px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.tableTitle {
+  width: fit-content;
+  margin: 20px 0px;
+  position: relative;
+  left: calc(50% - 130px);
+  color: var(--Card-Bg, #333d70);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.tableHead {
+  background: var(--tableHead-bg);
+  color: var(--Table-Row-1, #f6fcff);
+
+  /* Table Title */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+}
+.tableData {
+  color: var(--tableData-color);
+
+  /* Table Body */
+  font-family: "Instrument Sans";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+}
+.tableData td {
+  white-space: nowrap;
+}
+table {
+  table-layout: auto; /* ✅ Allows dynamic column width */
+  width: 100%; /* Ensures it uses full space */
+}
+.overflow-x-auto {
+  overflow-x: auto; /* ✅ Enables horizontal scrolling */
+  max-width: 100%;
+}
+.tabsRow {
+  margin-top: 20px;
+}
+.tabsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center content horizontally */
+  text-align: center;
+  width: 180px;
+  padding: 9px 1%;
+  border-radius: 12px;
+  background-color: var(--tab-bg-color);
+  color: var(--tab-color);
+  transition: background-color 0.3 ease, color 0.3 ease;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.ActiveTab {
+  display: flex;
+  width: 180px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 1%;
+  border-radius: 12px;
+  background-color: var(--activetab-bg-color);
+  color: var(--activetab-color);
+  transition: background-color 0.3 ease, color 0.3 ease;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}

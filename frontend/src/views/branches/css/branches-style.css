@@ -1,0 +1,97 @@
+:root {
+  --background-color: #ebeff8;
+}
+:global(.dark-mode) {
+  --background-color: #242a36;
+}
+
+.branchlist-field-div {
+  display: flex;
+  /* justify-content: space-between; */
+  padding: 5px 20px;
+}
+
+.branchlist-inputfield {
+  width: 280px;
+}
+.branchlist-field-div label {
+  font-size: 2px;
+}
+.branch-list-label-width {
+  width: 180px;
+}
+.delete-hover-color svg {
+  transition: fill 0.2s ease-in-out; /* Smooth transition for fill color */
+}
+
+.delete-hover-color:hover svg path {
+  fill: red; /* Change only the SVG path fill color on hover */
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  z-index: 9999;
+
+  width: 80%;
+  max-width: 616px;
+  height: auto;
+  padding: 40px;
+  background: var(--background-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* optional dim effect */
+  z-index: 9998;
+}
+
+.form-row {
+  display: flex;
+  gap: 30px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-actions {
+  margin: 16px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 20px;
+  gap: 15px;
+}
+
+.file-upload-button.uploaded {
+  width: 208px;
+}
+
+.file-upload-group {
+  width: 100%;
+}
+
+.file-upload-container {
+  width: 100%;
+}

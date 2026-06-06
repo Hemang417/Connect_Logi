@@ -1,0 +1,366 @@
+/* Component.module.css */
+:root {
+  --border-radius: 8px;
+  --pg-title-color: #1e2652;
+  --pg-total-job-color: #333d70;
+  --dark-green-color: #337039;
+  --dark-darkBlue-color: #333d70;
+  --dark-red-color: #9c565a;
+  --svg-color: #1e2652;
+  --line-color: #333d70;
+  --title-color: #D8F0FD;
+  --tableData-color: #1e2652;
+  --tableHead-bg: #2f4096;
+  --activetab-color: #d1eeff;
+  --activetab-bg-color: #1e2652;
+  --tab-color: #60b6e8;
+  --tab-bg-color: #f6fcff;
+}
+
+/* Apply dark mode globally inside module.css */
+:global(.dark-mode) {
+  --pg-title-color: #f6fcff;
+  --pg-total-job-color: #d1eeff;
+  --dark-green-color: #1e4722;
+  --dark-darkBlue-color: #151c3d;
+  --dark-red-color: #531f22;
+  --svg-color: #f6fcff;
+  --line-color: #f6fcff;
+  --title-color: #d1eeff;
+  --tableData-color: #f6fcff;
+  --tableHead-bg: #101322;
+  --activetab-color: #101322;
+  --activetab-bg-color: #abd3eb;
+  --tab-color: #f6fcff;
+  --tab-bg-color: #10152e;
+}
+.container {
+  /* background-color-color: #333d7049; */
+  height: 500px;
+  width: 100%;
+  position: relative;
+}
+.firstRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.backButtonP {
+  flex-shrink: 0;
+}
+.datePicker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 16px;
+}
+.DatePickerTitle {
+  color: var(--pg-total-job-color);
+  width: fit-content;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  transition: color 0.3s ease;
+}
+.startEndDateContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dateIputContainer {
+  display: flex;
+  width: 131px;
+  height: 26px;
+  padding: 10px 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--Placeholder-Stroke, #535b87);
+}
+.dateInput {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  height: 18px;
+  font-size: 14px;
+  background-color: transparent;
+  border: 0px;
+}
+.salesBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  left: 135px;
+}
+.salesTitle {
+  color: var(--pg-title-color);
+
+  /* Instrument Sans T1 */
+  font-family: "Instrument Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  transition: color 0.3s ease;
+}
+.outerBoxSalesTitle {
+  width: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.outerBoxSalesTitle span {
+  display: flex;
+  align-items: center;
+}
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 2.5%;
+  border-radius: 12px;
+  background-color: var(--tab-bg-color);
+  color: var(--tab-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  cursor: pointer;
+}
+.ActiveTab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 3%;
+  border-radius: 12px;
+  background-color: var(--activetab-bg-color);
+  color: var(--activetab-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+
+  /* Instrument Sans */
+  font-family: "Instrument Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.salesTotalJobs:hover {
+  color: var(--Card-Bg, #0044ff);
+}
+.salesTotalJobs {
+  color: var(--pg-total-job-color);
+  transition: color 0.3s ease;
+  position: relative;
+  left: 8px;
+  padding-top: 5px;
+  /* Lato Body 2 */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  word-spacing: 3px;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+.thirdRow {
+  margin-top: 12px;
+}
+.tabsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+.salesTotalJobs svg {
+  margin-left: 5px;
+}
+.secondRow {
+  margin-top: 12px;
+  display: flex;
+  width: 100%;
+  height: 15%;
+  align-items: center;
+  gap: 24px;
+}
+.firstBlock {
+  display: flex;
+  height: 100%;
+  padding: 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  background-color: var(--dark-green-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.secondBlock {
+  display: flex;
+  height: 100%;
+  padding: 17px 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  background-color: var(--dark-darkBlue-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.thirdBlock {
+  display: flex;
+  height: 100%;
+  padding: 17px 21px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: var(--border-radius);
+  background-color: var(--dark-red-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.innerBlock {
+  display: flex;
+  padding: 1px 2px;
+  align-items: flex-end;
+  gap: 25px;
+  flex-shrink: 0;
+  align-self: stretch;
+  position: relative;
+}
+.firstHalf {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.blockTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  color: var(--Card-Stroke-1, #f6fcff);
+
+  /* Lato Body */
+  font-family: Lato;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.firstBlockNo {
+  color: var(--Card-Digits-1, #d5f1d2);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.secondBlockNo {
+  color: var(--Card-Digits, #d1eeff);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.thirdBlockNo {
+  color: var(--Card-Digits-2, #ffdbdd);
+
+  /* Instrument Sans Digits */
+  font-family: "Instrument Sans";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.secondHalf {
+  position: absolute;
+  right: 15px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.line {
+  margin-top: 12px;
+  width: 95%;
+  transform: translate(2.5%, 0%);
+  height: 1px;
+  background-color: var(--line-color);
+}
+.tableHead {
+  background-color: var(--tableHead-bg);
+  color: var(--Table-Row-1, #f6fcff);
+  transition: color 0.3s ease, background-color 0.3s ease;
+
+  /* Table Title */
+  font-family: "Instrument Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+}
+.tableData {
+  color: var(--tableData-color);
+  transition: color 0.3s ease, background-color 0.3s ease;
+
+  /* Table Body */
+  font-family: "Instrument Sans";
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+}
+.tableData td {
+  white-space: nowrap;
+}
+table {
+  table-layout: auto; /* ✅ Allows dynamic column width */
+  width: 100%; /* Ensures it uses full space */
+}
+.overflow-x-auto {
+  overflow-x: auto; /* ✅ Enables horizontal scrolling */
+  max-width: 100%;
+}
+.fifthRow {
+  margin-top: 2px;
+}

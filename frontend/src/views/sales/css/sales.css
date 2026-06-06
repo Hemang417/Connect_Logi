@@ -1,0 +1,545 @@
+.form-import {
+  overflow-x: scroll;
+  width: 93%;
+  justify-content: space-around;
+  display: flex;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: gray transparent; /* Firefox */
+}
+
+/* Chrome, Edge, Safari */
+.form-import::-webkit-scrollbar {
+  height: 8px;
+  background-color: transparent !important;
+}
+
+.form-import::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+.form-import::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 4px;
+}
+
+.table-import {
+  width: max-content;
+  min-width: 100vw;
+}
+
+.sales-text-field-4,
+.sales-dropdown-btn-1 {
+  min-width: 140px;
+  width: auto;
+}
+
+.sales-dropdown-btn-1 {
+  height: 32px;
+  padding: 1px 3px;
+  background-color: transparent;
+  font-size: 16px;
+}
+
+.sales-dropdown-btn-2 {
+  width: 60px;
+}
+
+.sales-text-field-3 {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.grid-container-sales {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* padding: 0px 12px; */
+  /* gap: 5px; */
+}
+
+.grid-container-sales-1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sales-all-buttons {
+  padding: 5px 20px;
+  border-radius: 50px;
+}
+
+.custom-date-field {
+  display: flex;
+  align-items: center;
+  outline: none;
+  /* gap: 12px; */
+}
+.custom-date-dropdown {
+  width: 21px;
+  margin: 0px 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  outline: none;
+}
+.bank-date-sales {
+  width: 220px;
+  border-radius: 2px;
+  padding: 2px 8px;
+  border: 1px solid gray;
+  outline: none;
+  /* margin-left: 18px; */
+}
+
+.custom-date-dropdown {
+  width: 21px;
+  margin: 0px 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  outline: none;
+}
+
+.grid-container-sales-jobnum,
+.grid-container-sales-search {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  /* padding: 0px 84px; */
+  gap: 12px;
+}
+
+.sales-input-field-4 {
+  font-size: 16px;
+  padding: 3px;
+  box-shadow: none;
+  box-sizing: border-box;
+  margin: 4px 0px;
+  outline: none;
+}
+
+.sales-input-field {
+  min-width: 100px;
+  width: auto;
+}
+
+/* Custom CSS for ProspectCreate component */
+.card-space-prospect,
+.card-space-enquiry {
+  margin-bottom: 10px;
+}
+.job-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* column-gap: 20px;
+    row-gap: 15px; */
+  letter-spacing: 0.2px;
+}
+
+.prospect-primary-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 3px;
+}
+
+.prospect-job-grid-container-primary {
+  display: flex;
+  letter-spacing: 0.4px;
+  margin: 4px 4px;
+}
+
+.prospect-job-grid-container-secondary {
+  display: flex;
+  letter-spacing: 0.4px;
+  margin: 4px 4px;
+}
+
+.checkbox-inner-single-div Label {
+  font-size: 12px;
+}
+
+.prospect-job-label {
+  font-size: 12px;
+  margin-right: 8px;
+  width: 120px;
+  white-space: nowrap;
+}
+.prospect-job-label-three {
+  margin-top: 12px;
+  margin-left: 15px;
+  width: 200px;
+}
+
+.prospect-RFQ-label {
+  font-size: 12px;
+  margin-right: 8px;
+  width: 200px;
+}
+
+.prospectdate-job-text-field-3 {
+  font-size: 16px;
+  width: 45px;
+  margin-right: 50px;
+}
+
+.grid-equalizer-1,
+.grid-equalizer-2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.grid-equalizer-date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.prospect-location-select {
+  width: 240px;
+  padding: 4px;
+}
+.job-text-field-4 {
+  font-size: 12px;
+  padding: 3px 3px;
+  box-shadow: none;
+  box-sizing: border-box;
+  outline: none;
+  width: 240px;
+}
+.job-date-field-4 {
+  font-size: 12px;
+  padding: 3px;
+  box-shadow: none;
+  box-sizing: border-box;
+  outline: none;
+
+  text-align: center;
+  border: 1px solid grey;
+}
+.prospect-source-options {
+  display: flex;
+  flex-direction: column; /* Stack the radio buttons and textarea */
+  gap: 10px;
+  /* align-items: center; */
+}
+
+.prospect-search-button {
+  display: flex;
+  /* justify-content: flex-end; */
+  margin: 8px 0;
+}
+
+.prospect-job-textarea {
+  font-size: 12px;
+  margin-right: 8px;
+  min-width: 700px;
+  min-height: 60px;
+  max-height: 300px;
+  padding: 3px;
+}
+.source-textarea-field {
+  font-size: 16px;
+  width: 300px; /* Makes the textarea take the full width of the container */
+  min-height: 60px;
+  resize: vertical;
+  padding: 5px;
+}
+.textarea-wrapper {
+  flex-grow: 1; /* Allows the textarea to grow without affecting the label */
+}
+.source-container {
+  display: flex;
+  align-items: flex-start;
+}
+.source-default-label {
+  display: flex;
+  gap: 22px;
+}
+.enquiry-source-options {
+  display: flex;
+  gap: 12px;
+}
+
+.grid-container-sales-reference {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  /* gap: 12px; */
+}
+.grid-container-sales-name {
+  display: flex;
+  align-items: center;
+}
+
+.import-clearance-fields,
+.transportation-fields,
+.export-clearance-fields,
+.freight-booking-fields,
+.exim-consultancy-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  padding-top: 10px;
+}
+.import-extended-div.bordered,
+.exim-consultancy-extended-div.bordered,
+.export-extended-div.bordered,
+.freight-booking-extended-div.bordered,
+.transportation-extended-div.bordered {
+  border: 1px solid #000;
+  padding: 10px;
+  background-color: aliceblue;
+  border-radius: 5px;
+  margin: 12px;
+}
+.clearance-fields-text-box {
+  width: 160px;
+  font-size: 12px;
+}
+.enquiry-option input {
+  margin-right: 4px;
+}
+
+.custom-dropdown-toggle {
+  padding: 5px 10px !important;
+  font-size: 14px;
+  height: 30px; /* Adjust height */
+}
+
+.custom-dropdown-menu {
+  padding: 5px 0 !important;
+  min-height: auto !important;
+}
+
+.custom-dropdown-item {
+  padding: 5px 10px !important;
+  font-size: 14px;
+}
+
+.checkbox-inner-single-div {
+  width: 300px;
+  display: flex;
+  /* gap: 0px 40px; */
+  justify-content: space-between;
+  margin: 0px 18px;
+}
+.prospect-add-more-fields {
+  display: flex;
+  align-items: flex-start;
+}
+.prospect-label-width {
+  width: 110px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.selected-row-sales.primary-selected-row-sales {
+  color: #031c35;
+  /* background-color: #ffffe2 !important; */
+  font-weight: 600;
+  border-top: 1px solid #0a0a0a56;
+  border-bottom: 1px solid #0a0a0a56;
+}
+
+.table-border-sales {
+  border: 1px solid rgba(0, 0, 0, 0.562);
+}
+
+.table-border-sales-head {
+  border: 1px solid rgba(0, 0, 0, 0.562);
+}
+.delete-hover-color svg {
+  transition: fill 0.2s ease-in-out; /* Smooth transition for fill color */
+}
+
+.delete-hover-color:hover svg path {
+  fill: red; /* Change only the SVG path fill color on hover */
+}
+
+.head-style-enquiry {
+  background-color: #031c35e1;
+  color: aliceblue;
+  white-space: nowrap;
+}
+.container-no-div {
+  display: flex;
+  margin: 10px 4px;
+  gap: 12px;
+}
+.checkbox-inner-single-div-containerno {
+  width: 140px;
+  height: 30px;
+  font-size: 14px;
+}
+.table-head-row {
+}
+
+.width-enquiry-table {
+  width: 140px;
+  font-size: 14px;
+
+  height: 30px;
+}
+.tr-enquiry-head {
+  text-align: center;
+  font-size: 14px;
+}
+.table-head-row-enquiry {
+  margin: 8px 0px;
+  background-color: #031c35;
+  padding: 10px 12px;
+  color: aliceblue;
+  font-weight: 300;
+}
+/* ========================= Date Styling ========================== */
+
+.date-picker-wrapper-sales {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 35vw;
+  /* margin-top: 5px; */
+  align-items: center;
+}
+
+.date-range-highlight {
+  /* background: linear-gradient(to right, rgba(0, 123, 255, 0.2), rgba(0, 123, 255, 0.2)); */
+  /* height: 5px; */
+  margin-left: -8px;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  /* opacity: 0; */
+  /* width: 0; */
+  /* margin-top: 5px; */
+}
+
+.date-range-highlight.animate {
+  opacity: 1;
+  /* width: 100%; */
+}
+
+.date-picker-button {
+  background-color: #4a90e2; /* Soft blue color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 4px 7px; /* Padding for button */
+  font-size: 12px; /* Font size */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.date-picker-button:hover {
+  background-color: #357abd; /* Darker shade on hover */
+  cursor: pointer; /* Pointer cursor on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.date-picker-dropdown {
+  border: 1px solid #d1d1d1; /* Light gray border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 4px; /* Padding for dropdown */
+  font-size: 12px; /* Font size */
+  background-color: white; /* White background */
+  color: #333; /* Dark text color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+  font-size: 14px;
+}
+
+.date-picker-dropdown:focus {
+  border-color: #4a90e2; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Glow effect on focus */
+}
+
+.date-picker-dropdown option {
+  padding: 10px; /* Padding for dropdown options */
+}
+/* ========================= Search divs  Styling ========================== */
+
+.grid-container-sales-jobnum {
+  display: flex;
+  align-items: center;
+  /* justify-content: start; */
+  /* padding: 0px 84px; */
+  /* gap: 30px; */
+  /* margin-top: 4px; */
+}
+
+.sales-label-width {
+  width: 110px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.prospect-text-field-4 {
+  font-size: 14px;
+  width: 140px;
+  /* width: auto;
+    min-width: 80px; */
+}
+
+.end-date-margin-set-sales-search {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+}
+/* ========================= Table Styling ========================== */
+.table-sales-ref {
+  width: 100%;
+  border-collapse: collapse; /* Ensures clean borders */
+  margin-top: 10px;
+  background-color: #fff; /* White background */
+  border: 1px solid #ddd; /* Subtle outer border */
+}
+
+/* Table Header Styling */
+.head-sales-ref th {
+  background-color: #4f5d73; /* Dark blue background */
+  color: white; /* White text */
+  text-align: left; /* Align text to the left */
+  padding: 4px 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  font-weight: 600;
+
+  /* border-bottom: 1px solid #333;  */
+}
+
+/* Table Body Styling */
+.body-sales-ref tr {
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  font-size: 12px;
+}
+
+/* Hover Effect on Rows */
+.body-sales-ref tr:hover {
+  background-color: #ceccfd; /* Light blue on hover */
+}
+
+/* Selected Row Styling */
+.selected-row.primary-selected {
+  /* background-color: #ffffe2 !important; Light yellow background for selected row */
+  font-weight: 600;
+  border-top: 0.08rem solid #0a0a0a79;
+  border-bottom: 0.08rem solid #0a0a0a79;
+}
+
+/* Table Data Cell Styling */
+.td-sales-ref {
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid #ddd; /* Subtle row separator */
+  color: #333; /* Text color */
+  white-space: nowrap;
+}
+
+/* Table Row Alternate Colors for Readability */
+.body-sales-ref tr:nth-child(even) {
+  /* background-color: #f9fafc;  */
+}
+
+/* Button Cell Alignment */
+.td-sales-ref button {
+  margin: 0 4px; /* Space between buttons */
+}

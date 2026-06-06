@@ -1,0 +1,36 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 20%;
+}
+
+
+.employee-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.employee-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.employee-item:hover {
+  background: #f0f0f0;
+}
