@@ -271,9 +271,11 @@ const CreateOrg = () => {
       errors.push("GST format is invalid (e.g., 22AAAAA0000A1Z5)");
     }
 
-    const stateCode = parseInt(generalData.GST.slice(0, 2));
-    if (stateCode < 1 || stateCode > 35) {
-      errors.push("Invalid GST state code.");
+    if (generalData.GST) {
+      const stateCode = parseInt(generalData.GST.slice(0, 2));
+      if (stateCode < 1 || stateCode > 35) {
+        errors.push("Invalid GST state code.");
+      }
     }
 
     const iecRegex = /^[A-Z0-9]{10}$/;

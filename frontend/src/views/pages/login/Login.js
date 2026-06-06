@@ -161,7 +161,8 @@ const Login = () => {
         const branches = await fetchBranchesOfOurOwn(
           response.data.orgcode,
           response.data.orgname,
-          response.data.username
+          response.data.username,
+          response.data.token
         );
 
         if (branches.length === 1) {
@@ -208,7 +209,7 @@ const Login = () => {
     }
   }
 
-  const fetchBranchesOfOurOwn = async (orgcode, orgname, username) => {
+  const fetchBranchesOfOurOwn = async (orgcode, orgname, username, token) => {
     try {
       const response = await axios.get(
         `${API_BASE_URL}/fetchallownbranchname`,
@@ -217,6 +218,9 @@ const Login = () => {
             orgcode: orgcode,
             orgname: orgname,
             username: username,
+          },
+          headers: {
+            userauthtoken: `Bearer ${token}`,
           },
         }
       );

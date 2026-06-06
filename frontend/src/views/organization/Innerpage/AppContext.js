@@ -45,9 +45,9 @@ export const AppProvider = ({ children }) => {
 
       setGeneralData(response.data);
       setRegistrationData({
-        PAN: response.data.PAN,
-        GST: response.data.GST,
-        IEC: response.data.IEC,
+        PAN: response.data.PAN ?? response.data.pan ?? "",
+        GST: response.data.GST ?? response.data.gst ?? "",
+        IEC: response.data.IEC ?? response.data.iec ?? "",
       });
       setAccountData({
         creditdays: response.data.creditdays,
