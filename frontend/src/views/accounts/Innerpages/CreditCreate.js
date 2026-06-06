@@ -4,7 +4,6 @@ import "../css/accounts-styles.css";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from "react-select";
-import { on } from "ws";
 import toast from "react-hot-toast";
 import NewInput from "src/components/NewInput/NewInput";
 import NewDropdownInput from "src/components/DropDown/NewDropdownInput";

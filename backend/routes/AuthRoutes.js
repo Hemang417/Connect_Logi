@@ -113,42 +113,51 @@ router.post("/auth/forgotpassword", async (req, res) => {
   }
 });
 
-// Get Password Change Requests
+// Get Password Change Requests — admin only (global middleware already enforces auth)
 router.get("/auth/userreq", async (req, res) => {
   try {
-    const latestrouterroval = await getApprover();
-
-    if (latestrouterroval.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No password change requests found" });
+    if (req.user?.username !== "admin") {
+      return res.status(403).json({ error: "Forbidden: admin only" });
     }
-
+    const latestrouterroval = await getApprover();
+    if (!latestrouterroval || latestrouterroval.length === 0) {
+      return res.status(404).json({ message: "No password change requests found" });
+    }
     res.status(200).json(latestrouterroval);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching password requests:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// approve Password Change Route
+// Approve Password Change — admin only
 router.post("/auth/userreq/approve", async (req, res) => {
-  const { username } = req.body; // Get username from the request body
   try {
-
+    if (req.user?.username !== "admin") {
+      return res.status(403).json({ error: "Forbidden: admin only" });
+    }
+    const { username } = req.body;
+    if (!username) return res.status(400).json({ error: "username is required" });
     const result = await approvePasswordChange(username);
     res.status(200).json(result);
   } catch (error) {
+    console.error("Error approving password change:", error);
     res.status(500).json({ message: error.message });
   }
 });
 
-// Reject Password Change Route
+// Reject Password Change — admin only
 router.post("/auth/userreq/reject", async (req, res) => {
-  const { username } = req.body; // Get username from the request body
   try {
+    if (req.user?.username !== "admin") {
+      return res.status(403).json({ error: "Forbidden: admin only" });
+    }
+    const { username } = req.body;
+    if (!username) return res.status(400).json({ error: "username is required" });
     const result = await rejectPasswordChange(username);
     res.status(200).json(result);
   } catch (error) {
+    console.error("Error rejecting password change:", error);
     res.status(500).json({ message: error.message });
   }
 });

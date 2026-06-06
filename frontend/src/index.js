@@ -9,6 +9,30 @@ import store from './store';
 import { Toaster } from 'react-hot-toast';
 import Favicon from "react-favicon";
 import FavIcon from "../src/images/connectlogi-favicon.png";
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+// Attach auth token to every outgoing request
+axios.interceptors.request.use((config) => {
+  const token = Cookies.get('userauthtoken');
+  if (token) {
+    config.headers['userauthtoken'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Redirect to login on 401 (expired / invalid token)
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      Cookies.remove('userauthtoken');
+      window.location.hash = '#/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Create a wrapper component for theme logic
 function RootWithTheme() {

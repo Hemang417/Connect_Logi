@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { connectMySQL } from "../config/sqlconfig.js";
 import { fileURLToPath } from 'url';
-const connection = await connectMySQL(); // Avoid this in shared modules if reused
+const connection = await connectMySQL();
 import fs from "fs";
 import path from "path";
 
@@ -23,14 +24,46 @@ export const getTheUser = async (username, password, orgcode) => {
 
     const user = existingUsers[0];
 
-    if (user.loggedin === 1) {
-      return {
-        error:
-          "You are already logged in from another device. Please log out first.",
-      };
+    // Atomic single-session enforcement — only set loggedin=1 if currently 0
+    const [loginResult] = await connection.execute(
+      `UPDATE ${tableName} SET loggedin = 1, tokenIssuedAt = NOW() WHERE username = ? AND orgcode = ? AND loggedin = 0`,
+      [username, orgcode]
+    );
+
+    if (loginResult.affectedRows === 0) {
+      // Either already logged in or record doesn't exist
+      // Re-fetch to distinguish the two cases
+      const [check] = await connection.execute(
+        `SELECT loggedin FROM ${tableName} WHERE username = ? AND orgcode = ?`,
+        [username, orgcode]
+      );
+      if (check.length > 0 && check[0].loggedin === 1) {
+        return { error: "You are already logged in from another device. Please log out first." };
+      }
     }
 
-    if (user.password !== password) {
+    // Password check — support bcrypt hashes and legacy plain-text (transitional)
+    let passwordMatch = false;
+    if (user.password && user.password.startsWith("$2")) {
+      passwordMatch = await bcrypt.compare(password, user.password);
+    } else {
+      passwordMatch = user.password === password;
+      // Silently upgrade to bcrypt on next successful login
+      if (passwordMatch) {
+        const hashed = await bcrypt.hash(password, 10);
+        await connection.execute(
+          `UPDATE ${tableName} SET password = ? WHERE username = ? AND orgcode = ?`,
+          [hashed, username, orgcode]
+        );
+      }
+    }
+
+    if (!passwordMatch) {
+      // Roll back loggedin flag since password was wrong
+      await connection.execute(
+        `UPDATE ${tableName} SET loggedin = 0 WHERE username = ? AND orgcode = ?`,
+        [username, orgcode]
+      );
       return { error: "Incorrect password." };
     }
 
@@ -42,9 +75,10 @@ export const getTheUser = async (username, password, orgcode) => {
     const now = new Date();
     const tenHoursLater = new Date(now.getTime() + 10 * 60 * 60 * 1000);
     const midnight = new Date();
-    midnight.setHours(24, 0, 0, 0);
+    midnight.setHours(0, 0, 0, 0);
+    midnight.setDate(midnight.getDate() + 1); // tomorrow at 00:00
     const expiresAt = Math.min(tenHoursLater.getTime(), midnight.getTime());
-    const expInSeconds = Math.floor(expiresAt / 1000);
+    const expInSeconds = Math.ceil(expiresAt / 1000);
 
     const token = jwt.sign(
       {
@@ -53,11 +87,6 @@ export const getTheUser = async (username, password, orgcode) => {
         exp: expInSeconds,
       },
       SECRET_KEY
-    );
-
-    await connection.execute(
-      `UPDATE ${tableName} SET loggedin = 1, tokenIssuedAt = NOW() WHERE username = ? AND orgcode = ?`,
-      [username, orgcode]
     );
 
     user.token = token;
@@ -373,9 +402,10 @@ const insertUser = async (
   logoFilename
 ) => {
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const [rows] = await connection.execute(
       `INSERT INTO users (username, password, orgcode, orgname, userphoto) VALUES (?, ?, ?, ?, ?)`,
-      [username, password, organizationCode, orgname, logoFilename]
+      [username, hashedPassword, organizationCode, orgname, logoFilename]
     );
     return { rows, orgcode: organizationCode };
   } catch (error) {
@@ -392,11 +422,11 @@ export const updateUserPassword = async (
   orgcode
 ) => {
   try {
-    // Insert into the approval table for admin's approval before changing the password
+    const hashedPassword = await bcrypt.hash(newpassword, 10);
     const [result] = await connection.execute(
-      `INSERT INTO adminchangeapproval (username, role, newpassword,remark, orgcode) 
-             VALUES (?, ?, ?, ?, ?)`, // Assuming Status starts as 'Pending'
-      [username, role, newpassword, remark, orgcode]
+      `INSERT INTO adminchangeapproval (username, role, newpassword,remark, orgcode)
+             VALUES (?, ?, ?, ?, ?)`,
+      [username, role, hashedPassword, remark, orgcode]
     );
 
     return {
@@ -443,11 +473,13 @@ export const approvePasswordChange = async (username) => {
     }
 
     const { newpassword } = request[0];
-    // console.log(`Updating password for username: ${username}`)
-    // Update the password in the employee table
+    if (!newpassword || !newpassword.trim()) {
+      throw new Error("Invalid password change request: password is empty");
+    }
+    const hashedPassword = await bcrypt.hash(newpassword, 10);
     await connection.execute(
       "UPDATE userkyctable SET password = ? WHERE username = ?",
-      [newpassword, username]
+      [hashedPassword, username]
     );
     // console.log('Deleting request from adminchangeapproval');
     let date = new Date();
@@ -856,7 +888,7 @@ export const getApproverNameinOrg = async (orgcode) => {
   try {
     const [approverdata] = await connection.execute(
       `SELECT * FROM approvername WHERE orgcode = ?`,
-      []
+      [orgcode]
     );
     const data = approverdata.filter((item) => {
       return item.uniquevalue[0] === "OrgButton";

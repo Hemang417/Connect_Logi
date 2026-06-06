@@ -1,7 +1,14 @@
 import React, { Suspense } from "react";
 import { HashRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 import "./scss/style.scss";
 import { AppProvider } from "../src/views/organization/Innerpage/AppContext";
+
+// Redirect to /login if no auth token is present
+const ProtectedRoute = ({ element }) => {
+  const token = Cookies.get("userauthtoken");
+  return token ? element : React.createElement(Navigate, { to: "/login", replace: true });
+};
 
 const loading = React.createElement("div", { className: "pt-3 text-center" }, 
   React.createElement("div", { className: "sk-spinner sk-spinner-pulse" })
@@ -36,7 +43,7 @@ const AppRoutes = function () {
         React.createElement(Route, { element: React.createElement(Register), path: "/register" }),
         React.createElement(Route, { element: React.createElement(Page404), path: "/404" }),
         React.createElement(Route, { element: React.createElement(Page500), path: "/500" }),
-        React.createElement(Route, { element: React.createElement(DefaultLayout), path: "*" })
+        React.createElement(Route, { element: React.createElement(ProtectedRoute, { element: React.createElement(DefaultLayout) }), path: "*" })
       )
     )
   );

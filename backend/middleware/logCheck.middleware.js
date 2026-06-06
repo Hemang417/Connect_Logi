@@ -16,10 +16,9 @@ export const loginCheckToken = async (req, res, next) => {
     }
 
     jwt.verify(token, SECRET_KEY, async (err, userData) => {
-      const connection = await connectMySQL(); // 🛠 Per-request connection
+      const connection = await connectMySQL();
 
       if (err) {
-        // If token has some data, try to clean up
         if (userData && userData.username && userData.orgcode) {
           const tableName = userData.username === "admin" ? "users" : "userkyctable";
           await connection.execute(
@@ -27,8 +26,18 @@ export const loginCheckToken = async (req, res, next) => {
             [userData.username, userData.orgcode]
           );
         }
-
         return res.status(401).json({ error: "Token expired or invalid" });
+      }
+
+      // Verify the session is still active in DB (catches post-logout token reuse)
+      const tableName = userData.username === "admin" ? "users" : "userkyctable";
+      const [rows] = await connection.execute(
+        `SELECT loggedin FROM ${tableName} WHERE username = ? AND orgcode = ?`,
+        [userData.username, userData.orgcode]
+      );
+
+      if (!rows.length || rows[0].loggedin === 0) {
+        return res.status(401).json({ error: "Session expired. Please log in again." });
       }
 
       req.user = userData;

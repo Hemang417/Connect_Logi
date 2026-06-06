@@ -12,7 +12,7 @@ class SocketManager {
       return this.socket;
     }
 
-    this.socket = io("http://localhost:8081", {
+    this.socket = io(process.env.REACT_APP_SOCKET_URL || "http://localhost:8081", {
       transports: ['websocket', 'polling'],
       timeout: 5000,
       reconnection: true,

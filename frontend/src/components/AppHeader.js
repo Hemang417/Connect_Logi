@@ -154,7 +154,8 @@ const AppHeader = () => {
         setSelectedBranch(branch.label);
         setIsOpen(false);
         FetchAllBranches();
-        location.reload(navigate("/dashboard"));
+        navigate("/dashboard");
+        window.location.reload();
         // navigate('/dashboard')
         // toast.success(`Branch Changed`)
       } catch (error) {
@@ -385,12 +386,16 @@ const AppHeader = () => {
   const [approvers, setapprovers] = useState([]);
 
   useEffect(() => {
+    const branchName = localStorage.getItem("branchnameofemp");
+    setCurrentBranch(branchName);
+    fetchNotifications();
+
     const intervalId = setInterval(() => {
       const branchName = localStorage.getItem("branchnameofemp");
       setCurrentBranch(branchName);
       fetchNotifications();
-      dispatch({ type: 'toggleLatestMessage' })
-    }, 1000); // Interval set to 1 second
+      dispatch({ type: 'toggleLatestMessage' });
+    }, 30000); // Poll every 30 seconds instead of every 1 second
 
     return () => {
       clearInterval(intervalId);
@@ -479,9 +484,11 @@ const AppHeader = () => {
         window.location.href = "/login";
       } catch (error) {
         console.error("Logout error:", error);
-        // Still clear local data and redirect even if server request fails
-        // localStorage.clear();
-        // window.location.href = "/login";
+      } finally {
+        // Always clear credentials and redirect, even if the server call failed
+        localStorage.clear();
+        Cookies.remove("userauthtoken");
+        window.location.href = "/login";
       }
     }
   };

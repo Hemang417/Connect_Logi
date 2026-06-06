@@ -57,13 +57,25 @@ const storage = multer.diskStorage({
     },
 });
 
-// Multer configuration
+const ALLOWED_MIME_TYPES = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+];
+
 export const upload_middleware = multer({
     storage,
-    limits: { fileSize: 1 * 1024 * 1024 }, // Limit file size to 1 MB
+    limits: { fileSize: 1 * 1024 * 1024 }, // 1 MB per file
     fileFilter: (req, file, cb) => {
-        console.log(`Uploading file: ${file.originalname}`);
-        cb(null, true); // Accept all files (you can add type restrictions if needed)
+        if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+            return cb(new Error(`File type '${file.mimetype}' is not allowed. Only PDF, Word, Excel, and image files are accepted.`), false);
+        }
+        cb(null, true);
     },
 });
 

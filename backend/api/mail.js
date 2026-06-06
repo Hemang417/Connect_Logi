@@ -1,18 +1,14 @@
 import { connectMySQL } from "../config/sqlconfig.js";
 const connection = await connectMySQL();
-const orgname = 'Seawave Forwarding Logistics';
-const orgcode = 'seawave@2323';
-// import cron from 'cron'
 import cron from 'node-cron';
-import nodemailer from 'nodemailer'
+import nodemailer from 'nodemailer';
 
-// let recipients;
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'shreyashpingle752@gmail.com',
-        pass: 'vircbhwmcnqfinrb'
-    }
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+    },
 });
 
 

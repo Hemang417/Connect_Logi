@@ -117,7 +117,7 @@ export const OrgDataStorage = async (
     //   [clientname, orgname, orgcode]
     // );
 
-    console.log("existingOrgRows", existingOrgRows.lenght);
+    console.log("existingOrgRows", existingOrgRows.length);
 
     if (existingOrgRows.length > 0) {
       const clientCode = `${clientname.slice(0, 2).toUpperCase()}-${orgname
@@ -580,7 +580,7 @@ export const getBranches = async (alias) => {
 export const fetchBranchData = async (alias, branchname, id) => {
   console.log(alias, branchname, id);
   try {
-    if ((alias, branchname, id)) {
+    if (alias && branchname && id) {
       const [row] = await connection.execute(
         `SELECT * FROM organizations WHERE alias = ? AND branchname = ? AND id = ?`,
         [alias, branchname, id]

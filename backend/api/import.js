@@ -91,7 +91,7 @@ export const storeJob = async (
     // Default parts if not overridden by admin's configuration
     jobNumberParts["Fiscal Year"] = yearPart;
     jobNumberParts["Air/Sea"] = firstletter;
-    console.log["Air/Sea", jobNumberParts["Air/Sea"]];
+    console.log("Air/Sea", jobNumberParts["Air/Sea"]);
     jobNumberParts["BranchName"] = branchname;
     console.log("Job number parts:", jobNumberParts["BranchName"]);
     jobNumberParts["Import/Export"] = "I"; // Default value for export
@@ -248,7 +248,7 @@ export const updateJobNumber = async (
     // Default values
     jobNumberParts["Fiscal Year"] = yearPart;
     jobNumberParts["Air/Sea"] = firstletter;
-    console.log["Air/Sea", jobNumberParts["Air/Sea"]];
+    console.log("Air/Sea", jobNumberParts["Air/Sea"]);
     jobNumberParts["BranchName"] = branchname;
     console.log("Job number parts:", jobNumberParts["BranchName"]);
     jobNumberParts["Import/Export"] = "I"; // Default value for export

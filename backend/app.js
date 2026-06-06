@@ -12,12 +12,6 @@ if (result.error) {
   throw new Error(`Failed to load .env file at ${envFilePath}`);
 }
 
-// Optional: Warn if JWT_SECRET is not set
-if (!process.env.JWT_SECRET) {
-  console.warn("⚠️  JWT_SECRET is not defined. Make sure it's set in your .env file.");
-}
-
-// Optional: Warn if JWT_SECRET is not set
 if (!process.env.JWT_SECRET) {
   console.warn("⚠️  JWT_SECRET is not defined. Make sure it's set in your .env file.");
 }
@@ -41,12 +35,35 @@ import EditLogRoutes from "./routes/EditLogRoutes.js";
 import DelegationRoutes from "./routes/DelegationRoutes.js";
 import ConnectSpaceRoutes from "./routes/ConnectSpaceRoutes.js";
 import { cleanupExpiredLogins } from "./utils/loginCleanup.js";
+import { loginCheckToken } from "./middleware/logCheck.middleware.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN || "http://localhost:3000",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "userauthtoken"],
+}));
 app.use(express.json());
+
+// Public paths that do not require a JWT
+const PUBLIC_PATHS = [
+  { method: "POST", path: "/auth/login" },
+  { method: "POST", path: "/auth/logout" },
+  { method: "POST", path: "/ctclient/register" },
+  { method: "GET",  path: "/ctclient/nextid" },
+  { method: "POST", path: "/auth/forgotpassword" },
+];
+
+app.use((req, res, next) => {
+  const isPublic = PUBLIC_PATHS.some(
+    (p) => p.method === req.method && p.path === req.url.split("?")[0]
+  );
+  if (isPublic) return next();
+  return loginCheckToken(req, res, next);
+});
 
 // Serve static files from uploads
 app.use("/uploads", express.static("uploads"));
@@ -94,8 +111,11 @@ setInterval(async () => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
+  console.error("[ERROR]", err.message);
+  console.error("[STACK]", err.stack);
+  res.status(err.status || 500).json({
+    error: process.env.NODE_ENV === "production" ? "Internal Server Error" : err.message,
+  });
 });
 
 // Start the server
